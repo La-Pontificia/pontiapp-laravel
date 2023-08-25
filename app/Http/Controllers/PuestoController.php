@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departamento;
 use App\Models\Puesto;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,8 @@ class PuestoController extends Controller
     public function create()
     {
         $puesto = new Puesto();
-        return view('puesto.create', compact('puesto'));
+        $depas = Departamento::pluck('nombre_departamento', 'id');
+        return view('puesto.create', compact('puesto', 'depas'));
     }
 
     /**
@@ -73,8 +75,8 @@ class PuestoController extends Controller
     public function edit($id)
     {
         $puesto = Puesto::find($id);
-
-        return view('puesto.edit', compact('puesto'));
+        $depas = Departamento::pluck('nombre_departamento', 'id');
+        return view('puesto.edit', compact('puesto', 'depas'));
     }
 
     /**

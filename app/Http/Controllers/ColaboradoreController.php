@@ -36,8 +36,8 @@ class ColaboradoreController extends Controller
     public function create()
     {
         $colaboradore = new Colaboradore();
-        $cargos = Cargo::pluck('nombre_cargo', 'id');
         $puestos = Puesto::pluck('nombre_puesto', 'id');
+        $cargos = Cargo::pluck('nombre_cargo', 'id');
         return view('colaboradore.create', compact('colaboradore', 'puestos', 'cargos'));
     }
 

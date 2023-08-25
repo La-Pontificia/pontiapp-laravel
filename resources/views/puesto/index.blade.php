@@ -16,11 +16,12 @@
                                 {{ __('Puesto') }}
                             </span>
 
-                             <div class="float-right">
-                                <a href="{{ route('puestos.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
+                            <div class="float-right">
+                                <a href="{{ route('puestos.create') }}" class="btn btn-primary btn-sm float-right"
+                                    data-placement="left">
+                                    {{ __('Create New') }}
                                 </a>
-                              </div>
+                            </div>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -35,10 +36,10 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-                                        
-										<th>Codigo Puesto</th>
-										<th>Nombre Puesto</th>
-										<th>Id Departamento</th>
+
+                                        <th>Codigo Puesto</th>
+                                        <th>Nombre Puesto</th>
+                                        <th>Id Departamento</th>
 
                                         <th></th>
                                     </tr>
@@ -47,18 +48,23 @@
                                     @foreach ($puestos as $puesto)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $puesto->codigo_puesto }}</td>
-											<td>{{ $puesto->nombre_puesto }}</td>
-											<td>{{ $puesto->id_departamento }}</td>
+
+                                            <td>{{ $puesto->codigo_puesto }}</td>
+                                            <td>{{ $puesto->nombre_puesto }}</td>
+                                            <td>{{ $puesto->departamento->nombre_departamento }}</td>
 
                                             <td>
-                                                <form action="{{ route('puestos.destroy',$puesto->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('puestos.show',$puesto->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('puestos.edit',$puesto->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                <form action="{{ route('puestos.destroy', $puesto->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary "
+                                                        href="{{ route('puestos.show', $puesto->id) }}"><i
+                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success"
+                                                        href="{{ route('puestos.edit', $puesto->id) }}"><i
+                                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
                                                 </form>
                                             </td>
                                         </tr>

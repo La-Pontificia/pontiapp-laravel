@@ -16,11 +16,12 @@
                                 {{ __('Area') }}
                             </span>
 
-                             <div class="float-right">
-                                <a href="{{ route('areas.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
+                            <div class="float-right">
+                                <a href="{{ route('areas.create') }}" class="btn btn-primary btn-sm float-right"
+                                    data-placement="left">
+                                    {{ __('Create New') }}
                                 </a>
-                              </div>
+                            </div>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -35,9 +36,10 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-                                        
-										<th>Codigo Area</th>
-										<th>Nombre Area</th>
+
+                                        <th>Codigo Area</th>
+                                        <th>Nombre Area</th>
+                                        <th>Registro</th>
 
                                         <th></th>
                                     </tr>
@@ -46,17 +48,22 @@
                                     @foreach ($areas as $area)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $area->codigo_area }}</td>
-											<td>{{ $area->nombre_area }}</td>
+                                            <td>{{ $area->codigo_area }}</td>
+                                            <td>{{ $area->nombre_area }}</td>
+                                            <td>{{ $area->created_at }}</td>
 
                                             <td>
-                                                <form action="{{ route('areas.destroy',$area->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('areas.show',$area->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('areas.edit',$area->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                <form action="{{ route('areas.destroy', $area->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary "
+                                                        href="{{ route('areas.show', $area->id) }}"><i
+                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success"
+                                                        href="{{ route('areas.edit', $area->id) }}"><i
+                                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
                                                 </form>
                                             </td>
                                         </tr>

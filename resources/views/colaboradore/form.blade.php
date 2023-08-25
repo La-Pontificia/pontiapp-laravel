@@ -16,11 +16,6 @@
             {{ Form::text('nombres', $colaboradore->nombres, ['class' => 'form-control' . ($errors->has('nombres') ? ' is-invalid' : ''), 'placeholder' => 'Nombres']) }}
             {!! $errors->first('nombres', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        {{-- <div class="form-group">
-            {{ Form::label('estado') }}
-            {{ Form::text('estado', $colaboradore->estado, ['class' => 'form-control' . ($errors->has('estado') ? ' is-invalid' : ''), 'placeholder' => 'Estado']) }}
-            {!! $errors->first('estado', '<div class="invalid-feedback">:message</div>') !!}
-        </div> --}}
         <div class="form-group">
             {{ Form::label('id_cargo') }}
             {{ Form::select('id_cargo', $cargos, $colaboradore->id_cargo, ['class' => 'form-control' . ($errors->has('id_cargo') ? ' is-invalid' : ''), 'placeholder' => 'Id Cargo']) }}
@@ -31,11 +26,6 @@
             {{ Form::select('id_puesto', $puestos, $colaboradore->id_puesto, ['class' => 'form-control' . ($errors->has('id_puesto') ? ' is-invalid' : ''), 'placeholder' => 'Id Puesto']) }}
             {!! $errors->first('id_puesto', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        {{-- <div class="form-group">
-            {{ Form::label('id_usuario') }}
-            {{ Form::text('id_usuario', $colaboradore->id_usuario, ['class' => 'form-control' . ($errors->has('id_usuario') ? ' is-invalid' : ''), 'placeholder' => 'Id Usuario']) }}
-            {!! $errors->first('id_usuario', '<div class="invalid-feedback">:message</div>') !!}
-        </div> --}}
     </div>
     <div class="box-footer mt20">
         <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
