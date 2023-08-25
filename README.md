@@ -1,9 +1,13 @@
+```bash
+
 ## Install
 1- Install .exe <a href="https://getcomposer.org/">Composer</a>
 2- Install .exe <a href="https://nodejs.org/en">Node</a>
 3- Execut: composer require
 4- Execut: npm i && npm run dev
 4- Execut: php artisan migrate
+```
+
 
 
 
