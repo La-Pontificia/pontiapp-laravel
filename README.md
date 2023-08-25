@@ -1,11 +1,12 @@
 ```bash
 
-## Install
-1- Install .exe <a href="https://getcomposer.org/">Composer</a>
-2- Install .exe <a href="https://nodejs.org/en">Node</a>
-3- Execut: composer require
-4- Execut: npm i && npm run dev
-4- Execut: php artisan migrate
+## execute
+1- composer require
+2- npm i && npm run dev
+3- php artisan migrate
+4- php artisan serve
+5- enter url: http://127.0.0.1:8000/
+
 ```
 
 
