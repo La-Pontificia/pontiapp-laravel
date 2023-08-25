@@ -13,13 +13,13 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Colaboradore') }}
+                                {{ __('Lista de colaboradores') }}
                             </span>
 
                             <div class="float-right">
                                 <a href="{{ route('colaboradores.create') }}" class="btn btn-primary btn-sm float-right"
                                     data-placement="left">
-                                    {{ __('Create New') }}
+                                    {{ __('Crea nuevo colaborador') }}
                                 </a>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                                                     method="POST">
                                                     <a class="btn btn-sm btn-primary "
                                                         href="{{ route('colaboradores.show', $colaboradore->id) }}"><i
-                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                            class="fa fa-fw fa-eye"></i> {{ __('Ver') }}</a>
                                                     <a class="btn btn-sm btn-success"
                                                         href="{{ route('colaboradores.edit', $colaboradore->id) }}"><i
                                                             class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Acceso
+    {{ __('Create') }} Objetivo
 @endsection
 
 @section('content')
@@ -13,14 +13,13 @@
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">{{ __('Create') }} Acceso</span>
+                        <span class="card-title">{{ __('Create') }} Objetivo</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('accesos.store') }}" role="form"
-                            enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('objetivos.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 
-                            @include('acceso.form')
+                            @include('objetivo.form')
 
                         </form>
                     </div>

@@ -16,11 +16,12 @@
                                 {{ __('Supervisore') }}
                             </span>
 
-                             <div class="float-right">
-                                <a href="{{ route('supervisores.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
+                            <div class="float-right">
+                                <a href="{{ route('supervisores.create') }}" class="btn btn-primary btn-sm float-right"
+                                    data-placement="left">
+                                    {{ __('Create New') }}
                                 </a>
-                              </div>
+                            </div>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -35,9 +36,9 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-                                        
-										<th>Id Colaborador</th>
-										<th>Id Supervisor</th>
+
+                                        <th>Id Colaborador</th>
+                                        <th>Id Supervisor</th>
 
                                         <th></th>
                                     </tr>
@@ -46,17 +47,23 @@
                                     @foreach ($supervisores as $supervisore)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $supervisore->id_colaborador }}</td>
-											<td>{{ $supervisore->id_supervisor }}</td>
+
+                                            <td>{{ $supervisore->id_colaborador }}</td>
+                                            <td>{{ $supervisore->id_supervisor }}</td>
 
                                             <td>
-                                                <form action="{{ route('supervisores.destroy',$supervisore->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('supervisores.show',$supervisore->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('supervisores.edit',$supervisore->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                <form action="{{ route('supervisores.destroy', $supervisore->id) }}"
+                                                    method="POST">
+                                                    <a class="btn btn-sm btn-primary "
+                                                        href="{{ route('supervisores.show', $supervisore->id) }}"><i
+                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success"
+                                                        href="{{ route('supervisores.edit', $supervisore->id) }}"><i
+                                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
                                                 </form>
                                             </td>
                                         </tr>

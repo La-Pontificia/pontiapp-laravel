@@ -28,3 +28,4 @@ Route::resource('/puestos', App\Http\Controllers\PuestoController::class);
 Route::resource('/colaboradores', App\Http\Controllers\ColaboradoreController::class);
 Route::resource('/supervisores', App\Http\Controllers\SupervisoreController::class);
 Route::resource('/accesos', App\Http\Controllers\AccesoController::class);
+Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class);

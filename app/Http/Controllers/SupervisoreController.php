@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colaboradore;
 use App\Models\Supervisore;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,8 @@ class SupervisoreController extends Controller
     public function create()
     {
         $supervisore = new Supervisore();
-        return view('supervisore.create', compact('supervisore'));
+        $colabs = Colaboradore::pluck('nombres', 'id');
+        return view('supervisore.create', compact('supervisore', 'colabs'));
     }
 
     /**
@@ -73,8 +75,8 @@ class SupervisoreController extends Controller
     public function edit($id)
     {
         $supervisore = Supervisore::find($id);
-
-        return view('supervisore.edit', compact('supervisore'));
+        $colabs = Colaboradore::pluck('nombres', 'id');
+        return view('supervisore.edit', compact('supervisore', 'colabs'));
     }
 
     /**
