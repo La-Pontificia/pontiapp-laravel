@@ -21,11 +21,16 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('/cargos', App\Http\Controllers\CargoController::class);
-Route::resource('/areas', App\Http\Controllers\AreaController::class);
-Route::resource('/departamentos', App\Http\Controllers\DepartamentoController::class);
-Route::resource('/puestos', App\Http\Controllers\PuestoController::class);
-Route::resource('/colaboradores', App\Http\Controllers\ColaboradoreController::class);
-Route::resource('/supervisores', App\Http\Controllers\SupervisoreController::class);
-Route::resource('/accesos', App\Http\Controllers\AccesoController::class);
-Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class);
+Route::resource('/cargos', App\Http\Controllers\CargoController::class)->middleware('authMiddleware');
+Route::resource('/areas', App\Http\Controllers\AreaController::class)->middleware('authMiddleware');
+Route::resource('/departamentos', App\Http\Controllers\DepartamentoController::class)->middleware('authMiddleware');
+Route::resource('/puestos', App\Http\Controllers\PuestoController::class)->middleware('authMiddleware');
+Route::resource('/colaboradores', App\Http\Controllers\ColaboradoreController::class)->middleware('authMiddleware');
+Route::resource('/supervisores', App\Http\Controllers\SupervisoreController::class)->middleware('authMiddleware');
+Route::resource('/accesos', App\Http\Controllers\AccesoController::class)->middleware('authMiddleware');
+Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class)->middleware('authMiddleware');
+Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disableAccess')
+    ->name('accesos.disable');
+Route::get('/mantenimiento', function () {
+    return view('mantenimiento.index');
+})->name('mantenimiento.index'); // Nombre de la ruta

@@ -1,12 +1,35 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
 @section('template_title')
     Puesto
 @endsection
 
-@section('content')
+@section('content-2')
     <div class="container-fluid">
         <div class="row">
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Nuevo Puesto</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" id="form-carg" action="{{ route('cargos.store') }}" role="form"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @include('puesto.form')
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
@@ -16,12 +39,10 @@
                                 {{ __('Puesto') }}
                             </span>
 
-                            <div class="float-right">
-                                <a href="{{ route('puestos.create') }}" class="btn btn-primary btn-sm float-right"
-                                    data-placement="left">
-                                    {{ __('Create New') }}
-                                </a>
-                            </div>
+                            <button type="button" style="width: 200px;" class="btn btn-primary" data-toggle="modal"
+                                data-target="#exampleModal">
+                                Crear nuevo
+                            </button>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -35,12 +56,12 @@
                             <table class="table table-striped table-hover">
                                 <thead class="thead">
                                     <tr>
-                                        <th>No</th>
-
-                                        <th>Codigo Puesto</th>
-                                        <th>Nombre Puesto</th>
-                                        <th>Id Departamento</th>
-
+                                        <th>N°</th>
+                                        <th>Codigo </th>
+                                        <th>Nombre </th>
+                                        <th>Departamento</th>
+                                        <th>Registro</th>
+                                        <th>Actualización</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -48,23 +69,20 @@
                                     @foreach ($puestos as $puesto)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-
                                             <td>{{ $puesto->codigo_puesto }}</td>
                                             <td>{{ $puesto->nombre_puesto }}</td>
                                             <td>{{ $puesto->departamento->nombre_departamento }}</td>
-
+                                            <td>{{ $puesto->created_at }}</td>
+                                            <td>{{ $puesto->updated_at }}</td>
                                             <td>
                                                 <form action="{{ route('puestos.destroy', $puesto->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary "
-                                                        href="{{ route('puestos.show', $puesto->id) }}"><i
-                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success"
                                                         href="{{ route('puestos.edit', $puesto->id) }}"><i
-                                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                            class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i
-                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                            class="fa fa-fw fa-trash"></i> {{ __('Eliminar') }}</button>
                                                 </form>
                                             </td>
                                         </tr>

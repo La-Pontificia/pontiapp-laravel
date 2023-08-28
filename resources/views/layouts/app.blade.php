@@ -13,6 +13,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="resources/css/app.css">
+
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -20,12 +22,11 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+        <nav style="position: sticky; top: 0; z-index: 999;"
+            class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="custom_container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{-- {{ config('app.name', 'Laravel') }} --}}
-                    {{-- <i class="fa-solid fa-table"></i> --}}
-                    <img src="/elp.gif" style="width: 120px;" alt="">
+                    <img src="/elp.gif" style="width: 140px;" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -34,59 +35,77 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto" style="display: flex; gap: 5px">
+                    <ul class="navbar-nav ms-auto" style="display: flex; gap: 5px; align-items: center;">
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link font-semibold text-xl" class="font-semibold"
+                                        href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
                         @else
+                            @if ($accesos->contains('modulo', 'Mantenimiento'))
+                                <li class="nav-item" style="border-right: solid 1px rgba(0,0,0,.3);">
+                                    <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                                        class="nav-link {{ request()->is('mantenimiento*') ? 'text-primary' : '' }}"
+                                        href="{{ route('mantenimiento.index') }}"><i style="font-size: 30px"
+                                            class="fa-solid fa-server"></i>
+                                        <span style="font-size: 13px;">{{ __('Mantenimiento') }}</span></a>
+                                </li>
+                            @endif
                             <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px" class="nav-link"
-                                    href="{{ route('areas.index') }}"><i class="fa-solid fa-table"></i>
-                                    {{ __('Areas') }}</a>
+                                <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                                    class="nav-link {{ request()->is('objetivos*') ? 'text-primary' : '' }}"
+                                    href="{{ route('objetivos.index') }}"><i style="font-size: 30px"
+                                        class="fa-solid fa-list-check"></i>
+                                    <span style="font-size: 13px;">{{ __('Mis objetivos') }}</span></a>
                             </li>
+                            @if ($accesos->contains('modulo', 'Supervisores'))
+                                <li class="nav-item">
+                                    <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                                        class="nav-link {{ request()->is('supervisores*') ? 'text-primary' : '' }}"
+                                        href="{{ route('supervisores.index') }}"><i style="font-size: 30px"
+                                            class="fa-solid fa-user-tie"></i>
+                                        <span style="font-size: 13px;">{{ __('Supervisores') }}</span></a>
+                                </li>
+                            @endif
+                            @if ($accesos->contains('modulo', 'Colaboradores'))
+                                <li class="nav-item">
+                                    <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                                        class="nav-link {{ request()->is('colaboradores*') ? 'text-primary' : '' }}"
+                                        href="{{ route('colaboradores.index') }}"><i style="font-size: 30px"
+                                            class="fa-solid fa-users"></i>
+                                        <span style="font-size: 13px;">{{ __('Colaboradores') }}</span></a>
+                                </li>
+                            @endif
                             <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px" class="nav-link"
-                                    href="{{ route('puestos.index') }}"><i class="fa-solid fa-table"></i>
-                                    {{ __('Puestos') }}</a>
+                                <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                                    class="nav-link" href="{{ route('home') }}"><i style="font-size: 30px"
+                                        class="fa-solid fa-bell"></i>
+                                    <span style="font-size: 13px;">{{ __('Notificaciones') }}</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px" class="nav-link"
-                                    href="{{ route('departamentos.index') }}"><i class="fa-solid fa-table"></i>
-                                    {{ __('Departamentos') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px" class="nav-link"
-                                    href="{{ route('cargos.index') }}"><i class="fa-solid fa-table"></i>
-                                    {{ __('Cargos') }}</a>
-                            </li>
+                            <li class="nav-item dropdown" style="border-left: solid 1px rgba(0,0,0,.3);">
+                                <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                                    class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false" v-pre><i style="font-size: 30px"
+                                        class="fa-solid fa-user"></i>
+                                    <span style="font-size: 13px;">
+                                        {{ Auth::user()->name }}
+                                    </span></a>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                        {{ __('Cerrar Sesion') }}
+                                    </a>
 
-                            <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px" class="nav-link"
-                                    href="{{ route('supervisores.index') }}"><i class="fa-solid fa-table"></i>
-                                    {{ __('Supervisores') }}</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
                             </li>
-                            <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px" class="nav-link"
-                                    href="{{ route('colaboradores.index') }}"><i class="fa-solid fa-users"></i>
-                                    {{ __('Colaboradores') }}</a>
-                            </li>
-                            <li class="nav-item dropdown">
+                            {{-- <li class="nav-item dropdown">
                                 <a id="navbarDropdown" style="font-weight: 800; font-size: 16px"
                                     class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false" v-pre>
@@ -101,21 +120,30 @@
                                         {{ __('Cerrar Sesion') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
                                         @csrf
                                     </form>
                                 </div>
-                            </li>
+                            </li> --}}
                         @endguest
                     </ul>
                 </div>
             </div>
         </nav>
-
-        <main class="py-4 container">
+        <main class="py-4 custom_container">
             @yield('content')
         </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>

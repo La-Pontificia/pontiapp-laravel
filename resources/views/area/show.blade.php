@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
 @section('template_title')
     {{ $area->name ?? "{{ __('Show') Area" }}
@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="card-body">
-                        
+
                         <div class="form-group">
                             <strong>Codigo Area:</strong>
                             {{ $area->codigo_area }}

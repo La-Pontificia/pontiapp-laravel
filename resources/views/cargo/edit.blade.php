@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
 @section('template_title')
     {{ __('Update') }} Cargo
@@ -16,7 +16,8 @@
                         <span class="card-title">{{ __('Update') }} Cargo</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('cargos.update', $cargo->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('cargos.update', $cargo->id) }}" role="form"
+                            enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 

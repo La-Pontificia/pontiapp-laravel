@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
 @section('template_title')
     {{ __('Create') }} Acceso

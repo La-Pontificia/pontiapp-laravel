@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acceso;
+use App\Models\Area;
+use App\Models\Colaboradore;
 use App\Models\Departamento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class DepartamentoController
@@ -18,11 +22,18 @@ class DepartamentoController extends Controller
      */
     public function index()
     {
+        $departamento = new Departamento();
         $departamentos = Departamento::paginate();
-
-        return view('departamento.index', compact('departamentos'))
+        $areas = Area::pluck('nombre_area', 'id');
+        return view('departamento.index', compact('departamentos', 'departamento', 'areas'))
             ->with('i', (request()->input('page', 1) - 1) * $departamentos->perPage());
     }
+
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -73,8 +84,8 @@ class DepartamentoController extends Controller
     public function edit($id)
     {
         $departamento = Departamento::find($id);
-
-        return view('departamento.edit', compact('departamento'));
+        $areas = Area::pluck('nombre_area', 'id');
+        return view('departamento.edit', compact('departamento', 'areas'));
     }
 
     /**
@@ -89,7 +100,6 @@ class DepartamentoController extends Controller
         request()->validate(Departamento::$rules);
 
         $departamento->update($request->all());
-
         return redirect()->route('departamentos.index')
             ->with('success', 'Departamento updated successfully');
     }

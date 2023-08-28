@@ -8,6 +8,7 @@ use App\Models\Colaboradore;
 use App\Models\Puesto;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ColaboradoreController
@@ -23,7 +24,6 @@ class ColaboradoreController extends Controller
     public function index()
     {
         $colaboradores = Colaboradore::paginate();
-
         return view('colaboradore.index', compact('colaboradores'))
             ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
@@ -103,6 +103,12 @@ class ColaboradoreController extends Controller
         ]);
 
         $user = Acceso::create([
+            'modulo' => 'Mis objetivos',
+            'acceso' => 0,
+            'id_colaborador' => $colaborador->id,
+        ]);
+
+        $user = Acceso::create([
             'modulo' => 'Accesos',
             'acceso' => 0,
             'id_colaborador' => $colaborador->id,
@@ -110,6 +116,18 @@ class ColaboradoreController extends Controller
 
         $user = Acceso::create([
             'modulo' => 'Usuarios',
+            'acceso' => 0,
+            'id_colaborador' => $colaborador->id,
+        ]);
+
+        $user = Acceso::create([
+            'modulo' => 'Supervisores',
+            'acceso' => 0,
+            'id_colaborador' => $colaborador->id,
+        ]);
+
+        $user = Acceso::create([
+            'modulo' => 'Mantenimiento',
             'acceso' => 0,
             'id_colaborador' => $colaborador->id,
         ]);
@@ -140,8 +158,9 @@ class ColaboradoreController extends Controller
     public function edit($id)
     {
         $colaboradore = Colaboradore::find($id);
-
-        return view('colaboradore.edit', compact('colaboradore'));
+        $puestos = Puesto::pluck('nombre_puesto', 'id');
+        $cargos = Cargo::pluck('nombre_cargo', 'id');
+        return view('colaboradore.edit', compact('colaboradore', 'puestos', 'cargos'));
     }
 
     /**

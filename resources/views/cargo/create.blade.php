@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
 @section('template_title')
     {{ __('Create') }} Cargo
@@ -16,7 +16,7 @@
                         <span class="card-title">{{ __('Create') }} Cargo</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('cargos.store') }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('cargos.store') }}" role="form" enctype="multipart/form-data">
                             @csrf
 
                             @include('cargo.form')

@@ -1,8 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
-@section('template_title')
-    {{ $acceso->name ?? "{{ __('Show') Acceso" }}
-@endsection
 
 @section('content')
     <section class="content container-fluid">
@@ -19,7 +16,7 @@
                     </div>
 
                     <div class="card-body">
-                        
+
                         <div class="form-group">
                             <strong>Modulo:</strong>
                             {{ $acceso->modulo }}

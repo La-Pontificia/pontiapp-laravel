@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acceso;
+use App\Models\Colaboradore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class AccesoController
@@ -19,7 +21,6 @@ class AccesoController extends Controller
     public function index()
     {
         $accesos = Acceso::paginate();
-
         return view('acceso.index', compact('accesos'))
             ->with('i', (request()->input('page', 1) - 1) * $accesos->perPage());
     }
@@ -31,8 +32,11 @@ class AccesoController extends Controller
      */
     public function create()
     {
+        $modulos = ['Colaboradores', 'Departamento', 'Areas', 'Puestos', 'Cargos', 'Objetivos', 'Acessos', 'Usuarios'];
+        $accesos = ['0', '1'];
+        $colabs = Colaboradore::pluck('nombres', 'id');
         $acceso = new Acceso();
-        return view('acceso.create', compact('acceso'));
+        return view('acceso.create', compact('acceso', 'modulos', 'accesos', 'colabs'));
     }
 
     /**
@@ -70,11 +74,23 @@ class AccesoController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
+
+    public function disableAccess($id)
+    {
+        $acceso = Acceso::findOrFail($id);
+        $acceso->acceso = $acceso->acceso == 0 ? 1 : 0; // Cambiar de 0 a 1 y viceversa
+        $acceso->save();
+        return redirect()->route('accesos.index')
+            ->with('success', 'Estado de acceso cambiado exitosamente.');
+    }
+
     public function edit($id)
     {
         $acceso = Acceso::find($id);
-
-        return view('acceso.edit', compact('acceso'));
+        $modulos = ['Colaboradores', 'Departamento', 'Areas', 'Puestos', 'Cargos', 'Objetivos', 'Acessos', 'Usuarios'];
+        $accesos = ['0', '1'];
+        $colabs = Colaboradore::pluck('nombres', 'id');
+        return view('acceso.edit', compact('acceso', 'modulos', 'accesos', 'colabs'));
     }
 
     /**

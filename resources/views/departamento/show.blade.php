@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
 @section('template_title')
     {{ $departamento->name ?? "{{ __('Show') Departamento" }}
@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="card-body">
-                        
+
                         <div class="form-group">
                             <strong>Codigo Departamento:</strong>
                             {{ $departamento->codigo_departamento }}

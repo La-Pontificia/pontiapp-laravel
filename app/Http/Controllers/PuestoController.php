@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acceso;
+use App\Models\Colaboradore;
 use App\Models\Departamento;
 use App\Models\Puesto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class PuestoController
@@ -19,9 +22,11 @@ class PuestoController extends Controller
      */
     public function index()
     {
-        $puestos = Puesto::paginate();
 
-        return view('puesto.index', compact('puestos'))
+        $puestos = Puesto::paginate();
+        $puesto = new Puesto();
+        $depas = Departamento::pluck('nombre_departamento', 'id');
+        return view('puesto.index', compact('puestos', 'puesto', 'depas'))
             ->with('i', (request()->input('page', 1) - 1) * $puestos->perPage());
     }
 

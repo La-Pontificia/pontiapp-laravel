@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acceso;
 use App\Models\Area;
+use App\Models\Colaboradore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class AreaController
@@ -18,9 +21,10 @@ class AreaController extends Controller
      */
     public function index()
     {
-        $areas = Area::paginate();
 
-        return view('area.index', compact('areas'))
+        $areas = Area::paginate();
+        $area = new Area();
+        return view('area.index', compact('areas', 'area'))
             ->with('i', (request()->input('page', 1) - 1) * $areas->perPage());
     }
 

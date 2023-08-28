@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.maintenance')
 
 @section('template_title')
     {{ __('Create') }} Departamento
@@ -16,7 +16,8 @@
                         <span class="card-title">{{ __('Create') }} Departamento</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('departamentos.store') }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('departamentos.store') }}" role="form"
+                            enctype="multipart/form-data">
                             @csrf
 
                             @include('departamento.form')

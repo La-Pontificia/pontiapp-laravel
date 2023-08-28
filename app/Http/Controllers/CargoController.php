@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acceso;
 use App\Models\Cargo;
+use App\Models\Colaboradore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class CargoController
@@ -19,8 +22,8 @@ class CargoController extends Controller
     public function index()
     {
         $cargos = Cargo::paginate();
-
-        return view('cargo.index', compact('cargos'))
+        $cargo = new Cargo();
+        return view('cargo.index', compact('cargos', 'cargo'))
             ->with('i', (request()->input('page', 1) - 1) * $cargos->perPage());
     }
 

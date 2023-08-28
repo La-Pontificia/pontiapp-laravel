@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Acceso;
 use App\Models\Colaboradore;
 use App\Models\Supervisore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class SupervisoreController
@@ -20,7 +22,6 @@ class SupervisoreController extends Controller
     public function index()
     {
         $supervisores = Supervisore::paginate();
-
         return view('supervisore.index', compact('supervisores'))
             ->with('i', (request()->input('page', 1) - 1) * $supervisores->perPage());
     }
