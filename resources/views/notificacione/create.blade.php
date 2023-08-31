@@ -1,11 +1,11 @@
-@extends('layouts.maintenance')
+@extends('layouts.app')
 
 @section('template_title')
-    {{ __('Create') }} Objetivo
+    {{ __('Create') }} Notificacione
 @endsection
 
-@section('content-2')
-    <section class="content container-fluid" style="z-index:2">
+@section('content')
+    <section class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
 
@@ -13,13 +13,13 @@
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">{{ __('Crear') }} Objetivo</span>
+                        <span class="card-title">{{ __('Create') }} Notificacione</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('objetivos.store') }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('notificaciones.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 
-                            @include('objetivo.form')
+                            @include('notificacione.form')
 
                         </form>
                     </div>

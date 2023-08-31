@@ -21,7 +21,7 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong>Id Colaborador:</strong>
+                            <strong> Id Colaborador:</strong>
                             {{ $objetivo->id_colaborador }}
                         </div>
                         <div class="form-group">
