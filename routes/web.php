@@ -29,6 +29,7 @@ Route::resource('/colaboradores', App\Http\Controllers\ColaboradoreController::c
 Route::resource('/supervisores', App\Http\Controllers\SupervisoreController::class)->middleware('authMiddleware');
 Route::resource('/accesos', App\Http\Controllers\AccesoController::class)->middleware('authMiddleware');
 Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class)->middleware('authMiddleware');
+Route::resource('/notificaciones', App\Http\Controllers\notificacioneController::class)->middleware('authMiddleware');
 Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disableAccess')
     ->name('accesos.disable');
 Route::get('/mantenimiento', function () {
