@@ -11,11 +11,9 @@
                 <div class="card">
                     <div class="card-header">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-
                             <span id="card_title">
-                                {{ __('Supervisore') }}
+                                {{ __('Supervisores') }}
                             </span>
-
                             <div class="float-right">
                                 <a href="{{ route('supervisores.create') }}" class="btn btn-primary btn-sm float-right"
                                     data-placement="left">
@@ -36,10 +34,8 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-
-                                        <th>Id Colaborador</th>
-                                        <th>Id Supervisor</th>
-
+                                        <th>Colaborador</th>
+                                        <th>Supervisor</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -48,15 +44,16 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
 
-                                            <td>{{ $supervisore->id_colaborador }}</td>
-                                            <td>{{ $supervisore->id_supervisor }}</td>
+                                            <td>{{ $supervisore->colaboradore->nombres }}
+                                                {{ $supervisore->colaboradore->apellidos }}
+                                            </td>
+                                            <td>{{ $supervisore->supervisores->nombres }}
+                                                {{ $supervisore->supervisores->apellidos }}
+                                            </td>
 
                                             <td>
                                                 <form action="{{ route('supervisores.destroy', $supervisore->id) }}"
                                                     method="POST">
-                                                    <a class="btn btn-sm btn-primary "
-                                                        href="{{ route('supervisores.show', $supervisore->id) }}"><i
-                                                            class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success"
                                                         href="{{ route('supervisores.edit', $supervisore->id) }}"><i
                                                             class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>

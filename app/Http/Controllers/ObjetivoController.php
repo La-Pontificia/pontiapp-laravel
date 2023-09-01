@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colaboradore;
 use App\Models\Objetivo;
 use Illuminate\Http\Request;
 
@@ -18,9 +19,23 @@ class ObjetivoController extends Controller
      */
     public function index()
     {
-        $objetivos = Objetivo::paginate();
+        $user = auth()->user();
+        if (!$user) {
+            abort(404);
+        }
+        $id = $user->id;
+        $colab = Colaboradore::where([
+            'id_usuario' => $id,
+        ])->first();
 
-        return view('objetivo.index', compact('objetivos'))
+        if (!$colab) {
+            abort(404);
+        }
+
+        $objetivos = Objetivo::where('id_colaborador', $colab->id)->paginate();
+
+        $objetivo = new Objetivo();
+        return view('objetivo.index', compact('objetivos', 'objetivo'))
             ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
     }
 

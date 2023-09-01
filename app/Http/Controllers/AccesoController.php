@@ -75,13 +75,39 @@ class AccesoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function disableAccess($id)
+    public function disableAccess(Request $request, $id)
     {
         $acceso = Acceso::findOrFail($id);
         $acceso->acceso = $acceso->acceso == 0 ? 1 : 0; // Cambiar de 0 a 1 y viceversa
         $acceso->save();
+
+        if ($request->ajax()) {
+            // Devuelve el estado actualizado y la clase CSS del botón
+            $response = [
+                'acceso' => $acceso->acceso == 0 ? 1 : 0,
+                'success' => 'Estado de acceso cambiado exitosamente.'
+            ];
+
+            return response()->json($response);
+        }
+
+
         return redirect()->route('accesos.index')
             ->with('success', 'Estado de acceso cambiado exitosamente.');
+    }
+    public function getAccesosColaborador($id)
+    {
+        $colaborador = Colaboradore::find($id);
+
+        if (!$colaborador) {
+            abort(404);
+        }
+
+        $accesos = Acceso::where('id_colaborador', $colaborador->id)->paginate();
+
+        // Reutiliza la vista 'acceso.index' y la lógica de paginación
+        return view('acceso.index', compact('accesos'))
+            ->with('i', (request()->input('page', 1) - 1) * $accesos->perPage());
     }
 
     public function edit($id)

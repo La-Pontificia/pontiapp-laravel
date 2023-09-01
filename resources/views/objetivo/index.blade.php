@@ -13,7 +13,7 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Objetivo') }}
+                                {{ __('Mis objetivos') }}
                             </span>
 
                             <div class="float-right">
@@ -36,24 +36,21 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-
-                                        <th>Id Colaborador</th>
                                         <th>Objetivo</th>
                                         <th>Descripcion</th>
                                         <th>Porcentaje</th>
                                         <th>Indicadores</th>
-                                        <th>Fecha Vencimiento</th>
-                                        <th>Puntaje 01</th>
-                                        <th>Fecha Calificacion 1</th>
-                                        <th>Fecha Aprobacion 1</th>
-                                        <th>Puntaje 02</th>
-                                        <th>Fecha Calificacion 2</th>
-                                        <th>Fecha Aprobacion 2</th>
+                                        {{-- <th>Fecha Vencimiento</th> --}}
+                                        {{-- <th>Puntaje 01</th> --}}
+                                        {{-- <th>Fecha Calificacion 1</th>
+                                        <th>Fecha Aprobacion 1</th> --}}
+                                        {{-- <th>Puntaje 02</th> --}}
+                                        {{-- <th>Fecha Calificacion 2</th>
+                                        <th>Fecha Aprobacion 2</th> --}}
                                         <th>Aprobado</th>
-                                        <th>Aprovado Ev 1</th>
-                                        <th>Aprovado Ev 2</th>
-                                        <th>Año Actividad</th>
-
+                                        {{-- <th>Aprovado Ev 1</th>
+                                        <th>Aprovado Ev 2</th> --}}
+                                        {{-- <th>Año Actividad</th> --}}
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -62,22 +59,21 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
 
-                                            <td>{{ $objetivo->id_colaborador }}</td>
                                             <td>{{ $objetivo->objetivo }}</td>
                                             <td>{{ $objetivo->descripcion }}</td>
                                             <td>{{ $objetivo->porcentaje }}</td>
                                             <td>{{ $objetivo->indicadores }}</td>
-                                            <td>{{ $objetivo->fecha_vencimiento }}</td>
+                                            {{-- <td>{{ $objetivo->fecha_vencimiento }}</td>
                                             <td>{{ $objetivo->puntaje_01 }}</td>
                                             <td>{{ $objetivo->fecha_calificacion_1 }}</td>
                                             <td>{{ $objetivo->fecha_aprobacion_1 }}</td>
                                             <td>{{ $objetivo->puntaje_02 }}</td>
                                             <td>{{ $objetivo->fecha_calificacion_2 }}</td>
-                                            <td>{{ $objetivo->fecha_aprobacion_2 }}</td>
+                                            <td>{{ $objetivo->fecha_aprobacion_2 }}</td> --}}
                                             <td>{{ $objetivo->aprobado }}</td>
-                                            <td>{{ $objetivo->aprovado_ev_1 }}</td>
+                                            {{-- <td>{{ $objetivo->aprovado_ev_1 }}</td>
                                             <td>{{ $objetivo->aprovado_ev_2 }}</td>
-                                            <td>{{ $objetivo->año_actividad }}</td>
+                                            <td>{{ $objetivo->año_actividad }}</td> --}}
 
                                             <td>
                                                 <form action="{{ route('objetivos.destroy', $objetivo->id) }}"
@@ -101,7 +97,20 @@
                         </div>
                     </div>
                 </div>
-                {!! $objetivos->links() !!}
+                <br>
+                {{-- @includeif('partials.errors')
+                <div class="card card-default">
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('objetivos.store') }}" role="form"
+                            enctype="multipart/form-data">
+                            @csrf
+
+                            @include('objetivo.form')
+
+                        </form>
+                    </div>
+                </div> --}}
+                {{-- {!! $objetivos->links() !!} --}}
             </div>
         </div>
     </div>

@@ -53,5 +53,21 @@ class AccessComposerServiceProvider extends ServiceProvider
                 $view->with('accesos', $accesos);
             }
         });
+
+        View::composer('colaboradore.index', function ($view) {
+            $user = auth()->user();
+
+            if ($user) {
+                $id = $user->id;
+                $colab = Colaboradore::where([
+                    'id_usuario' => $id,
+                ])->first();
+
+                $accesos = Acceso::where('id_colaborador', $colab->id)
+                    ->where('acceso', 1)
+                    ->get();
+                $view->with('accesos', $accesos);
+            }
+        });
     }
 }

@@ -40,19 +40,16 @@
                                             <td>{{ ++$i }}</td>
                                             <td>{{ $acceso->modulo }}</td>
                                             <td>
-                                                @if ($acceso->acceso == 1)
-                                                    <a style="font-size: 15px" class="badge btn text-bg-success"
-                                                        href="{{ route('accesos.disable', $acceso->id) }}"
-                                                        class="btn btn-primary">Y</a>
-                                                @else
-                                                    <a style="font-size: 15px" class="badge btn text-bg-light"
-                                                        href="{{ route('accesos.disable', $acceso->id) }}"
-                                                        class="btn btn-primary">N</a>
-                                                @endif
+                                                <button
+                                                    class="btn disable-access {{ $acceso->acceso == 1 ? 'btn-success' : 'btn-default' }}"
+                                                    data-id="{{ $acceso->id }}">
+                                                    {{ $acceso->acceso == 1 ? 'Y' : 'N' }}
+                                                </button>
                                             </td>
                                             <td>{{ $acceso->colaboradore->nombres }} {{ $acceso->colaboradore->apellidos }}
                                             </td>
                                             <td>
+
                                                 {{-- <form action="{{ route('accesos.destroy', $acceso->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-success"
                                                         href="{{ route('accesos.edit', $acceso->id) }}"><i
@@ -72,4 +69,34 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.disable-access').on('click', function() {
+                var button = $(this); // Captura el botón que se hizo clic
+                var id = button.data('id');
+                $.ajax({
+                    url: `/accesos/${id}/disable`,
+                    method: 'GET',
+                    dataType: 'json',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        // Actualiza el botón y su texto según el nuevo estado
+                        if (response.acceso == 1) {
+                            button.removeClass('btn-success').addClass('btn-default').text('N');
+                        } else {
+                            button.removeClass('btn-default').addClass('btn-success').text('Y');
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

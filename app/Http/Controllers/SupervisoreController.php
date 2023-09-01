@@ -38,6 +38,20 @@ class SupervisoreController extends Controller
         return view('supervisore.create', compact('supervisore', 'colabs'));
     }
 
+    public function getSupervisorDeColaborador($id)
+    {
+        $colaborador = Colaboradore::find($id);
+
+        if (!$colaborador) {
+            abort(404);
+        }
+        $supervisores = Supervisore::where('id_colaborador', $colaborador->id)->paginate();
+
+        // Reutiliza la vista 'acceso.index' y la lógica de paginación
+        return view('supervisore.index', compact('supervisores'))
+            ->with('i', (request()->input('page', 1) - 1) * $supervisores->perPage());
+    }
+
     /**
      * Store a newly created resource in storage.
      *

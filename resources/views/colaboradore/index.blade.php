@@ -71,15 +71,27 @@
                                                     method="POST">
                                                     <a class="btn btn-sm btn-success"
                                                         href="{{ route('colaboradores.edit', $colaboradore->id) }}"><i
-                                                            class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
+                                                            class="fa fa-fw fa-edit"></i></a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i
-                                                            class="fa fa-fw fa-trash"></i> {{ __('Eliminar') }}</button>
-                                                    <a class="btn btn-sm btn-black"
-                                                        href="{{ route('colaboradores.edit', $colaboradore->id) }}"> <i
-                                                            style="font-size: 30px"
-                                                            class="fa-solid fa-universal-access"></i></a>
+                                                            class="fa fa-fw fa-trash"></i></button>
+
+                                                    @if ($accesos->contains('modulo', 'Accesos'))
+                                                        <a title="Acessos" class="btn btn-sm"
+                                                            href="{{ route('colaborador.accesos', $colaboradore->id) }}">
+                                                            <i style="font-size: 30px"
+                                                                class="fa-solid fa-universal-access"></i></a>
+                                                    @endif
+
+                                                    @if ($accesos->contains('modulo', 'Supervisores'))
+                                                        <a title="Supervisor (Jefe imediato)" class="btn btn-sm "
+                                                            href="{{ route('colaborador.supervisor', $colaboradore->id) }}"><i
+                                                                style="font-size: 30px"
+                                                                class="fa-solid fa-user-tie"></i></a>
+                                                    @endif
+
+
                                                 </form>
                                             </td>
                                         </tr>

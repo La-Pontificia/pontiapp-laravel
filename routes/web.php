@@ -30,8 +30,16 @@ Route::resource('/supervisores', App\Http\Controllers\SupervisoreController::cla
 Route::resource('/accesos', App\Http\Controllers\AccesoController::class)->middleware('authMiddleware');
 Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class)->middleware('authMiddleware');
 Route::resource('/notificaciones', App\Http\Controllers\notificacioneController::class)->middleware('authMiddleware');
+
+Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController@getAccesosColaborador')->name('colaborador.accesos');
+
+Route::get('/colaboradores/supervisor/{id}', 'App\Http\Controllers\SupervisoreController@getSupervisorDeColaborador')->name('colaborador.supervisor');
+
+
+
 Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disableAccess')
     ->name('accesos.disable');
+
 Route::get('/mantenimiento', function () {
     return view('mantenimiento.index');
 })->name('mantenimiento.index'); // Nombre de la ruta
