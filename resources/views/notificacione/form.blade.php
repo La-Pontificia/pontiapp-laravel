@@ -11,7 +11,7 @@
             {{ Form::text('id_objetivo', $notificacione->id_objetivo, ['class' => 'form-control' . ($errors->has('id_objetivo') ? ' is-invalid' : ''), 'placeholder' => 'Id Objetivo']) }}
             {!! $errors->first('id_objetivo', '<div class="invalid-feedback">:message</div>') !!}
         </div>
-        <div class="form-group">
+        <div class="form-group ">
             {{ Form::label('mensaje') }}
             {{ Form::text('mensaje', $notificacione->mensaje, ['class' => 'form-control' . ($errors->has('mensaje') ? ' is-invalid' : ''), 'placeholder' => 'Mensaje']) }}
             {!! $errors->first('mensaje', '<div class="invalid-feedback">:message</div>') !!}
