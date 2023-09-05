@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Objetivo
+    Objetivos
 @endsection
 
 @section('content')
@@ -15,13 +15,6 @@
                             <span id="card_title">
                                 {{ __('Mis objetivos') }}
                             </span>
-
-                            <div class="float-right">
-                                <a href="{{ route('objetivos.create') }}" class="btn btn-primary btn-sm float-right"
-                                    data-placement="left">
-                                    {{ __('Create New') }}
-                                </a>
-                            </div>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
@@ -37,19 +30,19 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Objetivo</th>
-                                        <th>Descripcion</th>
+                                        <th>Descripción</th>
                                         <th>Porcentaje</th>
                                         <th>Indicadores</th>
-                                        {{-- <th>Fecha Vencimiento</th> --}}
-                                        {{-- <th>Puntaje 01</th> --}}
+                                        <th>Fecha V.</th>
+                                        <th>Pt. 01</th>
                                         {{-- <th>Fecha Calificacion 1</th>
                                         <th>Fecha Aprobacion 1</th> --}}
-                                        {{-- <th>Puntaje 02</th> --}}
+                                        <th>Pt. 02</th>
                                         {{-- <th>Fecha Calificacion 2</th>
                                         <th>Fecha Aprobacion 2</th> --}}
-                                        <th>Aprobado</th>
-                                        {{-- <th>Aprovado Ev 1</th>
-                                        <th>Aprovado Ev 2</th> --}}
+                                        <th>Ev 1</th>
+                                        <th>Ev 2</th>
+                                        <th>Estado</th>
                                         {{-- <th>Año Actividad</th> --}}
                                         <th></th>
                                     </tr>
@@ -63,22 +56,49 @@
                                             <td>{{ $objetivo->descripcion }}</td>
                                             <td>{{ $objetivo->porcentaje }}</td>
                                             <td>{{ $objetivo->indicadores }}</td>
-                                            {{-- <td>{{ $objetivo->fecha_vencimiento }}</td>
-                                            <td>{{ $objetivo->puntaje_01 }}</td>
-                                            <td>{{ $objetivo->fecha_calificacion_1 }}</td>
-                                            <td>{{ $objetivo->fecha_aprobacion_1 }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($objetivo->fecha_vencimiento)->format('d/m/Y') }}
+                                            </td>
+                                            <td
+                                                title="{{ \Carbon\Carbon::parse($objetivo->fecha_calificacion_1)->format('d/m/Y') }}">
+                                                {{ $objetivo->puntaje_01 }}</td>
+                                            {{-- <td>{{ $objetivo->fecha_calificacion_1 }}</td> --}}
+                                            {{-- <td>{{ $objetivo->fecha_aprobacion_1 }}</td> --}}
                                             <td>{{ $objetivo->puntaje_02 }}</td>
-                                            <td>{{ $objetivo->fecha_calificacion_2 }}</td>
-                                            <td>{{ $objetivo->fecha_aprobacion_2 }}</td> --}}
-                                            <td>{{ $objetivo->aprobado }}</td>
-                                            {{-- <td>{{ $objetivo->aprovado_ev_1 }}</td>
-                                            <td>{{ $objetivo->aprovado_ev_2 }}</td>
-                                            <td>{{ $objetivo->año_actividad }}</td> --}}
+                                            {{-- <td>{{ $objetivo->fecha_calificacion_2 }}</td> --}}
+                                            {{-- <td>{{ $objetivo->fecha_aprobacion_2 }}</td> --}}
+                                            <td>
+                                                @if ($objetivo->aprovado_ev_1 == 1)
+                                                    <i style="font-size: 25px; color: green;"
+                                                        class="fa-solid fa-circle-check"></i>
+                                                @else
+                                                    <i style="font-size: 25px ; color: red;"
+                                                        class="fa-solid fa-circle-xmark"></i>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($objetivo->aprovado_ev_2 == 1)
+                                                    <i style="font-size: 25px; color: green;"
+                                                        class="fa-solid fa-circle-check"></i>
+                                                @else
+                                                    <i style="font-size: 25px ; color: red;"
+                                                        class="fa-solid fa-circle-xmark"></i>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($objetivo->aprobado == 1)
+                                                    <i style="font-size: 25px; color: green;"
+                                                        class="fa-solid fa-circle-check"></i>
+                                                @else
+                                                    <i style="font-size: 25px ; color: red;"
+                                                        class="fa-solid fa-circle-xmark"></i>
+                                                @endif
+                                            </td>
+                                            {{-- <td>{{ $objetivo->año_actividad }}</td> --}}
 
                                             <td>
                                                 <form action="{{ route('objetivos.destroy', $objetivo->id) }}"
                                                     method="POST">
-                                                    <a class="btn btn-sm btn-primary "
+                                                    {{-- <a class="btn btn-sm btn-primary "
                                                         href="{{ route('objetivos.show', $objetivo->id) }}"><i
                                                             class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
                                                     <a class="btn btn-sm btn-success"
@@ -87,7 +107,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i
-                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                            class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button> --}}
                                                 </form>
                                             </td>
                                         </tr>
@@ -98,19 +118,23 @@
                     </div>
                 </div>
                 <br>
-                {{-- @includeif('partials.errors')
-                <div class="card card-default">
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('objetivos.store') }}" role="form"
-                            enctype="multipart/form-data">
-                            @csrf
+                @includeif('partials.errors')
 
-                            @include('objetivo.form')
-
-                        </form>
+                @if ($mostrarFormulario)
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('objetivos.store') }}" role="form"
+                                enctype="multipart/form-data">
+                                @csrf
+                                @include('objetivo.form', ['objetivo' => $objetivoForm])
+                            </form>
+                        </div>
                     </div>
-                </div> --}}
-                {{-- {!! $objetivos->links() !!} --}}
+                @else
+                    <div class="alert alert-warning">
+                        Tu último objetivo entregado no ha sido aprobado.
+                    </div>
+                @endif
             </div>
         </div>
     </div>

@@ -61,7 +61,8 @@
                                     class="nav-link {{ request()->is('objetivos*') ? 'text-primary' : '' }}"
                                     href="{{ route('objetivos.index') }}"><i style="font-size: 30px"
                                         class="fa-solid fa-list-check"></i>
-                                    <span style="font-size: 13px;">{{ __('Objetivos') }}</span></a>
+
+                                    <span style="font-size: 13px;">{{ __('Mis Objetivos') }}</span></a>
                             </li>
                             {{-- @if ($accesos->contains('modulo', 'Supervisores'))
                                 <li class="nav-item">
@@ -81,12 +82,14 @@
                                         <span style="font-size: 13px;">{{ __('Colaboradores') }}</span></a>
                                 </li>
                             @endif
+
                             <li class="nav-item">
                                 <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
-                                    class="nav-link" href="{{ route('home') }}"><i style="font-size: 30px"
-                                        class="fa-solid fa-bell"></i>
-                                    <span style="font-size: 13px;">{{ __('Notificaciones') }}</span></a>
+                                    class="nav-link" href="{{ route('notificaciones.index') }}">
+                                    <i style="font-size: 30px" class="fa-regular fa-calendar-check"></i>
+                                    <span style="font-size: 13px;">{{ __('Calificar') }}</span></a>
                             </li>
+
                             <li class="nav-item dropdown" style="border-left: solid 1px rgba(0,0,0,.3);">
                                 <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
                                     class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"

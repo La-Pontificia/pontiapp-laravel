@@ -33,37 +33,37 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Objetivo extends Model
 {
-    
-    static $rules = [
-		'id_colaborador' => 'required',
-		'objetivo' => 'required',
-		'descripcion' => 'required',
-		'porcentaje' => 'required',
-		'indicadores' => 'required',
-		'puntaje_01' => 'required',
-		'puntaje_02' => 'required',
-		'aprobado' => 'required',
-		'aprovado_ev_1' => 'required',
-		'aprovado_ev_2' => 'required',
-    ];
 
-    protected $perPage = 20;
+  static $rules = [
+    // 'id_colaborador' => 'required',
+    'objetivo' => 'required',
+    'descripcion' => 'required',
+    'porcentaje' => 'required',
+    'indicadores' => 'required',
+    // 'puntaje_01' => 'required',
+    // 'puntaje_02' => 'required',
+    // 'aprobado' => 'required',
+    // 'aprovado_ev_1' => 'required',
+    // 'aprovado_ev_2' => 'required',
+    'año_actividad' => 'required',
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['id_colaborador','objetivo','descripcion','porcentaje','indicadores','fecha_vencimiento','puntaje_01','fecha_calificacion_1','fecha_aprobacion_1','puntaje_02','fecha_calificacion_2','fecha_aprobacion_2','aprobado','aprovado_ev_1','aprovado_ev_2','año_actividad'];
+  ];
+
+  protected $perPage = 20;
+
+  /**
+   * Attributes that should be mass-assignable.
+   *
+   * @var array
+   */
+  protected $fillable = ['id_colaborador', 'objetivo', 'descripcion', 'porcentaje', 'indicadores', 'fecha_vencimiento', 'puntaje_01', 'fecha_calificacion_1', 'fecha_aprobacion_1', 'puntaje_02', 'fecha_calificacion_2', 'fecha_aprobacion_2', 'aprobado', 'aprovado_ev_1', 'aprovado_ev_2', 'año_actividad'];
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function colaboradore()
-    {
-        return $this->hasOne('App\Models\Colaboradore', 'id', 'id_colaborador');
-    }
-    
-
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function colaboradore()
+  {
+    return $this->hasOne('App\Models\Colaboradore', 'id', 'id_colaborador');
+  }
 }
