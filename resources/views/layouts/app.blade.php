@@ -15,20 +15,25 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="resources/css/app.css">
 
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css"
+        integrity="sha384-3fdgwJw17Bi87e1QQ4fsLn4rUFqWw//KU0g8TvV6quvahISRewev6/EocKNuJmEw" crossorigin="anonymous"> --}}
 
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/simplex/bootstrap.min.css"
+        integrity="sha384-FYrl2Nk72fpV6+l3Bymt1zZhnQFK75ipDqPXK0sOR0f/zeOSZ45/tKlsKucQyjSp" crossorigin="anonymous">
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
-    <div id="app">
-        <nav style="position: sticky; top: 0; z-index: 999;"
-            class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="custom_container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="/elp.gif" style="width: 140px;" alt="">
+    <div style="display: flex;" id="app">
+        <nav style="position: fixed; top: 0; z-index: 999; width: 250px;"
+            class=" navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="" style="display: flex; flex-direction: column; height: 100svh; width: 100%;">
+                <a class="" style="" href="{{ url('/') }}">
+                    <span style="display: grid; width: 100%;">
+                        <img src="/elp.gif" style="width: 140px; margin: 0 auto;" alt="">
+                    </span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -36,107 +41,136 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto" style="display: flex; gap: 5px; align-items: center;">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link font-semibold text-xl" class="font-semibold"
-                                        href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            @if ($accesos->contains('modulo', 'Mantenimiento'))
-                                <li class="nav-item" style="border-right: solid 1px rgba(0,0,0,.3);">
-                                    <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
-                                        class="nav-link {{ request()->is('mantenimiento*') ? 'text-primary' : '' }}"
-                                        href="{{ route('mantenimiento.index') }}"><i style="font-size: 30px"
-                                            class="fa-solid fa-server"></i>
-                                        <span style="font-size: 13px;">{{ __('Mantenimiento') }}</span></a>
-                                </li>
-                            @endif
-                            <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
-                                    class="nav-link {{ request()->is('objetivos*') ? 'text-primary' : '' }}"
-                                    href="{{ route('objetivos.index') }}"><i style="font-size: 30px"
-                                        class="fa-solid fa-list-check"></i>
+                <ul class=""
+                    style="display: flex; padding: 10px; list-style: none; height: 100%; flex-direction: column; gap: 4px;">
+                    <!-- Authentication Links -->
 
-                                    <span style="font-size: 13px;">{{ __('Mis Objetivos') }}</span></a>
+                    @guest
+                        @if (Route::has('login'))
+                            <li class="">
+                                <a class="nav-link font-semibold text-xl" class="font-semibold"
+                                    href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
-                            {{-- @if ($accesos->contains('modulo', 'Supervisores'))
-                                <li class="nav-item">
-                                    <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
-                                        class="nav-link {{ request()->is('supervisores*') ? 'text-primary' : '' }}"
-                                        href="{{ route('supervisores.index') }}"><i style="font-size: 30px"
-                                            class="fa-solid fa-user-tie"></i>
-                                        <span style="font-size: 13px;">{{ __('Supervisores') }}</span></a>
-                                </li>
-                            @endif --}}
-                            @if ($accesos->contains('modulo', 'Colaboradores'))
-                                <li class="nav-item">
-                                    <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
-                                        class="nav-link {{ request()->is('colaboradores*') ? 'text-primary' : '' }}"
-                                        href="{{ route('colaboradores.index') }}"><i style="font-size: 30px"
-                                            class="fa-solid fa-users"></i>
-                                        <span style="font-size: 13px;">{{ __('Colaboradores') }}</span></a>
-                                </li>
-                            @endif
-
-                            <li class="nav-item">
-                                <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
-                                    class="nav-link" href="{{ route('notificaciones.index') }}">
-                                    <i style="font-size: 30px" class="fa-regular fa-calendar-check"></i>
-                                    <span style="font-size: 13px;">{{ __('Calificar') }}</span></a>
-                            </li>
-
-                            <li class="nav-item dropdown" style="border-left: solid 1px rgba(0,0,0,.3);">
-                                <a style="font-weight: 800; font-size: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
-                                    class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false" v-pre><i style="font-size: 30px"
-                                        class="fa-solid fa-user"></i>
-                                    <span style="font-size: 13px;">
-                                        {{ Auth::user()->name }}
-                                    </span></a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
-                                        {{ __('Cerrar Sesion') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                            {{-- <li class="nav-item dropdown">
-                                <a id="navbarDropdown" style="font-weight: 800; font-size: 16px"
-                                    class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false" v-pre>
+                        @endif
+                    @else
+                        <li class="nav-item dropdown">
+                            <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); background-color: rgb(209, 209, 209);"
+                                class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" v-pre><i style="font-size: 30px"
+                                    class="fa-solid fa-user"></i>
+                                <span style="font-size: 13px;">
                                     {{ Auth::user()->name }}
-                                    ({{ Auth::user()->email }})
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                    {{ __('Cerrar Sesion') }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Cerrar Sesion') }}
-                                    </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
+                        <li class="">
+                            <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('objetivos*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                class="nav-link {{ request()->is('objetivos*') ? '' : '' }}"
+                                href="{{ route('objetivos.index') }}"><i style="font-size: 25px"
+                                    class="fa-solid fa-list-check"></i>
+                                <span style="font-size: 15px;">{{ __('Mis Objetivos') }}</span></a>
+                        </li>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li> --}}
-                        @endguest
-                    </ul>
+                        @if ($accesos->contains('modulo', 'Colaboradores'))
+                            <li class="">
+                                <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('colaboradores*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                    class="nav-link {{ request()->is('objetivos*') ? '' : '' }}"
+                                    href="{{ route('colaboradores.index') }}"><i style="font-size: 25px"
+                                        class="fa-solid fa-users"></i>
+                                    <span style="font-size: 15px;">{{ __('Colaboradores') }}</span></a>
+                            </li>
+                        @endif
+
+                        @if ($accesos->contains('modulo', 'Supervisores'))
+                            <li class="">
+                                <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('supervisores*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                    class="nav-link" href="{{ route('supervisores.index') }}"><i style="font-size: 25px"
+                                        class="fa-solid fa-user-tie"></i>
+                                    <span style="font-size: 15px;">{{ __('Supervisores') }}</span></a>
+                            </li>
+                        @endif
+
+                        <li class="">
+                            <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('calificaciones*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                class="nav-link {{ request()->is('objetivos*') ? '' : '' }}"
+                                href="{{ route('calificaciones.index') }}"><i style="font-size: 25px"
+                                    class="fa-regular fa-calendar-check"></i>
+                                <span style="font-size: 15px;">{{ __('Calificar') }}</span></a>
+                        </li>
+
+                        <ul class=""
+                            style="display: flex; list-style: none; border-radius: 10px; box-shadow: 0 0 20px 1px rgba(0,0,0,.1); padding: 5px; flex-direction: column; border: solid 1px rgba(184, 184, 184, 0.369); gap: 5px;">
+                            @guest
+                            @else
+                                @if ($accesos->contains('modulo', 'Accesos'))
+                                    <li class="">
+                                        <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('accesos*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                            class="nav-link" href="{{ route('accesos.index') }}"><i style="font-size: 25px"
+                                                class="fa-solid fa-universal-access"></i>
+                                            <span style="font-size: 15px;">{{ __('Acessos') }}</span></a>
+                                    </li>
+                                @endif
+
+                                @if ($accesos->contains('modulo', 'Departamentos'))
+                                    <li class="">
+                                        <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('departamentos*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                            class="nav-link" href="{{ route('departamentos.index') }}"><i
+                                                style="font-size: 25px" class="fa-solid fa-house-flag"></i>
+
+                                            <span style="font-size: 15px;">{{ __('Departamentos') }}</span></a>
+                                    </li>
+                                @endif
+
+                                @if ($accesos->contains('modulo', 'Areas'))
+                                    <li class="">
+                                        <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('areas*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                            class="nav-link" href="{{ route('areas.index') }}"><i style="font-size: 25px"
+                                                class="fa-solid fa-table"></i>
+                                            <span style="font-size: 15px;">{{ __('Areas') }}</span></a>
+                                    </li>
+                                @endif
+
+                                @if ($accesos->contains('modulo', 'Puestos'))
+                                    <li class="">
+                                        <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(89, 89, 89); {{ request()->is('puestos*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                            class="nav-link" href="{{ route('puestos.index') }}"><i style="font-size: 25px"
+                                                class="fa-solid fa-table"></i>
+                                            <span style="font-size: 15px;">{{ __('Puestos') }}</span></a>
+                                    </li>
+                                @endif
+
+                                @if ($accesos->contains('modulo', 'Cargos'))
+                                    <li class="">
+                                        <a style="font-weight: 500; display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 10px; color: rgb(24, 56, 216); {{ request()->is('cargos*') ? 'background-color: rgb(0, 68, 255); color: white;' : '' }}"
+                                            class="nav-link" href="{{ route('cargos.index') }}"><i style="font-size: 25px"
+                                                class="fa-solid fa-address-card"></i>
+                                            <span style="font-size: 15px;">{{ __('Cargos') }}</span></a>
+                                    </li>
+                                @endif
+
+
+                            @endguest
+                        </ul>
+
+
+                    @endguest
+                </ul>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 </div>
             </div>
         </nav>
-        <main class="py-4 custom_container">
+        <main class="py-4 custom_container" style="padding-left: 250px">
             @yield('content')
         </main>
     </div>

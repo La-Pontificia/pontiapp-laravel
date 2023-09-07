@@ -33,20 +33,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Objetivo extends Model
 {
-
   static $rules = [
-    // 'id_colaborador' => 'required',
     'objetivo' => 'required',
     'descripcion' => 'required',
-    'porcentaje' => 'required',
+    'porcentaje' => 'required|numeric|gt:0|lte:100', // Asegura que sea numérico, mayor que 0 y menor o igual a 100
     'indicadores' => 'required',
-    // 'puntaje_01' => 'required',
-    // 'puntaje_02' => 'required',
-    // 'aprobado' => 'required',
-    // 'aprovado_ev_1' => 'required',
-    // 'aprovado_ev_2' => 'required',
     'año_actividad' => 'required',
-
   ];
 
   protected $perPage = 20;
