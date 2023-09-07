@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Calificacione;
 use App\Models\Colaboradore;
 use App\Models\Notificacione;
 use App\Models\Objetivo;
@@ -32,6 +33,7 @@ class ObjetivoController extends Controller
             abort(404);
         }
 
+
         $currentYear = date('Y');
         $years = range(2010, $currentYear);
 
@@ -59,7 +61,7 @@ class ObjetivoController extends Controller
     public function create()
     {
         $currentYear = date('Y');
-        $years = range(2010, $currentYear);
+        $years = range(2022, $currentYear);
 
         $objetivo = new Objetivo();
         return view('objetivo.create', compact('objetivo', 'years'));
@@ -88,25 +90,11 @@ class ObjetivoController extends Controller
         // Calcula la fecha de vencimiento 6 meses en el futuro
         $fecha_vencimiento = Carbon::now()->addMonths(6);
 
+
         // Combina los valores predeterminados con los datos del formulario validados
         $data = array_merge($validatedData, [
             'id_colaborador' => $colab->id,
             'fecha_vencimiento' => $fecha_vencimiento,
-
-            'puntaje_01' => 0,
-            'fecha_calificacion_1' => null,
-
-            'puntaje_02' => 0,
-            'fecha_calificacion_2' => null,
-
-            'aprovado_ev_1' => 0,
-            'fecha_aprobacion_1' => null,
-
-            'aprovado_ev_2' => 0,
-            'fecha_aprobacion_2' => null,
-
-            'aprobado' => 0,
-            'año_actividad' => null,
         ]);
 
 
@@ -114,18 +102,21 @@ class ObjetivoController extends Controller
         $objetivo = Objetivo::create($data);
 
 
-        $super = Supervisore::where([
-            'id_colaborador' => $colab->id,
-        ])->first();
+        // Crea una nueva Calificacion con los datos combinados
+        $super = Supervisore::where('id_colaborador', $colab->id)->first();
 
-        // Crea una notificación
-        $notificacion = new Notificacione([
-            'id_colaborador' => $super->id_supervisor,
+        if (!$colab) {
+            abort(404);
+        }
+
+        $calificacion =  new Calificacione([
             'id_objetivo' => $objetivo->id,
-            'mensaje' => 'Nuevo objetivo creado: ' . $objetivo->objetivo,
+            'id_supervisor' => $super->id_supervisor,
+            'aprobado' => 0,
+
         ]);
 
-        $notificacion->save();
+        $calificacion->save();
 
         return redirect()->route('objetivos.index')
             ->with('success', 'Objetivo created successfully.');

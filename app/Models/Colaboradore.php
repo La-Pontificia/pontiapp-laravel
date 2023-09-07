@@ -28,13 +28,11 @@ class Colaboradore extends Model
 {
 
     static $rules = [
-        'dni' => 'required',
+        'dni' => 'required|numeric|digits:8', // Asegura que sea numérico y tenga 8 dígitos
         'apellidos' => 'required',
         'nombres' => 'required',
-        // 'estado' => 'required',
         'id_cargo' => 'required',
         'id_puesto' => 'required',
-        // 'id_usuario' => 'required',
     ];
 
     protected $perPage = 20;

@@ -5,14 +5,18 @@
 @import "variables";
 
 // Bootstrap
+<<<<<<< HEAD
 // @import "bootstrap/scss/boyaotstrap";
+=======
+// @import "bootstrap/scss/bootstrap";
+>>>>>>> 349c5a7f32edb3ecfa9dc547375f820fa5570329
 
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 
 
 
 .custom_container {
-    max-width: 1500px;
+    max-width: 2000px;
     margin: auto;
     width: 100%;
     display: flex;
@@ -24,4 +28,12 @@
 
 * {
     font-size: 16px;
+}
+
+nav[role="navigation"] svg {
+    width: 20px;
+}
+
+nav[role="navigation"] p {
+    padding-top: 15px;
 }

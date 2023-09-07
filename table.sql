@@ -555,33 +555,31 @@ CREATE TABLE `dbo.EDA_Objetivo` (
     `Porcentaje` tinyint(4) DEFAULT NULL,
     `Indicadores_Objetivo` varchar(8) DEFAULT NULL,
     `Fecha_Vencimiento` varchar(10) DEFAULT NULL,
-    `Puntaje_01` decimal(3, 2) DEFAULT NULL,
-    `Fecha_Calificacion_01` varchar(0) DEFAULT NULL,
-    `Fecha_Aprobacion_01` varchar(0) DEFAULT NULL,
-    `Puntaje_02` decimal(3, 2) DEFAULT NULL,
-    `Fecha_Calificacion_02` varchar(0) DEFAULT NULL,
-    `Fecha_Aprobacion_02` varchar(0) DEFAULT NULL,
-    `Aprobado_Objetivo` INT DEFAULT NULL,
-    `Aprobado_Evaluacion_01` INT DEFAULT NULL,
-    `Aprobado_Evaluacion_02` INT DEFAULT NULL,
     `Ano_Actividad` smallint(6) DEFAULT NULL,
-    `Nro_Objetivo` tinyint(4) DEFAULT NULL
 );
 
 ----------------------------APROBACIONES
 CREATE TABLE `dbo.EDA_Aprobacion` (
-    `Id` INT NOT NULL AUTO_INCREMENT,
-    `Id_Objetivo` varchar(10) DEFAULT NULL,
-    `Aprobado` 1 DEFAULT NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `id_objetivo` varchar(10) DEFAULT NULL,
+    --
     `Fecha_Aprobacion` varchar(10) DEFAULT NULL,
-    `Fecha_Registro` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `Fecha_Modificacion` varchar(0) DEFAULT NULL,
+    `Aprobado` 1 DEFAULT NULL,
+    --
+    `Puntaje_01` decimal(3, 2) DEFAULT NULL,
     `Evaluacion_1` varchar(0) DEFAULT NULL,
-    `Aprobado_Supervisor_01` 1 DEFAULT NULL,
+    `Aprobado_Evaluacion_01` INT DEFAULT NULL,
+    `fecha_Calificacion_01` varchar(0) DEFAULT NULL,
+    `fecha_Aprobacion_01` varchar(0) DEFAULT NULL,
     `Cerrar_Eda_01` 1 DEFAULT NULL,
+    --
+    `Puntaje_02` decimal(3, 2) DEFAULT NULL,
     `Evaluacion_2` varchar(0) DEFAULT NULL,
-    `Aprobado_Supervisor_02` 1 DEFAULT NULL,
+    `Aprobado_Evaluacion_02` INT DEFAULT NULL,
+    `fecha_Calificacion_02` varchar(0) DEFAULT NULL,
+    `fecha_Aprobacion_02` varchar(0) DEFAULT NULL,
     `Cerrar_Eda_02` 1 DEFAULT NULL,
+    --
     `Cerrar_Eda_Final` 1 DEFAULT NULL,
     `Fecha_Eda_Final` varchar(0) DEFAULT NULL
 );
