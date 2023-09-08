@@ -13,34 +13,26 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-<<<<<<< HEAD
+
     {{-- <link rel="stylesheet" href="resources/css/app.css"> --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-=======
+
     <link rel="stylesheet" href="resources/css/app.css">
 
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css"
         integrity="sha384-3fdgwJw17Bi87e1QQ4fsLn4rUFqWw//KU0g8TvV6quvahISRewev6/EocKNuJmEw" crossorigin="anonymous"> --}}
->>>>>>> 349c5a7f32edb3ecfa9dc547375f820fa5570329
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/simplex/bootstrap.min.css"
-        integrity="sha384-FYrl2Nk72fpV6+l3Bymt1zZhnQFK75ipDqPXK0sOR0f/zeOSZ45/tKlsKucQyjSp" crossorigin="anonymous">
 
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/simplex/bootstrap.min.css"
+        integrity="sha384-FYrl2Nk72fpV6+l3Bymt1zZhnQFK75ipDqPXK0sOR0f/zeOSZ45/tKlsKucQyjSp" crossorigin="anonymous"> --}}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/litera/bootstrap.min.css" integrity="sha384-enpDwFISL6M3ZGZ50Tjo8m65q06uLVnyvkFO3rsoW0UC15ATBFz3QEhr3hmxpYsn" crossorigin="anonymous">
   {{-- //linea 23 eliminar dasboard// --}}
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
-<<<<<<< HEAD
-    <div id="app">
-        <nav style="position: sticky; top: 0; z-index: 999;"
-            class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="custom_container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    
-                    <img src="/elp.gif" style="width: 140px;" alt="">
-=======
+
     <div style="display: flex;" id="app">
         <nav style="position: fixed; top: 0; z-index: 999; width: 250px;"
             class=" navbar-expand-md navbar-light bg-white shadow-sm">
@@ -49,7 +41,7 @@
                     <span style="display: grid; width: 100%;">
                         <img src="/elp.gif" style="width: 140px; margin: 0 auto;" alt="">
                     </span>
->>>>>>> 349c5a7f32edb3ecfa9dc547375f820fa5570329
+
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
