@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Acceso;
 use App\Models\Cargo;
 use App\Models\Colaboradore;
+use App\Models\Departamento;
 use App\Models\Puesto;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,8 +24,12 @@ class ColaboradoreController extends Controller
      */
     public function index()
     {
+        $colaboradorForm = new Colaboradore();
+        $puestos = Puesto::pluck('nombre_puesto', 'id');
+        $cargos = Cargo::pluck('nombre_cargo', 'id');
+
         $colaboradores = Colaboradore::paginate();
-        return view('colaboradore.index', compact('colaboradores'))
+        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos'))
             ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
 
@@ -50,6 +55,7 @@ class ColaboradoreController extends Controller
     public function store(Request $request)
     {
         request()->validate(Colaboradore::$rules);
+
         // Crear el usuario en la tabla users
         $user = User::create([
             'name' => $request->input('nombres'),
@@ -96,17 +102,17 @@ class ColaboradoreController extends Controller
             'id_colaborador' => $colaborador->id,
         ]);
 
-        $user = Acceso::create([
-            'modulo' => 'Objetivos',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
+        // $user = Acceso::create([
+        //     'modulo' => 'Objetivos',
+        //     'acceso' => 0,
+        //     'id_colaborador' => $colaborador->id,
+        // ]);
 
-        $user = Acceso::create([
-            'modulo' => 'Mis objetivos',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
+        // $user = Acceso::create([
+        //     'modulo' => 'Mis objetivos',
+        //     'acceso' => 0,
+        //     'id_colaborador' => $colaborador->id,
+        // ]);
 
         $user = Acceso::create([
             'modulo' => 'Accesos',
@@ -126,11 +132,11 @@ class ColaboradoreController extends Controller
             'id_colaborador' => $colaborador->id,
         ]);
 
-        $user = Acceso::create([
-            'modulo' => 'Mantenimiento',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
+        // $user = Acceso::create([
+        //     'modulo' => 'Mantenimiento',
+        //     'acceso' => 0,
+        //     'id_colaborador' => $colaborador->id,
+        // ]);
 
         return redirect()->route('colaboradores.index')
             ->with('success', 'Colaboradore created successfully.');
