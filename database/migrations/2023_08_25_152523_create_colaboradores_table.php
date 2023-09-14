@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('colaboradores', function (Blueprint $table) {
             $table->id();
+
             $table->string('dni', 8)->required();
             $table->string('apellidos', 40);
             $table->string('nombres', 40);
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->foreign('id_cargo')->references('id')->on('cargos')->onDelete('cascade');
             $table->foreign('id_puesto')->references('id')->on('puestos')->onDelete('cascade');
             $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
+            
             $table->timestamps();
         });
     }

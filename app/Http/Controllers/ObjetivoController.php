@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Calificacione;
 use App\Models\Colaboradore;
-use App\Models\Notificacione;
 use App\Models\Objetivo;
 use App\Models\Supervisore;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -23,34 +20,10 @@ class ObjetivoController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        if (!$user) {
-            abort(404);
-        }
-
-        $colab = Colaboradore::where('id_usuario', $user->id)->first();
-        if (!$colab) {
-            abort(404);
-        }
-
-
-        $currentYear = date('Y');
-        $years = range(2010, $currentYear);
-
-        $objetivos = Objetivo::where('id_colaborador', $colab->id)->paginate();
-        // Crea una nueva instancia de Objetivo para el formulario
-
-        // Verifica si hay objetivos no aprobados
-        $objetivosNoAprobados = $objetivos->where('aprobado', 0)->count();
-
-        // Decide si mostrar o no el formulario en función de la condición
-        $mostrarFormulario = $objetivosNoAprobados === 0;
-
-        $objetivoForm = new Objetivo();
-        // dd($mostrarFormulario);
-
-        return view('objetivo.index', compact('objetivos', 'objetivoForm', 'years', 'mostrarFormulario'))
-            ->with('i', ($objetivos->currentPage() - 1) * $objetivos->perPage());
+        $objetivos = Objetivo::paginate();
+        $objetivoNewForm = new Objetivo();
+        return view('objetivo.index', compact('objetivos', 'objetivoNewForm'))
+            ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
     }
 
     /**
@@ -60,11 +33,8 @@ class ObjetivoController extends Controller
      */
     public function create()
     {
-        $currentYear = date('Y');
-        $years = range(2022, $currentYear);
-
         $objetivo = new Objetivo();
-        return view('objetivo.create', compact('objetivo', 'years'));
+        return view('objetivo.create', compact('objetivo'));
     }
 
     /**
@@ -83,50 +53,42 @@ class ObjetivoController extends Controller
             abort(404);
         }
         $id = $user->id;
+
+        // obtenemos el colaborador por id de usuario
         $colab = Colaboradore::where([
             'id_usuario' => $id,
         ])->first();
 
-        // Calcula la fecha de vencimiento 6 meses en el futuro
-        $fecha_vencimiento = Carbon::now()->addMonths(6);
+        if (!$colab) {
+            abort(404);
+        }
+
+        // obtenemos el supervisor del colaborador
+        $super = Supervisore::where('id_colaborador', $colab->id)->first();
 
 
-        // Combina los valores predeterminados con los datos del formulario validados
+        if (!$super) {
+            abort(404);
+        }
+
+        // creamos una nueva data
         $data = array_merge($validatedData, [
             'id_colaborador' => $colab->id,
-            'fecha_vencimiento' => $fecha_vencimiento,
+            'id_supervisor' => $super->id,
+            'estado' => 1,
+            'eva' => 1,
+            'año' => '2023',
+            'notify_super' => 1,
+            'notify_colab' => 0,
         ]);
 
 
         // Crea un nuevo Objetivo con los datos combinados
         $objetivo = Objetivo::create($data);
 
-
-        // Crea una nueva Calificacion con los datos combinados
-        $super = Supervisore::where('id_colaborador', $colab->id)->first();
-
-        if (!$colab) {
-            abort(404);
-        }
-
-        $calificacion =  new Calificacione([
-            'id_objetivo' => $objetivo->id,
-            'id_supervisor' => $super->id_supervisor,
-            'aprobado' => 0,
-
-        ]);
-
-        $calificacion->save();
-
         return redirect()->route('objetivos.index')
-            ->with('success', 'Objetivo created successfully.');
+            ->with('success', 'Objetivo creado correctamente');
     }
-
-
-
-
-
-
 
     /**
      * Display the specified resource.

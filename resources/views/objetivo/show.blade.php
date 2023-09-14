@@ -21,8 +21,12 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong> Id Colaborador:</strong>
+                            <strong>Id Colaborador:</strong>
                             {{ $objetivo->id_colaborador }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Id Supervisor:</strong>
+                            {{ $objetivo->id_supervisor }}
                         </div>
                         <div class="form-group">
                             <strong>Objetivo:</strong>
@@ -33,56 +37,56 @@
                             {{ $objetivo->descripcion }}
                         </div>
                         <div class="form-group">
-                            <strong>Porcentaje:</strong>
-                            {{ $objetivo->porcentaje }}
-                        </div>
-                        <div class="form-group">
                             <strong>Indicadores:</strong>
                             {{ $objetivo->indicadores }}
                         </div>
                         <div class="form-group">
-                            <strong>Fecha Vencimiento:</strong>
-                            {{ $objetivo->fecha_vencimiento }}
+                            <strong>Porcentaje:</strong>
+                            {{ $objetivo->porcentaje }}
                         </div>
                         <div class="form-group">
-                            <strong>Puntaje 01:</strong>
-                            {{ $objetivo->puntaje_01 }}
+                            <strong>Estado:</strong>
+                            {{ $objetivo->estado }}
                         </div>
                         <div class="form-group">
-                            <strong>Fecha Calificacion 1:</strong>
-                            {{ $objetivo->fecha_calificacion_1 }}
+                            <strong>Estado Fecha:</strong>
+                            {{ $objetivo->estado_fecha }}
                         </div>
                         <div class="form-group">
-                            <strong>Fecha Aprobacion 1:</strong>
-                            {{ $objetivo->fecha_aprobacion_1 }}
+                            <strong>Feedback:</strong>
+                            {{ $objetivo->feedback }}
                         </div>
                         <div class="form-group">
-                            <strong>Puntaje 02:</strong>
-                            {{ $objetivo->puntaje_02 }}
+                            <strong>Feedback Fecha:</strong>
+                            {{ $objetivo->feedback_fecha }}
                         </div>
                         <div class="form-group">
-                            <strong>Fecha Calificacion 2:</strong>
-                            {{ $objetivo->fecha_calificacion_2 }}
+                            <strong>Nota Colab:</strong>
+                            {{ $objetivo->nota_colab }}
                         </div>
                         <div class="form-group">
-                            <strong>Fecha Aprobacion 2:</strong>
-                            {{ $objetivo->fecha_aprobacion_2 }}
+                            <strong>Nota Super:</strong>
+                            {{ $objetivo->nota_super }}
                         </div>
                         <div class="form-group">
-                            <strong>Aprobado:</strong>
-                            {{ $objetivo->aprobado }}
+                            <strong>Nota Super Fecha:</strong>
+                            {{ $objetivo->nota_super_fecha }}
                         </div>
                         <div class="form-group">
-                            <strong>Aprovado Ev 1:</strong>
-                            {{ $objetivo->aprovado_ev_1 }}
+                            <strong>Eva:</strong>
+                            {{ $objetivo->eva }}
                         </div>
                         <div class="form-group">
-                            <strong>Aprovado Ev 2:</strong>
-                            {{ $objetivo->aprovado_ev_2 }}
+                            <strong>Año:</strong>
+                            {{ $objetivo->año }}
                         </div>
                         <div class="form-group">
-                            <strong>Año Actividad:</strong>
-                            {{ $objetivo->año_actividad }}
+                            <strong>Notify Super:</strong>
+                            {{ $objetivo->notify_super }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Notify Colab:</strong>
+                            {{ $objetivo->notify_colab }}
                         </div>
 
                     </div>

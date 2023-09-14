@@ -31,10 +31,9 @@ Route::resource('/accesos', App\Http\Controllers\AccesoController::class);
 Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class)->middleware('authMiddleware');
 Route::resource('/calificaciones', App\Http\Controllers\CalificacioneController::class)->middleware('authMiddleware');
 
+
 Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController@getAccesosColaborador')->name('colaborador.accesos');
-
 Route::get('/colaboradores/supervisor/{id}', 'App\Http\Controllers\SupervisoreController@getSupervisorDeColaborador')->name('colaborador.supervisor');
-
 
 
 Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disableAccess')

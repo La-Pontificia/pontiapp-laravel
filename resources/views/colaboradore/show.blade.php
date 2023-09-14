@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('template_title')
-    {{ $colaboradore->name ?? "{{ __('Show') Colaboradore" }}
+    {{-- {{ $colaboradore->name ?? "{{ __('Show') Colaboradore" }} --}}
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
+    {{-- <section class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="card-body">
-                        
+
                         <div class="form-group">
                             <strong>Dni:</strong>
                             {{ $colaboradore->dni }}
@@ -53,5 +53,5 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 @endsection
