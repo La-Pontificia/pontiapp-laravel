@@ -314,7 +314,7 @@
 
         {!! $objetivos->links() !!}
 
-        <div class="fixed z-40 bg-neutral-500/40 inset-0 grid place-content-center">
+        {{-- <div class="fixed z-40 bg-neutral-500/40 inset-0 grid place-content-center">
             <div class="w-[600px] bg-white p-4 rounded-2xl">
                 <header class="pb-1">
                     <h1 class="font-bold text-2xl">Detalles del objetivo</h1>
@@ -349,6 +349,6 @@
                         class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-base px-5 py-2.5 text-center mr-2 mb-2">Aceptar</button>
                 </footer>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection
