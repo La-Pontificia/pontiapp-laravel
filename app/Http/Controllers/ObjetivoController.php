@@ -22,7 +22,10 @@ class ObjetivoController extends Controller
     {
         $objetivos = Objetivo::paginate();
         $objetivoNewForm = new Objetivo();
-        return view('objetivo.index', compact('objetivos', 'objetivoNewForm'))
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+        $totalNota = $objetivos->sum('nota_super');
+
+        return view('objetivo.index', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota'))
             ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
     }
 
@@ -47,6 +50,13 @@ class ObjetivoController extends Controller
     {
         // Valida los datos del formulario
         $validatedData = $request->validate(Objetivo::$rules);
+
+        $objetivos = Objetivo::paginate();
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+
+        if (($totalPorcentaje + $validatedData['porcentaje']) > 100) {
+            return back()->withErrors(['porcentaje' => 'La suma total de porcentaje excede 100'])->withInput();
+        }
 
         $user = auth()->user();
         if (!$user) {

@@ -1,6 +1,6 @@
-{{-- @extends('layouts.app')
+@extends('layouts.app')
 
-@section('content')
+{{-- @section('content')
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -43,7 +43,8 @@
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
-                                    @enderror@error('password')
+                                    @enderror
+                                    @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -85,129 +86,92 @@
     </div>
 @endsection --}}
 
-@extends('layouts.app')
-<section class="h-screen">
-    <div class="h-full">
-      <!-- Left column container with background-->
-      <div class="g-6 flex h-full max-w-7xl mx-auto flex-wrap items-center justify-center lg:justify-between">
-        <div
-          class="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
-          <img
-            src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-            class="w-full"
-            alt="Sample image" />
-        </div>
-        <!-- Right column container -->
-        <div class="mb-10 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
-          <form class="p-3 rounded-xl bg-neutral-50 border">
-            <!--Sign in section-->
-            <div
-              class="flex flex-row items-center justify-center lg:justify-start">
-              <p class="mb-0 mr-4 text-lg">Sign in with</p>
-              <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="mx-auto h-3.5 w-3.5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24">
-                  
-                    
-                </svg>
-              
-            </div>
-            
-  
-            <!-- Separator between social media sign in and email/password sign in -->
-            
-  
-            <!-- Email input -->
-            <div class="relative mb-6" data-te-input-wrapper-init>
-              <input
-                type="text"
-                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-100 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                id="exampleFormControlInput2"
-                placeholder="Email address" />
-              <label
-                for="exampleFormControlInput2"
-                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-                >
-              </label>
-              @error('email')
-              <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-              </span>
-          @enderror
-          @error('email')
-                 <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                        </span>
-                             @enderror
+@section('content')
+    <section class="">
+        <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
+            <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center items-center flex-1">
+                <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
+                    <div>
+                        <img src="/elp.gif" class="w-52 mx-auto" />
+                    </div>
+                    <div class="mt-4 flex flex-col items-center">
+                        <h1
+                            class="text-2xl tracking-tighter xl:text-4xl bg-gradient-to-br from-red-600 to-yellow-400 text-transparent bg-clip-text font-extrabold">
+                            Iniciar Sesión
+                        </h1>
+                        <div class="w-full flex-1 mt-4">
+                            <div class="my-4 border-b text-center">
+                                <div
+                                    class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
+                                    Inicia sesion con tu cuenta
+                                </div>
+                            </div>
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
+                                <div class="mx-auto max-w-md">
 
-            </div>
-  
-            <!-- Password input -->
-            <div class="relative mb-6" data-te-input-wrapper-init>
-              <input
-                type="password"
-                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                id="exampleFormControlInput22"
-                placeholder="Password" />
-              <label
-                for="exampleFormControlInput22"
-                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
-                >
-              </label>
-              @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                                </span>
+                                    <input required autofocus id="email"
+                                        class="w-full px-5 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-base focus:outline-none focus:border-gray-400 focus:bg-white"
+                                        type="number" name="email" value="{{ old('email') }}"
+                                        placeholder="Nombre de usuario" />
+
+                                    @error('email')
+                                        <span class="text-sm px-2 text-red-500" role="alert">
+                                            {{ $message }}
+                                        </span>
                                     @enderror
-            </div>
-  
-            <div class="mb-6 flex items-center justify-between">
-              <!-- Remember me checkbox -->
-              <div class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
-                <input
-                  class="relative float-left -ml-[1.5rem] mr-[6px] mt-[0.15rem] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
-                  type="checkbox"
-                  value=""
-                  id="exampleCheck2" />
-                <label
-                  class="inline-block pl-[0.15rem] hover:cursor-pointer"
-                  for="exampleCheck2">
-                  Remember me
-                </label>
-              </div>
-  
-              <!--Forgot password link-->
-              <a href="#!">Forgot password?</a>
 
-              
-            </div>
-  
-            <!-- Login button -->
-            <div class="text-center lg:text-left">
-                <div class="flex justify-center">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                        Entrar
-                    </button>
+                                    <input required
+                                        class="w-full px-5 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-base focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                                        type="password" name="password" placeholder="Contraseña" />
 
-                    @if (Route::has('password.request'))
-                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                        {{ __('¿Olvidaste tu contraseña?') }}
-                    </a>
-                @endif
+                                    @error('password')
+                                        <span class="text-sm px-2 text-red-500" role="alert">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
+                                    <button type="submit"
+                                        class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                            </g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path
+                                                    d="M20.1633 4.09295L15.0612 2.17072C14.1429 1.86721 13.2245 1.96838 12.5102 2.47423C12.2041 2.67657 12 2.87891 11.7959 3.08125H7.91837C6.38776 3.08125 5.06122 4.39646 5.06122 5.91401V6.9257C5.06122 7.33038 5.36735 7.73506 5.87755 7.73506C6.38776 7.73506 6.69388 7.33038 6.69388 6.9257V5.91401C6.69388 5.20582 7.30612 4.69997 7.91837 4.69997H11.2857V19.3696H7.91837C7.20408 19.3696 6.69388 18.7626 6.69388 18.1555V17.1439C6.69388 16.7392 6.38776 16.3345 5.87755 16.3345C5.36735 16.3345 5.06122 16.638 5.06122 17.0427V18.0544C5.06122 19.5719 6.28572 20.8871 7.91837 20.8871H11.7959C12 21.0895 12.2041 21.393 12.4082 21.4942C12.9184 21.7977 13.4286 22 14.0408 22C14.3469 22 14.7551 21.8988 15.0612 21.7977L20.1633 19.8754C21.2857 19.4708 22 18.4591 22 17.245V6.62219C22 5.50933 21.1837 4.39646 20.1633 4.09295Z"
+                                                    fill="currentColor"></path>
+                                                <path
+                                                    d="M6.38776 13.5017C6.08163 13.8052 6.08163 14.3111 6.38776 14.6146C6.4898 14.7158 6.69388 14.8169 6.89796 14.8169C7.10204 14.8169 7.30612 14.7158 7.40816 14.6146L9.44898 12.5912C9.55102 12.49 9.55102 12.3889 9.65306 12.3889C9.65306 12.2877 9.7551 12.1865 9.7551 12.0854C9.7551 11.9842 9.7551 11.883 9.65306 11.7819C9.65306 11.6807 9.55102 11.5795 9.44898 11.5795L7.40816 9.55612C7.10204 9.25261 6.59184 9.25261 6.28571 9.55612C5.97959 9.85963 5.97959 10.3655 6.28571 10.669L7 11.3772H2.81633C2.40816 11.3772 2 11.6807 2 12.1865C2 12.6924 2.30612 12.9959 2.81633 12.9959H7.10204L6.38776 13.5017Z"
+                                                    fill="currentColor"></path>
+                                            </g>
+                                        </svg>
+                                        <span class="ml-3">
+                                            Entrar
+                                        </span>
+                                    </button>
+
+                                    <p class="mt-6 text-xs text-gray-600 text-center">
+                                        I agree to abide by templatana's
+                                        <a href="#" class="border-b border-gray-500 border-dotted">
+                                            Terms of Service
+                                        </a>
+                                        and its
+                                        <a href="#" class="border-b border-gray-500 border-dotted">
+                                            Privacy Policy
+                                        </a>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                
-  
-              <!-- Register link -->
-              <p class="mb-0 mt-2 pt-1 text-sm font-semibold">
-                
-                
-                
-              </p>
+                <div class="flex-1 bg-indigo-100 h-full text-center hidden lg:flex">
+                    <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
+                        style="background-image: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg');">
+                    </div>
+                </div>
             </div>
-          </form>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
+@endsection
