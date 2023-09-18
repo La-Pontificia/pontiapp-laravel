@@ -20,7 +20,20 @@ class ObjetivoController extends Controller
      */
     public function index()
     {
-        $objetivos = Objetivo::paginate();
+
+        $user = auth()->user();
+        if (!$user) {
+            abort(404);
+        }
+
+        $id = $user->id;
+
+        // obtenemos el colaborador por id de usuario
+        $colab = Colaboradore::where([
+            'id_usuario' => $id,
+        ])->first();
+
+        $objetivos = Objetivo::where('id_colaborador', $colab->id)->paginate();
         $objetivoNewForm = new Objetivo();
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota_super');
@@ -28,6 +41,44 @@ class ObjetivoController extends Controller
         return view('objetivo.index', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota'))
             ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
     }
+
+
+    public function indexCalificar(Request $request)
+    {
+        $idColaborador = request('id_colaborador');
+
+
+        $user = auth()->user();
+        if (!$user) {
+            abort(404);
+        }
+        $id = $user->id;
+
+        // obtenemos el colaborador por id de usuario
+        $colab = Colaboradore::where([
+            'id_usuario' => $id,
+        ])->first();
+
+        // obtenemos el supervisor del colaborador
+        // $colab_a_supervisar = Supervisore::where('id_supervisor', $colab->id);
+        $colab_a_supervisar = Supervisore::where('id_supervisor', $colab->id)->paginate();
+
+        $objetivos = null;
+
+        if ($idColaborador) {
+            $objetivos = Objetivo::where('id_supervisor', $colab->id)->where('id_colaborador', $idColaborador)->paginate();
+        } else {
+            $objetivos = Objetivo::where('id_supervisor', $colab->id)->paginate();
+        }
+
+        $objetivoNewForm = new Objetivo();
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+        $totalNota = $objetivos->sum('nota_super');
+
+        return view('objetivo.calificar', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota', 'colab_a_supervisar', 'idColaborador'))
+            ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -48,15 +99,7 @@ class ObjetivoController extends Controller
      */
     public function store(Request $request)
     {
-        // Valida los datos del formulario
-        $validatedData = $request->validate(Objetivo::$rules);
 
-        $objetivos = Objetivo::paginate();
-        $totalPorcentaje = $objetivos->sum('porcentaje');
-
-        if (($totalPorcentaje + $validatedData['porcentaje']) > 100) {
-            return back()->withErrors(['porcentaje' => 'La suma total de porcentaje excede 100'])->withInput();
-        }
 
         $user = auth()->user();
         if (!$user) {
@@ -68,6 +111,17 @@ class ObjetivoController extends Controller
         $colab = Colaboradore::where([
             'id_usuario' => $id,
         ])->first();
+
+        // Valida los datos del formulario
+        $validatedData = $request->validate(Objetivo::$rules);
+
+        $objetivos = Objetivo::where('id_colaborador', $colab->id)->paginate();
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+
+        if (($totalPorcentaje + $validatedData['porcentaje']) > 100) {
+            return back()->withErrors(['porcentaje' => 'La suma total de porcentaje excede 100'])->withInput();
+        }
+
 
         if (!$colab) {
             abort(404);
@@ -84,7 +138,7 @@ class ObjetivoController extends Controller
         // creamos una nueva data
         $data = array_merge($validatedData, [
             'id_colaborador' => $colab->id,
-            'id_supervisor' => $super->id,
+            'id_supervisor' => $super->id_supervisor,
             'estado' => 1,
             'eva' => 1,
             'año' => '2023',

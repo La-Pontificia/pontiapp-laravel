@@ -22,6 +22,9 @@ VALUES
     ('C005', 'ASISTENTE', NOW()),
     ('C006', 'ANALISTA', NOW());
 
+
+
+
 INSERT INTO
     `departamentos` (
         `codigo_departamento`,

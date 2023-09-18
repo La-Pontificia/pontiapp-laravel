@@ -217,7 +217,7 @@
                                 <span class="ml-3">Objetivos</span>
                             </a>
                         </li>
-
+                        {{-- 
 
                         <li>
                             <a href="{{ route('calificaciones.index') }}"
@@ -232,7 +232,7 @@
                                 <span
                                     class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">1</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="#"
                                 class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -294,8 +294,8 @@
                                         d="M18 5H0v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5Zm-7.258-2L9.092.8a2.009 2.009 0 0 0-1.6-.8H2.049a2 2 0 0 0-2 2v1h10.693Z" />
                                 </svg>
                                 <span class="flex-1 ml-3 text-left whitespace-nowrap">Mantenimiento</span>
-                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 10 6">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 10 6">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2" d="m1 1 4 4 4-4" />
                                 </svg>
