@@ -45,25 +45,50 @@
                             <td class="px-6 py-4">{{ ++$i }}</td>
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $supervisore->colaboradore->nombres }}
-                                {{ $supervisore->colaboradore->apellidos }}
+                                <div clas>
+                                    <h3>
+                                        {{ $supervisore->colaboradore->nombres }}
+                                        {{ $supervisore->colaboradore->apellidos }}
+                                    </h3>
+                                    <div>
+                                        <span class="text-xs text-neutral-600 capitalize">
+                                            {{ mb_strtolower($supervisore->colaboradore->puesto->nombre_puesto, 'UTF-8') }}
+                                            -
+                                            {{ mb_strtolower($supervisore->colaboradore->puesto->departamento->area->nombre_area, 'UTF-8') }}
+                                        </span>
+                                    </div>
+                                </div>
                             </th>
-                            <td class="px-6 py-4">
-                                {{ $supervisore->supervisores->nombres }}
-                                {{ $supervisore->supervisores->apellidos }}
+                            <td class="px-6 py-4 font-medium text-gray-900">
+                                <h3>
+                                    {{ $supervisore->supervisores->nombres }}
+                                    {{ $supervisore->supervisores->apellidos }}
+                                </h3>
+                                <span class="text-xs text-neutral-600 capitalize">
+                                    {{ mb_strtolower($supervisore->supervisores->puesto->nombre_puesto, 'UTF-8') }}
+                                    -
+                                    {{ mb_strtolower($supervisore->supervisores->puesto->departamento->area->nombre_area, 'UTF-8') }}
+                                </span>
                             </td>
                             <td>
                                 <form class="flex gap-0" action="{{ route('supervisores.destroy', $supervisore->id) }}"
                                     method="POST">
                                     <a class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
                                         href="{{ route('supervisores.edit', $supervisore->id) }}"><i
-                                            class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                            class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                        class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"><i
-                                            class="fa fa-fw fa-trash"></i>
-                                        {{ __('Delete') }}</button>
+                                    <a href="#"
+                                        class="text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-base px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                                        onclick="event.preventDefault(); confirm('¿Estás seguro de que deseas eliminar este registro?') && document.getElementById('delete-form-{{ $supervisore->id }}').submit();">
+                                        <i class="fa fa-fw fa-trash"></i>
+                                        {{ __('Eliminar') }}
+                                    </a>
+                                </form>
+                                <form id="delete-form-{{ $supervisore->id }}" class="hidden"
+                                    action="{{ route('supervisores.destroy', $supervisore->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
                                 </form>
                             </td>
                         </tr>

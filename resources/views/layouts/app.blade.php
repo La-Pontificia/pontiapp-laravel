@@ -117,7 +117,7 @@
                                 <span class="flex-1 ml-3 whitespace-nowrap">Accesos</span>
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="{{ route('accesos.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('accesos*') ? 'text-white bg-zinc-700' : '' }}">
                                 <svg class="w-6 h-6 text-gray-500 group-hover:text-white" aria-hidden="true"
@@ -128,7 +128,7 @@
                                 </svg>
                                 <span class="flex-1 ml-3 whitespace-nowrap">Usuarios</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="border-t border-t-neutral-700 pt-2 mt-2">
                             <a href="{{ route('areas.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('areas*') ? 'text-white bg-zinc-700' : '' }}">
