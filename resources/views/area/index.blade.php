@@ -1,10 +1,7 @@
-@extends('layouts.maintenance')
+@extends('layouts.sidebar')
 
-@section('template_title')
-    Area
-@endsection
 
-@section('content-2')
+@section('content-sidebar')
     <div class="container-fluid">
         <div class="row">
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

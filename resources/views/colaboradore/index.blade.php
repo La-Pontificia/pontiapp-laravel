@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.sidebar')
 
 @section('template_title')
     Colaboradores
 @endsection
 
-@section('content')
+@section('content-sidebar')
     <div class="p-5">
         @if ($message = Session::get('success'))
             <div id="alert-1"

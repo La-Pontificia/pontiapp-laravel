@@ -1,10 +1,6 @@
-@extends('layouts.maintenance')
+@extends('layouts.sidebar')
 
-@section('template_title')
-    Acceso
-@endsection
-
-@section('content-2')
+@section('content-sidebar')
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">

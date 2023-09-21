@@ -89,20 +89,20 @@
 @section('content')
     <section class="">
         <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-            <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center items-center flex-1">
+            <div class="bg-white shadow sm:rounded-lg flex justify-center items-center flex-1">
                 <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
                     <div>
-                        <img src="/elp.gif" class="w-52 mx-auto" />
+                        <img src="/elp.gif" class="w-60 mx-auto" />
                     </div>
                     <div class="mt-4 flex flex-col items-center">
-                        <h1
+                        {{-- <h1
                             class="text-2xl tracking-tighter xl:text-4xl bg-gradient-to-br from-red-600 to-yellow-400 text-transparent bg-clip-text font-extrabold">
                             Iniciar Sesión
-                        </h1>
+                        </h1> --}}
                         <div class="w-full flex-1 mt-4">
                             <div class="my-4 border-b text-center">
                                 <div
-                                    class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
+                                    class="leading-none px-2 inline-block text-lg text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
                                     Inicia sesion con tu cuenta
                                 </div>
                             </div>

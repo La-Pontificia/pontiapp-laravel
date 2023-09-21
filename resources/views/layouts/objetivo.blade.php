@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.sidebar')
 
-@section('content')
-    <div class="mx-auto h-full flex flex-col w-full p-5">
+@section('content-sidebar')
+    <div class="h-full flex flex-col w-full">
         <header>
             <h1 class="text-4xl font-bold tracking-tighter">Objetivos</h1>
         </header>

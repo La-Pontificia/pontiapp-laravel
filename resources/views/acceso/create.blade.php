@@ -1,10 +1,10 @@
-@extends('layouts.maintenance')
+@extends('layouts.sidebar')
 
 @section('template_title')
     {{ __('Create') }} Acceso
 @endsection
 
-@section('content')
+@section('content-sidebar')
     <section class="content container-fluid">
         <div class="row">
             <div class="col-md-12">

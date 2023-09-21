@@ -1,6 +1,6 @@
-@extends('layouts.maintenance')
+@extends('layouts.sidebar')
 
-@section('content-2')
+@section('content-sidebar')
     <div class="container-fluid">
         <div class="row">
 

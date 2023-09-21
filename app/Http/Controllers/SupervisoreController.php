@@ -22,7 +22,10 @@ class SupervisoreController extends Controller
     public function index()
     {
         $supervisores = Supervisore::paginate();
-        return view('supervisore.index', compact('supervisores'))
+        $colaboradores = Colaboradore::paginate();
+        $idColabSelected = 0;
+
+        return view('supervisore.index', compact('supervisores', 'colaboradores', 'idColabSelected'))
             ->with('i', (request()->input('page', 1) - 1) * $supervisores->perPage());
     }
 

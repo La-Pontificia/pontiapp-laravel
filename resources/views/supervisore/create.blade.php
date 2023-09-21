@@ -1,10 +1,5 @@
-@extends('layouts.app')
-
-@section('template_title')
-    {{ __('Create') }} Supervisore
-@endsection
-
-@section('content')
+@extends('layouts.sidebar')
+@section('content-sidebar')
     <section class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -16,7 +11,8 @@
                         <span class="card-title">{{ __('Create') }} Supervisore</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('supervisores.store') }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('supervisores.store') }}" role="form"
+                            enctype="multipart/form-data">
                             @csrf
 
                             @include('supervisore.form')
