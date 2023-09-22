@@ -22,7 +22,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cerrar</button>
                         </div>
                     </div>
                 </div>
@@ -48,28 +48,35 @@
                         </div>
                     @endif
 
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="thead">
-                                    <tr>
-                                        <th>N°</th>
-                                        <th>Codigo</th>
-                                        <th>Nombre</th>
-                                        <th>Registro</th>
-                                        <th>Actualización</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($areas as $area)
-                                        <tr>
-                                            <td>{{ ++$i }}</td>
-                                            <td>{{ $area->codigo_area }}</td>
-                                            <td>{{ $area->nombre_area }}</td>
-                                            <td>{{ $area->created_at }}</td>
-                                            <td>{{ $area->updated_at }}</td>
-                                            <td>
+
+                    
+
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Codigo
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Nombre
+                                    </th>
+                                    
+                                    <th scope="col" class="px-6 py-3">
+                                        <span class="sr-only">Edit</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($areas as $area)
+                                        <tr class="border-b even:bg-gray-100
+                                         bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            {{-- <td>{{ ++$i }}</td> --}}
+                                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $area->codigo_area }}</td>
+                                            <td class="px-6 py-4">{{ $area->nombre_area }}</td>
+                                            {{-- <td class="px-6 py-4">{{ $area->created_at }}</td>
+                                            <td class="px-6 py-4">{{ $area->updated_at }}</td> --}}
+                                            <td class="px-6 py-4">
                                                 <form action="{{ route('areas.destroy', $area->id) }}" method="POST">
                                                     <a class="btn btn-sm btn-success"
                                                         href="{{ route('areas.edit', $area->id) }}"><i
@@ -82,10 +89,14 @@
                                             </td>
                                         </tr>
                                     @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                
+                                
+                            </tbody>
+                        </table>
                     </div>
+
+
+                    
                 </div>
                 {!! $areas->links() !!}
             </div>
