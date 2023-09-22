@@ -100,7 +100,6 @@ class ObjetivoController extends Controller
     public function store(Request $request)
     {
 
-
         $user = auth()->user();
         if (!$user) {
             abort(404);
@@ -118,10 +117,10 @@ class ObjetivoController extends Controller
         $objetivos = Objetivo::where('id_colaborador', $colab->id)->paginate();
         $totalPorcentaje = $objetivos->sum('porcentaje');
 
+
         if (($totalPorcentaje + $validatedData['porcentaje']) > 100) {
             return back()->withErrors(['porcentaje' => 'La suma total de porcentaje excede 100'])->withInput();
         }
-
 
         if (!$colab) {
             abort(404);
@@ -129,7 +128,6 @@ class ObjetivoController extends Controller
 
         // obtenemos el supervisor del colaborador
         $super = Supervisore::where('id_colaborador', $colab->id)->first();
-
 
         if (!$super) {
             abort(404);
@@ -144,11 +142,12 @@ class ObjetivoController extends Controller
             'año' => '2023',
             'notify_super' => 1,
             'notify_colab' => 0,
+            'porcentaje' =>  $request->input('porcentaje'),
+            'porcentaje_inicial' => $request->input('porcentaje')
         ]);
 
-
         // Crea un nuevo Objetivo con los datos combinados
-        $objetivo = Objetivo::create($data);
+        Objetivo::create($data);
 
         return redirect()->route('objetivos.index')
             ->with('success', 'Objetivo creado correctamente');

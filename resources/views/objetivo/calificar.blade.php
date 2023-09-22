@@ -186,10 +186,10 @@
                                 data-modal-show="editObjModal{{ $objetivo->id }}"
                                 class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Calificar</button>
 
-                            <!-- Main modal -->
+                            <!-- MODAL CALIFICATE -->
                             <div id="editObjModal{{ $objetivo->id }}" tabindex="-1" aria-hidden="true"
                                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative max-w-4xl w-full max-h-full">
+                                <div class="relative max-w-lg w-full max-h-full">
                                     <!-- Modal content -->
                                     <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                         <button type="button"
@@ -200,36 +200,33 @@
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                                     stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                             </svg>
-                                            <span class="sr-only">Close modal</span>
                                         </button>
                                         @includeif('partials.errors')
                                         <div class="px-4 py-4">
-                                            <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                                                Editar objetivo</h3>
+                                            <header class="border-b">
+                                                <h3
+                                                    class="mb-4 text-center text-xl opacity-70 font-medium text-gray-900 dark:text-white">
+                                                    Calificar objetivo</h3>
+                                            </header>
                                             @includeif('partials.errors')
                                             <form method="POST" action="{{ route('objetivos.update', $objetivo->id) }}"
                                                 role="form" enctype="multipart/form-data">
                                                 {{ method_field('PATCH') }}
                                                 @csrf
-                                                @include('objetivo.form', [
+                                                @include('objetivo.form-calificar', [
                                                     'objetivo' => $objetivo,
                                                 ])
                                                 <footer class="flex mt-4">
-
-                                                    <a href="#"
-                                                        class="text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-base px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                                                        onclick="event.preventDefault(); confirm('¿Estás seguro de que deseas eliminar este registro?') && document.getElementById('delete-form-{{ $objetivo->id }}').submit();">
-                                                        Eliminar
-                                                    </a>
                                                     <button data-modal-target="editObjModal{{ $objetivo->id }}"
                                                         type="button" type="button"
                                                         data-modal-toggle="editObjModal{{ $objetivo->id }}"
-                                                        class="text-white ml-auto bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-base px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cerrar</button>
-                                                    <button
-                                                        class="text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                        type="submit">
-                                                        Actualizar objetivo
-                                                    </button>
+                                                        class="text-white mr-auto bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-base px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cerrar</button>
+                                                    <button data-modal-target="modal-feddback{{ $objetivo->id }}"
+                                                        data-modal-toggle="modal-feddback{{ $objetivo->id }}"
+                                                        type="button"
+                                                        class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-base px-5 py-2.5 text-center mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Desaprobar</button>
+                                                    <button type="button"
+                                                        class="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Aprobar</button>
                                                 </footer>
                                             </form>
                                             <form id="delete-form-{{ $objetivo->id }}" class="hidden"
@@ -242,6 +239,40 @@
                                 </div>
                             </div>
 
+                            <!-- MODAL FEEDBACK -->
+                            <div id="modal-feddback{{ $objetivo->id }}" tabindex="-1" aria-hidden="true"
+                                class="fixed top-0 left-0 right-0 z-[60] bg-black/50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full">
+                                <div class="relative max-w-lg w-full max-h-full">
+                                    <!-- Modal content -->
+                                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                        <button type="button"
+                                            class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                            data-modal-hide="modal-feddback{{ $objetivo->id }}">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                        </button>
+                                        @includeif('partials.errors')
+                                        <div class="px-4 py-4">
+                                            <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+                                                Feedback</h3>
+                                            <div>
+                                                <textarea id="message" rows="6"
+                                                    class="block p-2.5 w-full text-base font-medium text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    placeholder="Escribe un poco de tu opinion de este objetivo (Opcional)"></textarea>
+                                                <footer class="pt-4 flex justify-end">
+                                                    <button type="button"
+                                                        class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center">Desaprobar
+                                                        y enviar feedback</button>
+                                                </footer>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
@@ -262,6 +293,8 @@
                 </tr>
             </tbody>
         </table>
+
+
     </div>
     {!! $objetivos->links() !!}
     {{-- <div class="fixed z-40 bg-neutral-500/40 inset-0 grid place-content-center">

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('descripcion', 1255);
             $table->string('indicadores', 1255);
             $table->decimal('porcentaje', 5, 2);
+            $table->decimal('porcentaje_inicial', 5, 2);
 
             $table->integer('estado')->default(0); // 0= DESAPROBADO, 1=PENDIENTE, 2=APROBADO
             $table->timestamp('estado_fecha')->nullable();
