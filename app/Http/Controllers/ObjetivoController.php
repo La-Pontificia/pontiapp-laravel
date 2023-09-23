@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Colaboradore;
 use App\Models\Objetivo;
 use App\Models\Supervisore;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 /**
@@ -47,7 +48,6 @@ class ObjetivoController extends Controller
     {
         $idColaborador = request('id_colaborador');
 
-
         $user = auth()->user();
         if (!$user) {
             abort(404);
@@ -74,6 +74,14 @@ class ObjetivoController extends Controller
         $objetivoNewForm = new Objetivo();
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota_super');
+
+        $objetivosDesaprobados = $objetivos->filter(function ($objetivo) {
+            return $objetivo->estado === 0 && !empty($objetivo->feedback);
+        });
+
+        view()->share([
+            'objetivosdesaprobados' => $objetivosDesaprobados,
+        ]);
 
         return view('objetivo.calificar', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota', 'colab_a_supervisar', 'idColaborador'))
             ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
@@ -207,5 +215,32 @@ class ObjetivoController extends Controller
 
         return redirect()->route('objetivos.index')
             ->with('success', 'Objetivo deleted successfully');
+    }
+
+
+    public function desaprobar(Request $request)
+    {
+        $request->validate([
+            'feedback' => 'string|max:255',
+            'id' => 'required|integer|min:1',
+
+        ]);
+
+        $objetivo = Objetivo::find($request->id);
+
+        if (!$objetivo) {
+            return redirect()->route('objetivo.calificarindex')->with('error', 'El objetivo no existe.');
+        }
+
+        $objetivo->feedback = $request->feedback;
+        $objetivo->feedback_fecha = Carbon::now();
+        $objetivo->notify_super = 0;
+        $objetivo->notify_colab = 1;
+        $objetivo->estado = 0;
+
+        $objetivo->save();
+
+        return redirect()->route('objetivo.calificarindex')
+            ->with('success', 'Objetivo actualizado correctamente.');
     }
 }
