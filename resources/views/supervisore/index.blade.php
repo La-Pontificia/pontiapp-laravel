@@ -13,22 +13,102 @@
                 <p>{{ $message }}</p>
             </div>
         @endif
-        <nav class="flex gap-2 items-center bg-neutral-100 p-2 rounded-xl">
-            <span>
-                <label for="colaboradores">Colaborador</label>
-                <select id="colaboradores"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-base font-semibold rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected value="">Todos</option>
-                    @foreach ($colaboradores as $item)
-                        <option {{ $idColabSelected == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
-                            {{ $item->nombres }}
-                            {{ $item->apellidos }}</option>
-                    @endforeach
-                </select>
-            </span>
-            {{-- <button type="button"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Default</button> --}}
-        </nav>
+        <header class="flex items-center gap-2">
+            <nav class="flex gap-2 items-center bg-neutral-100 p-2 rounded-xl">
+                <span class="">
+                    <label for="colaboradores">Colaborador</label>
+                    <select id="colaboradores"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-base font-semibold rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected value="">Todos</option>
+                        @foreach ($colaboradores as $item)
+                            <option {{ $idColabSelected == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
+                                {{ $item->nombres }}
+                                {{ $item->apellidos }}</option>
+                        @endforeach
+                    </select>
+                </span>
+            </nav>
+            <nav class="ml-auto">
+                <!-- Modal toggle -->
+                <button data-modal-target="create-super-modal" data-modal-toggle="create-super-modal"
+                    class="text-white ml-auto bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    type="button">
+                    Asignar
+                    jefe inmediato
+                </button>
+
+                <!-- Main modal -->
+                <div id="create-super-modal" tabindex="-1" aria-hidden="true"
+                    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative max-w-lg w-full max-h-full">
+                        <!-- Modal content -->
+                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                            <button type="button"
+                                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-hide="create-super-modal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                            @includeif('partials.errors')
+                            <div class="px-4 py-4">
+                                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Registrar nuevo
+                                    colaborador</h3>
+
+
+                                @includeif('partials.errors')
+                                <form method="POST" action="{{ route('supervisores.store') }}" role="form"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    @include('supervisore.form')
+                                </form>
+
+                                {{-- <form method="POST" class="space-y-6" action="{{ route('colaboradores.store') }}"
+                                    role="form" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="grid gap-3 mb-6 md:grid-cols-2">
+                                        <div>
+                                            <label for="nombres"
+                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombres</label>
+                                            {{ Form::text('nombres', $colaboradorForm->nombres, ['class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' . ($errors->has('nombres') ? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500' : ''), 'required' => 'required']) }}
+                                            {!! $errors->first('nombres', '<p class="mt-2 text-sm text-red-600 dark:text-red-500">:message</p>') !!}
+                                        </div>
+                                        <div>
+                                            <label for="apellidos"
+                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellidos</label>
+                                            {{ Form::text('apellidos', $colaboradorForm->apellidos, ['class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' . ($errors->has('apellidos') ? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500' : ''), 'required' => 'required']) }}
+                                            {!! $errors->first('apellidos', '  <p class="mt-2 text-sm text-red-600 dark:text-red-500">:message</p>') !!}
+                                        </div>
+                                        <div>
+                                            <label for="Dni"
+                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dni</label>
+                                            {{ Form::text('dni', $colaboradorForm->dni, ['class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' . ($errors->has('dni') ? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500' : ''), 'required' => 'required']) }}
+                                            {!! $errors->first('dni', '  <p class="mt-2 text-sm text-red-600 dark:text-red-500">:message</p>') !!}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ Form::label('Cargo') }}
+                                            {{ Form::select('id_cargo', $cargos, $colaboradorForm->id_cargo, ['class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' . ($errors->has('id_cargo') ? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500' : ''), 'required' => 'required']) }}
+                                            {!! $errors->first('id_cargo', '<div class="invalid-feedback">:message</div>') !!}
+                                        </div>
+                                        <div class="col-span-2">
+                                            {{ Form::label('Puesto') }}
+                                            {{ Form::select('id_puesto', $puestos, $colaboradorForm->id_puesto, ['class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' . ($errors->has('id_puesto') ? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500' : ''), 'required' => 'required']) }}
+                                            {!! $errors->first('id_puesto', '<div class="invalid-feedback">:message</div>') !!}
+                                        </div>
+                                    </div>
+                                    <button type="submit"
+                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Registrar</button>
+                                </form> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </nav>
+        </header>
         <div class="shadow-md relative">
             <table class="w-full text-sm  text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

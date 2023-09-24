@@ -59,7 +59,7 @@ class Objetivo extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_colaborador', 'id_supervisor', 'objetivo', 'descripcion', 'indicadores', 'porcentaje', 'estado', 'estado_fecha', 'feedback', 'feedback_fecha', 'nota_colab', 'nota_super', 'nota_super_fecha', 'eva', 'año', 'notify_super', 'notify_colab'];
+    protected $fillable = ['id_colaborador', 'id_supervisor', 'objetivo', 'descripcion', 'indicadores', 'porcentaje', 'porcentaje_inicial', 'estado', 'estado_fecha', 'feedback', 'feedback_fecha', 'nota_colab', 'nota_super', 'nota_super_fecha', 'eva', 'año', 'notify_super', 'notify_colab'];
 
 
     /**

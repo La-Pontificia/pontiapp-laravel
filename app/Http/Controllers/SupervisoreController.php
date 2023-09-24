@@ -25,7 +25,15 @@ class SupervisoreController extends Controller
         $colaboradores = Colaboradore::paginate();
         $idColabSelected = 0;
 
-        return view('supervisore.index', compact('supervisores', 'colaboradores', 'idColabSelected'))
+        $supervisoreForm = new Supervisore();
+        $colabs = Colaboradore::pluck('nombres', 'id');
+        foreach ($colabs as $id => $nombre) {
+            $colaborador = Colaboradore::find($id);
+            $nombreCompleto = $nombre . ' ' . $colaborador->apellidos . ' (' . $colaborador->dni . ' )';
+            $colabs[$id] = $nombreCompleto;
+        }
+
+        return view('supervisore.index', compact('supervisores', 'colaboradores', 'idColabSelected', 'supervisoreForm', 'colabs'))
             ->with('i', (request()->input('page', 1) - 1) * $supervisores->perPage());
     }
 
@@ -37,7 +45,7 @@ class SupervisoreController extends Controller
     public function create()
     {
         $supervisore = new Supervisore();
-        $colabs = Colaboradore::pluck('nombres', 'id');
+
         return view('supervisore.create', compact('supervisore', 'colabs'));
     }
 

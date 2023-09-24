@@ -29,6 +29,8 @@ class ColaboradoreController extends Controller
         $cargos = Cargo::pluck('nombre_cargo', 'id');
 
         $colaboradores = Colaboradore::paginate();
+
+
         return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos'))
             ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
@@ -43,6 +45,8 @@ class ColaboradoreController extends Controller
         $colaboradore = new Colaboradore();
         $puestos = Puesto::pluck('nombre_puesto', 'id');
         $cargos = Cargo::pluck('nombre_cargo', 'id');
+
+
         return view('colaboradore.create', compact('colaboradore', 'puestos', 'cargos'));
     }
 

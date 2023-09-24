@@ -1,6 +1,6 @@
 @extends('layouts.objetivo')
 @section('content-objetivo')
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="relative shadow-md h-full overflow-x-auto flex flex-col sm:rounded-lg">
         <div class="flex gap-3 items-center p-4 bg-white dark:bg-gray-800">
             <select id="countries"
                 class="bg-gray-50 w-[200px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -37,7 +37,7 @@
                 <!-- Main modal -->
                 <div id="create-colab-modal" tabindex="-1" aria-hidden="true"
                     class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                    <div class="relative max-w-4xl w-full max-h-full">
+                    <div class="relative max-w-xl w-full max-h-full">
                         <!-- Modal content -->
                         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                             <button type="button"
@@ -105,7 +105,7 @@
             <tbody>
                 @foreach ($objetivos as $objetivo)
                     <tr
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        class="bg-white {{ $objetivo->estado === 0 ? 'bg-red-500/5' : 'hover:bg-gray-50' }} border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600">
                         <th scope="row"
                             class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                             <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
@@ -146,14 +146,33 @@
 
 
                                 @if ($objetivo->estado === 0)
+                                    @php
+                                        $fechaFeedback = \Carbon\Carbon::parse($objetivo->feedback_fecha);
+                                        $diferencia = $fechaFeedback->diffForHumans();
+                                    @endphp
                                     <span
-                                        class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Desaprobado</span>
+                                        class="bg-red-100 text-red-800 group text-base relative font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Desaprobado
+                                        <div
+                                            class="absolute font-normal min-w-[400px] max-w-[600px] bg-white z-40 p-4 shadow-xl rounded-xl group-hover:block hidden top-[100%] right-0">
+                                            <div class=" flex gap-2 items-center">
+                                                <div class="flex flex-col text-neutral-800">
+                                                    <h5 class="font-bold text-lg pb-2">{{ $objetivo->supervisor->nombres }}
+                                                        {{ $objetivo->supervisor->apellidos }}</h5>
+                                                    <span>
+                                                        {{ $objetivo->feedback }}
+                                                    </span>
+                                                    <span
+                                                        class="text-neutral-600 font-semibold">{{ $diferencia }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
                                 @elseif ($objetivo->estado === 1)
                                     <span
-                                        class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Pendiente</span>
+                                        class="bg-yellow-100 text-yellow-800 text-base font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Pendiente</span>
                                 @else
                                     <span
-                                        class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Aprobado</span>
+                                        class="bg-green-100 text-green-800 text-base font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Aprobado</span>
                                 @endif
                             </div>
                         </td>
@@ -171,7 +190,7 @@
                                 <!-- Main modal -->
                                 <div id="editObjModal{{ $objetivo->id }}" tabindex="-1" aria-hidden="true"
                                     class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                    <div class="relative max-w-4xl w-full max-h-full">
+                                    <div class="relative max-w-xl w-full max-h-full">
                                         <!-- Modal content -->
                                         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                             <button type="button"
@@ -184,13 +203,31 @@
                                                         stroke-linejoin="round" stroke-width="2"
                                                         d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                                 </svg>
-                                                <span class="sr-only">Close modal</span>
                                             </button>
                                             @includeif('partials.errors')
+
                                             <div class="px-4 py-4">
                                                 <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
                                                     Editar objetivo</h3>
                                                 @includeif('partials.errors')
+                                                @if ($objetivo->estado == 0)
+                                                    <div id="alert-additional-content-2"
+                                                        class="p-4 mb-2 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                                                        role="alert">
+                                                        <div class="flex items-center">
+                                                            <svg class="flex-shrink-0 w-4 h-4 mr-2" aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                                <path
+                                                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                                            </svg>
+                                                            <h3 class="text-lg font-medium">Feedback</h3>
+                                                        </div>
+                                                        <div class="mt-2 text-sm">
+                                                            {{ $objetivo->feedback }}
+                                                        </div>
+                                                    </div>
+                                                @endif
                                                 <form method="POST"
                                                     action="{{ route('objetivos.update', $objetivo->id) }}"
                                                     role="form" enctype="multipart/form-data">
@@ -206,14 +243,15 @@
                                                             onclick="event.preventDefault(); confirm('¿Estás seguro de que deseas eliminar este registro?') && document.getElementById('delete-form-{{ $objetivo->id }}').submit();">
                                                             Eliminar
                                                         </a>
-                                                        <button data-modal-target="editObjModal{{ $objetivo->id }}"
-                                                            type="button" type="button"
-                                                            data-modal-toggle="editObjModal{{ $objetivo->id }}"
-                                                            class="text-white ml-auto bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-base px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cerrar</button>
                                                         <button
-                                                            class="text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                            class="text-white ml-auto bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                                             type="submit">
-                                                            Actualizar objetivo
+                                                            Actualizar
+                                                        </button>
+                                                        <button
+                                                            class="text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                            type="submit">
+                                                            Reenviar a revisión
                                                         </button>
                                                     </footer>
                                                 </form>

@@ -14,34 +14,15 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    {{-- <link rel="stylesheet" href="resources/css/app.css"> --}}
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> --}}
-
     <link rel="stylesheet" href="resources/css/app.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css"
-        integrity="sha384-3fdgwJw17Bi87e1QQ4fsLn4rUFqWw//KU0g8TvV6quvahISRewev6/EocKNuJmEw" crossorigin="anonymous"> --}}
 
-
-
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/simplex/bootstrap.min.css"
-        integrity="sha384-FYrl2Nk72fpV6+l3Bymt1zZhnQFK75ipDqPXK0sOR0f/zeOSZ45/tKlsKucQyjSp" crossorigin="anonymous"> --}}
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/litera/bootstrap.min.css" integrity="sha384-enpDwFISL6M3ZGZ50Tjo8m65q06uLVnyvkFO3rsoW0UC15ATBFz3QEhr3hmxpYsn" crossorigin="anonymous"> --}}
-    {{-- //linea 23 eliminar dasboard// --}}
-
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/simplex/bootstrap.min.css"
-        integrity="sha384-FYrl2Nk72fpV6+l3Bymt1zZhnQFK75ipDqPXK0sOR0f/zeOSZ45/tKlsKucQyjSp" crossorigin="anonymous"> --}}
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/litera/bootstrap.min.css"
-        integrity="sha384-enpDwFISL6M3ZGZ50Tjo8m65q06uLVnyvkFO3rsoW0UC15ATBFz3QEhr3hmxpYsn" crossorigin="anonymous">
- --}}
-
-    <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="h-screen">
 
-    <div style="" id="app">
+    <div style="" id="app" class="h-screen">
         <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
             aria-controls="cta-button-sidebar" type="button"
             class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -62,7 +43,7 @@
             @endif
         @else
             <aside id="cta-button-sidebar"
-                class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+                class="fixed top-0 left-0 z-40 w-[300px] h-screen transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar">
                 <div class="h-full px-3 py-4 pt-2 flex flex-col overflow-y-auto bg-zinc-900">
                     <a href="{{ url('/') }}" class="flex items-center p-3">
@@ -177,6 +158,49 @@
                                 <span class="flex-1 ml-3 whitespace-nowrap">Departamentos</span>
                             </a>
                         </li>
+                        <div class="flex flex-col gap-2">
+                            @foreach ($objetivosDesaprobados as $objetivoDesaprobado)
+                                @php
+                                    $fechaFeedback = \Carbon\Carbon::parse($objetivoDesaprobado->feedback_fecha);
+                                    $diferencia = $fechaFeedback->diffForHumans();
+                                @endphp
+                                <a href="">
+                                    <div id="toast-notification"
+                                        class="w-full max-w-xs p-2 text-gray-100 bg-neutral-700 rounded-lg shadow dark:bg-gray-800 dark:text-gray-300"
+                                        role="alert">
+
+                                        <div class="flex items-center">
+                                            <div class="relative inline-block shrink-0">
+                                                <img class="w-12 h-12 rounded-full" src="/default-user.webp"
+                                                    alt="Jese Leos image" />
+                                                <span
+                                                    class="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
+                                                    <svg class="w-3 h-3 text-white" aria-hidden="true"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 18"
+                                                        fill="currentColor">
+                                                        <path
+                                                            d="M18 4H16V9C16 10.0609 15.5786 11.0783 14.8284 11.8284C14.0783 12.5786 13.0609 13 12 13H9L6.846 14.615C7.17993 14.8628 7.58418 14.9977 8 15H11.667L15.4 17.8C15.5731 17.9298 15.7836 18 16 18C16.2652 18 16.5196 17.8946 16.7071 17.7071C16.8946 17.5196 17 17.2652 17 17V15H18C18.5304 15 19.0391 14.7893 19.4142 14.4142C19.7893 14.0391 20 13.5304 20 13V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4Z"
+                                                            fill="currentColor" />
+                                                        <path
+                                                            d="M12 0H2C1.46957 0 0.960859 0.210714 0.585786 0.585786C0.210714 0.960859 0 1.46957 0 2V9C0 9.53043 0.210714 10.0391 0.585786 10.4142C0.960859 10.7893 1.46957 11 2 11H3V13C3 13.1857 3.05171 13.3678 3.14935 13.5257C3.24698 13.6837 3.38668 13.8114 3.55279 13.8944C3.71889 13.9775 3.90484 14.0126 4.08981 13.996C4.27477 13.9793 4.45143 13.9114 4.6 13.8L8.333 11H12C12.5304 11 13.0391 10.7893 13.4142 10.4142C13.7893 10.0391 14 9.53043 14 9V2C14 1.46957 13.7893 0.960859 13.4142 0.585786C13.0391 0.210714 12.5304 0 12 0Z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                            <div class="ml-3 text-sm font-normal">
+                                                <div class="text-sm font-semibold text-gray-100">
+                                                    {{ $objetivoDesaprobado->supervisor->nombres }}
+                                                    {{ $objetivoDesaprobado->supervisor->apellidos }}
+                                                </div>
+                                                <div class="text-sm font-normal">Tienes un nuevo feedback</div>
+                                                <span
+                                                    class="text-xs font-medium text-blue-600 dark:text-blue-500">{{ $diferencia }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
                         <li class="nav-item dropdown mt-auto">
                             <button type="button"
                                 class="flex mr-3 text-sm bg-gray-800 w-full p-2 items-center gap-2 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -216,7 +240,7 @@
                 </div>
             </aside>
         @endguest
-        <main class="">
+        <main class="h-screen">
             @yield('content')
         </main>
     </div>
