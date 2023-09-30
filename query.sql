@@ -367,10 +367,6 @@ VALUES
         'ASESOR DE ADMISIÓN ILP ',
         7,
         5,
-<<<<<<< HEAD
-        
-=======
->>>>>>> 20e6b8fcb8371d6c3dadd7491329c4f7c59bf5d4
         NOW()
     ),
     (
