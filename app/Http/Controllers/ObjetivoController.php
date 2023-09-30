@@ -65,31 +65,23 @@ class ObjetivoController extends Controller
 
         // areas
         $areas = Area::all();
-        if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
+        // if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
 
 
         // Departamentos
         if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
         else $departamentos = Departamento::all();
-        if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
 
 
         // Cargos
         $cargos = Cargo::all();
-        // if (!$cargos->isEmpty() && !$id_cargo) $id_cargo = $cargos[0]->id;
 
         // Puestos
         if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
         else $puestos = Puesto::all();
 
-        if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
-
-
-
-
 
         // COLABORADORES
-
         $user = auth()->user();
         if (!$user) {
             abort(404);
@@ -112,8 +104,6 @@ class ObjetivoController extends Controller
                 return $query->where('C.id_puesto', $id_puesto);
             })
             ->get();
-
-
         return view('objetivo.calificar', compact('areas', 'departamentos', 'cargos', 'puestos', 'id_area', 'id_departamento', 'id_cargo', 'id_puesto', 'colaboradores_a_supervisar'));
     }
 

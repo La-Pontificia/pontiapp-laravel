@@ -88,7 +88,8 @@
                                 placeholder="" required>
                         </div>
                         <div>
-                            <label for="departamento" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Departamento</label>
+                            <label for="departamento"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Departamento</label>
                             <select id="departamento"
                                 class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option selected>Seleccionar</option>
@@ -97,11 +98,12 @@
                                 <option value="FR">France</option>
                                 <option value="DE">Germany</option>
                             </select>
-                            
+
                         </div>
 
                         <div>
-                            <label for="cargo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cargo</label>
+                            <label for="cargo"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cargo</label>
                             <select id="cargo"
                                 class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option selected>Seleccionar</option>
@@ -134,65 +136,29 @@
         </div>
     </div>
 
-
-
-
-
     {{-- comentario --}}
     <div class="card-body">
         <div class="table-responsive">
-<<<<<<< HEAD
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-=======
-            <table class="table w-full table-striped table-hover">
+            <table class="table w-full text-gray-600 table-striped table-hover">
                 <thead class="thead">
->>>>>>> 20e6b8fcb8371d6c3dadd7491329c4f7c59bf5d4
                     <tr>
                         <th scope="col" class="px-6 py-3">Codigo</th>
                         <th scope="col" class="px-6 py-3">Puesto</th>
                         <th scope="col" class="px-6 py-3">Departamento</th>
                         <th scope="col" class="px-6 py-3">Cargo</th>
-                        {{-- <th>Departamento</th> --}}
                         <th></th>
                     </tr>
                 </thead>
-
-
-
-
-
-
                 <tbody>
                     @foreach ($puestos as $puesto)
                         <tr
-<<<<<<< HEAD
                             class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-
-
                             <td class="px-6 py-4 font-medium  whitespace-nowrap dark:text-white">
                                 {{ $puesto->codigo_puesto }}</td>
                             <td class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
                                 {{ $puesto->nombre_puesto }}</td>
-=======
-                            class="border-b even:bg-gray-100
-                        bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-
-
-
-                            {{-- <td >{{ ++$i }}</td> --}}
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $puesto->codigo_puesto }}</td>
-                            <td class="px-6 py-4">{{ $puesto->nombre_puesto }}</td>
                             <td class="px-6 py-4">{{ $puesto->departamento->nombre_departamento }}</td>
                             <td class="px-6 py-4">{{ $puesto->cargo->nombre_cargo }}</td>
-
->>>>>>> 20e6b8fcb8371d6c3dadd7491329c4f7c59bf5d4
-                            {{-- <td>{{ $puesto->nombre_cargo}}</td> --}}
-
-                            {{-- <td>{{ $puesto->departamento->nombre_departamento }}</td> --}}
-                            {{-- <td>{{ $puesto->created_at }}</td>
-                                            <td>{{ $puesto->updated_at }}</td> --}}
                             <td class="px6 -py-4">
                                 <form action="{{ route('puestos.destroy', $puesto->id) }}" method="POST">
                                     <a class="btn btn-sm btn-success" href="{{ route('puestos.edit', $puesto->id) }}"><i
