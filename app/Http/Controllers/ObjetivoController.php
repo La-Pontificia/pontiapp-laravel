@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
+use App\Models\Cargo;
 use App\Models\Colaboradore;
+use App\Models\Departamento;
 use App\Models\Objetivo;
+use App\Models\Puesto;
 use App\Models\Supervisore;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,46 +50,117 @@ class ObjetivoController extends Controller
 
     public function indexCalificar(Request $request)
     {
-        $idColaborador = request('id_colaborador');
+
+        // NULLS VARIABLES
+        $id_area = request('id_area');
+        $id_departamento = request('id_departamento');
+        $id_cargo = request('id_cargo');
+        $id_puesto = request('id_puesto');
+
+        $cargos = null;
+        $puestos = null;
+        $departamentos = null;
+        $colaboradores = null;
+
+
+        // areas
+        $areas = Area::all();
+        if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
+
+
+        // Departamentos
+        if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
+        else $departamentos = Departamento::all();
+        if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
+
+
+        // Cargos
+        $cargos = Cargo::all();
+        // if (!$cargos->isEmpty() && !$id_cargo) $id_cargo = $cargos[0]->id;
+
+        // Puestos
+        if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
+        else $puestos = Puesto::all();
+
+        if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
+
+
+
+
+
+        // COLABORADORES
 
         $user = auth()->user();
         if (!$user) {
             abort(404);
         }
-        $id = $user->id;
 
         // obtenemos el colaborador por id de usuario
         $colaborador = Colaboradore::where([
-            'id_usuario' => $id,
+            'id_usuario' => $user->id,
         ])->first();
 
-        // obtenemos el supervisor del colaborador
-        // $colab_a_supervisar = Supervisore::where('id_supervisor', $colab->id);
-        $colab_a_supervisar = Supervisore::where('id_supervisor', $colaborador->id)->paginate();
 
-        $objetivos = null;
+        $colaboradores_a_supervisar = Supervisore
+            ::join('colaboradores as C', 'supervisores.id_colaborador', '=', 'C.id')
+            ->join('puestos as P', 'C.id_puesto', '=', 'P.id')
+            ->where('supervisores.id_supervisor', $colaborador->id)
+            ->when($id_cargo !== null, function ($query) use ($id_cargo) {
+                return $query->where('C.id_cargo', $id_cargo);
+            })
+            ->when($id_puesto !== null, function ($query) use ($id_puesto) {
+                return $query->where('C.id_puesto', $id_puesto);
+            })
+            ->get();
 
-        if ($idColaborador) {
-            $objetivos = Objetivo::where('id_supervisor', $colaborador->id)->where('id_colaborador', $idColaborador)->paginate();
-        } else {
-            $objetivos = Objetivo::where('id_supervisor', $colaborador->id)->paginate();
-        }
 
-        $objetivoNewForm = new Objetivo();
-        $totalPorcentaje = $objetivos->sum('porcentaje');
-        $totalNota = $objetivos->sum('nota_super');
-
-        $objetivosDesaprobados = $objetivos->filter(function ($objetivo) {
-            return $objetivo->estado === 0 && !empty($objetivo->feedback);
-        });
-
-        view()->share([
-            'objetivosdesaprobados' => $objetivosDesaprobados,
-        ]);
-
-        return view('objetivo.calificar', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota', 'colab_a_supervisar', 'idColaborador', 'colaborador'))
-            ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
+        return view('objetivo.calificar', compact('areas', 'departamentos', 'cargos', 'puestos', 'id_area', 'id_departamento', 'id_cargo', 'id_puesto', 'colaboradores_a_supervisar'));
     }
+
+    // public function indexCalificar(Request $request)
+    // {
+    //     $idColaborador = request('id_colaborador');
+    //     $areas = Area::all();
+
+
+    //     $user = auth()->user();
+    //     if (!$user) {
+    //         abort(404);
+    //     }
+    //     $id = $user->id;
+
+    //     // obtenemos el colaborador por id de usuario
+    //     $colaborador = Colaboradore::where([
+    //         'id_usuario' => $id,
+    //     ])->first();
+
+    //     // obtenemos el supervisor del colaborador
+    //     // $colab_a_supervisar = Supervisore::where('id_supervisor', $colab->id);
+    //     $colab_a_supervisar = Supervisore::where('id_supervisor', $colaborador->id)->paginate();
+
+    //     $objetivos = null;
+
+    //     if ($idColaborador) {
+    //         $objetivos = Objetivo::where('id_supervisor', $colaborador->id)->where('id_colaborador', $idColaborador)->paginate();
+    //     } else {
+    //         $objetivos = Objetivo::where('id_supervisor', $colaborador->id)->paginate();
+    //     }
+
+    //     $objetivoNewForm = new Objetivo();
+    //     $totalPorcentaje = $objetivos->sum('porcentaje');
+    //     $totalNota = $objetivos->sum('nota_super');
+
+    //     $objetivosDesaprobados = $objetivos->filter(function ($objetivo) {
+    //         return $objetivo->estado === 0 && !empty($objetivo->feedback);
+    //     });
+
+    //     view()->share([
+    //         'objetivosdesaprobados' => $objetivosDesaprobados,
+    //     ]);
+
+    //     return view('objetivo.calificar', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota', 'colab_a_supervisar', 'idColaborador', 'colaborador', 'areas'))
+    //         ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
+    // }
 
 
     /**

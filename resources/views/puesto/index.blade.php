@@ -141,13 +141,18 @@
     {{-- comentario --}}
     <div class="card-body">
         <div class="table-responsive">
+<<<<<<< HEAD
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+=======
+            <table class="table w-full table-striped table-hover">
+                <thead class="thead">
+>>>>>>> 20e6b8fcb8371d6c3dadd7491329c4f7c59bf5d4
                     <tr>
-                        <th scope="col" class="px-6 py-3">N°</th>
-                        <th scope="col" class="px-6 py-3">Codigo </th>
-                        <th scope="col" class="px-6 py-3">Cargo </th>
+                        <th scope="col" class="px-6 py-3">Codigo</th>
                         <th scope="col" class="px-6 py-3">Puesto</th>
+                        <th scope="col" class="px-6 py-3">Departamento</th>
+                        <th scope="col" class="px-6 py-3">Cargo</th>
                         {{-- <th>Departamento</th> --}}
                         <th></th>
                     </tr>
@@ -161,6 +166,7 @@
                 <tbody>
                     @foreach ($puestos as $puesto)
                         <tr
+<<<<<<< HEAD
                             class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
 
 
@@ -168,6 +174,20 @@
                                 {{ $puesto->codigo_puesto }}</td>
                             <td class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
                                 {{ $puesto->nombre_puesto }}</td>
+=======
+                            class="border-b even:bg-gray-100
+                        bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+
+
+                            {{-- <td >{{ ++$i }}</td> --}}
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ $puesto->codigo_puesto }}</td>
+                            <td class="px-6 py-4">{{ $puesto->nombre_puesto }}</td>
+                            <td class="px-6 py-4">{{ $puesto->departamento->nombre_departamento }}</td>
+                            <td class="px-6 py-4">{{ $puesto->cargo->nombre_cargo }}</td>
+
+>>>>>>> 20e6b8fcb8371d6c3dadd7491329c4f7c59bf5d4
                             {{-- <td>{{ $puesto->nombre_cargo}}</td> --}}
 
                             {{-- <td>{{ $puesto->departamento->nombre_departamento }}</td> --}}
