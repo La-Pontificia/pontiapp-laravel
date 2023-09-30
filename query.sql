@@ -337,36 +337,37 @@ VALUES
     (
         'P038',
         'ASESOR DE ADMISIÓN CI  ',
-        5,
         7,
+        5,
         NOW()
     ),
     (
         'P039',
         'ASESOR DE ADMISIÓN EC  ',
-        5,
         7,
+        5,
         NOW()
     ),
     (
         'P040',
         'ASESOR DE ADMISIÓN ELP ',
-        5,
         7,
+        5,
         NOW()
     ),
     (
         'P041',
         'ASESOR DE ADMISIÓN ELP Y ILP  ',
-        5,
         7,
+        5,
         NOW()
     ),
     (
         'P042',
         'ASESOR DE ADMISIÓN ILP ',
-        5,
         7,
+        5,
+        
         NOW()
     ),
     (
