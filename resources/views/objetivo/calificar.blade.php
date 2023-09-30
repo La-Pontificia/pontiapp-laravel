@@ -6,7 +6,7 @@
             <span>
                 <label for="eva">Año Actividad</label>
                 <select id="countries"
-                    class="bg-gray-50 w-[200px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 w-[120px] font-semibold border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected value="">Todos</option>
                     <option value="2023">2023</option>
                     <option value="2024">2024</option>
@@ -15,7 +15,7 @@
             <span>
                 <label for="eva">Evaluacion</label>
                 <select id="eva"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[130px] font-semibold p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected value="">Todos</option>
                     <option value="eva_01">Evaluacion 01</option>
                     <option value="eva_02">Evaluacion 02</option>
@@ -33,7 +33,6 @@
                     @endforeach
                 </select>
             </span>
-
             <script>
                 document.getElementById('colaboradorSelect').addEventListener('change', function() {
                     var selectedValue = this.value;
@@ -53,7 +52,6 @@
                     window.location.href = currentURL;
                 });
             </script>
-
             <div class="relative ml-auto">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -67,12 +65,19 @@
                     placeholder="Buscar objetivo">
             </div>
         </div>
+        @if ($colaborador)
+            <div class="h-[250px]">
+
+            </div>
+        @endif
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3 max-w-[250px]">
-                        Colaborador y objetivo
-                    </th>
+                    @if ($idColaborador === null)
+                        <th scope="col" class="px-6 py-3 max-w-[250px]">
+                            Colaborador y objetivo
+                        </th>
+                    @endif
                     <th scope="col" class="px-6 py-3">
                         Descripcion
                     </th>
@@ -89,7 +94,6 @@
                         %
                     </th>
                     <th scope="col" class="px-6 py-3">
-
                     </th>
                 </tr>
             </thead>
@@ -97,40 +101,42 @@
                 @foreach ($objetivos as $objetivo)
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row"
-                            class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                            <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
-                            <div class="pl-3">
-                                <div
-                                    class="text-base group relative hover:text-blue-600 hover:underline cursor-pointer font-semibold">
-                                    {{ $objetivo->colaborador->nombres }}
-                                    {{ $objetivo->colaborador->apellidos }}
+                        @if ($idColaborador === null)
+                            <th scope="row"
+                                class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
+                                <div class="pl-3">
                                     <div
-                                        class="absolute bg-white z-40 p-2 shadow-xl rounded-xl group-hover:block hidden top-[100%]">
-                                        <div class=" flex gap-2 items-center">
-                                            <div>
-                                                <img class="w-10 h-10 rounded-full" src="/default-user.webp"
-                                                    alt="Jese image">
-                                            </div>
-                                            <div class="flex flex-col">
-                                                <span>
-                                                    {{ $objetivo->colaborador->nombres }}
-                                                    {{ $objetivo->colaborador->apellidos }}
-                                                </span>
-                                                <span class="text-xs text-neutral-600 capitalize">
-                                                    {{ mb_strtolower($objetivo->colaborador->puesto->nombre_puesto, 'UTF-8') }}
-                                                    -
-                                                    {{ mb_strtolower($objetivo->colaborador->puesto->departamento->area->nombre_area, 'UTF-8') }}
-                                                </span>
+                                        class="text-base group relative hover:text-blue-600 hover:underline cursor-pointer font-semibold">
+                                        {{ $objetivo->colaborador->nombres }}
+                                        {{ $objetivo->colaborador->apellidos }}
+                                        <div
+                                            class="absolute bg-white z-40 p-2 shadow-xl rounded-xl group-hover:block hidden top-[100%]">
+                                            <div class=" flex gap-2 items-center">
+                                                <div>
+                                                    <img class="w-10 h-10 rounded-full" src="/default-user.webp"
+                                                        alt="Jese image">
+                                                </div>
+                                                <div class="flex flex-col">
+                                                    <span>
+                                                        {{ $objetivo->colaborador->nombres }}
+                                                        {{ $objetivo->colaborador->apellidos }}
+                                                    </span>
+                                                    <span class="text-xs text-neutral-600 capitalize">
+                                                        {{ mb_strtolower($objetivo->colaborador->puesto->nombre_puesto, 'UTF-8') }}
+                                                        -
+                                                        {{ mb_strtolower($objetivo->colaborador->puesto->departamento->area->nombre_area, 'UTF-8') }}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="font-normal max-w-[200px] truncate text-gray-500">
+                                        {{ $objetivo->objetivo }}
+                                    </div>
                                 </div>
-                                <div class="font-normal max-w-[200px] truncate text-gray-500">
-                                    {{ $objetivo->objetivo }}
-                                </div>
-                            </div>
-                        </th>
+                            </th>
+                        @endif
                         <td class="px-6 py-4 ">
                             <div class="line-clamp-3 overflow-ellipsis overflow-hidden">
                                 {{ $objetivo->descripcion }}
@@ -149,12 +155,10 @@
                                 /
                                 <span
                                     class="bg-green-500 rounded-lg flex text-white p-1 px-3">{{ $objetivo->nota_super }}</span>
-
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-
                                 @if ($objetivo->estado === 0)
                                     <span
                                         class="bg-red-100 text-red-800 group block text-base font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
@@ -182,14 +186,12 @@
                             <div>
                                 <span
                                     class="bg-purple-100 text-purple-800 p-1 px-3 text-base font-medium mr-2 rounded-full dark:bg-purple-900 dark:text-purple-300">{{ $objetivo->porcentaje }}</span>
-
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <button type="button" data-modal-target="editObjModal{{ $objetivo->id }}"
                                 data-modal-show="editObjModal{{ $objetivo->id }}"
                                 class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Calificar</button>
-
                             <!-- MODAL CALIFICATE -->
                             <div id="editObjModal{{ $objetivo->id }}" tabindex="-1" aria-hidden="true"
                                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -197,7 +199,7 @@
                                     <!-- Modal content -->
                                     <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                         <button type="button"
-                                            class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                            class="absolute top-3 z-[1] right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                                             data-modal-hide="editObjModal{{ $objetivo->id }}">
                                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 fill="none" viewBox="0 0 14 14">

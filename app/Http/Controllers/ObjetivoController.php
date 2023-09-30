@@ -55,20 +55,20 @@ class ObjetivoController extends Controller
         $id = $user->id;
 
         // obtenemos el colaborador por id de usuario
-        $colab = Colaboradore::where([
+        $colaborador = Colaboradore::where([
             'id_usuario' => $id,
         ])->first();
 
         // obtenemos el supervisor del colaborador
         // $colab_a_supervisar = Supervisore::where('id_supervisor', $colab->id);
-        $colab_a_supervisar = Supervisore::where('id_supervisor', $colab->id)->paginate();
+        $colab_a_supervisar = Supervisore::where('id_supervisor', $colaborador->id)->paginate();
 
         $objetivos = null;
 
         if ($idColaborador) {
-            $objetivos = Objetivo::where('id_supervisor', $colab->id)->where('id_colaborador', $idColaborador)->paginate();
+            $objetivos = Objetivo::where('id_supervisor', $colaborador->id)->where('id_colaborador', $idColaborador)->paginate();
         } else {
-            $objetivos = Objetivo::where('id_supervisor', $colab->id)->paginate();
+            $objetivos = Objetivo::where('id_supervisor', $colaborador->id)->paginate();
         }
 
         $objetivoNewForm = new Objetivo();
@@ -83,7 +83,7 @@ class ObjetivoController extends Controller
             'objetivosdesaprobados' => $objetivosDesaprobados,
         ]);
 
-        return view('objetivo.calificar', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota', 'colab_a_supervisar', 'idColaborador'))
+        return view('objetivo.calificar', compact('objetivos', 'objetivoNewForm', 'totalPorcentaje', 'totalNota', 'colab_a_supervisar', 'idColaborador', 'colaborador'))
             ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
     }
 

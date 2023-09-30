@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('codigo_puesto', 50)->require();
             $table->string('nombre_puesto', 255)->require();
+            $table->unsignedBigInteger('id_cargo');
             $table->unsignedBigInteger('id_departamento');
             $table->foreign('id_departamento')->references('id')->on('departamentos')->onDelete('cascade');
+            $table->foreign('id_cargo')->references('id')->on('cargos')->onDelete('cascade');
             $table->timestamps();
         });
     }

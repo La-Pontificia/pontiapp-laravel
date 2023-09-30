@@ -105,7 +105,7 @@
             <tbody>
                 @foreach ($objetivos as $objetivo)
                     <tr
-                        class="bg-white {{ $objetivo->estado === 0 ? 'bg-red-500/5' : 'hover:bg-gray-50' }} border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600">
+                        class="bg-white {{ $objetivo->estado === 0 ? 'bg-red-300/10' : 'hover:bg-gray-50' }} border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600">
                         <th scope="row"
                             class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                             <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
@@ -205,7 +205,6 @@
                                                 </svg>
                                             </button>
                                             @includeif('partials.errors')
-
                                             <div class="px-4 py-4">
                                                 <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
                                                     Editar objetivo</h3>
@@ -243,13 +242,15 @@
                                                             onclick="event.preventDefault(); confirm('¿Estás seguro de que deseas eliminar este registro?') && document.getElementById('delete-form-{{ $objetivo->id }}').submit();">
                                                             Eliminar
                                                         </a>
+                                                        @if ($objetivo->estado != 0)
+                                                            <button
+                                                                class="text-white ml-auto bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                                type="submit">
+                                                                Actualizar
+                                                            </button>
+                                                        @endif
                                                         <button
-                                                            class="text-white ml-auto bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                            type="submit">
-                                                            Actualizar
-                                                        </button>
-                                                        <button
-                                                            class="text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                            class="text-white ml-auto bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                                             type="submit">
                                                             Reenviar a revisión
                                                         </button>
