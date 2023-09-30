@@ -123,13 +123,13 @@
     {{-- comentario --}}
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table w-full table-striped table-hover">
                 <thead class="thead">
                     <tr>
-                        <th scope="col" class="px-6 py-3">N°</th>
-                        <th scope="col" class="px-6 py-3">Codigo </th>
-                        <th scope="col" class="px-6 py-3">Cargo </th>
+                        <th scope="col" class="px-6 py-3">Codigo</th>
                         <th scope="col" class="px-6 py-3">Puesto</th>
+                        <th scope="col" class="px-6 py-3">Departamento</th>
+                        <th scope="col" class="px-6 py-3">Cargo</th>
                         {{-- <th>Departamento</th> --}}
                         <th></th>
                     </tr>
@@ -142,16 +142,21 @@
 
                 <tbody>
                     @foreach ($puestos as $puesto)
-                        <tr class="border-b even:bg-gray-100
+                        <tr
+                            class="border-b even:bg-gray-100
                         bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
 
-                           
-                        
+
+
                             {{-- <td >{{ ++$i }}</td> --}}
-                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $puesto->codigo_puesto }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ $puesto->codigo_puesto }}</td>
                             <td class="px-6 py-4">{{ $puesto->nombre_puesto }}</td>
+                            <td class="px-6 py-4">{{ $puesto->departamento->nombre_departamento }}</td>
+                            <td class="px-6 py-4">{{ $puesto->cargo->nombre_cargo }}</td>
+
                             {{-- <td>{{ $puesto->nombre_cargo}}</td> --}}
-                            
+
                             {{-- <td>{{ $puesto->departamento->nombre_departamento }}</td> --}}
                             {{-- <td>{{ $puesto->created_at }}</td>
                                             <td>{{ $puesto->updated_at }}</td> --}}
@@ -171,7 +176,7 @@
             </table>
         </div>
     </div>
-    
+
     {!! $puestos->links() !!}
-    
+
 @endsection

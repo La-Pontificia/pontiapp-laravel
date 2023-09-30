@@ -65,11 +65,19 @@
                         <li>
                             <a href="{{ route('colaboradores.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('colaboradores*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-white"
-                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                    viewBox="0 0 20 18">
-                                    <path
-                                        d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                                <svg class="w-[40px] block {{ request()->is('colaboradores*') ? 'text-rose-400 ' : '' }}"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path opacity="0.5"
+                                            d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M16.807 19.0112C15.4398 19.9504 13.7841 20.5 12 20.5C10.2159 20.5 8.56023 19.9503 7.193 19.0111C6.58915 18.5963 6.33109 17.8062 6.68219 17.1632C7.41001 15.8302 8.90973 15 12 15C15.0903 15 16.59 15.8303 17.3178 17.1632C17.6689 17.8062 17.4108 18.5964 16.807 19.0112Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3432 6 9.00004 7.34315 9.00004 9C9.00004 10.6569 10.3432 12 12 12Z"
+                                            fill="currentColor"></path>
+                                    </g>
                                 </svg>
                                 <span class="flex-1 ml-3 whitespace-nowrap">Colaboradores</span>
                             </a>
@@ -77,11 +85,28 @@
                         <li>
                             <a href="{{ route('supervisores.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('supervisores*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-white"
-                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                    viewBox="0 0 20 19">
-                                    <path
-                                        d="M7.324 9.917A2.479 2.479 0 0 1 7.99 7.7l.71-.71a2.484 2.484 0 0 1 2.222-.688 4.538 4.538 0 1 0-3.6 3.615h.002ZM7.99 18.3a2.5 2.5 0 0 1-.6-2.564A2.5 2.5 0 0 1 6 13.5v-1c.005-.544.19-1.072.526-1.5H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h7.687l-.697-.7ZM19.5 12h-1.12a4.441 4.441 0 0 0-.579-1.387l.8-.795a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.795.8A4.443 4.443 0 0 0 15 8.62V7.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.12c-.492.113-.96.309-1.387.579l-.795-.795a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.8.8c-.272.424-.47.891-.584 1.382H8.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1.12c.113.492.309.96.579 1.387l-.795.795a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.8-.8c.424.272.892.47 1.382.584v1.12a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1.12c.492-.113.96-.309 1.387-.579l.795.8a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.8-.795c.273-.427.47-.898.584-1.392h1.12a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5ZM14 15.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
+                                <svg class="w-[40px] block {{ request()->is('supervisores*') ? 'text-yellow-400 ' : '' }}"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path opacity="0.5"
+                                            d="M14 4H10C6.22876 4 4.34315 4 3.17157 5.17157C2 6.34315 2 8.22876 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20H14C17.7712 20 19.6569 20 20.8284 18.8284C22 17.6569 22 15.7712 22 12C22 8.22876 22 6.34315 20.8284 5.17157C19.6569 4 17.7712 4 14 4Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M13.25 9C13.25 8.58579 13.5858 8.25 14 8.25H19C19.4142 8.25 19.75 8.58579 19.75 9C19.75 9.41421 19.4142 9.75 19 9.75H14C13.5858 9.75 13.25 9.41421 13.25 9Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M14.25 12C14.25 11.5858 14.5858 11.25 15 11.25H19C19.4142 11.25 19.75 11.5858 19.75 12C19.75 12.4142 19.4142 12.75 19 12.75H15C14.5858 12.75 14.25 12.4142 14.25 12Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M15.25 15C15.25 14.5858 15.5858 14.25 16 14.25H19C19.4142 14.25 19.75 14.5858 19.75 15C19.75 15.4142 19.4142 15.75 19 15.75H16C15.5858 15.75 15.25 15.4142 15.25 15Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M9 11C10.1046 11 11 10.1046 11 9C11 7.89543 10.1046 7 9 7C7.89543 7 7 7.89543 7 9C7 10.1046 7.89543 11 9 11Z"
+                                            fill="currentColor"></path>
+                                        <path
+                                            d="M9 17C13 17 13 16.1046 13 15C13 13.8954 11.2091 13 9 13C6.79086 13 5 13.8954 5 15C5 16.1046 5 17 9 17Z"
+                                            fill="currentColor"></path>
+                                    </g>
                                 </svg>
                                 <span class="flex-1 ml-3 whitespace-nowrap">Supervisores</span>
                             </a>
@@ -123,6 +148,18 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{ route('departamentos.index') }}"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('departamentos*') ? 'text-white bg-zinc-700' : '' }}">
+                                <svg class="flex-shrink-0 w-6 h-6  transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-white"
+                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                    viewBox="0 0 18 18">
+                                    <path
+                                        d="M18 5H0v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5Zm-7.258-2L9.092.8a2.009 2.009 0 0 0-1.6-.8H2.049a2 2 0 0 0-2 2v1h10.693Z" />
+                                </svg>
+                                <span class="flex-1 ml-3 whitespace-nowrap">Departamentos</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('cargos.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('cargos*') ? 'text-white bg-zinc-700' : '' }}">
                                 <svg class="flex-shrink-0 w-6 h-6  transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-white"
@@ -146,18 +183,7 @@
                                 <span class="flex-1 ml-3 whitespace-nowrap">Puestos</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ route('departamentos.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('departamentos*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg class="flex-shrink-0 w-6 h-6  transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-white"
-                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                    viewBox="0 0 18 18">
-                                    <path
-                                        d="M18 5H0v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5Zm-7.258-2L9.092.8a2.009 2.009 0 0 0-1.6-.8H2.049a2 2 0 0 0-2 2v1h10.693Z" />
-                                </svg>
-                                <span class="flex-1 ml-3 whitespace-nowrap">Departamentos</span>
-                            </a>
-                        </li>
+
                         <div class="flex flex-col gap-2">
                             @foreach ($objetivosDesaprobados as $objetivoDesaprobado)
                                 @php

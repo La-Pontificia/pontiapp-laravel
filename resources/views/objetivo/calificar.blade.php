@@ -2,88 +2,90 @@
 @section('content-objetivo')
     <div class="relative shadow-md sm:rounded-lg">
         @includeif('partials.errors')
-        <div class="flex gap-3 items-center p-4 bg-white dark:bg-gray-800">
-            <span>
-                <label for="eva">Año Actividad</label>
-                <select id="countries"
-                    class="bg-gray-50 w-[120px] font-semibold border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <div class="grid grid-cols-5 gap-3 p-4 bg-white">
+            <span class="w-full block">
+                <label for="area">Area</label>
+                <select id="area"
+                    class="bg-gray-50 w-full h-12 font-medium border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected value="">Todos</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
+                    @foreach ($areas as $area)
+                        <option {{ $id_area == $area->id ? 'selected' : '' }} value="{{ $area->id }}">
+                            {{ $area->nombre_area }}
+                        </option>
+                    @endforeach
                 </select>
+
             </span>
             <span>
-                <label for="eva">Evaluacion</label>
-                <select id="eva"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[130px] font-semibold p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="departamento">Departamento</label>
+                <select id="departamento"
+                    class="bg-gray-50 w-full font-medium border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected value="">Todos</option>
-                    <option value="eva_01">Evaluacion 01</option>
-                    <option value="eva_02">Evaluacion 02</option>
+                    @foreach ($departamentos as $departamento)
+                        <option {{ $id_departamento == $departamento->id ? 'selected' : '' }}
+                            value="{{ $departamento->id }}">{{ $departamento->nombre_departamento }}
+                        </option>
+                    @endforeach
                 </select>
+                {{-- <script>
+                    document.getElementById('departamento').addEventListener('change', function() {
+                        var selectedValue = this.value;
+                        var currentURL = window.location.href;
+                        // Verifica si ya existe un parámetro "id_area" en el URL
+                        var regex = /[?&]id_area(=([^&#]*)|&|#|$)/;
+                        if (regex.test(currentURL)) {
+                            // Si el parámetro ya existe, reemplaza su valor
+                            currentURL = currentURL.replace(/([?&])id_area=.*?(&|#|$)/, '$1id_departamento=' +
+                                selectedValue + '$2');
+                        } else {
+                            // Si el parámetro no existe, agrégalo al URL
+                            currentURL += (currentURL.indexOf('?') === -1 ? '?' : '&') + 'id_departamento=' + selectedValue;
+                        }
+
+                        // Redirecciona a la nueva URL con el parámetro
+                        window.location.href = currentURL;
+                    });
+                </script> --}}
             </span>
             <span>
-                <label for="colaboradorSelect">Colaborador</label>
-                <select id="colaboradorSelect"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="cargo">Cargo</label>
+                <select id="cargo"
+                    class="bg-gray-50 w-full font-medium border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected value="">Todos</option>
-                    @foreach ($colab_a_supervisar as $item)
-                        <option {{ $idColaborador == $item->id_colaborador ? 'selected' : '' }}
-                            value="{{ $item->id_colaborador }}">{{ $item->colaboradore->nombres }}
-                            {{ $item->colaboradore->apellidos }}</option>
+                    @foreach ($cargos as $cargo)
+                        <option {{ $id_cargo == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
+                            {{ $cargo->nombre_cargo }}
+                        </option>
                     @endforeach
                 </select>
             </span>
-            <script>
-                document.getElementById('colaboradorSelect').addEventListener('change', function() {
-                    var selectedValue = this.value;
-                    var currentURL = window.location.href;
-                    // Verifica si ya existe un parámetro "id_colaborador" en el URL
-                    var regex = /[?&]id_colaborador(=([^&#]*)|&|#|$)/;
-                    if (regex.test(currentURL)) {
-                        // Si el parámetro ya existe, reemplaza su valor
-                        currentURL = currentURL.replace(/([?&])id_colaborador=.*?(&|#|$)/, '$1id_colaborador=' +
-                            selectedValue + '$2');
-                    } else {
-                        // Si el parámetro no existe, agrégalo al URL
-                        currentURL += (currentURL.indexOf('?') === -1 ? '?' : '&') + 'id_colaborador=' + selectedValue;
-                    }
-
-                    // Redirecciona a la nueva URL con el parámetro
-                    window.location.href = currentURL;
-                });
-            </script>
-            <div class="relative ml-auto">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                    </svg>
-                </div>
-                <input type="text" id="table-search"
-                    class="block p-2 pl-10 text-base text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Buscar objetivo">
+            <span>
+                <label for="cargo">Puesto</label>
+                <select id="puesto"
+                    class="bg-gray-50 w-full font-medium border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected value="">Todos</option>
+                    @foreach ($puestos as $puesto)
+                        <option {{ $id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
+                            {{ $puesto->nombre_puesto }}
+                        </option>
+                    @endforeach
+                </select>
+            </span>
+            <div class="relative">
+                <input type="search"
+                    class="block p-2 mt-6 h-12 font-medium w-full text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Buscar colaborador">
             </div>
         </div>
-        @if ($colaborador)
-            <div class="h-[250px]">
-
-            </div>
-        @endif
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    @if ($idColaborador === null)
-                        <th scope="col" class="px-6 py-3 max-w-[250px]">
-                            Colaborador y objetivo
-                        </th>
-                    @endif
+                    <th scope="col" class="px-6 py-3 max-w-[250px]">
+                        Colaborador
+                    </th>
                     <th scope="col" class="px-6 py-3">
                         Descripcion
                     </th>
-                    {{-- <th scope="col" class="px-6 py-3">
-                        Indicadores
-                    </th> --}}
                     <th scope="col" class="px-6 py-3">
                         Notas
                     </th>
@@ -98,7 +100,144 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($objetivos as $objetivo)
+                @foreach ($colaboradores_a_supervisar as $item)
+                    {{-- <div class="w-72 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
+                            <div class="flex justify-end px-2 pt-2">
+                                <button id="dropdownButton" data-dropdown-toggle="dropdown"
+                                    class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
+                                    type="button">
+                                    <span class="sr-only">Open dropdown</span>
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" viewBox="0 0 16 3">
+                                        <path
+                                            d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                                    </svg>
+                                </button>
+                                <!-- Dropdown menu -->
+                                <div id="dropdown"
+                                    class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                    <ul class="py-2" aria-labelledby="dropdownButton">
+                                        <li>
+                                            <a href="#"
+                                                class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Ver
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('colaboradores.edit', $colaboradore->id) }}"
+                                                class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Editar</a>
+                                        </li>
+                                        @if ($accesos->contains('modulo', 'Accesos'))
+                                            <li>
+                                                <a href="{{ route('colaborador.accesos', $colaboradore->id) }}"
+                                                    class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Accesos
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($accesos->contains('modulo', 'Supervisores'))
+                                            <li>
+                                                <a href="{{ route('colaborador.supervisor', $colaboradore->id) }}"
+                                                    class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Jefe
+                                                    inmediato</a>
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <form action="{{ route('colaboradores.destroy', $colaboradore->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="block w-full text-left px-4 py-1 text-base font-medium text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Eliminar</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-center pb-5">
+                                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/default-user.webp"
+                                    alt="Bonnie image" />
+                                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                                    {{ $colaboradore->apellidos }}
+                                    {{ $colaboradore->nombres }}</h5>
+                                <span
+                                    class="text-sm text-gray-500 dark:text-gray-400">{{ $colaboradore->cargo->nombre_cargo }}</span>
+                                <div class="flex mt-4 space-x-3 md:mt-6">
+                                    <a href="{{ route('colaboradores.edit', $colaboradore->id) }}"
+                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Editar</a>
+                                    <a href="#"
+                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">
+                                        Objetivos</a>
+                                </div>
+                            </div>
+                        </div> --}}
+                    <tr
+                        class="bg-white [&>td]:px-2 [&>td]:py-2 [&>th]:px-2 [&>th]:py-2 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="flex items-center  text-gray-900 whitespace-nowrap dark:text-white">
+                            <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
+                            <div class="pl-3">
+                                <div class="text-lg font-semibold">
+                                    {{ $item->colaboradore->nombres }}
+                                    {{-- {{ $colaboradore->nombres }} --}}
+                                </div>
+                                <div class="font-normal text-gray-500">{{ $item->colaboradore->dni }}</div>
+                            </div>
+                        </th>
+                        {{-- <td class=" capitalize text-red-600 font-medium">
+                            {{ strtolower($colaboradore->cargo->nombre_cargo) }}
+                        </td>
+                        <td class=" capitalize text-yellow-600 font-medium">
+                            {{ strtolower($colaboradore->puesto->nombre_puesto) }}
+                        </td>
+                        <td class=" capitalize text-sky-600 font-medium">
+                            {{ strtolower($colaboradore->puesto->departamento->area->nombre_area) }}
+                            <span class="block text-neutral-500 text-sm font-normal line-clamp-1"><span>Dep.</span>
+                                {{ strtolower($colaboradore->puesto->departamento->nombre_departamento) }}</span>
+                        </td>
+                        <td class="">
+                            @if ($colaboradore->estado == 0)
+                                <span
+                                    class="bg-red-100 text-red-800 text-base font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                            @else
+                                <span
+                                    class="bg-green-100 text-green-800 text-base font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                            @endif
+                        </td>
+                        <td class="">
+                            <div class="line-clamp-2">
+                                {{ \Carbon\Carbon::parse($colaboradore->created_at)->format('j \d\e F, Y') }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex gap-1">
+                                <button type="button" title="Editar"
+                                    class="text-white gap-2 bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-full text-sm h-[40px] w-[40px] justify-center text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+                                    <svg class="w-5 h-5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z" />
+                                    </svg>
+                                </button>
+                                <button type="button" title="Objetivos"
+                                    class="text-white gap-2 bg-[#f44268] hover:bg-[#f57893] focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-full text-sm h-[40px] w-[40px] justify-center text-center inline-flex items-center dark:focus:ring-[#4285F4]/55">
+                                    <svg class="w-5 h-5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor" viewBox="0 0 18 20">
+                                        <path
+                                            d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                                    </svg>
+                                </button>
+                                <button type="button"
+                                    class="text-gray-900 gap-2 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-full text-sm h-[40px] w-[40px] justify-center text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50">
+                                    <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                                        <path
+                                            d="M7.324 9.917A2.479 2.479 0 0 1 7.99 7.7l.71-.71a2.484 2.484 0 0 1 2.222-.688 4.538 4.538 0 1 0-3.6 3.615h.002ZM7.99 18.3a2.5 2.5 0 0 1-.6-2.564A2.5 2.5 0 0 1 6 13.5v-1c.005-.544.19-1.072.526-1.5H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h7.687l-.697-.7ZM19.5 12h-1.12a4.441 4.441 0 0 0-.579-1.387l.8-.795a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.795.8A4.443 4.443 0 0 0 15 8.62V7.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.12c-.492.113-.96.309-1.387.579l-.795-.795a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.8.8c-.272.424-.47.891-.584 1.382H8.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1.12c.113.492.309.96.579 1.387l-.795.795a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.8-.8c.424.272.892.47 1.382.584v1.12a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1.12c.492-.113.96-.309 1.387-.579l.795.8a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.8-.795c.273-.427.47-.898.584-1.392h1.12a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5ZM14 15.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td> --}}
+                    </tr>
+                @endforeach
+                {{-- @foreach ($objetivos as $objetivo)
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         @if ($idColaborador === null)
@@ -142,11 +281,6 @@
                                 {{ $objetivo->descripcion }}
                             </div>
                         </td>
-                        {{-- <td class="px-6 py-4">
-                            <div class="line-clamp-3 overflow-ellipsis overflow-hidden">
-                                {{ $objetivo->indicadores }}
-                            </div>
-                        </td> --}}
                         <td class="px-6 py-4">
                             <div
                                 class="line-clamp-2 flex gap-1 min-w-max items-center font-semibold overflow-ellipsis overflow-hidden">
@@ -172,14 +306,6 @@
                                     <span
                                         class="bg-green-100 text-green-800 text-base font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Aprobado</span>
                                 @endif
-                                {{-- <label class="relative inline-flex items-center mr-5 cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer"
-                                        {{ $objetivo->estado == 2 ? 'checked' : '' }}>
-                                    <div
-                                        class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600">
-                                    </div>
-                                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
-                                </label> --}}
                             </div>
                         </td>
                         <td class="px-6 py-4">
@@ -306,11 +432,41 @@
                         </div>
                     </td>
                     <td class="p-2 font-bold text-xl"></td>
-                </tr>
+                </tr> --}}
             </tbody>
         </table>
     </div>
-    {!! $objetivos->links() !!}
+    <script>
+        function handleSelectChange(selectId, paramName) {
+            var selectedValue = document.getElementById(selectId).value;
+            var currentURL = window.location.href;
+            var regex = new RegExp("[?&]" + paramName + "(=([^&#]*)|&|#|$)");
+            if (regex.test(currentURL)) {
+                currentURL = currentURL.replace(new RegExp("([?&])" + paramName + "=.*?(&|#|$)"), '$1' + paramName + '=' +
+                    selectedValue + '$2');
+            } else {
+                currentURL += (currentURL.indexOf('?') === -1 ? '?' : '&') + paramName + '=' + selectedValue;
+            }
+            window.location.href = currentURL;
+        }
+
+        document.getElementById('area').addEventListener('change', function() {
+            handleSelectChange('area', 'id_area');
+        });
+
+        document.getElementById('departamento').addEventListener('change', function() {
+            handleSelectChange('departamento', 'id_departamento');
+        });
+
+        document.getElementById('cargo').addEventListener('change', function() {
+            handleSelectChange('cargo', 'id_cargo');
+        });
+
+        document.getElementById('puesto').addEventListener('change', function() {
+            handleSelectChange('puesto', 'id_puesto');
+        });
+    </script>
+
     {{-- <div class="fixed z-40 bg-neutral-500/40 inset-0 grid place-content-center">
             <div class="w-[600px] bg-white p-4 rounded-2xl">
                 <header class="pb-1">
