@@ -5,7 +5,7 @@
         <header>
             <h1 class="text-4xl font-bold tracking-tighter">Objetivos</h1>
         </header>
-        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+        <div class=" border-b border-gray-200 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent"
                 role="tablist">
                 <li class="mr-2" role="presentation">

@@ -75,6 +75,7 @@ INSERT INTO
     `puestos` (
         `codigo_puesto`,
         `nombre_puesto`,
+        `id_cargo`,
         `id_departamento`,
         `created_at`
     )
