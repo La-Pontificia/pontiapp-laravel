@@ -1,3 +1,4 @@
+
 INSERT INTO
     `areas` (`codigo_area`, `nombre_area`, `created_at`)
 VALUES
@@ -20,7 +21,7 @@ VALUES
     ('C003', 'JEFE', NOW()),
     ('C004', 'COORDINADOR', NOW()),
     ('C005', 'ASISTENTE', NOW()),
-    ('C006', 'ANALISTA', NOW());
+    ('C006', 'ANALISTA', NOW()),
     ('C007', 'ASESOR', NOW());
 
 
@@ -148,7 +149,7 @@ VALUES
         'P011',
         'JEFE DE ADMISIÓN',
         3,
-        3
+        3,
         NOW()
     ),
     (
