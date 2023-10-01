@@ -27,25 +27,6 @@
                         </option>
                     @endforeach
                 </select>
-                {{-- <script>
-                    document.getElementById('departamento').addEventListener('change', function() {
-                        var selectedValue = this.value;
-                        var currentURL = window.location.href;
-                        // Verifica si ya existe un parámetro "id_area" en el URL
-                        var regex = /[?&]id_area(=([^&#]*)|&|#|$)/;
-                        if (regex.test(currentURL)) {
-                            // Si el parámetro ya existe, reemplaza su valor
-                            currentURL = currentURL.replace(/([?&])id_area=.*?(&|#|$)/, '$1id_departamento=' +
-                                selectedValue + '$2');
-                        } else {
-                            // Si el parámetro no existe, agrégalo al URL
-                            currentURL += (currentURL.indexOf('?') === -1 ? '?' : '&') + 'id_departamento=' + selectedValue;
-                        }
-
-                        // Redirecciona a la nueva URL con el parámetro
-                        window.location.href = currentURL;
-                    });
-                </script> --}}
             </span>
             <span>
                 <label for="cargo">Cargo</label>
@@ -80,99 +61,30 @@
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th class="px-6 py-3 max-w-[250px]">
+                    <th class="px-3 py-3 max-w-[250px]">
                         Colaborador
                     </th>
-                    <th class="px-6 py-3">
+                    <th class="px-3 py-3">
                         Cargo
                     </th>
-                    <th class="px-6 py-3">
+                    <th class="px-3 py-3">
                         Puesto
                     </th>
-                    <th class="px-6 py-3">
+                    <th class="px-3 py-3">
                         Dep. & Area
                     </th>
-                    <th class="px-6 py-3">
+                    <th class="px-3 py-3">
                         Estado
                     </th>
-                    <th class="px-6 py-3">
+                    <th class="px-3 py-3">
                         F. Registro
                     </th>
-                    <th class="px-6 py-3">
+                    <th class="px-3 py-3">
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($colaboradores_a_supervisar as $item)
-                    {{-- <div class="w-72 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
-                            <div class="flex justify-end px-2 pt-2">
-                                <button id="dropdownButton" data-dropdown-toggle="dropdown"
-                                    class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
-                                    type="button">
-                                    <span class="sr-only">Open dropdown</span>
-                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor" viewBox="0 0 16 3">
-                                        <path
-                                            d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                                    </svg>
-                                </button>
-                                <!-- Dropdown menu -->
-                                <div id="dropdown"
-                                    class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                    <ul class="py-2" aria-labelledby="dropdownButton">
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Ver
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('colaboradores.edit', $colaboradore->id) }}"
-                                                class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Editar</a>
-                                        </li>
-                                        @if ($accesos->contains('modulo', 'Accesos'))
-                                            <li>
-                                                <a href="{{ route('colaborador.accesos', $colaboradore->id) }}"
-                                                    class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Accesos
-                                                </a>
-                                            </li>
-                                        @endif
-                                        @if ($accesos->contains('modulo', 'Supervisores'))
-                                            <li>
-                                                <a href="{{ route('colaborador.supervisor', $colaboradore->id) }}"
-                                                    class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Jefe
-                                                    inmediato</a>
-                                            </li>
-                                        @endif
-                                        <li>
-                                            <form action="{{ route('colaboradores.destroy', $colaboradore->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="block w-full text-left px-4 py-1 text-base font-medium text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Eliminar</button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-center pb-5">
-                                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/default-user.webp"
-                                    alt="Bonnie image" />
-                                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                                    {{ $colaboradore->apellidos }}
-                                    {{ $colaboradore->nombres }}</h5>
-                                <span
-                                    class="text-sm text-gray-500 dark:text-gray-400">{{ $colaboradore->cargo->nombre_cargo }}</span>
-                                <div class="flex mt-4 space-x-3 md:mt-6">
-                                    <a href="{{ route('colaboradores.edit', $colaboradore->id) }}"
-                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                        Editar</a>
-                                    <a href="#"
-                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">
-                                        Objetivos</a>
-                                </div>
-                            </div>
-                        </div> --}}
                     <tr
                         class="bg-white even:bg-neutral-50 [&>td]:px-2 [&>td]:py-2 [&>th]:px-2 [&>th]:py-2 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <th scope="row" class="flex items-center  text-gray-900 whitespace-nowrap dark:text-white">
@@ -212,7 +124,7 @@
                         </td>
                         <td>
                             <button type="button"
-                                class="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2 mb-2">
+                                class="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center mr-2 mb-2">
                                 <svg viewBox="0 0 24 24" fill="none" class="w-[25px]" xmlns="http://www.w3.org/2000/svg">
                                     <g id="SVGRepo_iconCarrier">
                                         <path opacity="0.4"
@@ -491,41 +403,4 @@
             handleSelectChange('puesto', 'id_puesto');
         });
     </script>
-
-    {{-- <div class="fixed z-40 bg-neutral-500/40 inset-0 grid place-content-center">
-            <div class="w-[600px] bg-white p-4 rounded-2xl">
-                <header class="pb-1">
-                    <h1 class="font-bold text-2xl">Detalles del objetivo</h1>
-                    <p class="opacity-60">13 abril 2023</p>
-                    <span
-                        class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Aprobado</span>
-                </header>
-                <div class="flex pt-2 flex-col gap-2">
-                    <div class="p-2 rounded-lg bg-neutral-100">
-                        <span class="font-semibold">Objetivo:</span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, iste ducimus. Esse, optio.</p>
-                    </div>
-                    <div class="p-2 rounded-lg bg-neutral-100">
-                        <span class="font-semibold">Descripción:</span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, iste ducimus. Esse, optio.</p>
-                    </div>
-                    <div class="p-2 rounded-lg bg-neutral-100">
-                        <span class="font-semibold">Indicadores:</span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, iste ducimus. Esse, optio. <br>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, iste ducimus. Esse, optio.
-                            <br>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, iste ducimus. Esse, optio.
-                        </p>
-                    </div>
-                    <div class="p-2">
-                        <span class="font-semibold">Nota:</span>
-                        <p class="font-bold text-2xl">12</p>
-                    </div>
-                </div>
-                <footer class="flex justify-end">
-                    <button type="button"
-                        class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-base px-5 py-2.5 text-center mr-2 mb-2">Aceptar</button>
-                </footer>
-            </div>
-        </div> --}}
 @endsection

@@ -33,6 +33,9 @@ Route::resource('/calificaciones', App\Http\Controllers\CalificacioneController:
 
 Route::get('/calificar', 'App\Http\Controllers\ObjetivoController@indexCalificar')->name('objetivo.calificarindex')->middleware('authMiddleware');
 
+Route::get('/{id}', 'App\Http\Controllers\ColabObjetivosController@index')->name('colab-objetivo.index')->middleware('authMiddleware');
+
+
 Route::post('/calificar/desaprobar', 'App\Http\Controllers\ObjetivoController@desaprobar')->name('objetivo.desaprobar');
 
 Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController@getAccesosColaborador')->name('colaborador.accesos');
