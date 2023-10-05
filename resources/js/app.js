@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             })
             .catch(function (error) {
-                console.log(error)
                 Swal.fire({
                     icon: 'error',
                     title: 'Error al crear el objetivo',

@@ -50,37 +50,42 @@ class ObjetivoController extends GlobalController
      */
     public function store(Request $request)
     {
-        $colab = $this->getCurrentColab();
-
-        if ($request->porcentaje < 1) {
-            return response()->json(['error' => 'El porcentaje no puede ser menor a 0'], 400);
+        // Validar el porcentaje
+        if ($request->porcentaje < 1 || $request->porcentaje > 100) {
+            return response()->json(['error' => 'El porcentaje debe estar entre 1 y 100'], 400);
         }
 
-        // Valida los datos del formulario
+        // Validar la descripción e indicadores
+        $maxTextLength = 2000;
+        $requiredFields = ['descripcion' => 'La descripción', 'indicadores' => 'Los indicadores'];
+
+        foreach ($requiredFields as $field => $fieldName) {
+            if (!$request->$field || strlen($request->$field) > $maxTextLength) {
+                return response()->json(['error' => "$fieldName no puede estar vacío o tener más de $maxTextLength caracteres"], 400);
+            }
+        }
+
+        // Validar la suma total del porcentaje
         $validatedData = $request->validate(Objetivo::$rules);
         $objetivos = $this->getObjetivosByCurrentColab();
-        $totalPorcentaje = $objetivos->sum('porcentaje');
+        $totalPorcentaje = $objetivos->sum('porcentaje') + $request->porcentaje;
 
         if ($totalPorcentaje > 100) {
             return response()->json(['error' => 'La suma total de porcentaje excede 100'], 400);
         }
 
-        // obtenemos el supervisor del colaborador
-        $super = $this->getSuperByCurrentColab();
-
+        // Crear el nuevo objetivo
         $edaColab = $this->getCurrentEdaByCurrentColab();
-        // creamos una nueva data
         $data = array_merge($validatedData, [
             'id_eda_colab' => $edaColab->id,
-            'id_supervisor' => $super->id_supervisor,
             'porcentaje' =>  $request->input('porcentaje'),
             'porcentaje_inicial' => $request->input('porcentaje')
         ]);
 
-        // Crea un nuevo Objetivo con los datos combinados
         Objetivo::create($data);
         return response()->json(['success' => true], 202);
     }
+
 
     /**
      * Display the specified resource.
@@ -104,7 +109,6 @@ class ObjetivoController extends GlobalController
     public function edit($id)
     {
         $objetivo = Objetivo::find($id);
-
         return view('objetivo.edit', compact('objetivo'));
     }
 
@@ -123,18 +127,56 @@ class ObjetivoController extends GlobalController
      * @param  Objetivo $objetivo
      * @return \Illuminate\Http\Response
      */
+    // public function update(Request $request, Objetivo $objetivo)
+    // {
+    //     $colab = $this->getCurrentColab();
+    //     if ($request->porcentaje < 1) {
+    //         return response()->json(['error' => 'El porcentaje no puede ser menor a 1'], 400);
+    //     }
+
+    //     $objetivos = Objetivo::where('id_colaborador', $colab->id)
+    //         ->where('id', '!=', $objetivo->id)
+    //         ->get();
+
+    //     $totalPorcentaje = $objetivos->sum('porcentaje') + $request->porcentaje;
+    //     if ($totalPorcentaje > 100) {
+    //         return response()->json(['error' => 'La suma total de porcentaje excede 100'], 400);
+    //     }
+
+    //     $maxTextLength = 2000;
+    //     $requiredFields = ['descripcion' => 'La descripción', 'indicadores' => 'Los indicadores'];
+
+    //     foreach ($requiredFields as $field => $fieldName) {
+    //         if (!$request->$field || strlen($request->$field) > $maxTextLength) {
+    //             return response()->json(['error' => "$fieldName no puede estar vacío o tener más de $maxTextLength caracteres"], 400);
+    //         }
+    //     }
+
+    //     // Actualizar el objetivo
+    //     $objetivo->update($request->all());
+    //     return response()->json(['success' => true], 200);
+    // }
+
+
     public function update(Request $request, Objetivo $objetivo)
     {
-
-
-
-        $colab = $this->getCurrentColab();
-        $validatedData = $request->validate(Objetivo::$rules);
-        if ($request->porcentaje < 1) {
-            return response()->json(['error' => 'El porcentaje no puede ser menor a 0'], 400);
+        // Validar el porcentaje
+        if ($request->porcentaje < 1 || $request->porcentaje > 100) {
+            return response()->json(['error' => 'El porcentaje debe estar entre 1 y 100'], 400);
         }
-        $objetivos = Objetivo::where('id_colaborador', $colab->id)->where('id', '!=', $objetivo->id)->get();
-        $totalPorcentaje = $objetivos->sum('porcentaje') + $validatedData['porcentaje'];
+
+        // Validar la descripción e indicadores
+        $maxTextLength = 2000;
+        $requiredFields = ['descripcion' => 'La descripción', 'indicadores' => 'Los indicadores'];
+
+        foreach ($requiredFields as $field => $fieldName) {
+            if (!$request->$field || strlen($request->$field) > $maxTextLength) {
+                return response()->json(['error' => "$fieldName no puede estar vacío o tener más de $maxTextLength caracteres"], 400);
+            }
+        }
+
+        $objetivos = $this->getObjetivosByCurrentColab();
+        $totalPorcentaje = ($objetivos->sum('porcentaje') - $objetivo->porcentaje) + $request->porcentaje;
 
         if ($totalPorcentaje > 100) {
             return response()->json(['error' => 'La suma total de porcentaje excede 100'], 400);
@@ -143,6 +185,7 @@ class ObjetivoController extends GlobalController
         $objetivo->update($request->all());
         return response()->json(['success' => true], 200);
     }
+
 
     /**
      * @param int $id

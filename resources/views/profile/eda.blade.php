@@ -158,10 +158,10 @@
                                             <th scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                                                 <h3>{{ $objetivo->objetivo }}</h3>
-                                                <h4 class="text-neutral-400 text-sm font-normal">
+                                                {{-- <h4 class="text-neutral-400 text-sm font-normal">
                                                     <span>Sup. </span>{{ $objetivo->supervisor->nombres }}
                                                     {{ $objetivo->supervisor->apellidos }}
-                                                </h4>
+                                                </h4> --}}
                                             </th>
                                             <td class="px-6 py-4">
                                                 <div class="line-clamp-3 overflow-ellipsis overflow-hidden">
@@ -399,7 +399,6 @@
                     });
             });
         });
-
 
 
         $formlimit.addEventListener('submit', function(event) {

@@ -28,17 +28,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Objetivo extends Model
 {
-    
+
     static $rules = [
-		'id_supervisor' => 'required',
-		'id_eda_colab' => 'required',
-		'objetivo' => 'required',
-		'descripcion' => 'required',
-		'indicadores' => 'required',
-		'porcentaje' => 'required',
-		'autoevaluacion' => 'required',
-		'nota' => 'required',
-		'editado' => 'required',
+        // 'id_supervisor' => 'required',
+        // 'id_eda_colab' => 'required',
+        'objetivo' => 'required',
+        'descripcion' => 'required',
+        'indicadores' => 'required',
+        'porcentaje' => 'required',
+        // 'autoevaluacion' => 'required',
+        // 'nota' => 'required',
+        // 'editado' => 'required',
     ];
 
     protected $perPage = 20;
@@ -48,7 +48,7 @@ class Objetivo extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_supervisor','id_eda_colab','objetivo','descripcion','indicadores','porcentaje','autoevaluacion','nota','editado','nota_fecha'];
+    protected $fillable = ['id_supervisor', 'id_eda_colab', 'objetivo', 'descripcion', 'indicadores', 'porcentaje', 'autoevaluacion', 'nota', 'editado', 'nota_fecha'];
 
 
     /**
@@ -58,7 +58,7 @@ class Objetivo extends Model
     {
         return $this->hasOne('App\Models\Colaboradore', 'id', 'id_supervisor');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -66,6 +66,4 @@ class Objetivo extends Model
     {
         return $this->hasOne('App\Models\EdaColab', 'id', 'id_eda_colab');
     }
-    
-
 }
