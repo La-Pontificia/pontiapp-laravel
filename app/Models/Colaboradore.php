@@ -42,7 +42,7 @@ class Colaboradore extends Model
      *
      * @var array
      */
-    protected $fillable = ['dni', 'apellidos', 'nombres', 'estado', 'id_cargo', 'id_puesto', 'id_usuario'];
+    protected $fillable = ['dni', 'apellidos', 'nombres', 'estado', 'id_cargo', 'id_eda_colab', 'id_puesto', 'id_usuario'];
 
 
     /**

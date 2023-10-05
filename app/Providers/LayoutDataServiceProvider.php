@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Colaboradore;
+use App\Models\Eda;
 use App\Models\Objetivo;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
@@ -23,22 +24,17 @@ class LayoutDataServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('layouts.app', function ($view) {
-            $user = auth()->user();
-
-            if ($user) {
-                $id = $user->id;
-                $colab = Colaboradore::where([
-                    'id_usuario' => $id,
-                ])->first();
-
-                $objetivosDesaprobados = Objetivo::where('estado', 0)
-                    ->where('id_colaborador', $colab->id)
-                    ->where('notify_colab', 1)
-                    ->whereNotNull('feedback')
-                    ->get();
-
-                $view->with('objetivosDesaprobados', $objetivosDesaprobados);
-            }
+            $edas = Eda::orderBy('created_at', 'desc')->get();
+            $currentEda = Eda::where('wearing', 1)->first();
+            $view->with('edas', $edas);
+            $view->with('currentEda', $currentEda);
         });
+
+        // View::composer('layouts.profile', function ($view) {
+        //     $edas = Eda::orderBy('created_at', 'desc')->get();
+        //     $currentEda = Eda::where('wearing', 1)->first();
+        //     $view->with('edas', $edas);
+        //     $view->with('currentEda', $currentEda);
+        // });
     }
 }

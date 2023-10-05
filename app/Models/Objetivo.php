@@ -8,48 +8,37 @@ use Illuminate\Database\Eloquent\Model;
  * Class Objetivo
  *
  * @property $id
- * @property $id_colaborador
  * @property $id_supervisor
+ * @property $id_eda_colab
  * @property $objetivo
  * @property $descripcion
  * @property $indicadores
  * @property $porcentaje
- * @property $estado
- * @property $estado_fecha
- * @property $feedback
- * @property $feedback_fecha
- * @property $nota_colab
- * @property $nota_super
- * @property $nota_super_fecha
- * @property $eva
- * @property $año
- * @property $notify_super
- * @property $notify_colab
+ * @property $autoevaluacion
+ * @property $nota
+ * @property $editado
+ * @property $nota_fecha
  * @property $created_at
  * @property $updated_at
  *
  * @property Colaboradore $colaboradore
- * @property Colaboradore $colaboradore
+ * @property EdaColab $edaColab
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
 class Objetivo extends Model
 {
-
+    
     static $rules = [
-        // 'id_colaborador' => 'required',
-        // 'id_supervisor' => 'required',
-        'objetivo' => 'required',
-        'descripcion' => 'required',
-        'indicadores' => 'required',
-        'porcentaje' => 'required|numeric|gt:0|lte:100',
-        // 'estado' => 'required',
-        // 'feedback' => 'required',
-        'nota_colab' => 'required',
-        // 'nota_super' => 'required',
-        // 'eva' => 'required',
-        // 'notify_super' => 'required',
-        // 'notify_colab' => 'required',
+		'id_supervisor' => 'required',
+		'id_eda_colab' => 'required',
+		'objetivo' => 'required',
+		'descripcion' => 'required',
+		'indicadores' => 'required',
+		'porcentaje' => 'required',
+		'autoevaluacion' => 'required',
+		'nota' => 'required',
+		'editado' => 'required',
     ];
 
     protected $perPage = 20;
@@ -59,22 +48,24 @@ class Objetivo extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_colaborador', 'id_supervisor', 'objetivo', 'descripcion', 'indicadores', 'porcentaje', 'porcentaje_inicial', 'estado', 'estado_fecha', 'feedback', 'feedback_fecha', 'nota_colab', 'nota_super', 'nota_super_fecha', 'eva', 'año', 'notify_super', 'notify_colab'];
+    protected $fillable = ['id_supervisor','id_eda_colab','objetivo','descripcion','indicadores','porcentaje','autoevaluacion','nota','editado','nota_fecha'];
 
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function colaborador()
-    {
-        return $this->hasOne('App\Models\Colaboradore', 'id', 'id_colaborador');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function supervisor()
+    public function colaboradore()
     {
         return $this->hasOne('App\Models\Colaboradore', 'id', 'id_supervisor');
     }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function edaColab()
+    {
+        return $this->hasOne('App\Models\EdaColab', 'id', 'id_eda_colab');
+    }
+    
+
 }

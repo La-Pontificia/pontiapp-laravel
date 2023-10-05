@@ -1,3 +1,27 @@
+INSERT INTO
+    `edas` (
+        `id`,
+        `year`,
+        `n_evaluacion`,
+        `descripcion`,
+        `f_inicio`,
+        `f_fin`,
+        `wearing`,
+        `created_at`,
+        `updated_at`
+    )
+VALUES
+    (
+        1,
+        2024,
+        2,
+        NULL,
+        '2023-10-04 00:00:00',
+        '2023-10-04 00:00:00',
+        1,
+        '2023-10-04 18:32:10',
+        '2023-10-04 18:32:10'
+    );
 
 INSERT INTO
     `areas` (`codigo_area`, `nombre_area`, `created_at`)
@@ -23,9 +47,6 @@ VALUES
     ('C005', 'ASISTENTE', NOW()),
     ('C006', 'ANALISTA', NOW()),
     ('C007', 'ASESOR', NOW());
-
-
-
 
 INSERT INTO
     `departamentos` (
@@ -109,7 +130,6 @@ VALUES
         3,
         NOW()
     ),
-   
     (
         'P006',
         'DIRECTOR ADMINISTRATIVO',

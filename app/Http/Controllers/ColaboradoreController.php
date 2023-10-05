@@ -6,6 +6,8 @@ use App\Models\Acceso;
 use App\Models\Cargo;
 use App\Models\Colaboradore;
 use App\Models\Departamento;
+use App\Models\Eda;
+use App\Models\EdaColab;
 use App\Models\Puesto;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -76,6 +78,8 @@ class ColaboradoreController extends Controller
             'id_usuario' => $user->id, // Asignar el id del usuario al campo id_usuario
         ]);
 
+
+
         $user = Acceso::create([
             'modulo' => 'Colaboradores',
             'acceso' => 0,
@@ -106,18 +110,6 @@ class ColaboradoreController extends Controller
             'id_colaborador' => $colaborador->id,
         ]);
 
-        // $user = Acceso::create([
-        //     'modulo' => 'Objetivos',
-        //     'acceso' => 0,
-        //     'id_colaborador' => $colaborador->id,
-        // ]);
-
-        // $user = Acceso::create([
-        //     'modulo' => 'Mis objetivos',
-        //     'acceso' => 0,
-        //     'id_colaborador' => $colaborador->id,
-        // ]);
-
         $user = Acceso::create([
             'modulo' => 'Accesos',
             'acceso' => 0,
@@ -136,14 +128,27 @@ class ColaboradoreController extends Controller
             'id_colaborador' => $colaborador->id,
         ]);
 
-        // $user = Acceso::create([
-        //     'modulo' => 'Mantenimiento',
-        //     'acceso' => 0,
-        //     'id_colaborador' => $colaborador->id,
-        // ]);
+        $this->createEdas($colaborador->id);
 
         return redirect()->route('colaboradores.index')
             ->with('success', 'Colaboradore created successfully.');
+    }
+
+
+
+    public function createEdas($id_colab)
+    {
+        $edas = Eda::all();
+        foreach ($edas as $eda) {
+            EdaColab::create([
+                'id_eda' => $eda->id,
+                'id_colaborador' => $id_colab,
+                'wearing' => $eda->wearing,
+                'estado' => 0, // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
+                'cant_obj' => 0,
+                'nota_final' => 0,
+            ]);
+        }
     }
 
     /**
@@ -201,5 +206,17 @@ class ColaboradoreController extends Controller
 
         return redirect()->route('colaboradores.index')
             ->with('success', 'Colaboradore deleted successfully');
+    }
+
+    public function searchColaboradores(Request $request)
+    {
+        $q = $request->input('q');
+        $colaboradores = Colaboradore::where('nombres', 'LIKE', "%$q%")
+            ->orWhere('apellidos', 'LIKE', "%$q%")
+            ->orWhere('dni', 'LIKE', "%$q%")
+            ->take(15)
+            ->get();
+
+        return response()->json($colaboradores);
     }
 }

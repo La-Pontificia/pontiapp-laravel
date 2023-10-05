@@ -1,90 +1,128 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.headers')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <link rel="stylesheet" href="resources/css/app.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-
-    @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body class="h-screen">
-
+@section('app')
     <div style="" id="app" class="h-screen">
-        <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
-            aria-controls="cta-button-sidebar" type="button"
-            class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-            <span class="sr-only">Open sidebar</span>
-            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path clip-rule="evenodd" fill-rule="evenodd"
-                    d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
-                </path>
-            </svg>
-        </button>
         @guest
             @if (Route::has('login'))
-                {{-- <li class="">
-                    <a class="nav-link font-semibold text-xl" class="font-semibold"
-                        href="{{ route('login') }}">{{ __('Login') }}</a>
-                </li> --}}
             @endif
         @else
-            <aside id="cta-button-sidebar"
-                class="fixed top-0 left-0 z-40 w-[300px] h-screen transition-transform -translate-x-full sm:translate-x-0"
-                aria-label="Sidebar">
-                <div class="h-full px-3 py-4 pt-2 flex flex-col overflow-y-auto bg-zinc-900">
-                    <a href="{{ url('/') }}" class="flex items-center p-3">
-                        <img src="/elp.gif" class="h-14 mr-3" alt="Flowbite Logo" />
+            <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 bg-white backdrop-blur-sm z-30">
+                <div class=" flex w-full gap-3 px-4 items-center h-16">
+                    <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
+                        aria-controls="cta-button-sidebar" type="button"
+                        class="inline-flex items-center p-2 mt-2  text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-100 dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="/" class="flex items-center">
+                        <img src="/elp.gif" class="w-32" alt="Flowbite Logo" />
                     </a>
-                    <ul class="gap-2 h-full flex flex-col font-medium text-neutral-300">
+                    <span
+                        class="bg-purple-200 mx-auto text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
+                        <div class="flex items-center gap-2 divide-x divide-purple-500 p-2 rounded-xl">
+                            <h4 class="min-w-max text-xl tracking-tight font-semibold leading-4">
+                                {{ $currentEda->year }}-{{ $currentEda->n_evaluacion }}</h4>
+                            <div class="text-purple-700 pl-2 text-xs flex flex-col">
+                                <span>
+                                    <span class="text-neutral-700">Hasta:</span>
+                                    {{ \Carbon\Carbon::parse($currentEda->f_fin)->format('d F Y') }}</span>
+                            </div>
+                        </div>
+                    </span>
+                    {{-- <div class="relative w-full">
+                    <span
+                        class="absolute top-[50%] left-4 text-xl text-gray-500 font-medium translate-y-[-50%]">EDA:</span>
+                    <select name=""
+                        class="w-full pl-16 text-gray-800 font-medium text-lg border border-gray-300 cursor-pointer rounded-full p-2 px-3 bg-transparent"
+                        id="">
+                        @foreach ($edas as $eda)
+                            <option value="{{ $eda->id }}">{{ $eda->year }}-{{ $eda->n_evaluacion }}</option>
+                        @endforeach
+                    </select>
+                </div> --}}
+                    {{-- <div class="border-l ml-auto pl-2 ">
+                    <div class="relative w-full">
+                        <span
+                            class="absolute top-[50%] left-4 text-xl text-gray-500 font-medium translate-y-[-50%]">Eva:</span>
+                        <select name=""
+                            class="w-[160px] pl-14 text-gray-800 font-medium text-lg border border-gray-300 cursor-pointer rounded-full p-2 px-3 bg-transparent"
+                            id="">
+                            <option value="2023">2023-1</option>
+                            <option value="2024">2023-2</option>
+                        </select>
+                    </div>
+                </div> --}}
+                    <div class="flex ml-auto items-center md:order-2">
+                        <button type="button"
+                            class="flex  text-sm bg-gray-100 w-full p-2 items-center gap-2 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+                            data-dropdown-placement="bottom">
+                            <img class="w-9 h-8 rounded-full" src="https://cataas.com/cat?type=sq" alt="user photo">
+                            <span class="font-medium">{{ Auth::user()->name }}</span>
+                        </button>
+                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                            id="user-dropdown">
+                            <div class="px-4 py-3">
+                                <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
+                                <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+                            </div>
+                            <ul class="py-2" aria-labelledby="user-menu-button">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cerrar
+                                        sesión</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <aside id="cta-button-sidebar"
+                class="fixed top-0 left-0 z-40 w-[250px] h-screen transition-transform -translate-x-full sm:translate-x-0"
+                aria-label="Sidebar">
+                <div class="h-full px-3 py-4 pt-2 flex flex-col overflow-y-auto bg-gray-900 shadow-lg">
+                    <ul class="h-full flex mt-2 flex-col font-medium text-neutral-500">
                         <li>
-                            <a href="{{ route('objetivos.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('objetivos*') || request()->is('calificar*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg height="40px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 58 58" xml:space="preserve"
-                                    fill="#000000">
+                            <a href="/me"
+                                class="flex items-center p-2 rounded-lg hover:bg-gray-100 group transition-colors {{ request()->is('objetivos*') || request()->is('me') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                     <g id="SVGRepo_iconCarrier">
-                                        <g>
-                                            <rect x="1" style="fill:#CBB292;" width="44" height="58"></rect>
-                                            <rect x="1" style="fill:#7F6E5D;" width="8" height="58"></rect>
-                                            <rect x="16" y="10" style="fill:#EFEBDE;" width="22"
-                                                height="12"></rect>
-                                            <rect x="20" y="13" style="fill:#D5D0BB;" width="14"
-                                                height="2"></rect>
-                                            <rect x="20" y="17" style="fill:#D5D0BB;" width="14"
-                                                height="2"></rect>
-                                            <g>
-                                                <path style="fill:#F09372;"
-                                                    d="M45,41.2c0.969-2.183,3.109-4.2,5.684-4.2c3.467,0,5.964,2.821,6.278,6.183 c0,0,0.17,0.835-0.203,2.337c-0.508,2.046-1.701,3.864-3.311,5.251L45,58l-8.447-7.229c-1.61-1.387-2.803-3.205-3.311-5.251 c-0.373-1.502-0.203-2.337-0.203-2.337C33.352,39.821,35.849,37,39.316,37C41.891,37,44.031,39.017,45,41.2z">
-                                                </path>
-                                            </g>
-                                        </g>
+                                        <path
+                                            d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"
+                                            fill="#4296FF"></path>
+                                        <path
+                                            d="M12.0001 6C10.3433 6 9.00012 7.34315 9.00012 9C9.00012 10.6569 10.3433 12 12.0001 12C13.657 12 15.0001 10.6569 15.0001 9C15.0001 7.34315 13.657 6 12.0001 6Z"
+                                            fill="#152C70"></path>
+                                        <path
+                                            d="M17.8948 16.5528C18.0356 16.8343 18.0356 17.1657 17.8948 17.4473C17.9033 17.4297 17.8941 17.4487 17.8941 17.4487L17.8933 17.4502L17.8918 17.4532L17.8883 17.46L17.8801 17.4756C17.874 17.4871 17.8667 17.5004 17.8582 17.5155C17.841 17.5458 17.8187 17.5832 17.7907 17.6267C17.7348 17.7138 17.6559 17.8254 17.5498 17.9527C17.337 18.208 17.0164 18.5245 16.555 18.8321C15.623 19.4534 14.1752 20 12.0002 20C8.31507 20 6.76562 18.4304 6.26665 17.7115C5.96476 17.2765 5.99819 16.7683 6.18079 16.4031C6.91718 14.9303 8.42247 14 10.0691 14H13.7643C15.5135 14 17.1125 14.9883 17.8948 16.5528Z"
+                                            fill="#152C70"></path>
                                     </g>
                                 </svg>
-                                <span class="ml-3">Objetivos</span>
+                                <span class="ml-3">Yo y mis objetivos</span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('colaboradores.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('colaboradores*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg height="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 503.5 503.5"
-                                    xml:space="preserve" fill="#000000">
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('colaboradores*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 503.5 503.5" xml:space="preserve"
+                                    fill="#000000">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                     <g id="SVGRepo_iconCarrier">
@@ -109,32 +147,8 @@
                         </li>
                         <li>
                             <a href="{{ route('supervisores.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('supervisores*') ? 'text-white bg-zinc-700' : '' }}">
-
-                                {{-- <svg class="w-[40px] block {{ request()->is('supervisores*') ? 'text-yellow-400 ' : '' }}"
-                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path opacity="0.5"
-                                            d="M14 4H10C6.22876 4 4.34315 4 3.17157 5.17157C2 6.34315 2 8.22876 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20H14C17.7712 20 19.6569 20 20.8284 18.8284C22 17.6569 22 15.7712 22 12C22 8.22876 22 6.34315 20.8284 5.17157C19.6569 4 17.7712 4 14 4Z"
-                                            fill="currentColor"></path>
-                                        <path
-                                            d="M13.25 9C13.25 8.58579 13.5858 8.25 14 8.25H19C19.4142 8.25 19.75 8.58579 19.75 9C19.75 9.41421 19.4142 9.75 19 9.75H14C13.5858 9.75 13.25 9.41421 13.25 9Z"
-                                            fill="currentColor"></path>
-                                        <path
-                                            d="M14.25 12C14.25 11.5858 14.5858 11.25 15 11.25H19C19.4142 11.25 19.75 11.5858 19.75 12C19.75 12.4142 19.4142 12.75 19 12.75H15C14.5858 12.75 14.25 12.4142 14.25 12Z"
-                                            fill="currentColor"></path>
-                                        <path
-                                            d="M15.25 15C15.25 14.5858 15.5858 14.25 16 14.25H19C19.4142 14.25 19.75 14.5858 19.75 15C19.75 15.4142 19.4142 15.75 19 15.75H16C15.5858 15.75 15.25 15.4142 15.25 15Z"
-                                            fill="currentColor"></path>
-                                        <path
-                                            d="M9 11C10.1046 11 11 10.1046 11 9C11 7.89543 10.1046 7 9 7C7.89543 7 7 7.89543 7 9C7 10.1046 7.89543 11 9 11Z"
-                                            fill="currentColor"></path>
-                                        <path
-                                            d="M9 17C13 17 13 16.1046 13 15C13 13.8954 11.2091 13 9 13C6.79086 13 5 13.8954 5 15C5 16.1046 5 17 9 17Z"
-                                            fill="currentColor"></path>
-                                    </g>
-                                </svg> --}}
-                                <svg height="42px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('supervisores*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="32" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512.001 512.001"
                                     xml:space="preserve" fill="#000000">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -225,8 +239,8 @@
                         </li>
                         <li>
                             <a href="{{ route('accesos.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('accesos*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg  height="45px"viewBox="0 0 64 64" id="Layer_1" version="1.1" xml:space="preserve"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('accesos*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="33"viewBox="0 0 64 64" id="Layer_1" version="1.1" xml:space="preserve"
                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                     fill="#000000">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -320,22 +334,92 @@
                                 <span class="flex-1 ml-3 whitespace-nowrap">Accesos</span>
                             </a>
                         </li>
-                        {{-- <li>
-                            <a href="{{ route('accesos.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('accesos*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg class="w-6 h-6 text-gray-500 group-hover:text-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4.333 6.764a3 3 0 1 1 3.141-5.023M2.5 16H1v-2a4 4 0 0 1 4-4m7.379-8.121a3 3 0 1 1 2.976 5M15 10a4 4 0 0 1 4 4v2h-1.761M13 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-4 6h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                        <li class="border-t border-neutral-600 pt-2 mt-2">
+                            <a href="{{ route('edas.index') }}"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('edas*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="28px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 60" xml:space="preserve"
+                                    fill="#000000">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <g>
+                                            <path style="fill:#424A60;"
+                                                d="M24,35v-0.375V34.25v-8.625V25.25h0.034C24.013,25.374,24,25.499,24,25.625 c0-2.437,3.862-4.552,9.534-5.625H3.608C1.616,20,0,21.615,0,23.608v11.783C0,37.385,1.616,39,3.608,39H24V35z">
+                                            </path>
+                                        </g>
+                                        <g>
+                                            <path style="fill:#556080;"
+                                                d="M24.034,53H24v-9v-0.375V43.25V39H3.608C1.616,39,0,40.615,0,42.608v11.783 C0,56.385,1.616,58,3.608,58h28.718C27.601,56.931,24.378,55.103,24.034,53z">
+                                            </path>
+                                        </g>
+                                        <path style="fill:#556080;"
+                                            d="M54.392,20H3.608C1.616,20,0,18.384,0,16.392V4.608C0,2.616,1.616,1,3.608,1h50.783 C56.384,1,58,2.616,58,4.608v11.783C58,18.384,56.384,20,54.392,20z">
+                                        </path>
+                                        <circle style="fill:#7383BF;" cx="9.5" cy="10.5" r="3.5">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="49" cy="9" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="45" cy="9" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="51" cy="12" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="47" cy="12" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="41" cy="9" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="43" cy="12" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="37" cy="9" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="39" cy="12" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="33" cy="9" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="35" cy="12" r="1">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="9.5" cy="29.5" r="3.5">
+                                        </circle>
+                                        <circle style="fill:#7383BF;" cx="9.5" cy="48.5" r="3.5">
+                                        </circle>
+                                        <g>
+                                            <path style="fill:#1A9172;"
+                                                d="M42,48.75c-9.941,0-18-2.854-18-6.375V53h0.034c0.548,3.346,8.381,6,17.966,6s17.418-2.654,17.966-6 H60V42.375C60,45.896,51.941,48.75,42,48.75z">
+                                            </path>
+                                            <path style="fill:#1A9172;" d="M24,42v0.375c0-0.126,0.013-0.251,0.034-0.375H24z">
+                                            </path>
+                                            <path style="fill:#1A9172;"
+                                                d="M59.966,42C59.987,42.124,60,42.249,60,42.375V42H59.966z"></path>
+                                        </g>
+                                        <g>
+                                            <path style="fill:#25AE88;"
+                                                d="M42,38c-9.941,0-18-2.854-18-6.375V42.75h0.034c0.548,3.346,8.381,6,17.966,6s17.418-2.654,17.966-6 H60V31.625C60,35.146,51.941,38,42,38z">
+                                            </path>
+                                            <path style="fill:#25AE88;"
+                                                d="M24,31.25v0.375c0-0.126,0.013-0.251,0.034-0.375H24z"></path>
+                                            <path style="fill:#25AE88;"
+                                                d="M59.966,31.25C59.987,31.374,60,31.499,60,31.625V31.25H59.966z"></path>
+                                        </g>
+                                        <ellipse style="fill:#88C057;" cx="42" cy="21.375" rx="18"
+                                            ry="6.375"></ellipse>
+                                        <g>
+                                            <path style="fill:#61B872;"
+                                                d="M42,27.75c-9.941,0-18-2.854-18-6.375V32h0.034c0.548,3.346,8.381,6,17.966,6s17.418-2.654,17.966-6 H60V21.375C60,24.896,51.941,27.75,42,27.75z">
+                                            </path>
+                                            <path style="fill:#61B872;" d="M24,21v0.375c0-0.126,0.013-0.251,0.034-0.375H24z">
+                                            </path>
+                                            <path style="fill:#61B872;"
+                                                d="M59.966,21C59.987,21.124,60,21.249,60,21.375V21H59.966z"></path>
+                                        </g>
+                                    </g>
                                 </svg>
-                                <span class="flex-1 ml-3 whitespace-nowrap">Usuarios</span>
+                                <span class="flex-1 ml-3 whitespace-nowrap">EDAS</span>
                             </a>
-                        </li> --}}
-                        <li class="border-t border-t-neutral-700 pt-2 mt-2">
+                        </li>
+                        <li class="border-t border-neutral-600 pt-2 mt-2">
                             <a href="{{ route('areas.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('areas*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg height="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('areas*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
                                     fill="#000000">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -365,8 +449,8 @@
                         </li>
                         <li>
                             <a href="{{ route('departamentos.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('departamentos*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg height="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('departamentos*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
                                     fill="#000000">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -396,8 +480,8 @@
                         </li>
                         <li>
                             <a href="{{ route('cargos.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('cargos*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg height="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('cargos*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
                                     fill="#000000">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -427,8 +511,8 @@
                         </li>
                         <li>
                             <a href="{{ route('puestos.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:bg-gray-700 group transition-colors {{ request()->is('puestos*') ? 'text-white bg-zinc-700' : '' }}">
-                                <svg height="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('puestos*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
                                     fill="#000000">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -456,103 +540,58 @@
                                 <span class="flex-1 ml-3 whitespace-nowrap">Puestos</span>
                             </a>
                         </li>
-
                         <div class="flex flex-col gap-2">
-                            @foreach ($objetivosDesaprobados as $objetivoDesaprobado)
-                                @php
-                                    $fechaFeedback = \Carbon\Carbon::parse($objetivoDesaprobado->feedback_fecha);
-                                    $diferencia = $fechaFeedback->diffForHumans();
-                                @endphp
-                                <a href="">
-                                    <div id="toast-notification"
-                                        class="w-full max-w-xs p-2 text-gray-100 bg-neutral-700 rounded-lg shadow dark:bg-gray-800 dark:text-gray-300"
-                                        role="alert">
+                            {{-- @foreach ($objetivosDesaprobados as $objetivoDesaprobado)
+                            @php
+                                $fechaFeedback = \Carbon\Carbon::parse($objetivoDesaprobado->feedback_fecha);
+                                $diferencia = $fechaFeedback->diffForHumans();
+                            @endphp
+                            <a href="">
+                                <div id="toast-notification"
+                                    class="w-full max-w-xs p-2 text-gray-100 bg-neutral-700 rounded-lg shadow dark:bg-gray-800 dark:text-gray-300"
+                                    role="alert">
 
-                                        <div class="flex items-center">
-                                            <div class="relative inline-block shrink-0">
-                                                <img class="w-12 h-12 rounded-full" src="/default-user.webp"
-                                                    alt="Jese Leos image" />
-                                                <span
-                                                    class="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
-                                                    <svg class="w-3 h-3 text-white" aria-hidden="true"
-                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 18"
-                                                        fill="currentColor">
-                                                        <path
-                                                            d="M18 4H16V9C16 10.0609 15.5786 11.0783 14.8284 11.8284C14.0783 12.5786 13.0609 13 12 13H9L6.846 14.615C7.17993 14.8628 7.58418 14.9977 8 15H11.667L15.4 17.8C15.5731 17.9298 15.7836 18 16 18C16.2652 18 16.5196 17.8946 16.7071 17.7071C16.8946 17.5196 17 17.2652 17 17V15H18C18.5304 15 19.0391 14.7893 19.4142 14.4142C19.7893 14.0391 20 13.5304 20 13V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4Z"
-                                                            fill="currentColor" />
-                                                        <path
-                                                            d="M12 0H2C1.46957 0 0.960859 0.210714 0.585786 0.585786C0.210714 0.960859 0 1.46957 0 2V9C0 9.53043 0.210714 10.0391 0.585786 10.4142C0.960859 10.7893 1.46957 11 2 11H3V13C3 13.1857 3.05171 13.3678 3.14935 13.5257C3.24698 13.6837 3.38668 13.8114 3.55279 13.8944C3.71889 13.9775 3.90484 14.0126 4.08981 13.996C4.27477 13.9793 4.45143 13.9114 4.6 13.8L8.333 11H12C12.5304 11 13.0391 10.7893 13.4142 10.4142C13.7893 10.0391 14 9.53043 14 9V2C14 1.46957 13.7893 0.960859 13.4142 0.585786C13.0391 0.210714 12.5304 0 12 0Z"
-                                                            fill="currentColor" />
-                                                    </svg>
-                                                </span>
+                                    <div class="flex items-center">
+                                        <div class="relative inline-block shrink-0">
+                                            <img class="w-12 h-12 rounded-full" src="/default-user.webp"
+                                                alt="Jese Leos image" />
+                                            <span
+                                                class="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 bg-blue-600 rounded-full">
+                                                <svg class="w-3 h-3 text-white" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 18"
+                                                    fill="currentColor">
+                                                    <path
+                                                        d="M18 4H16V9C16 10.0609 15.5786 11.0783 14.8284 11.8284C14.0783 12.5786 13.0609 13 12 13H9L6.846 14.615C7.17993 14.8628 7.58418 14.9977 8 15H11.667L15.4 17.8C15.5731 17.9298 15.7836 18 16 18C16.2652 18 16.5196 17.8946 16.7071 17.7071C16.8946 17.5196 17 17.2652 17 17V15H18C18.5304 15 19.0391 14.7893 19.4142 14.4142C19.7893 14.0391 20 13.5304 20 13V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4Z"
+                                                        fill="currentColor" />
+                                                    <path
+                                                        d="M12 0H2C1.46957 0 0.960859 0.210714 0.585786 0.585786C0.210714 0.960859 0 1.46957 0 2V9C0 9.53043 0.210714 10.0391 0.585786 10.4142C0.960859 10.7893 1.46957 11 2 11H3V13C3 13.1857 3.05171 13.3678 3.14935 13.5257C3.24698 13.6837 3.38668 13.8114 3.55279 13.8944C3.71889 13.9775 3.90484 14.0126 4.08981 13.996C4.27477 13.9793 4.45143 13.9114 4.6 13.8L8.333 11H12C12.5304 11 13.0391 10.7893 13.4142 10.4142C13.7893 10.0391 14 9.53043 14 9V2C14 1.46957 13.7893 0.960859 13.4142 0.585786C13.0391 0.210714 12.5304 0 12 0Z"
+                                                        fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="ml-3 text-sm font-normal">
+                                            <div class="text-sm font-semibold text-gray-100">
+                                                {{ $objetivoDesaprobado->supervisor->nombres }}
+                                                {{ $objetivoDesaprobado->supervisor->apellidos }}
                                             </div>
-                                            <div class="ml-3 text-sm font-normal">
-                                                <div class="text-sm font-semibold text-gray-100">
-                                                    {{ $objetivoDesaprobado->supervisor->nombres }}
-                                                    {{ $objetivoDesaprobado->supervisor->apellidos }}
-                                                </div>
-                                                <div class="text-sm font-normal">Tienes un nuevo feedback</div>
-                                                <span
-                                                    class="text-xs font-medium text-blue-600 dark:text-blue-500">{{ $diferencia }}</span>
-                                            </div>
+                                            <div class="text-sm font-normal">Tienes un nuevo feedback</div>
+                                            <span
+                                                class="text-xs font-medium text-blue-600 dark:text-blue-500">{{ $diferencia }}</span>
                                         </div>
                                     </div>
-                                </a>
-                            @endforeach
+                                </div>
+                            </a>
+                        @endforeach --}}
                         </div>
                         <li class="nav-item dropdown mt-auto">
-                            <button type="button"
-                                class="flex mr-3 text-sm bg-gray-800 w-full p-2 items-center gap-2 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                                id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                                data-dropdown-placement="bottom">
-                                <span class="sr-only">Open user menu</span>
-                                <img class="w-8 h-8 rounded-full" src="/default-user.webp" alt="user photo">
-                                <span>{{ Auth::user()->name }}</span>
-                            </button>
-                            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                                id="user-dropdown">
-                                <div class="px-4 py-3">
-                                    <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-                                    <span
-                                        class="block text-sm  text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
-                                </div>
-                                <ul class="py-2" aria-labelledby="user-menu-button">
-                                    <li>
-                                        <a href="#"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cerrar
-                                            sesión</a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
+
                         </li>
                     </ul>
                 </div>
             </aside>
         @endguest
-        <main class="h-screen">
+        <main class="min-h-screen">
             @yield('content')
         </main>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.6/dist/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
-    @yield('script')
-</body>
-
-</html>
+@endsection

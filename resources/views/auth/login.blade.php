@@ -90,16 +90,12 @@
     <section class="">
         <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
             <div class="bg-white shadow sm:rounded-lg flex justify-center items-center flex-1">
-                <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
+                <div class="p-3 sm:p-3">
                     <div>
                         <img src="/elp.gif" class="w-60 mx-auto" />
                     </div>
-                    <div class="mt-4 flex flex-col items-center">
-                        {{-- <h1
-                            class="text-2xl tracking-tighter xl:text-4xl bg-gradient-to-br from-red-600 to-yellow-400 text-transparent bg-clip-text font-extrabold">
-                            Iniciar Sesión
-                        </h1> --}}
-                        <div class="w-full flex-1 mt-4">
+                    <div class="flex flex-col items-center">
+                        <div class="w-full flex-1">
                             <div class="my-4 border-b text-center">
                                 <div
                                     class="leading-none px-2 inline-block text-lg text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
@@ -108,10 +104,10 @@
                             </div>
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
-                                <div class="mx-auto max-w-md">
+                                <div class="mx-auto max-w-sm p-5">
 
                                     <input required autofocus id="email"
-                                        class="w-full px-5 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-base focus:outline-none focus:border-gray-400 focus:bg-white"
+                                        class="w-full px-3 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-base focus:outline-none focus:border-gray-400 focus:bg-white"
                                         type="number" name="email" value="{{ old('email') }}"
                                         placeholder="Nombre de usuario" />
 
@@ -122,7 +118,7 @@
                                     @enderror
 
                                     <input required
-                                        class="w-full px-5 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-base focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                                        class="w-full px-3 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-base focus:outline-none focus:border-gray-400 focus:bg-white mt-3"
                                         type="password" name="password" placeholder="Contraseña" />
 
                                     @error('password')
@@ -131,7 +127,7 @@
                                         </span>
                                     @enderror
                                     <button type="submit"
-                                        class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                                        class="mt-3 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-2 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -150,7 +146,13 @@
                                             Entrar
                                         </span>
                                     </button>
-
+                                    <span class="border-t border-neutral-300 mt-6 pt-4 block">
+                                        <button type="button"
+                                            class="w-full mt-2 gap-2 justify-center text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center inline-flex items-center dark:focus:ring-gray-800 dark:bg-white dark:border-gray-300 dark:text-gray-900 dark:hover:bg-gray-200 mr-2 mb-2">
+                                            <img src="/microsoft-365.png" class="w-6" alt="">
+                                            Microsoft 365
+                                        </button>
+                                    </span>
                                     <p class="mt-6 text-xs text-gray-600 text-center">
                                         I agree to abide by templatana's
                                         <a href="#" class="border-b border-gray-500 border-dotted">
@@ -167,9 +169,7 @@
                     </div>
                 </div>
                 <div class="flex-1 bg-indigo-100 h-full text-center hidden lg:flex">
-                    <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
-                        style="background-image: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg');">
-                    </div>
+                    <img src="/ponti-back.png" class="object-cover w-full h-full" alt="">
                 </div>
             </div>
         </div>
