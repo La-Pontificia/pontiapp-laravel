@@ -3,15 +3,15 @@
         <input type="text" required name="objetivo" value="{{ $objetivo->objetivo }}" placeholder="Nombre de objetivo"
             class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600">
     </span>
-   
+
     <span>
-        <textarea rows="5" required name="descripcion" type="text" value="{{ $objetivo->descripcion }}" placeholder="Descripcion"
-            class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600"></textarea>
+        <textarea rows="5" required name="descripcion" type="text" placeholder="Descripcion"
+            class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600">{{ $objetivo->descripcion }}</textarea>
     </span>
 
     <span>
-        <textarea rows="7" required name="indicadores" type="text" value="{{ $objetivo->indicadores }}" placeholder="Indicadores"
-            class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600"></textarea>
+        <textarea rows="7" required name="indicadores" type="text" placeholder="Indicadores"
+            class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600">{{ $objetivo->indicadores }}</textarea>
     </span>
 
     <span>
@@ -19,5 +19,5 @@
             class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600">
     </span>
 
-   
+
 </div>

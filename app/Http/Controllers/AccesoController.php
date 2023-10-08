@@ -25,6 +25,12 @@ class AccesoController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $accesos->perPage());
     }
 
+    public function accesoColaborador($id)
+    {
+        $accesos = Acceso::where('id_colaborador', $id)->get();
+        return view('acceso.colaborador', compact('accesos'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

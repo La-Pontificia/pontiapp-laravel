@@ -22,9 +22,11 @@ return new class extends Migration
             $table->unsignedBigInteger('id_cargo');
             $table->unsignedBigInteger('id_puesto');
             $table->unsignedBigInteger('id_usuario');
+            $table->unsignedBigInteger('id_supervisor')->nullable()->default(null);
             $table->foreign('id_cargo')->references('id')->on('cargos')->onDelete('cascade');
             $table->foreign('id_puesto')->references('id')->on('puestos')->onDelete('cascade');
             $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_supervisor')->references('id')->on('colaboradores')->onDelete('cascade');
             $table->timestamps();
         });
     }

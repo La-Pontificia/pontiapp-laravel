@@ -77,24 +77,64 @@
         <div class="relative overflow-x-auto sm:rounded-lg">
             <header class="pb-2">
                 {{-- <h1 class=" font-bold text-4xl tracking-tighter text-blue-700 pb-2">Colaboradores</h1> --}}
-                <div class="pb-4  flex dark:bg-gray-900">
-                    <label for="table-search" class="sr-only">Search</label>
-                    <div class="relative mt-1">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                            </svg>
-                        </div>
-                        <input type="text" id="table-search"
-                            class="block p-2 pl-10 text-base text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Buscar colaborador">
-                    </div>
+                <div class="grid grid-cols-5 items-end gap-3  bg-white">
+                    <span class="w-full block">
+                        <label for="area">Area</label>
+                        <select id="area"
+                            class="bg-gray-50 w-full h-12 font-medium border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected value="">Todos</option>
+                            @foreach ($areas as $area)
+                                <option {{ $id_area == $area->id ? 'selected' : '' }} value="{{ $area->id }}">
+                                    {{ $area->nombre_area }}
+                                </option>
+                            @endforeach
+                        </select>
 
+                    </span>
+                    <span>
+                        <label for="departamento">Departamento</label>
+                        <select id="departamento"
+                            class="bg-gray-50 w-full font-medium border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected value="">Todos</option>
+                            @foreach ($departamentos as $departamento)
+                                <option {{ $id_departamento == $departamento->id ? 'selected' : '' }}
+                                    value="{{ $departamento->id }}">{{ $departamento->nombre_departamento }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </span>
+                    {{-- <span>
+                        <label for="cargo">Cargo</label>
+                        <select id="cargo"
+                            class="bg-gray-50 w-full font-medium border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected value="">Todos</option>
+                            @foreach ($cargos as $cargo)
+                                <option {{ $id_cargo == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
+                                    {{ $cargo->nombre_cargo }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </span>
+                    <span>
+                        <label for="cargo">Puesto</label>
+                        <select id="puesto"
+                            class="bg-gray-50 w-full font-medium border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected value="">Todos</option>
+                            @foreach ($puestos as $puesto)
+                                <option {{ $id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
+                                    {{ $puesto->nombre_puesto }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </span>
+                    <div class="relative">
+                        <input type="search"
+                            class="block p-2 mt-6 h-12 font-medium w-full text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Buscar colaborador">
+                    </div> --}}
                     <!-- Modal toggle -->
                     <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
-                        class="text-white ml-auto bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        class="text-white ml-auto h-10 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         type="button">
                         Agregar
                     </button>
@@ -161,201 +201,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <span>
-                        <select id="countries"
-                            class="bg-gray-50 font-medium text-base border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Seleccionar un cargo</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
-                        </select>
-                    </span>
-                </div>
             </header>
 
-            {{-- <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Nombres y apellidos
+                            <th scope="col" class="px-6 py-3 min-w-[300px]">
+                                Colaborador
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                DNI
-                            </th>
-                            <th scope="col" class="px-6 py-3">
+                            <th scope="col" class="px-6 py-3 min-w-[200px]">
                                 Cargo
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Puesto
+
+                            <th scope="col" class="px-6 py-3 min-w-[200px]">
+                                Area
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Usuario
+                                Estado
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                <span class="sr-only">Edit</span>
+                            {{-- <th scope="col" class="px-6 py-3 min-w-[250px]">
+                            Fecha de registro
+                        </th> --}}
+                            <th>
+
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($colaboradores as $colaboradore)
-                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <th scope="row"
-                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $colaboradore->apellidos }} {{ $colaboradore->nombres }}
-                                </th>
-                                <td class="px-6 py-4">
-                                    {{ $colaboradore->dni }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $colaboradore->cargo->nombre_cargo }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $colaboradore->user->email }}
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <form action="{{ route('colaboradores.destroy', $colaboradore->id) }}" method="POST">
-
-                                        <a class="btn btn-sm btn-success"
-                                            href="{{ route('colaboradores.edit', $colaboradore->id) }}"><i
-                                                class="fa fa-fw fa-edit"></i></a>
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm"><i
-                                                class="fa fa-fw fa-trash"></i></button>
-
-                                        @if ($accesos->contains('modulo', 'Accesos'))
-                                            <a title="Acessos" class="btn btn-sm"
-                                                href="{{ route('colaborador.accesos', $colaboradore->id) }}">
-                                                <i style="font-size: 30px" class="fa-solid fa-universal-access"></i></a>
-                                        @endif
-
-                                        @if ($accesos->contains('modulo', 'Supervisores'))
-                                            <a title="Supervisor (Jefe imediato)" class="btn btn-sm "
-                                                href="{{ route('colaborador.supervisor', $colaboradore->id) }}"><i
-                                                    style="font-size: 30px" class="fa-solid fa-user-tie"></i></a>
-                                        @endif
-
-
-                                    </form>
-
-                                </td>
-                            </tr>
+                            @include('colaboradore.item', ['colaborador' => $colaboradore])
                         @endforeach
                     </tbody>
                 </table>
-            </div> --}}
+            </div>
+            {{-- {!! $colaboradores->links() !!} --}}
+
         </div>
-
-        {{-- <div class="flex gap-2 flex-wrap">
-            @foreach ($colaboradores as $colaboradore)
-                <div class="w-72 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
-                    <div class="flex justify-end px-2 pt-2">
-                        <button id="dropdownButton" data-dropdown-toggle="dropdown"
-                            class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
-                            type="button">
-                            <span class="sr-only">Open dropdown</span>
-                            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor" viewBox="0 0 16 3">
-                                <path
-                                    d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                            </svg>
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div id="dropdown"
-                            class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                            <ul class="py-2" aria-labelledby="dropdownButton">
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Ver
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('colaboradores.edit', $colaboradore->id) }}"
-                                        class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Editar</a>
-                                </li>
-                                @if ($accesos->contains('modulo', 'Accesos'))
-                                    <li>
-                                        <a href="{{ route('colaborador.accesos', $colaboradore->id) }}"
-                                            class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Accesos
-                                        </a>
-                                    </li>
-                                @endif
-                                @if ($accesos->contains('modulo', 'Supervisores'))
-                                    <li>
-                                        <a href="{{ route('colaborador.supervisor', $colaboradore->id) }}"
-                                            class="block px-4 py-1 text-base font-medium text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Jefe
-                                            inmediato</a>
-                                    </li>
-                                @endif
-                                <li>
-                                    <form action="{{ route('colaboradores.destroy', $colaboradore->id) }}"
-                                        method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="block w-full text-left px-4 py-1 text-base font-medium text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Eliminar</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-center pb-5">
-                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/default-user.webp" alt="Bonnie image" />
-                        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{ $colaboradore->apellidos }}
-                            {{ $colaboradore->nombres }}</h5>
-                        <span
-                            class="text-sm text-gray-500 dark:text-gray-400">{{ $colaboradore->cargo->nombre_cargo }}</span>
-                        <div class="flex mt-4 space-x-3 md:mt-6">
-                            <a href="{{ route('colaboradores.edit', $colaboradore->id) }}"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Editar</a>
-                            <a href="#"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">
-                                Objetivos</a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div> --}}
-
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 min-w-[300px]">
-                            Colaborador
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Cargo
-                        </th>
-                        <th scope="col" class="px-6 py-3 min-w-[250px]">
-                            Puesto
-                        </th>
-                        <th scope="col" class="px-6 py-3 min-w-[300px]">
-                            Area
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Estado
-                        </th>
-                        <th scope="col" class="px-6 py-3 min-w-[250px]">
-                            Fecha de registro
-                        </th>
-                        <th>
-
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($colaboradores as $colaboradore)
-                        @include('colaboradore.item', ['colaborador' => $colaboradore])
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        {!! $colaboradores->links() !!}
-
-    </div>
-@endsection
+    @endsection

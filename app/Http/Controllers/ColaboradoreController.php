@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acceso;
+use App\Models\Area;
 use App\Models\Cargo;
 use App\Models\Colaboradore;
 use App\Models\Departamento;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
  * Class ColaboradoreController
  * @package App\Http\Controllers
  */
-class ColaboradoreController extends Controller
+class ColaboradoreController extends GlobalController
 {
     /**
      * Display a listing of the resource.
@@ -26,15 +27,65 @@ class ColaboradoreController extends Controller
      */
     public function index()
     {
+
+
+        $colab = $this->getCurrentColab();
+
+        // NULLS VARIABLES
+        $id_area = request('id_area');
+        $id_departamento = request('id_departamento');
+        $id_cargo = request('id_cargo');
+        $id_puesto = request('id_puesto');
+
+        $cargos = null;
+        $puestos = null;
+        $departamentos = null;
+        $colaboradores = null;
+
+
+        // areas
+        $areas = Area::all();
+        if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
+
+
+        // Departamentos
+        if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
+        else $departamentos = Departamento::all();
+        if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
+
+
+        // Cargos
+        $cargos = Cargo::all();
+        // if (!$cargos->isEmpty() && !$id_cargo) $id_cargo = $cargos[0]->id;
+
+
+        // Puestos
+        if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
+        else $puestos = Puesto::all();
+
+        if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
+
+
+
+        $colaboradores = Colaboradore::get();
+        // ::join('puestos as P', 'colaboradores.id_puesto', '=', 'P.id')
+        // // ->where('id_supervisor', $colab->id)
+        // ->when($id_cargo !== null, function ($query) use ($id_cargo) {
+        //     return $query->where('colaboradores.id_cargo', $id_cargo);
+        // })
+        // ->when($id_puesto !== null, function ($query) use ($id_puesto) {
+        //     return $query->where('colaboradores.id_puesto', $id_puesto);
+        // })
+        // ->get();
+
         $colaboradorForm = new Colaboradore();
         $puestos = Puesto::pluck('nombre_puesto', 'id');
         $cargos = Cargo::pluck('nombre_cargo', 'id');
 
-        $colaboradores = Colaboradore::paginate();
+        // $colaboradores = Colaboradore::paginate();
 
 
-        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos'))
-            ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
+        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'id_cargo', 'id_puesto'));
     }
 
     /**

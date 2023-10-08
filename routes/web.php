@@ -56,6 +56,8 @@ Route::get('/colaboradores/supervisor/{id}', 'App\Http\Controllers\SupervisoreCo
 Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disableAccess')
     ->name('accesos.disable');
 
+// ACCESOS
+Route::get('/acceso/colaborador/{id}', 'App\Http\Controllers\AccesoController@accesoColaborador')->name('colaborador.acceso');
 
 // COLABORADORES
 Route::get('/search-colaboradores', 'App\Http\Controllers\ColaboradoreController@searchColaboradores');

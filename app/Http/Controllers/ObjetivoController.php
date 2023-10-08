@@ -21,6 +21,7 @@ class ObjetivoController extends GlobalController
     {
         $colab = $this->getCurrentColab();
 
+
         $objetivos = Objetivo::where('id_colaborador', $colab->id)->paginate();
         $objetivoNewForm = new Objetivo();
         $totalPorcentaje = $objetivos->sum('porcentaje');
