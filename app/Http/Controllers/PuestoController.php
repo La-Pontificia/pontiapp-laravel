@@ -30,6 +30,13 @@ class PuestoController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $puestos->perPage());
     }
 
+
+    public function getPuestosByArea($id_cargo)
+    {
+        $puestos = Puesto::where('id_cargo', $id_cargo)->get();
+        return $puestos;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
