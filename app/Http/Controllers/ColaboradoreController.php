@@ -10,6 +10,7 @@ use App\Models\Departamento;
 use App\Models\Eda;
 use App\Models\EdaColab;
 use App\Models\Puesto;
+use App\Models\Sede;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,13 +46,13 @@ class ColaboradoreController extends GlobalController
 
         // areas
         $areas = Area::all();
-        if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
+        // if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
 
 
         // Departamentos
         if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
         else $departamentos = Departamento::all();
-        if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
+        // if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
 
 
         // Cargos
@@ -63,29 +64,30 @@ class ColaboradoreController extends GlobalController
         if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
         else $puestos = Puesto::all();
 
-        if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
+        // if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
 
 
 
-        $colaboradores = Colaboradore::get();
-        // ::join('puestos as P', 'colaboradores.id_puesto', '=', 'P.id')
-        // // ->where('id_supervisor', $colab->id)
-        // ->when($id_cargo !== null, function ($query) use ($id_cargo) {
-        //     return $query->where('colaboradores.id_cargo', $id_cargo);
-        // })
-        // ->when($id_puesto !== null, function ($query) use ($id_puesto) {
-        //     return $query->where('colaboradores.id_puesto', $id_puesto);
-        // })
-        // ->get();
+        $colaboradores = Colaboradore
+            // ::join('puestos as P', 'colaboradores.id_puesto', '=', 'P.id')
+            // // ->where('id_supervisor', $colab->id)
+            ::when($id_cargo !== null, function ($query) use ($id_cargo) {
+                return $query->where('colaboradores.id_cargo', $id_cargo);
+            })
+            ->when($id_puesto !== null, function ($query) use ($id_puesto) {
+                return $query->where('colaboradores.id_puesto', $id_puesto);
+            })
+            ->get();
 
         $colaboradorForm = new Colaboradore();
-        $puestos = Puesto::pluck('nombre_puesto', 'id');
-        $cargos = Cargo::pluck('nombre_cargo', 'id');
-
         // $colaboradores = Colaboradore::paginate();
 
 
-        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'id_cargo', 'id_puesto'));
+        // SEDES
+
+        $sedes = Sede::all();
+
+        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'sedes', 'id_cargo', 'id_puesto'));
     }
 
     /**
@@ -113,6 +115,12 @@ class ColaboradoreController extends GlobalController
     {
         request()->validate(Colaboradore::$rules);
 
+        $validateUser = User::where('email', $request->input('dni'))->first();
+        if ($validateUser) {
+            return response()->json(['error' => 'El usuario con el DNI ingresado ya existe'], 400);
+        }
+
+
         // Crear el usuario en la tabla users
         $user = User::create([
             'name' => $request->input('nombres'),
@@ -120,11 +128,14 @@ class ColaboradoreController extends GlobalController
             'password' => bcrypt($request->input('dni')), // Recuerda cifrar la contraseña
             // Otras columnas del usuario si es necesario
         ]);
+
+
         $colaborador = Colaboradore::create([
             'dni' => $request->input('dni'),
             'apellidos' => $request->input('apellidos'),
             'nombres' => $request->input('nombres'),
             'id_cargo' => $request->input('id_cargo'),
+            'id_sede' => $request->input('id_sede'),
             'id_puesto' => $request->input('id_puesto'),
             'id_usuario' => $user->id, // Asignar el id del usuario al campo id_usuario
         ]);

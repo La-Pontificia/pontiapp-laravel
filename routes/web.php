@@ -21,6 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::resource('/sedes', App\Http\Controllers\SedeController::class);
 Route::resource('/cargos', App\Http\Controllers\CargoController::class)->middleware('authMiddleware');
 Route::resource('/areas', App\Http\Controllers\AreaController::class)->middleware('authMiddleware');
 Route::resource('/departamentos', App\Http\Controllers\DepartamentoController::class)->middleware('authMiddleware');
@@ -51,6 +52,9 @@ Route::post('change-wearing/{id}', 'App\Http\Controllers\EdaController@changeWea
 Route::post('/calificar/desaprobar', 'App\Http\Controllers\ObjetivoController@desaprobar')->name('objetivo.desaprobar');
 Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController@getAccesosColaborador')->name('colaborador.accesos');
 Route::get('/colaboradores/supervisor/{id}', 'App\Http\Controllers\SupervisoreController@getSupervisorDeColaborador')->name('colaborador.supervisor');
+
+// PUESTOS
+Route::get('/get-puestos-by-area/{id}', 'App\Http\Controllers\PuestoController@getPuestosByArea');
 
 
 Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disableAccess')

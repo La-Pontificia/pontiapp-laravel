@@ -373,34 +373,4 @@
             </tbody>
         </table>
     </div>
-    <script>
-        function handleSelectChange(selectId, paramName) {
-            var selectedValue = document.getElementById(selectId).value;
-            var currentURL = window.location.href;
-            var regex = new RegExp("[?&]" + paramName + "(=([^&#]*)|&|#|$)");
-            if (regex.test(currentURL)) {
-                currentURL = currentURL.replace(new RegExp("([?&])" + paramName + "=.*?(&|#|$)"), '$1' + paramName + '=' +
-                    selectedValue + '$2');
-            } else {
-                currentURL += (currentURL.indexOf('?') === -1 ? '?' : '&') + paramName + '=' + selectedValue;
-            }
-            window.location.href = currentURL;
-        }
-
-        document.getElementById('area').addEventListener('change', function() {
-            handleSelectChange('area', 'id_area');
-        });
-
-        document.getElementById('departamento').addEventListener('change', function() {
-            handleSelectChange('departamento', 'id_departamento');
-        });
-
-        document.getElementById('cargo').addEventListener('change', function() {
-            handleSelectChange('cargo', 'id_cargo');
-        });
-
-        document.getElementById('puesto').addEventListener('change', function() {
-            handleSelectChange('puesto', 'id_puesto');
-        });
-    </script>
 @endsection
