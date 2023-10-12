@@ -68,4 +68,9 @@ class Colaboradore extends Model
     {
         return $this->hasOne('App\Models\User', 'id', 'id_usuario');
     }
+
+    public function supervisor()
+    {
+        return $this->belongsTo(Colaboradore::class, 'id_supervisor');
+    }
 }

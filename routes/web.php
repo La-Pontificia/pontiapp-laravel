@@ -65,3 +65,4 @@ Route::get('/acceso/colaborador/{id}', 'App\Http\Controllers\AccesoController@ac
 
 // COLABORADORES
 Route::get('/search-colaboradores', 'App\Http\Controllers\ColaboradoreController@searchColaboradores');
+Route::post('/colaboradores/update-supervisor', 'App\Http\Controllers\ColaboradoreController@updateSupervisor');

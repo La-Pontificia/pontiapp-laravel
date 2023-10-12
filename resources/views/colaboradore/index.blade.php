@@ -268,7 +268,6 @@
                     </thead>
                     <tbody>
                         @foreach ($colaboradores as $colaborador)
-                            {{ $colaborador->id }}
                             @include('colaboradore.item', ['colaborador' => $colaborador])
                         @endforeach
                     </tbody>
