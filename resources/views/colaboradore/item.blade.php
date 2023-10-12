@@ -111,8 +111,24 @@
                     </div>
                     <!-- Modal body -->
                     <div class="p-4">
+                        @if ($colaborador->id_supervisor)
+                            <div class='flex items-center gap-2 p-2 bg-neutral-100 rounded-xl'>
+                                <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
+                                <div>
+                                    <h4>{{ $colaborador->supervisor->nombres }}
+                                        {{ $colaborador->supervisor->apellidos }}
+                                    </h4>
+                                    <span class="font-semibold">{{ $colaborador->supervisor->dni }}</span>
+                                </div>
+                                <div class="ml-auto">
+                                    <span
+                                        class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Supervisor
+                                        actual</span>
+                                </div>
+                            </div>
+                        @endif
                         <p class="text-sm mb-4 font-normal text-gray-500 dark:text-gray-400">
-                            Asigna un supervisor de la Eda Actual a este colaborador
+                            Asigna o actualiza el supervisor de este colaborador
                         </p>
 
                         <div class="relative w-full block">
@@ -145,14 +161,18 @@
 
 @section('script')
     <script>
+        // variables
         const $busquedaInputs = document.querySelectorAll('.query-colab');
         const $ul_results = document.querySelectorAll('.colabs-q');
+        const btnSupers = document.querySelectorAll('.btn-super-colab');
         const initialHtml = `<div class="h-[100px] grid place-content-center">
                                 <h2 class="text-center text-neutral-500 text-lg">Busca un colaborador y luego asigna
                                     como supervisor
                                 </h2>
                             </div>`
 
+
+        // modal search
         $busquedaInputs.forEach((input) => {
             input.addEventListener('input', function() {
                 const q = this.value;
@@ -173,12 +193,12 @@
                             const li = document.createElement('li');
                             li.innerHTML =
                                 `
-                                <li class="flex items-center gap-2">
-                                    <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
+                                    <div class='flex item-center gap-2'>
+                                        <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
                                     <h4>${colaborador.apellidos},${colaborador.nombres}</h4>
                                     <span class="font-semibold">${colaborador.dni}</span>
-                                    <button data-id-colab='${id_colab}' data-id-super='${colaborador.id}' type="button"
-                                        class="text-gray-900 ml-auto bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                    <button id_colab='${id_colab}' id_super='${colaborador.id}' type="button"
+                                        class="btn-super-colab text-gray-900 ml-auto bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                                         <svg aria-hidden="true" class="w-4 h-4 mr-2" fill="none"
                                             stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -187,13 +207,42 @@
                                         </svg>
                                         Asignar
                                     </button>
-                                </li>
+                                        </div>
                                    `;
                             $ul_results.forEach((ul) => {
                                 const data_id = ul.getAttribute('data-id');
                                 if (data_id === id_colab) {
                                     ul.appendChild(li);
                                 }
+                            });
+
+                            // btns add super
+                            const btnSupers = li.querySelector('.btn-super-colab');
+                            btnSupers.addEventListener('click', function() {
+                                const idColab = this.getAttribute("id_colab");
+                                const idSuper = this.getAttribute("id_super");
+
+                                axios.post('/colaboradores/update-supervisor', {
+                                        id_colab: idColab,
+                                        id_super: idSuper
+                                    })
+                                    .then(function(response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: response.data.success,
+                                        }).then(() => {
+                                            window.location.href = window
+                                                .location.href;
+                                        });
+                                    })
+                                    .catch(function(error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error al crear el objetivo',
+                                            text: error.response.data,
+                                        });
+                                    });
+
                             });
                         });
                     })

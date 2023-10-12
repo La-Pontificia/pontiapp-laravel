@@ -17,15 +17,14 @@ class ProfileController extends GlobalController
         $isMyprofile = false;
         $youSupervise = false;
         $hasSupervisor = false;
+        $supervisor = null;
 
-        $supervisores = $this->getSupervisoresByColabID($colaborador->id);
-        if (count($supervisores) > 0) $hasSupervisor = true;
-        foreach ($supervisores as $super) {
-            if ($super->id_supervisor == $currentColab->id) {
-                $youSupervise = true;
-                break;
-            }
+        if ($colaborador->id_supervisor) {
+            $supervisor = Colaboradore::find($colaborador->id_supervisor);
+            if ($supervisor->id == $currentColab->id) $youSupervise = true;
+            $hasSupervisor = true;
         }
+
         if ($colaborador->id == $currentColab->id) $isMyprofile = true;
         $objetivos = $this->getObjetivosByCurrentColab();
 

@@ -84,7 +84,6 @@ class ColaboradoreController extends GlobalController
 
 
         // SEDES
-
         $sedes = Sede::all();
 
         return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'sedes', 'id_cargo', 'id_puesto'));
@@ -196,6 +195,16 @@ class ColaboradoreController extends GlobalController
             ->with('success', 'Colaboradore created successfully.');
     }
 
+
+    public function updateSupervisor()
+    {
+        $id_colab = request('id_colab');
+        $id_super = request('id_super');
+        $Colab = Colaboradore::find($id_colab);
+        $Colab->id_supervisor = $id_super;
+        $Colab->save();
+        return response()->json(['success' => 'Colaborador actualizado correctamente.'], 202);
+    }
 
 
     public function createEdas($id_colab)
