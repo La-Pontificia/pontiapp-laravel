@@ -16,8 +16,6 @@ return new class extends Migration
             $table->integer('year'); // 2023, 2024, 2025 ...
             $table->integer('n_evaluacion'); // 1 , 2
             $table->string('descripcion')->nullable();
-            $table->timestamp('f_inicio');
-            $table->timestamp('f_fin');
             $table->boolean('wearing')->default(false);
             $table->timestamps();
         });

@@ -21,11 +21,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Departamento extends Model
 {
-    
+
     static $rules = [
-		'codigo_departamento' => 'required',
-		'nombre_departamento' => 'required',
-		'id_area' => 'required',
+        'nombre_departamento' => 'required',
+        'id_area' => 'required',
     ];
 
     protected $perPage = 20;
@@ -35,7 +34,7 @@ class Departamento extends Model
      *
      * @var array
      */
-    protected $fillable = ['codigo_departamento','nombre_departamento','id_area'];
+    protected $fillable = ['codigo_departamento', 'nombre_departamento', 'id_area'];
 
 
     /**
@@ -45,7 +44,7 @@ class Departamento extends Model
     {
         return $this->hasOne('App\Models\Area', 'id', 'id_area');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -53,6 +52,4 @@ class Departamento extends Model
     {
         return $this->hasMany('App\Models\Puesto', 'id_departamento', 'id');
     }
-    
-
 }

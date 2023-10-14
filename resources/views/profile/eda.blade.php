@@ -4,11 +4,20 @@
     <section class="p-2 px-4">
         {{-- Si tiene un supervisor o es su perfil del colaborador actual --}}
         @if ($youSupervise || $isMyprofile)
+            <ul class="flex items-center gap-1 h-[50px] pb-3">
+                @foreach ($edas as $eda)
+                    <li class="">
+                        <button class="p-2 rounded-full font-semibold px-4 bg-neutral-200 hover:bg-neutral-100">
+                            EDA {{ $eda->year }}-{{ $eda->n_evaluacion }}
+                        </button>
+                    </li>
+                @endforeach
+            </ul>
             <div class="relative overflow-x-auto bg-white shadow-xl rounded-2xl border">
                 {{-- Si tiene un supervisor --}}
                 @if ($hasSupervisor)
                     <header class="p-2 py-2 flex items-center gap-2">
-                        <form>
+                        {{-- <form>
                             <label for="default-search"
                                 class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                             <div class="relative w-[500px] max-w-full">
@@ -25,7 +34,7 @@
                                 <button type="submit"
                                     class="text-white absolute right-1 top-[3px] bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2">Buscar</button>
                             </div>
-                        </form>
+                        </form> --}}
                         @if ($isMyprofile)
                             <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
                                 class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-80 cursor-not-allowed select-none' : 'hover:bg-purple-600' }} bg-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center">Enviar
@@ -39,16 +48,6 @@
                     @if ($currentColabEda->estado === 0 && $youSupervise)
                         <div class="h-[200px] w-full grid place-content-center">
                             <h2 class="text-xl text-neutral-400 pb-2 text-center">El colaborador aun no envió su EDA</h2>
-                            @if ($currentColabEda->flimit_send_obj_from)
-                                <div class="pb-2 text-center">
-                                    Puede enviar antes de:
-                                    <span
-                                        class="bg-purple-100 text-purple-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">{{ \Carbon\Carbon::parse($currentColabEda->flimit_send_obj_at)->format('d F Y') }}</span>
-                                </div>
-                            @endif
-                            <button data-modal-target="limite-send-eda" data-modal-toggle="limite-send-eda" type="button"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Definir
-                                fecha limite de envio</button>
                         </div>
                     @else
                         <div class="overflow-x-auto">
@@ -158,10 +157,6 @@
                                             <th scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                                                 <h3>{{ $objetivo->objetivo }}</h3>
-                                                {{-- <h4 class="text-neutral-400 text-sm font-normal">
-                                                    <span>Sup. </span>{{ $objetivo->supervisor->nombres }}
-                                                    {{ $objetivo->supervisor->apellidos }}
-                                                </h4> --}}
                                             </th>
                                             <td class="px-6 py-4">
                                                 <div class="line-clamp-3 overflow-ellipsis overflow-hidden">
@@ -329,7 +324,7 @@
 
 
 
-
+    {{-- 
     <!-- Main modal -->
     <div id="limite-send-eda" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -368,7 +363,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @section('script')
     <script>

@@ -32,14 +32,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EdaColab extends Model
 {
-    
+
     static $rules = [
-		'id_eda' => 'required',
-		'id_colaborador' => 'required',
-		'estado' => 'required',
-		'cant_obj' => 'required',
-		'nota_final' => 'required',
-		'wearing' => 'required',
+        'id_eda' => 'required',
+        'id_colaborador' => 'required',
+        'estado' => 'required',
+        'cant_obj' => 'required',
+        'nota_final' => 'required',
+        'wearing' => 'required',
     ];
 
     protected $perPage = 20;
@@ -49,7 +49,7 @@ class EdaColab extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_eda','id_colaborador','estado','cant_obj','nota_final','wearing','f_envio','f_aprobacion','f_cerrado','flimit_send_obj_from','flimit_send_obj_at','flimit_white_autoeva_from','flimit_white_autoeva_at'];
+    protected $fillable = ['id_eda', 'id_colaborador', 'estado', 'cant_obj', 'nota_final', 'wearing', 'f_envio', 'f_aprobacion', 'f_cerrado'];
 
 
     /**
@@ -59,7 +59,7 @@ class EdaColab extends Model
     {
         return $this->hasOne('App\Models\Colaboradore', 'id', 'id_colaborador');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -67,7 +67,7 @@ class EdaColab extends Model
     {
         return $this->hasMany('App\Models\EdaObj', 'id_eda_colab', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -75,6 +75,4 @@ class EdaColab extends Model
     {
         return $this->hasOne('App\Models\Eda', 'id', 'id_eda');
     }
-    
-
 }

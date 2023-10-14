@@ -29,12 +29,6 @@ return new class extends Migration
             $table->timestamp('f_aprobacion')->nullable()->default(null);
             $table->timestamp('f_cerrado')->nullable()->default(null);
 
-            $table->timestamp('flimit_send_obj_from')->nullable()->default(null);
-            $table->timestamp('flimit_send_obj_at')->nullable()->default(null);
-
-            $table->timestamp('flimit_white_autoeva_from')->nullable()->default(null);
-            $table->timestamp('flimit_white_autoeva_at')->nullable()->default(null);
-
             $table->timestamps();
         });
     }

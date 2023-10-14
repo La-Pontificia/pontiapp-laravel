@@ -1,0 +1,14 @@
+{
+    "edas": {
+        "leer": true,
+        "crear": false,
+        "eliminar": false,
+        "actualizar":false
+    },
+    "mantenimiento": {
+        "leer": true,
+        "crear": false,
+        "eliminar": false,
+        "actualizar":false
+    }
+}

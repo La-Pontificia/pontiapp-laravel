@@ -45,15 +45,47 @@ class AreaController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
+
+
+
+
+
+
+
+
+
     public function store(Request $request)
     {
-        request()->validate(Area::$rules);
+        // obtenemos el ultimo codigo de area
+        $codeUltimate = Area::max('codigo_area');
 
-        $area = Area::create($request->all());
+        // creamos el nuevo codigo
+        $numero = (int)substr($codeUltimate, 1) + 1;
+        $newCode = 'A' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+
+        $validatedData = $request->validate(Area::$rules);
+
+        // creamos el area
+        $data = array_merge($validatedData, [
+            'codigo_area' => $newCode,
+        ]);
+
+        Area::create($data);
 
         return redirect()->route('areas.index')
             ->with('success', 'Area created successfully.');
     }
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Display the specified resource.

@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     @if (!$isMyprofile)
-                        <button type="button"
+                        {{-- <button type="button"
                             class="text-blue-700 gap-2 max-w-max mt-2 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                 viewBox="0 0 18 18">
@@ -53,7 +53,7 @@
                                     d="M3 7H1a1 1 0 0 0-1 1v8a2 2 0 0 0 4 0V8a1 1 0 0 0-1-1Zm12.954 0H12l1.558-4.5a1.778 1.778 0 0 0-3.331-1.06A24.859 24.859 0 0 1 6 6.8v9.586h.114C8.223 16.969 11.015 18 13.6 18c1.4 0 1.592-.526 1.88-1.317l2.354-7A2 2 0 0 0 15.954 7Z" />
                             </svg>
                             <span>Enviar feedback</span>
-                        </button>
+                        </button> --}}
                     @else
                         <button type="button"
                             class="text-blue-700 gap-2 max-w-max mt-2 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
@@ -137,15 +137,26 @@
                                 viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>EDA {{ $currentColabEda->eda->year }}-{{ $currentColabEda->eda->n_evaluacion }}
+                            </svg>EDAS
                         </a>
                     </li>
+
+                    {{-- <li class="mr-2">
+                        <a href="/profile/{{ $colaborador->id }}/eda"
+                            class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg dark:hover:text-gray-300 group {{ request()->is('me') || request()->is('*/eda') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}">
+                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>EDA {{ $currentColabEda->eda->year }}-{{ $currentColabEda->eda->n_evaluacion }}
+                        </a>
+                    </li> --}}
                     <li class="mr-2">
                         <a href="/profile/{{ $colaborador->id }}/history"
                             class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg group {{ request()->is('*/history') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}"
                             aria-current="page">
-                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 20 20">
+                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
                                     d="M10 6v4l3.276 3.276M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>Historial
@@ -155,8 +166,8 @@
                 <li class="mr-2">
                     <a href="/profile/{{ $colaborador->id }}/setting"
                         class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg group {{ request()->is('*/setting') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}">
-                        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                            viewBox="0 0 20 20">
                             <path
                                 d="M5 11.424V1a1 1 0 1 0-2 0v10.424a3.228 3.228 0 0 0 0 6.152V19a1 1 0 1 0 2 0v-1.424a3.228 3.228 0 0 0 0-6.152ZM19.25 14.5A3.243 3.243 0 0 0 17 11.424V1a1 1 0 0 0-2 0v10.424a3.227 3.227 0 0 0 0 6.152V19a1 1 0 1 0 2 0v-1.424a3.243 3.243 0 0 0 2.25-3.076Zm-6-9A3.243 3.243 0 0 0 11 2.424V1a1 1 0 0 0-2 0v1.424a3.228 3.228 0 0 0 0 6.152V19a1 1 0 1 0 2 0V8.576A3.243 3.243 0 0 0 13.25 5.5Z" />
                         </svg>Configuraciónes

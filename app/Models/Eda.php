@@ -26,8 +26,6 @@ class Eda extends Model
   static $rules = [
     'year' => 'required',
     'n_evaluacion' => 'required',
-    'f_inicio' => 'required',
-    'f_fin' => 'required',
     // 'wearing' => 'required',
   ];
 
@@ -38,7 +36,7 @@ class Eda extends Model
    *
    * @var array
    */
-  protected $fillable = ['year', 'n_evaluacion', 'f_inicio', 'f_fin', 'wearing'];
+  protected $fillable = ['year', 'n_evaluacion',  'wearing'];
 
 
   /**

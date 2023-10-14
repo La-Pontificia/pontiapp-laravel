@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Colaboradore;
+use App\Models\Eda;
 use App\Models\Objetivo;
 
 use App\Models\Supervisore;
@@ -33,7 +34,8 @@ class ProfileController extends GlobalController
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota_super');
         $currentColabEda = $this->getEdaByColabId($colaborador->id);
-        return compact('id', 'colaborador', 'objetivos', 'totalPorcentaje', 'hasSupervisor', 'totalNota', 'isMyprofile', 'objetivoNewForm', 'youSupervise', 'currentColabEda');
+        $edas = Eda::orderBy('created_at', 'desc')->get();
+        return compact('id', 'colaborador', 'objetivos', 'totalPorcentaje', 'hasSupervisor', 'totalNota', 'isMyprofile', 'objetivoNewForm', 'youSupervise', 'currentColabEda', 'edas');
     }
 
     public function getProfile($id)

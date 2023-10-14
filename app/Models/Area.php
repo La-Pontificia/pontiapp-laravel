@@ -19,29 +19,27 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Area extends Model
 {
-    
-    static $rules = [
-		'codigo_area' => 'required',
-		'nombre_area' => 'required',
-    ];
 
-    protected $perPage = 20;
+  static $rules = [
+    // 'codigo_area' => 'required',
+    'nombre_area' => 'required',
+  ];
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['codigo_area','nombre_area'];
+  protected $perPage = 20;
+
+  /**
+   * Attributes that should be mass-assignable.
+   *
+   * @var array
+   */
+  protected $fillable = ['codigo_area', 'nombre_area'];
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function departamentos()
-    {
-        return $this->hasMany('App\Models\Departamento', 'id_area', 'id');
-    }
-    
-
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function departamentos()
+  {
+    return $this->hasMany('App\Models\Departamento', 'id_area', 'id');
+  }
 }

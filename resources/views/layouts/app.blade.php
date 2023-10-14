@@ -26,12 +26,12 @@
                         class="bg-purple-200 mx-auto text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
                         <div class="flex items-center gap-2 divide-x divide-purple-500 p-2 rounded-xl">
                             <h4 class="min-w-max text-xl tracking-tight font-semibold leading-4">
-                                {{ $currentEda->year }}-{{ $currentEda->n_evaluacion }}</h4>
-                            <div class="text-purple-700 pl-2 text-xs flex flex-col">
+                                EDA: {{ $currentEda->year }}-{{ $currentEda->n_evaluacion }}</h4>
+                            {{-- <div class="text-purple-700 pl-2 text-xs flex flex-col">
                                 <span>
                                     <span class="text-neutral-700">Hasta:</span>
                                     {{ \Carbon\Carbon::parse($currentEda->f_fin)->format('d F Y') }}</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </span>
                     {{-- <div class="relative w-full">
@@ -145,7 +145,7 @@
                                 <span class="flex-1 ml-3 whitespace-nowrap">Colaboradores</span>
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="{{ route('supervisores.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('supervisores*') ? 'text-gray-700 bg-gray-100' : '' }}">
                                 <svg height="32" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +236,7 @@
 
                                 <span class="flex-1 ml-3 whitespace-nowrap">Supervisores</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="{{ route('accesos.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('accesos*') ? 'text-gray-700 bg-gray-100' : '' }}">

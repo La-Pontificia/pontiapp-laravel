@@ -4,8 +4,6 @@ INSERT INTO
         `year`,
         `n_evaluacion`,
         `descripcion`,
-        `f_inicio`,
-        `f_fin`,
         `wearing`,
         `created_at`,
         `updated_at`
@@ -16,8 +14,6 @@ VALUES
         2024,
         2,
         NULL,
-        '2023-10-04 00:00:00',
-        '2023-10-04 00:00:00',
         1,
         '2023-10-04 18:32:10',
         '2023-10-04 18:32:10'
@@ -38,12 +34,12 @@ VALUES
     ('A010', 'GESTIÓN DE PERSONAS', NOW());
 
 INSERT INTO
-`sedes` (`nombre` )
+    `sedes` (`nombre`)
 VALUES
     ('ALAMEDA'),
     ('JAZMINES'),
     ('CASUARINAS');
-    
+
 INSERT INTO
     `cargos` (`codigo_cargo`, `nombre_cargo`, `created_at`)
 VALUES

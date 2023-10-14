@@ -52,7 +52,7 @@ class EdaController extends Controller
 
         // Realiza las validaciones
         if ($this->validarEdaExistente($year, $numero)) {
-            return response()->json(['message' => 'Ya existe un registro con el mismo año y número'], 202);
+            return response()->json(['message' => 'Ya existe un registro con el mismo año y número de evaluacion'], 202);
         }
 
         $wearing = $request->wearing === 'on' ? 1 : 0;

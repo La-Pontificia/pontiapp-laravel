@@ -62,14 +62,12 @@
                             Año
                         </th>
                         <th scope="col" class="px-3 w-[90px] py-3">
-                            Numero
+                            Evaluación
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Fecha inicio
+                            Fecha registro
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                            Fecha fin
-                        </th>
+
                         <th scope="col" class="px-6 py-3">
                             Usar
                         </th>
@@ -85,8 +83,7 @@
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ $eda->year }}</td>
                             <td class="px-6 py-4">{{ $eda->n_evaluacion }}</td>
-                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($eda->f_inicio)->format('d F Y') }}</td>
-                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($eda->f_fin)->format('d F Y') }}</td>
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($eda->created_at)->format('d F Y') }}</td>
                             <td class="px-6 py-4">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <button data-eda-id="{{ $eda->id }}" name="wearing" type="button"

@@ -21,7 +21,6 @@
                             @csrf
 
                             @include('departamento.form')
-
                         </form>
                     </div>
                 </div>

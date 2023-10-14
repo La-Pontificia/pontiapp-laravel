@@ -13,7 +13,7 @@
             </select>
             {!! $errors->first('n_evaluacion', '<div class="invalid-feedback">:message</div>') !!}
         </span>
-        <span>
+        {{-- <span>
             <input required name="f_inicio" type="date" value="{{ $newEda->f_inicio }}" placeholder="Año"
                 class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600">
             {!! $errors->first('f_inicio', '<div class="invalid-feedback">:message</div>') !!}
@@ -22,7 +22,7 @@
             <input required name="f_fin" type="date" value="{{ $newEda->f_fin }}" placeholder="F. fin"
                 class="rounded-xl w-full text-lg font-medium border-neutral-300 outline-none focus:outline-2 transition-all focus:outline-blue-600">
             {!! $errors->first('f_fin', '<div class="invalid-feedback">:message</div>') !!}
-        </span>
+        </span> --}}
         <span class="pt-2 block">
             <label class="relative inline-flex items-center cursor-pointer">
                 <input name="wearing" type="checkbox" class="sr-only peer">

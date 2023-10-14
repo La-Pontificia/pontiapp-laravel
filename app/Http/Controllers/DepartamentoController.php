@@ -24,7 +24,7 @@ class DepartamentoController extends Controller
     {
         $departamento = new Departamento();
         $departamentos = Departamento::paginate();
-        $areas = Area::pluck('nombre_area', 'id');
+        $areas = Area::all();
         return view('departamento.index', compact('departamentos', 'departamento', 'areas'))
             ->with('i', (request()->input('page', 1) - 1) * $departamentos->perPage());
     }
@@ -52,15 +52,48 @@ class DepartamentoController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
+
+
+
+
+
+
+
+
+
+
+
+
     public function store(Request $request)
     {
-        request()->validate(Departamento::$rules);
+        // obtenemos el ultimo codigo de departamento
+        $codeUltimate = Departamento::max('codigo_departamento');
 
-        $departamento = Departamento::create($request->all());
+        // creamos el nuevo codigo
+        $numero = (int)substr($codeUltimate, 1) + 1;
+        $newCode = 'D' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+
+        // validamos los datos
+        $validatedData = $request->validate(Departamento::$rules);
+
+        // creamos el departamento
+        $data = array_merge($validatedData, [
+            'codigo_departamento' => $newCode,
+        ]);
+
+        Departamento::create($data);
 
         return redirect()->route('departamentos.index')
             ->with('success', 'Departamento created successfully.');
     }
+
+
+
+
+
+
+
+
 
     /**
      * Display the specified resource.
