@@ -20,7 +20,24 @@ VALUES
     ('A009', 'SISTEMAS'),
     ('A010', 'GESTIÓN DE PERSONAS');
 
+
+--------------------------SEDES
+  `dbo.sedes` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Nombre` varchar(50) DEFAULT NULL,
+    `Direccion` varchar(100) NOT NULL,
+);
+
+   INSERT INTO
+`dbo.sedes` (`nombre`, `direccion` )
+VALUES
+    ('ALAMEDA',''),
+    ('JAZMINES',''),
+    ('CASUARINAS',''),
+    
+
 ----------------------------CARGO
+
 CREATE TABLE `dbo.EDA_Cargo` (
     `Id` INT NOT NULL AUTO_INCREMENT,
     `Nombre_Cargo` varchar(50) DEFAULT NULL,

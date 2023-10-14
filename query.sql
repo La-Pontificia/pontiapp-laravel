@@ -38,6 +38,13 @@ VALUES
     ('A010', 'GESTIÓN DE PERSONAS', NOW());
 
 INSERT INTO
+`sedes` (`nombre` )
+VALUES
+    ('ALAMEDA'),
+    ('JAZMINES'),
+    ('CASUARINAS');
+    
+INSERT INTO
     `cargos` (`codigo_cargo`, `nombre_cargo`, `created_at`)
 VALUES
     ('C001', 'GERENTE GENERAL', NOW()),

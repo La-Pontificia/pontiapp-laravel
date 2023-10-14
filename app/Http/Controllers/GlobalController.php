@@ -65,7 +65,9 @@ class GlobalController extends Controller
         $user = auth()->user();
         if (!$user) {
             return;
+
             // abort(404);
+
         }
         $id = $user->id;
         $colab = $this->getColabByUser($id);
