@@ -18,13 +18,7 @@ return new class extends Migration
             $table->string('apellidos', 40);
             $table->string('nombres', 40);
             $table->string('correo_institucional', 40)->nullable()->default(null);
-            $table->integer('roles')->default(0); // 0 = Colaborador // 1 = Admin // 2 = developer
-
-            $table->string('acceso_edas')->default('[0,0,0,0]');
-            $table->string('acceso_sedes')->default('[0,0,0,0]');
-            $table->string('acceso_accesos')->default('[0,0,0,0]');
-            $table->string('acceso_accesos')->default('[0,0,0,0]');
-
+            $table->integer('rol')->default(0); // 0 = colaborador // 1 = admin // 2 = developer
 
             $table->integer('estado')->default(1);
             $table->unsignedBigInteger('id_cargo');

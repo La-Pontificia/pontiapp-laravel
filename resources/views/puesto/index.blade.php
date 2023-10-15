@@ -7,6 +7,7 @@
 
 
 @section('content-sidebar')
+
     <!-- Modal toggle -->
     <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
         class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -15,50 +16,50 @@
     </button>
 
     {{-- <div class="container-fluid">
-        <div class="row">
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Nuevo Puesto</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST" id="form-carg" action="{{ route('cargos.store') }}" role="form"
-                                enctype="multipart/form-data">
-                                @csrf
-                                @include('puesto.form')
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <div class="row">
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Nuevo Puesto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" id="form-carg" action="{{ route('cargos.store') }}" role="form"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    @include('puesto.form')
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-
-                            <span id="card_title">
-                                {{ __('Puesto') }}
-                            </span>
-
-                            <button type="button" style="width: 200px;" class="btn btn-primary" data-toggle="modal"
-                                data-target="#exampleModal">
-                                Crear nuevo
-                            </button>
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+    
+                                <span id="card_title">
+                                    {{ __('Puesto') }}
+                                </span>
+    
+                                <button type="button" style="width: 200px;" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#exampleModal">
+                                    Crear nuevo
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif --}}
+                        @if ($message = Session::get('success'))
+                            <div class="alert alert-success">
+                                <p>{{ $message }}</p>
+                            </div>
+                        @endif --}}
 
     <!-- Main modal -->
     <div id="authentication-modal" tabindex="-1" aria-hidden="true"

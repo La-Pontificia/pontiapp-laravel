@@ -15,12 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
+    return redirect('/me');
+})->middleware('authMiddleware');;
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('/sedes', App\Http\Controllers\SedeController::class);
 Route::resource('/cargos', App\Http\Controllers\CargoController::class)->middleware('authMiddleware');
 Route::resource('/areas', App\Http\Controllers\AreaController::class)->middleware('authMiddleware');
@@ -39,9 +36,10 @@ Route::get('/calificar', 'App\Http\Controllers\ObjetivoController@indexCalificar
 //PROFILE
 Route::get('/profile/{id}', 'App\Http\Controllers\ProfileController@getProfile')->name('profile.index')->middleware('authMiddleware');
 Route::get('/profile/{id}/eda', 'App\Http\Controllers\ProfileController@getEda')->name('profile.eda')->middleware('authMiddleware');
-Route::get('/profile/{id}/history', 'App\Http\Controllers\ProfileController@getHistory')->name('profile.history')->middleware('authMiddleware');
 Route::get('/profile/{id}/setting', 'App\Http\Controllers\ProfileController@getSetting')->name('profile.setting')->middleware('authMiddleware');
 Route::get('/me', 'App\Http\Controllers\ProfileController@myProfile')->middleware('authMiddleware')->name('profile.me');
+Route::get('/me/setting', 'App\Http\Controllers\ProfileController@mySetting')->middleware('authMiddleware')->name('profile.me');
+Route::get('/me/eda', 'App\Http\Controllers\ProfileController@myEda')->middleware('authMiddleware')->name('profile.me');
 
 //EDA COLAB
 Route::post('/define-f-limite-envio-eda-colab', 'App\Http\Controllers\EdaColabController@defineFLimiteEnvio')->middleware('authMiddleware');
@@ -62,6 +60,8 @@ Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disab
 
 // ACCESOS
 Route::get('/acceso/colaborador/{id}', 'App\Http\Controllers\AccesoController@accesoColaborador')->name('colaborador.acceso');
+Route::get('/accesos/colaborador/{id}', 'App\Http\Controllers\AccesoController@getAccesos');
+Route::post('/accesos/update', 'App\Http\Controllers\AccesoController@updateAcceso')->middleware('authMiddleware');
 
 // COLABORADORES
 Route::get('/search-colaboradores', 'App\Http\Controllers\ColaboradoreController@searchColaboradores');

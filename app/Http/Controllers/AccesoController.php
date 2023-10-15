@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acceso;
-use App\Models\Colaboradore;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class AccesoController
@@ -21,14 +19,9 @@ class AccesoController extends Controller
     public function index()
     {
         $accesos = Acceso::paginate();
+
         return view('acceso.index', compact('accesos'))
             ->with('i', (request()->input('page', 1) - 1) * $accesos->perPage());
-    }
-
-    public function accesoColaborador($id)
-    {
-        $accesos = Acceso::where('id_colaborador', $id)->get();
-        return view('acceso.colaborador', compact('accesos'));
     }
 
     /**
@@ -38,11 +31,8 @@ class AccesoController extends Controller
      */
     public function create()
     {
-        $modulos = ['Colaboradores', 'Departamento', 'Areas', 'Puestos', 'Cargos', 'Objetivos', 'Acessos', 'Usuarios'];
-        $accesos = ['0', '1'];
-        $colabs = Colaboradore::pluck('nombres', 'id');
         $acceso = new Acceso();
-        return view('acceso.create', compact('acceso', 'modulos', 'accesos', 'colabs'));
+        return view('acceso.create', compact('acceso'));
     }
 
     /**
@@ -80,49 +70,11 @@ class AccesoController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-
-    public function disableAccess(Request $request, $id)
-    {
-        $acceso = Acceso::findOrFail($id);
-        $acceso->acceso = $acceso->acceso == 0 ? 1 : 0; // Cambiar de 0 a 1 y viceversa
-        $acceso->save();
-
-        if ($request->ajax()) {
-            // Devuelve el estado actualizado y la clase CSS del botón
-            $response = [
-                'acceso' => $acceso->acceso == 0 ? 1 : 0,
-                'success' => 'Estado de acceso cambiado exitosamente.'
-            ];
-
-            return response()->json($response);
-        }
-
-
-        return redirect()->route('accesos.index')
-            ->with('success', 'Estado de acceso cambiado exitosamente.');
-    }
-    public function getAccesosColaborador($id)
-    {
-        $colaborador = Colaboradore::find($id);
-
-        if (!$colaborador) {
-            abort(404);
-        }
-
-        $accesos = Acceso::where('id_colaborador', $colaborador->id)->paginate();
-
-        // Reutiliza la vista 'acceso.index' y la lógica de paginación
-        return view('acceso.index', compact('accesos'))
-            ->with('i', (request()->input('page', 1) - 1) * $accesos->perPage());
-    }
-
     public function edit($id)
     {
         $acceso = Acceso::find($id);
-        $modulos = ['Colaboradores', 'Departamento', 'Areas', 'Puestos', 'Cargos', 'Objetivos', 'Acessos', 'Usuarios'];
-        $accesos = ['0', '1'];
-        $colabs = Colaboradore::pluck('nombres', 'id');
-        return view('acceso.edit', compact('acceso', 'modulos', 'accesos', 'colabs'));
+
+        return view('acceso.edit', compact('acceso'));
     }
 
     /**
@@ -153,5 +105,35 @@ class AccesoController extends Controller
 
         return redirect()->route('accesos.index')
             ->with('success', 'Acceso deleted successfully');
+    }
+
+
+
+
+
+
+
+    public function getAccesos($id)
+    {
+        $accesos = Acceso::where('id_colaborador', $id)->paginate();
+        return response()->json($accesos, 200);
+    }
+
+
+    public function updateAcceso(Request $request)
+    {
+        $modulo = $request->modulo;
+        $metodo = $request->metodo;
+        $id_colab = $request->id_colab;
+        $value = $request->value;
+
+        $acceso = Acceso::where('id_colaborador', $id_colab)->where('modulo', $modulo)->first();
+        if ($metodo == 'crear') $acceso->crear = $value;
+        if ($metodo == 'editar') $acceso->actualizar = $value;
+        if ($metodo == 'eliminar') $acceso->eliminar = $value;
+        if ($metodo == 'ver') $acceso->leer = $value;
+        $acceso->save();
+
+        return response()->json($acceso, 200);
     }
 }

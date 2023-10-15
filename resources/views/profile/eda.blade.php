@@ -8,7 +8,7 @@
                 @foreach ($edas as $eda)
                     <li class="">
                         <button class="p-2 rounded-full font-semibold px-4 bg-neutral-200 hover:bg-neutral-100">
-                            EDA {{ $eda->year }}-{{ $eda->n_evaluacion }}
+                            {{ $eda->year }}-{{ $eda->n_evaluacion }}
                         </button>
                     </li>
                 @endforeach
@@ -17,24 +17,6 @@
                 {{-- Si tiene un supervisor --}}
                 @if ($hasSupervisor)
                     <header class="p-2 py-2 flex items-center gap-2">
-                        {{-- <form>
-                            <label for="default-search"
-                                class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                            <div class="relative w-[500px] max-w-full">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                    </svg>
-                                </div>
-                                <input type="search" id="default-search"
-                                    class="block w-full p-2 pl-10 text-base font-medium text-gray-900 border border-gray-300 rounded-full bg-gray-200 focus:ring-4 focus:ring-blue-500/40 focus:border-blue-500 "
-                                    placeholder="Buscar objetivo" required>
-                                <button type="submit"
-                                    class="text-white absolute right-1 top-[3px] bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2">Buscar</button>
-                            </div>
-                        </form> --}}
                         @if ($isMyprofile)
                             <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
                                 class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-80 cursor-not-allowed select-none' : 'hover:bg-purple-600' }} bg-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center">Enviar

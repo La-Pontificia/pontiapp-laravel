@@ -35,11 +35,6 @@
                 class="bg-green-100 text-green-800 text-base font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
         @endif
     </td>
-    {{-- <td class="">
-        <div class="line-clamp-2">
-            {{ \Carbon\Carbon::parse($colaborador->created_at)->format('j \d\e F, Y') }}
-        </div>
-    </td> --}}
     <td>
         <div class="flex gap-1">
             <button type="button" data-modal-target="modal-add-supervisor-{{ $colaborador->id }}"
@@ -62,15 +57,46 @@
                 @endif
                 Supervisor
             </button>
-            <a href="/acceso/colaborador/{{ $colaborador->id }}"
-                class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
-                <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor" viewBox="0 0 20 19">
+
+
+
+
+
+
+
+
+
+
+
+
+            <button data-id='{{ $colaborador->id }}' data-modal-target="modal-accesos"
+                data-modal-toggle="modal-accesos"
+                class="text-black btn-accesos flex items-center gap-2 bg-white-700 border hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                type="button">
+                <svg class="w-4 h-4 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                    viewBox="0 0 20 19">
                     <path
                         d="M7.324 9.917A2.479 2.479 0 0 1 7.99 7.7l.71-.71a2.484 2.484 0 0 1 2.222-.688 4.538 4.538 0 1 0-3.6 3.615h.002ZM7.99 18.3a2.5 2.5 0 0 1-.6-2.564A2.5 2.5 0 0 1 6 13.5v-1c.005-.544.19-1.072.526-1.5H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h7.687l-.697-.7ZM19.5 12h-1.12a4.441 4.441 0 0 0-.579-1.387l.8-.795a.5.5 0 0 0 0-.707l-.707-.707a.5.5 0 0 0-.707 0l-.795.8A4.443 4.443 0 0 0 15 8.62V7.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.12c-.492.113-.96.309-1.387.579l-.795-.795a.5.5 0 0 0-.707 0l-.707.707a.5.5 0 0 0 0 .707l.8.8c-.272.424-.47.891-.584 1.382H8.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1.12c.113.492.309.96.579 1.387l-.795.795a.5.5 0 0 0 0 .707l.707.707a.5.5 0 0 0 .707 0l.8-.8c.424.272.892.47 1.382.584v1.12a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1.12c.492-.113.96-.309 1.387-.579l.795.8a.5.5 0 0 0 .707 0l.707-.707a.5.5 0 0 0 0-.707l-.8-.795c.273-.427.47-.898.584-1.392h1.12a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5ZM14 15.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
                 </svg>
                 Accesos
-            </a>
+            </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <a href="/profile/{{ $colaborador->id }}/eda" title="Objetivos"
                 class="text-gray-900 gap-2 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -88,73 +114,7 @@
                 </svg>
             </button>
         </div>
-        <!-- Main modal -->
-        <div id="modal-add-supervisor-{{ $colaborador->id }}" tabindex="-1" aria-hidden="true"
-            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative w-full max-w-lg max-h-full">
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <button type="button"
-                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-hide="modal-add-supervisor-{{ $colaborador->id }}">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                    </button>
-                    <!-- Modal header -->
-                    <div class="px-6 py-4 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
-                            Asignar supervisor
-                        </h3>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="p-4">
-                        @if ($colaborador->id_supervisor)
-                            <div class='flex items-center gap-2 p-2 bg-neutral-100 rounded-xl'>
-                                <img class="w-10 h-10 rounded-full" src="/default-user.webp" alt="Jese image">
-                                <div>
-                                    <h4>{{ $colaborador->supervisor->nombres }}
-                                        {{ $colaborador->supervisor->apellidos }}
-                                    </h4>
-                                    <span class="font-semibold">{{ $colaborador->supervisor->dni }}</span>
-                                </div>
-                                <div class="ml-auto">
-                                    <span
-                                        class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Supervisor
-                                        actual</span>
-                                </div>
-                            </div>
-                        @endif
-                        <p class="text-sm mb-4 font-normal text-gray-500 dark:text-gray-400">
-                            Asigna o actualiza el supervisor de este colaborador
-                        </p>
 
-                        <div class="relative w-full block">
-                            <span class="absolute top-[50%] left-2 translate-y-[-50%]">
-                                <svg class="w-6 h-6 text-gray-500" aria-hidden="true" fill="none"
-                                    viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                </svg>
-                            </span>
-                            <input type="text" data-id='{{ $colaborador->id }}'
-                                class="w-full block query-colab rounded-full bg-gray-100 border p-2 px-4 pl-10"
-                                placeholder="Buscar colaborador por nombres o dni">
-                        </div>
-
-                        <ul data-id='{{ $colaborador->id }}' class="flex colabs-q flex-col gap-1 pt-2">
-                            <div class="h-[100px] grid place-content-center">
-                                <h2 class="text-center text-neutral-500 text-lg">Busca un colaborador y luego asigna
-                                    como supervisor
-                                </h2>
-                            </div>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
     </td>
 </tr>
 

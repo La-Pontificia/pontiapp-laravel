@@ -1,10 +1,10 @@
-@extends('layouts.sidebar')
+@extends('layouts.app')
 
 @section('template_title')
     {{ __('Create') }} Acceso
 @endsection
 
-@section('content-sidebar')
+@section('content')
     <section class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -16,8 +16,7 @@
                         <span class="card-title">{{ __('Create') }} Acceso</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('accesos.store') }}" role="form"
-                            enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('accesos.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 
                             @include('acceso.form')

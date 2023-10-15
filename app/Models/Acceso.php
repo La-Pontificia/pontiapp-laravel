@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property $id
  * @property $modulo
- * @property $acceso
+ * @property $crear
+ * @property $leer
+ * @property $actualizar
+ * @property $eliminar
  * @property $id_colaborador
  * @property $created_at
  * @property $updated_at
@@ -23,7 +26,10 @@ class Acceso extends Model
     
     static $rules = [
 		'modulo' => 'required',
-		'acceso' => 'required',
+		'crear' => 'required',
+		'leer' => 'required',
+		'actualizar' => 'required',
+		'eliminar' => 'required',
 		'id_colaborador' => 'required',
     ];
 
@@ -34,7 +40,7 @@ class Acceso extends Model
      *
      * @var array
      */
-    protected $fillable = ['modulo','acceso','id_colaborador'];
+    protected $fillable = ['modulo','crear','leer','actualizar','eliminar','id_colaborador'];
 
 
     /**

@@ -2,6 +2,6 @@
 
 @section('content-profile')
     <section>
-        <h3>history</h3>
+        <h3>Index</h3>
     </section>
 @endsection

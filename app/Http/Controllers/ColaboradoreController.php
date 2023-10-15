@@ -139,56 +139,7 @@ class ColaboradoreController extends GlobalController
             'id_usuario' => $user->id, // Asignar el id del usuario al campo id_usuario
         ]);
 
-
-
-        $user = Acceso::create([
-            'modulo' => 'Colaboradores',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
-        $user = Acceso::create([
-            'modulo' => 'Departamentos',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
-        $user = Acceso::create([
-            'modulo' => 'Areas',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
-        $user = Acceso::create([
-            'modulo' => 'Puestos',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
-        $user = Acceso::create([
-            'modulo' => 'Cargos',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
-        $user = Acceso::create([
-            'modulo' => 'Accesos',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
-        $user = Acceso::create([
-            'modulo' => 'Usuarios',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
-        $user = Acceso::create([
-            'modulo' => 'Supervisores',
-            'acceso' => 0,
-            'id_colaborador' => $colaborador->id,
-        ]);
-
+        $this->createAccesByColaborador($colaborador->id);
         $this->createEdas($colaborador->id);
 
         return redirect()->route('colaboradores.index')
@@ -204,6 +155,21 @@ class ColaboradoreController extends GlobalController
         $Colab->id_supervisor = $id_super;
         $Colab->save();
         return response()->json(['success' => 'Colaborador actualizado correctamente.'], 202);
+    }
+
+    public function createAccesByColaborador($id)
+    {
+        $modulos = ['colaboradores',  'accesos', 'edas', 'areas', 'departamentos', 'cargos', 'puestos', 'sedes', 'reportes', 'objetivos'];
+        foreach ($modulos as $modulo) {
+            Acceso::create([
+                'modulo' => $modulo,
+                'crear' => 0,
+                'leer' => 0,
+                'actualizar' => 0,
+                'eliminar' => 0,
+                'id_colaborador' => $id
+            ]);
+        }
     }
 
 

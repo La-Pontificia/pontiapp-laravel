@@ -1,5 +1,8 @@
-@extends('layouts.maintenance')
+@extends('layouts.app')
 
+@section('template_title')
+    {{ $acceso->name ?? "{{ __('Show') Acceso" }}
+@endsection
 
 @section('content')
     <section class="content container-fluid">
@@ -16,14 +19,26 @@
                     </div>
 
                     <div class="card-body">
-
+                        
                         <div class="form-group">
                             <strong>Modulo:</strong>
                             {{ $acceso->modulo }}
                         </div>
                         <div class="form-group">
-                            <strong>Acceso:</strong>
-                            {{ $acceso->acceso }}
+                            <strong>Crear:</strong>
+                            {{ $acceso->crear }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Leer:</strong>
+                            {{ $acceso->leer }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Actualizar:</strong>
+                            {{ $acceso->actualizar }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Eliminar:</strong>
+                            {{ $acceso->eliminar }}
                         </div>
                         <div class="form-group">
                             <strong>Id Colaborador:</strong>

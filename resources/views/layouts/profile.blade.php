@@ -120,57 +120,25 @@
         <div class="border-b border-gray-200 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
                 @if ($youSupervise || $isMyprofile)
-                    {{-- <li class="mr-2">
-                            <a href="/profile/{{ $colaborador->id }}/goals"
-                                class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg group {{ request()->is('me') || request()->is('*/goals') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}">
-                                <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor" viewBox="0 0 18 20">
-                                    <path
-                                        d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
-                                </svg>Mis Objetivos
-                            </a>
-                        </li> --}}
                     <li class="mr-2">
-                        <a href="/profile/{{ $colaborador->id }}/eda"
-                            class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg dark:hover:text-gray-300 group {{ request()->is('me') || request()->is('*/eda') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}">
+                        <a href="{{ $isMyprofile ? '/me/eda' : "/profile/$colaborador->id/eda" }}"
+                            class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg dark:hover:text-gray-300 group {{ request()->is('/me/eda') || request()->is('*/eda') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}">
                             <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>EDAS
-                        </a>
-                    </li>
-
-                    {{-- <li class="mr-2">
-                        <a href="/profile/{{ $colaborador->id }}/eda"
-                            class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg dark:hover:text-gray-300 group {{ request()->is('me') || request()->is('*/eda') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}">
-                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 9h2v5m-2 0h4M9.408 5.5h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>EDA {{ $currentColabEda->eda->year }}-{{ $currentColabEda->eda->n_evaluacion }}
-                        </a>
-                    </li> --}}
-                    <li class="mr-2">
-                        <a href="/profile/{{ $colaborador->id }}/history"
-                            class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg group {{ request()->is('*/history') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}"
-                            aria-current="page">
-                            <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 6v4l3.276 3.276M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>Historial
+                            </svg>EDA's y objetivos
                         </a>
                     </li>
                 @endif
                 <li class="mr-2">
-                    <a href="/profile/{{ $colaborador->id }}/setting"
+                    <a href="{{ $isMyprofile ? '/me/setting' : "/profile/$colaborador->id/setting" }}"
                         class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg group {{ request()->is('*/setting') ? 'text-blue-600 border-b-blue-600' : 'hover:text-gray-600 hover:border-gray-300' }}">
                         <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                             viewBox="0 0 20 20">
                             <path
                                 d="M5 11.424V1a1 1 0 1 0-2 0v10.424a3.228 3.228 0 0 0 0 6.152V19a1 1 0 1 0 2 0v-1.424a3.228 3.228 0 0 0 0-6.152ZM19.25 14.5A3.243 3.243 0 0 0 17 11.424V1a1 1 0 0 0-2 0v10.424a3.227 3.227 0 0 0 0 6.152V19a1 1 0 1 0 2 0v-1.424a3.243 3.243 0 0 0 2.25-3.076Zm-6-9A3.243 3.243 0 0 0 11 2.424V1a1 1 0 0 0-2 0v1.424a3.228 3.228 0 0 0 0 6.152V19a1 1 0 1 0 2 0V8.576A3.243 3.243 0 0 0 13.25 5.5Z" />
-                        </svg>Configuraciónes
+                        </svg>Configuraciones
                     </a>
                 </li>
             </ul>

@@ -22,52 +22,100 @@ class AccessComposerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('layouts.app', function ($view) {
-            $user = auth()->user();
-
-            if ($user) {
-                $id = $user->id;
-                $colab = Colaboradore::where([
-                    'id_usuario' => $id,
-                ])->first();
-
-                $accesos = Acceso::where('id_colaborador', $colab->id)
-                    ->where('acceso', 1)
-                    ->get();
-                $view->with('accesos', $accesos);
+        View::composer('*', function ($view) {
+            if ($this->getColab()) {
+                $view->with('a_puesto', $this->getPuestos());
+                $view->with('a_colaborador', $this->getColaboradores());
+                $view->with('a_area', $this->getAreas());
+                $view->with('a_eda', $this->getEdas());
+                $view->with('a_departamento', $this->getDepartamentos());
+                $view->with('a_acceso', $this->getAccesos());
+                $view->with('a_cargo', $this->getCargos());
+                $view->with('a_sede', $this->getSedes());
+                $view->with('a_objetivo', $this->getObjetivos());
+                $view->with('a_reporte', $this->getReportes());
             }
         });
+    }
 
-        View::composer('layouts.maintenance', function ($view) {
-            $user = auth()->user();
-
-            if ($user) {
-                $id = $user->id;
-                $colab = Colaboradore::where([
-                    'id_usuario' => $id,
-                ])->first();
-
-                $accesos = Acceso::where('id_colaborador', $colab->id)
-                    ->where('acceso', 1)
-                    ->get();
-                $view->with('accesos', $accesos);
-            }
-        });
-
-        View::composer('colaboradore.index', function ($view) {
-            $user = auth()->user();
-
-            if ($user) {
-                $id = $user->id;
-                $colab = Colaboradore::where([
-                    'id_usuario' => $id,
-                ])->first();
-
-                $accesos = Acceso::where('id_colaborador', $colab->id)
-                    ->where('acceso', 1)
-                    ->get();
-                $view->with('accesos', $accesos);
-            }
-        });
+    function getColab()
+    {
+        $user = auth()->user();
+        if ($user) {
+            $id = $user->id;
+            return Colaboradore::where([
+                'id_usuario' => $id,
+            ])->first();
+        }
+    }
+    function getPuestos()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'puestos')
+            ->first();
+    }
+    function getColaboradores()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'colaboradores')
+            ->first();
+    }
+    function getAreas()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'areas')
+            ->first();
+    }
+    function getEdas()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'edas')
+            ->first();
+    }
+    function getDepartamentos()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'departamentos')
+            ->first();
+    }
+    function getAccesos()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'accesos')
+            ->first();
+    }
+    function getCargos()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'cargos')
+            ->first();
+    }
+    function getSedes()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'sedes')
+            ->first();
+    }
+    function getObjetivos()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'objetivos')
+            ->first();
+    }
+    function getReportes()
+    {
+        $colab = $this->getColab();
+        return Acceso::where('id_colaborador', $colab->id)
+            ->where('modulo', 'reportes')
+            ->first();
     }
 }

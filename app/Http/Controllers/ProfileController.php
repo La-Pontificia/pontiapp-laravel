@@ -72,6 +72,26 @@ class ProfileController extends GlobalController
     {
         $colab = $this->getCurrentColab();
         $data = $this->commonOperations($colab->id);
+        return view('profile.index', $data);
+    }
+
+    public function myHistory()
+    {
+        $colab = $this->getCurrentColab();
+        $data = $this->commonOperations($colab->id);
+        return view('profile.history', $data);
+    }
+
+    public function mySetting()
+    {
+        $colab = $this->getCurrentColab();
+        $data = $this->commonOperations($colab->id);
+        return view('profile.setting', $data);
+    }
+    public function myEda()
+    {
+        $colab = $this->getCurrentColab();
+        $data = $this->commonOperations($colab->id);
         return view('profile.eda', $data);
     }
 }
