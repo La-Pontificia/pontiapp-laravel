@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acceso;
+use App\Models\Cargo;
 use App\Models\Colaboradore;
 use App\Models\Departamento;
 use App\Models\Puesto;
@@ -22,11 +23,11 @@ class PuestoController extends Controller
      */
     public function index()
     {
-
-        $puestos = Puesto::paginate();
-        $puesto = new Puesto();
-        $depas = Departamento::pluck('nombre_departamento', 'id');
-        return view('puesto.index', compact('puestos', 'puesto', 'depas'))
+       $puesto = new Puesto();
+       $puestos = Puesto::paginate();
+       $cargos = Cargo::all();
+       $departamentos = Departamento::all();
+        return view('puesto.index', compact('puestos', 'puesto', 'cargos','departamentos'))
             ->with('i', (request()->input('page', 1) - 1) * $puestos->perPage());
     }
 
@@ -45,8 +46,7 @@ class PuestoController extends Controller
     public function create()
     {
         $puesto = new Puesto();
-        $depas = Departamento::pluck('nombre_departamento', 'id');
-        return view('puesto.create', compact('puesto', 'depas'));
+        return view('puesto.create', compact('puesto', 'cargos'));
     }
 
     /**
@@ -57,13 +57,28 @@ class PuestoController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Puesto::$rules);
+     // obtenemos el ultimo codigo de puesto
+     $codeUltimate = Puesto::max('codigo_puesto');
 
-        $puesto = Puesto::create($request->all());
+     // creamos el nuevo codigo
+     $numero = (int)substr($codeUltimate, 1) + 1;
+     $newCode = 'P' . str_pad($numero, 3, '0', STR_PAD_LEFT);
 
-        return redirect()->route('puestos.index')
-            ->with('success', 'Puesto created successfully.');
-    }
+     // validamos los datos
+     $validatedData = $request->validate(Puesto::$rules);
+
+     // creamos el puesto
+     $data = array_merge($validatedData, [
+        'codigo_puesto' => $newCode,
+    ]);
+    Puesto::create($data);
+
+    return redirect()->route('puestos.index')
+        ->with('success', 'Puesto created successfully.');
+}
+
+        
+    
 
     /**
      * Display the specified resource.
