@@ -21,7 +21,7 @@ class Cargo extends Model
 {
     
     static $rules = [
-		'codigo_cargo' => 'required',
+		// 'codigo_cargo' => 'required',
 		'nombre_cargo' => 'required',
     ];
 

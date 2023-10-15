@@ -46,12 +46,25 @@ class CargoController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Cargo::$rules);
 
-        $cargo = Cargo::create($request->all());
+        $codeUltimate = Cargo::max('codigo_cargo');
 
-        return redirect()->route('cargos.index')
-            ->with('success', 'Cargo created successfully.');
+        // creamos el nuevo codigo
+        $numero = (int)substr($codeUltimate, 1) + 1;
+        $newCode = 'C' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+
+        $validatedData = $request->validate(Cargo::$rules);
+
+        // creamos el cargo
+        $data = array_merge($validatedData, [
+            'codigo_cargo' => $newCode,
+        ]);
+
+        Cargo::create($data);
+
+        return redirect("/cargos");
+            
+        
     }
 
     /**
