@@ -23,9 +23,10 @@ class Puesto extends Model
 {
 
     static $rules = [
-        'codigo_puesto' => 'required',
+        // 'codigo_puesto' => 'required',
         'nombre_puesto' => 'required',
         'id_departamento' => 'required',
+        'id_cargo' => 'required',
     ];
 
     protected $perPage = 20;
