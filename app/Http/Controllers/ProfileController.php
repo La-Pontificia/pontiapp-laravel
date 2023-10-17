@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Colaboradore;
 use App\Models\Eda;
+use App\Models\EdaColab;
 use App\Models\Objetivo;
 
 use App\Models\Supervisore;
@@ -27,15 +28,12 @@ class ProfileController extends GlobalController
         }
 
         if ($colaborador->id == $currentColab->id) $isMyprofile = true;
-        $objetivos = $this->getObjetivosByCurrentColab();
-
         // SUMMARY
         $objetivoNewForm = new Objetivo();
-        $totalPorcentaje = $objetivos->sum('porcentaje');
-        $totalNota = $objetivos->sum('nota_super');
+
         $currentColabEda = $this->getEdaByColabId($colaborador->id);
-        $edas = Eda::orderBy('created_at', 'desc')->get();
-        return compact('id', 'colaborador', 'objetivos', 'totalPorcentaje', 'hasSupervisor', 'totalNota', 'isMyprofile', 'objetivoNewForm', 'youSupervise', 'currentColabEda', 'edas');
+        $edas = EdaColab::where('id_colaborador', $this->getCurrentColab()->id)->orderBy('created_at', 'desc')->get();
+        return compact('id', 'colaborador', 'hasSupervisor', 'isMyprofile', 'objetivoNewForm', 'youSupervise', 'currentColabEda', 'edas');
     }
 
     public function getProfile($id)
@@ -88,10 +86,26 @@ class ProfileController extends GlobalController
         $data = $this->commonOperations($colab->id);
         return view('profile.setting', $data);
     }
-    public function myEda()
+    public function myFirstEda()
+    {
+        $edaColab = EdaColab::where('id_colaborador', $this->getCurrentColab()->id)->where('wearing', 1)->first();
+        return redirect("/me/eda/$edaColab->id");
+    }
+
+    public function myEda($id_eda)
     {
         $colab = $this->getCurrentColab();
+        $edaColab = EdaColab::find($id_eda);
+        $wearingEda = EdaColab::where('id_colaborador', $colab->id)->where('wearing', 1)->first();
         $data = $this->commonOperations($colab->id);
+        $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+        $totalNota = $objetivos->sum('nota_super');
+        $data['edaColab'] = $edaColab;
+        $data['objetivos'] = $objetivos;
+        $data['totalPorcentaje'] = $totalPorcentaje;
+        $data['totalNota'] = $totalNota;
+        $data['wearingEda'] = $wearingEda;
         return view('profile.eda', $data);
     }
 }

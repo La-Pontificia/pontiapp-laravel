@@ -39,7 +39,11 @@ Route::get('/profile/{id}/eda', 'App\Http\Controllers\ProfileController@getEda')
 Route::get('/profile/{id}/setting', 'App\Http\Controllers\ProfileController@getSetting')->name('profile.setting')->middleware('authMiddleware');
 Route::get('/me', 'App\Http\Controllers\ProfileController@myProfile')->middleware('authMiddleware')->name('profile.me');
 Route::get('/me/setting', 'App\Http\Controllers\ProfileController@mySetting')->middleware('authMiddleware')->name('profile.me');
-Route::get('/me/eda', 'App\Http\Controllers\ProfileController@myEda')->middleware('authMiddleware')->name('profile.me');
+Route::get('/me/eda', 'App\Http\Controllers\ProfileController@myFirstEda')->middleware('authMiddleware')->name('profile.me');
+
+Route::get('/profile/{id}/eda/{id_eda}', 'App\Http\Controllers\ProfileController@getEda')->name('profile.eda')->middleware('authMiddleware');
+Route::get('/me/eda/{id_eda}', 'App\Http\Controllers\ProfileController@myEda')->middleware('authMiddleware')->name('profile.me');
+
 
 //EDA COLAB
 Route::post('/define-f-limite-envio-eda-colab', 'App\Http\Controllers\EdaColabController@defineFLimiteEnvio')->middleware('authMiddleware');

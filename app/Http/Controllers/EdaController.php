@@ -63,7 +63,7 @@ class EdaController extends Controller
         $eda = Eda::create($request->all());
         if ($wearing === 1) Eda::where('id', '<>', $eda->id)->update(['wearing' => 0]);
 
-        $this->createEdaByColab($eda->id, $wearing);
+        $this->createEdaByColab($eda->id, 1);
         return response()->json(['success' => true], 202);
     }
 
@@ -93,6 +93,10 @@ class EdaController extends Controller
         return response()->json(['success' => true], 200);
     }
 
+
+
+
+
     public function createEdaByColab($id_eda, $wearing)
     {
         $colaboradores = Colaboradore::get();
@@ -112,11 +116,6 @@ class EdaController extends Controller
     {
         EdaColab::where('id_eda', '<>', $id_eda)->update(['wearing' => 0]);
         EdaColab::where('id_eda', $id_eda)->update(['wearing' => 1]);
-
-        $colaboradores = Colaboradore::all(); // Obtén todos los colaboradores
-        foreach ($colaboradores as $colaborador) {
-            $colaborador->update(['id_eda_colab' => $id_eda]); // Actualiza el campo id_eda para cada colaborador
-        }
     }
 
     // public function createEdaByColab($id_eda)

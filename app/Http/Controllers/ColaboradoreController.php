@@ -180,8 +180,8 @@ class ColaboradoreController extends GlobalController
             EdaColab::create([
                 'id_eda' => $eda->id,
                 'id_colaborador' => $id_colab,
-                'wearing' => $eda->wearing,
                 'estado' => 0, // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
+                'wearing' => $eda->wearing,
                 'cant_obj' => 0,
                 'nota_final' => 0,
             ]);

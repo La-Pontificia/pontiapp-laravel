@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EdaColab;
 use App\Models\EdaObj;
 use App\Models\Objetivo;
 use Illuminate\Http\Request;
@@ -68,7 +69,9 @@ class ObjetivoController extends GlobalController
 
         // Validar la suma total del porcentaje
         $validatedData = $request->validate(Objetivo::$rules);
-        $objetivos = $this->getObjetivosByCurrentColab();
+        $edaColab = $this->getCurrentEdaByCurrentColab();
+
+        $objetivos = Objetivo::where('id_eda_colab', $edaColab->id);
         $totalPorcentaje = $objetivos->sum('porcentaje') + $request->porcentaje;
 
         if ($totalPorcentaje > 100) {
@@ -76,7 +79,6 @@ class ObjetivoController extends GlobalController
         }
 
         // Crear el nuevo objetivo
-        $edaColab = $this->getCurrentEdaByCurrentColab();
         $data = array_merge($validatedData, [
             'id_eda_colab' => $edaColab->id,
             'porcentaje' =>  $request->input('porcentaje'),

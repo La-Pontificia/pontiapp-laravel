@@ -1,30 +1,25 @@
-@extends('layouts.profile')
+@extends('layouts.eda')
 
-@section('content-profile')
-    <section class="p-2 px-4">
+@section('content-eda')
+    <section class="p-2 pt-0 px-4">
         {{-- Si tiene un supervisor o es su perfil del colaborador actual --}}
         @if ($youSupervise || $isMyprofile)
-            <ul class="flex items-center gap-1 h-[50px] pb-3">
-                @foreach ($edas as $eda)
-                    <li class="">
-                        <button class="p-2 rounded-full font-semibold px-4 bg-neutral-200 hover:bg-neutral-100">
-                            {{ $eda->year }}-{{ $eda->n_evaluacion }}
-                        </button>
-                    </li>
-                @endforeach
-            </ul>
             <div class="relative overflow-x-auto bg-white shadow-xl rounded-2xl border">
                 {{-- Si tiene un supervisor --}}
                 @if ($hasSupervisor)
                     <header class="p-2 py-2 flex items-center gap-2">
                         @if ($isMyprofile)
-                            <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
-                                class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-80 cursor-not-allowed select-none' : 'hover:bg-purple-600' }} bg-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center">Enviar
-                                EDA</button>
+                            @if ($wearingEda->id == $edaColab->id)
+                                <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
+                                    class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-80 cursor-not-allowed select-none' : 'hover:bg-purple-600' }} bg-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center">Enviar
+                                    EDA</button>
+                            @endif
                         @else
-                            <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
-                                class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-50 cursor-not-allowed select-none' : '' }} bg-pink-500 hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 ">Aprobar
-                                EDA</button>
+                            @if ($wearingEda->id == $edaColab->id)
+                                <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
+                                    class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-50 cursor-not-allowed select-none' : '' }} bg-pink-500 hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 ">Aprobar
+                                    EDA</button>
+                            @endif
                         @endif
                     </header>
                     @if ($currentColabEda->estado === 0 && $youSupervise)
@@ -76,61 +71,64 @@
                                         </td>
                                         <td class="p-2 font-bold text-xl">
                                             @if ($isMyprofile && $totalPorcentaje < 100)
-                                                <button data-modal-target="create-colab-modal"
-                                                    data-modal-toggle="create-colab-modal"
-                                                    class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                    type="button">
-                                                    Agregar
-                                                </button>
-                                                <!-- Main modal -->
-                                                <div id="create-colab-modal" tabindex="-1" aria-hidden="true"
-                                                    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                                    <div class="relative max-w-xl w-full max-h-full">
-                                                        <!-- Modal content -->
-                                                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                            <button type="button"
-                                                                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                                data-modal-hide="create-colab-modal">
-                                                                <svg class="w-3 h-3" aria-hidden="true"
-                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 14 14">
-                                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                                        stroke-linejoin="round" stroke-width="2"
-                                                                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                                </svg>
-                                                                <span class="sr-only">Close modal</span>
-                                                            </button>
-                                                            @includeif('partials.errors')
-                                                            <div class="px-4 py-4">
-                                                                <h3
-                                                                    class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                                                                    Agregar
-                                                                    nuevo
-                                                                    objetivo</h3>
+                                                @if ($wearingEda->id == $edaColab->id)
+                                                    <button data-modal-target="create-colab-modal"
+                                                        data-modal-toggle="create-colab-modal"
+                                                        class="text-white w-full bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                        type="button">
+                                                        Agregar
+                                                    </button>
+                                                    <!-- Main modal -->
+                                                    <div id="create-colab-modal" tabindex="-1" aria-hidden="true"
+                                                        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                                        <div class="relative max-w-xl w-full max-h-full">
+                                                            <!-- Modal content -->
+                                                            <div
+                                                                class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                                <button type="button"
+                                                                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                                                    data-modal-hide="create-colab-modal">
+                                                                    <svg class="w-3 h-3" aria-hidden="true"
+                                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 14 14">
+                                                                        <path stroke="currentColor" stroke-linecap="round"
+                                                                            stroke-linejoin="round" stroke-width="2"
+                                                                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                                    </svg>
+                                                                    <span class="sr-only">Close modal</span>
+                                                                </button>
+                                                                @includeif('partials.errors')
+                                                                <div class="px-4 py-4">
+                                                                    <h3
+                                                                        class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+                                                                        Agregar
+                                                                        nuevo
+                                                                        objetivo</h3>
 
-                                                                <form method="POST" id="form-store-obj"
-                                                                    action="{{ route('objetivos.store') }}" role="form"
-                                                                    enctype="multipart/form-data">
-                                                                    @csrf
-                                                                    @include('objetivo.form', [
-                                                                        'objetivo' => $objetivoNewForm,
-                                                                    ])
-                                                                    <footer class="flex justify-end mt-4">
-                                                                        <button data-modal-target="create-colab-modal"
-                                                                            type="button" type="button"
-                                                                            data-modal-toggle="create-colab-modal"
-                                                                            class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-base px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cerrar</button>
-                                                                        <button
-                                                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                                            type="submit">
-                                                                            Entregar objetivo
-                                                                        </button>
-                                                                    </footer>
-                                                                </form>
+                                                                    <form method="POST" id="form-store-obj"
+                                                                        action="{{ route('objetivos.store') }}"
+                                                                        role="form" enctype="multipart/form-data">
+                                                                        @csrf
+                                                                        @include('objetivo.form', [
+                                                                            'objetivo' => $objetivoNewForm,
+                                                                        ])
+                                                                        <footer class="flex justify-end mt-4">
+                                                                            <button data-modal-target="create-colab-modal"
+                                                                                type="button" type="button"
+                                                                                data-modal-toggle="create-colab-modal"
+                                                                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-base px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cerrar</button>
+                                                                            <button
+                                                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                                                type="submit">
+                                                                                Entregar objetivo
+                                                                            </button>
+                                                                        </footer>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>
@@ -178,21 +176,23 @@
                                             <td class="px-3 py-4 bg-gray-50 dark:bg-gray-800">
                                                 <div class="flex gap-2">
 
-                                                    <button data-modal-target="editObjModal{{ $objetivo->id }}"
-                                                        data-modal-show="editObjModal{{ $objetivo->id }}" type="button"
-                                                        class="focus:outline-none rounded-full text-black bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                                                        <svg class="w-4" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 21 21">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2"
-                                                                d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
-                                                        </svg>
-                                                    </button>
+                                                    @if ($wearingEda->id == $edaColab->id)
+                                                        <button data-modal-target="editObjModal{{ $objetivo->id }}"
+                                                            data-modal-show="editObjModal{{ $objetivo->id }}"
+                                                            type="button"
+                                                            class="focus:outline-none rounded-full text-black bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                            <svg class="w-4" aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                viewBox="0 0 21 21">
+                                                                <path stroke="currentColor" stroke-linecap="round"
+                                                                    stroke-linejoin="round" stroke-width="2"
+                                                                    d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
+                                                            </svg>
+                                                        </button>
 
-                                                    <a href="#"
-                                                        class="focus:outline-none rounded-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                                                        onclick="event.preventDefault(); 
+                                                        <a href="#"
+                                                            class="focus:outline-none rounded-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                                                            onclick="event.preventDefault(); 
                                                             Swal.fire({
                                                                 title: '¿Estás seguro?',
                                                                 text: 'No podrás deshacer esta acción.',
@@ -207,80 +207,84 @@
                                                                     document.getElementById('delete-form-{{ $objetivo->id }}').submit();
                                                                 }
                                                             });">
-                                                        <svg class="w-4" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 18 20">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2"
-                                                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
-                                                        </svg>
-                                                    </a>
+                                                            <svg class="w-4" aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                viewBox="0 0 18 20">
+                                                                <path stroke="currentColor" stroke-linecap="round"
+                                                                    stroke-linejoin="round" stroke-width="2"
+                                                                    d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                                                            </svg>
+                                                        </a>
 
-                                                    <form id="delete-form-{{ $objetivo->id }}" class="hidden"
-                                                        action="{{ route('objetivos.destroy', $objetivo->id) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                    </form>
+                                                        <form id="delete-form-{{ $objetivo->id }}" class="hidden"
+                                                            action="{{ route('objetivos.destroy', $objetivo->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
 
-                                                    <!-- Main modal -->
-                                                    <div id="editObjModal{{ $objetivo->id }}" tabindex="-1"
-                                                        aria-hidden="true"
-                                                        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                                        <div class="relative max-w-xl w-full max-h-full">
-                                                            <!-- Modal content -->
-                                                            <div
-                                                                class="relative bg-white rounded-2xl shadow dark:bg-gray-700">
-                                                                <button type="button"
-                                                                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                                    data-modal-hide="editObjModal{{ $objetivo->id }}">
-                                                                    <svg class="w-3 h-3" aria-hidden="true"
-                                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                        viewBox="0 0 14 14">
-                                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                                            stroke-linejoin="round" stroke-width="2"
-                                                                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                                    </svg>
-                                                                </button>
-                                                                @includeif('partials.errors')
-                                                                <div class="px-4 py-4">
-                                                                    <h3
-                                                                        class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                                                                        Editar objetivo</h3>
+                                                        <!-- Main modal -->
+                                                        <div id="editObjModal{{ $objetivo->id }}" tabindex="-1"
+                                                            aria-hidden="true"
+                                                            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                                            <div class="relative max-w-xl w-full max-h-full">
+                                                                <!-- Modal content -->
+                                                                <div
+                                                                    class="relative bg-white rounded-2xl shadow dark:bg-gray-700">
+                                                                    <button type="button"
+                                                                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                                                        data-modal-hide="editObjModal{{ $objetivo->id }}">
+                                                                        <svg class="w-3 h-3" aria-hidden="true"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            fill="none" viewBox="0 0 14 14">
+                                                                            <path stroke="currentColor"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                                        </svg>
+                                                                    </button>
                                                                     @includeif('partials.errors')
-                                                                    <form class="form-update-obj" method="POST"
-                                                                        action="{{ route('objetivos.update', $objetivo->id) }}"
-                                                                        role="form" enctype="multipart/form-data">
-                                                                        {{ method_field('PATCH') }}
-                                                                        @csrf
-                                                                        @include('objetivo.form', [
-                                                                            'objetivo' => $objetivo,
-                                                                        ])
-                                                                        <footer class="flex mt-4">
-                                                                            <a href="#"
-                                                                                class="focus:outline-none rounded-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                                                                                onclick="">
-                                                                                <svg class="w-4" aria-hidden="true"
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                    fill="none" viewBox="0 0 18 20">
-                                                                                    <path stroke="currentColor"
-                                                                                        stroke-linecap="round"
-                                                                                        stroke-linejoin="round"
-                                                                                        stroke-width="2"
-                                                                                        d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
-                                                                                </svg>
-                                                                            </a>
-                                                                            <button
-                                                                                class="text-white ml-auto bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                                                type="submit">
-                                                                                Actualizar
-                                                                            </button>
-                                                                        </footer>
-                                                                    </form>
+                                                                    <div class="px-4 py-4">
+                                                                        <h3
+                                                                            class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+                                                                            Editar objetivo</h3>
+                                                                        @includeif('partials.errors')
+                                                                        <form class="form-update-obj" method="POST"
+                                                                            action="{{ route('objetivos.update', $objetivo->id) }}"
+                                                                            role="form" enctype="multipart/form-data">
+                                                                            {{ method_field('PATCH') }}
+                                                                            @csrf
+                                                                            @include('objetivo.form', [
+                                                                                'objetivo' => $objetivo,
+                                                                            ])
+                                                                            <footer class="flex mt-4">
+                                                                                <a href="#"
+                                                                                    class="focus:outline-none rounded-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                                                                                    onclick="">
+                                                                                    <svg class="w-4" aria-hidden="true"
+                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                        fill="none"
+                                                                                        viewBox="0 0 18 20">
+                                                                                        <path stroke="currentColor"
+                                                                                            stroke-linecap="round"
+                                                                                            stroke-linejoin="round"
+                                                                                            stroke-width="2"
+                                                                                            d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                                                                                    </svg>
+                                                                                </a>
+                                                                                <button
+                                                                                    class="text-white ml-auto bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                                                    type="submit">
+                                                                                    Actualizar
+                                                                                </button>
+                                                                            </footer>
+                                                                        </form>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    @endif
+
                                                 </div>
                                             </td>
                                         </tr>

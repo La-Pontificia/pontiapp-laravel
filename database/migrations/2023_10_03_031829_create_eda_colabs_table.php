@@ -15,20 +15,19 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_eda');
             $table->foreign('id_eda')->references('id')->on('edas')->onDelete('cascade');
-
             $table->unsignedBigInteger('id_colaborador');
             $table->foreign('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
-
             $table->integer('estado')->default(0); // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
-
+            $table->integer('feedback_estado')->default(0); // 0 PENDIENTE | 1 ENVIADO | 2 ACEPTADO
+            $table->string('feedback_descripcion')->nullable()->default(null);
+            $table->unsignedBigInteger('feedback_supervisor')->nullable()->default(null);
+            $table->foreign('feedback_supervisor')->references('id')->on('colaboradores')->onDelete('cascade');
             $table->integer('cant_obj')->default(0);
             $table->integer('nota_final')->default(0);
             $table->integer('wearing')->default(0); // SI SE ESTA USANDO ESTA EDA EL COLABORADOR
-
             $table->timestamp('f_envio')->nullable()->default(null);
             $table->timestamp('f_aprobacion')->nullable()->default(null);
             $table->timestamp('f_cerrado')->nullable()->default(null);
-
             $table->timestamps();
         });
     }
