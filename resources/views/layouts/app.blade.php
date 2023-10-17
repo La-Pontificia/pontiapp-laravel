@@ -160,7 +160,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (
+                        {{-- @if (
                             $a_acceso &&
                                 ($a_acceso->crear == 1 || $a_acceso->leer == 1 || $a_acceso->eliminar == 1 || $a_acceso->actualizar == 1))
                             <li>
@@ -257,10 +257,10 @@
                                             </g>
                                         </g>
                                     </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">Accesos</span>
+                                       <span class="flex-1 ml-3 whitespace-nowrap">Accesos</span>
                                 </a>
                             </li>
-                        @endif
+                        @endif --}}
                         @if ($a_eda && ($a_eda->crear == 1 || $a_eda->leer == 1 || $a_eda->eliminar == 1 || $a_eda->actualizar == 1))
                             <li class="border-t border-neutral-600 pt-2 mt-2">
                                 <a href="{{ route('edas.index') }}"
