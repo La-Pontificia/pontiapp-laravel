@@ -4,7 +4,7 @@
     {{ __('Create') }} Puesto
 @endsection
 
-@section('content-2')
+@section('content')
     <section class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
