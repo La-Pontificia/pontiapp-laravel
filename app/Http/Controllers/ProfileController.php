@@ -62,10 +62,22 @@ class ProfileController extends GlobalController
         $objetivos = Objetivo::where('id_eda_colab', $wearingEda->id)->get();
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota_super');
+        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
+
+        $autocalificado = true;
+
+        foreach ($objetivos as $objetivo) {
+            if (!$objetivo->autoevaluacion > 0) {
+                $autocalificado = false;
+                break;
+            }
+        }
+        $data['autocalificado'] = $autocalificado;
         $data['edaColab'] = $wearingEda;
         $data['objetivos'] = $objetivos;
         $data['totalPorcentaje'] = $totalPorcentaje;
         $data['totalNota'] = $totalNota;
+        $data['totalNotalAutoevaluacion'] = $totalNotalAutoevaluacion;
         $data['wearingEda'] = $wearingEda;
 
         return view('profile.eda', $data);
@@ -81,11 +93,25 @@ class ProfileController extends GlobalController
 
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota_super');
+        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
+
+        $autocalificado = true;
+
+        foreach ($objetivos as $objetivo) {
+            if (!$objetivo->autoevaluacion > 0) {
+                $autocalificado = false;
+                break;
+            }
+        }
+
         $data['edaColab'] = $edaColab;
         $data['objetivos'] = $objetivos;
         $data['totalPorcentaje'] = $totalPorcentaje;
         $data['totalNota'] = $totalNota;
+        $data['totalNotalAutoevaluacion'] = $totalNotalAutoevaluacion;
         $data['wearingEda'] = $wearingEda;
+        $data['autocalificado'] = $autocalificado;
+
 
         return view('profile.eda', $data);
     }
@@ -127,13 +153,28 @@ class ProfileController extends GlobalController
         $data = $this->commonOperations($colab->id);
 
         $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
+        $autocalificado = true;
+
+        foreach ($objetivos as $objetivo) {
+            if (!$objetivo->autoevaluacion > 0) {
+                $autocalificado = false;
+                break;
+            }
+        }
+
+
+
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota_super');
+        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
+
         $data['edaColab'] = $edaColab;
         $data['objetivos'] = $objetivos;
         $data['totalPorcentaje'] = $totalPorcentaje;
         $data['totalNota'] = $totalNota;
+        $data['totalNotalAutoevaluacion'] = $totalNotalAutoevaluacion;
         $data['wearingEda'] = $wearingEda;
+        $data['autocalificado'] = $autocalificado;
         return view('profile.eda', $data);
     }
 }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('wearing')->default(0); // SI SE ESTA USANDO ESTA EDA EL COLABORADOR
             $table->timestamp('f_envio')->nullable()->default(null);
             $table->timestamp('f_aprobacion')->nullable()->default(null);
+            $table->timestamp('f_autocalificacion')->nullable()->default(null);
             $table->timestamp('f_cerrado')->nullable()->default(null);
             $table->timestamps();
         });

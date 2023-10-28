@@ -428,6 +428,7 @@
                         title: 'Error al crear el colaborador',
                         text: error.response.data.error,
                     });
+                    console.log(error)
                 }).finally(() => {
                     loadingRemove()
                 });

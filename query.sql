@@ -1,6 +1,5 @@
 INSERT INTO
     `edas` (
-        `id`,
         `year`,
         `n_evaluacion`,
         `descripcion`,
@@ -10,7 +9,6 @@ INSERT INTO
     )
 VALUES
     (
-        1,
         2024,
         2,
         NULL,

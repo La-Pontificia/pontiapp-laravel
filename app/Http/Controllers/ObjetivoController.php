@@ -209,6 +209,26 @@ class ObjetivoController extends GlobalController
     }
 
 
+    public function autocalificarObjetivo(Request $request)
+    {
+        $id = $request->id;
+        $nota = $request->nota;
+
+        if (!$id || !$nota) {
+            return response()->json(['error' => 'El id y la nota es requerido'], 404);
+        }
+        if ($nota != 1 && $nota != 2 && $nota != 3 && $nota != 4 && $nota != 5) {
+            return response()->json(['error' => 'La nora debe ser 1, 2, 3, 4 o 5'], 404);
+        }
+
+        $objetivo = Objetivo::find($id);
+        $objetivo->autoevaluacion = $nota;
+        $objetivo->save();
+
+        return response()->json(['success' => true, "objetivo autocalificado"], 200);
+    }
+
+
     /**
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse

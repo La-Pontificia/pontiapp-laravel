@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EdaColab;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 
 /**
  * Class EdaColabController
@@ -120,6 +121,15 @@ class EdaColabController extends Controller
         try {
             $edaColab = EdaColab::find($id);
             $edaColab->estado = $estado;
+            if ($estado == 1) {
+                $edaColab->f_envio = \Carbon\Carbon::now();
+            } elseif ($estado == 2) {
+                $edaColab->f_aprobacion = \Carbon\Carbon::now();
+            } elseif ($estado == 3) {
+                $edaColab->f_autocalificacion = \Carbon\Carbon::now();
+            } elseif ($estado == 4) {
+                $edaColab->f_cerrado = \Carbon\Carbon::now();
+            }
             $edaColab->save();
             return response()->json(['msg' => 'Estado cambiado'], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {

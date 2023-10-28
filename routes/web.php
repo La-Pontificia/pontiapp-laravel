@@ -46,6 +46,13 @@ Route::get('/me/eda/{id_eda}', 'App\Http\Controllers\ProfileController@myEda')->
 
 //OBJETIVOS
 Route::post('/objetivos/delete/{id}', 'App\Http\Controllers\ObjetivoController@deleteObjetivo');
+Route::post('/objetivos/autocalificar', 'App\Http\Controllers\ObjetivoController@autocalificarObjetivo');
+
+
+
+
+
+
 
 
 //EDA COLAB

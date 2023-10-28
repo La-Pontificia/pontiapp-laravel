@@ -25,7 +25,7 @@
                     <span class="bg-amber-200 mx-auto text-amber-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full ">
                         <div class="flex items-center gap-2 divide-x divide-amber-500 p-2 rounded-xl">
                             <h4 class="min-w-max text-xl tracking-tight font-semibold leading-4">
-                                EDA actual: {{ $currentEda->year }}-{{ $currentEda->n_evaluacion }}</h4>
+                                {{-- EDA actual: {{ $currentEda->year }}-{{ $currentEda->n_evaluacion }}</h4> --}}
                         </div>
                     </span>
                     <div class="flex ml-auto items-center md:order-2">
@@ -159,9 +159,7 @@
                                 </a>
                             </li>
                         @endif
-                        {{-- @if (
-                            $a_acceso &&
-                                ($a_acceso->crear == 1 || $a_acceso->leer == 1 || $a_acceso->eliminar == 1 || $a_acceso->actualizar == 1))
+                        {{-- @if ($a_acceso && ($a_acceso->crear == 1 || $a_acceso->leer == 1 || $a_acceso->eliminar == 1 || $a_acceso->actualizar == 1))
                             <li>
                                 <a href="{{ route('accesos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('accesos*') ? 'text-gray-700 bg-gray-100' : '' }}">

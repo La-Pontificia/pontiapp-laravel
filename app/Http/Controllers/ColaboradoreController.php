@@ -163,10 +163,10 @@ class ColaboradoreController extends GlobalController
         foreach ($modulos as $modulo) {
             Acceso::create([
                 'modulo' => $modulo,
-                'crear' => 0,
-                'leer' => 0,
-                'actualizar' => 0,
-                'eliminar' => 0,
+                'crear' => 1,
+                'leer' => 1,
+                'actualizar' => 1,
+                'eliminar' => 1,
                 'id_colaborador' => $id
             ]);
         }
@@ -182,7 +182,6 @@ class ColaboradoreController extends GlobalController
                 'id_colaborador' => $id_colab,
                 'estado' => 0, // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
                 'wearing' => $eda->wearing,
-                'cant_obj' => 0,
                 'nota_final' => 0,
             ]);
         }

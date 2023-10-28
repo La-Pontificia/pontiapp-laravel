@@ -106,7 +106,6 @@ class EdaController extends Controller
                 'id_colaborador' => $colaborador->id,
                 'wearing' => $wearing,
                 'estado' => 0, // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
-                'cant_obj' => 0,
                 'nota_final' => 0,
             ]);
         }
