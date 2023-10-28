@@ -8,15 +8,31 @@
                 {{-- Si tiene un supervisor --}}
                 @if ($hasSupervisor)
                     <header class="p-2 py-2 flex items-center gap-2">
+                        @if ($edaColab->estado == 1)
+                            <span
+                                class="bg-yellow-100 mx-auto text-yellow-800 text-sm font-medium mr-2 px-4 py-1 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                                {{ $youSupervise ? 'Pendiente' : 'EDA Enviado' }}
+                            </span>
+                        @endif
+                        @if ($edaColab->estado == 2)
+                            <span
+                                class="bg-green-100 text-green-800 text-base font-medium mr-2 px-3 py-1 rounded-full dark:bg-green-900 dark:text-green-300">
+                                {{ $youSupervise ? 'Aprobado' : 'Aprobado ahora puedes autocalificar tus objetivos' }}
+                            </span>
+                        @endif
                         @if ($isMyprofile)
                             @if ($wearingEda->id == $edaColab->id)
-                                <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
-                                    class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-80 cursor-not-allowed select-none' : 'hover:bg-purple-600' }} bg-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center">Enviar
-                                    EDA</button>
+                                @if ($edaColab->estado == 0)
+                                    <button data-id="{{ $edaColab->id }}" id="enviar-eda-btn"
+                                        {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
+                                        class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-80 cursor-not-allowed select-none' : 'hover:bg-purple-600' }} bg-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-base px-5 py-2.5 text-center">Enviar
+                                        EDA</button>
+                                @endif
                             @endif
                         @else
-                            @if ($wearingEda->id == $edaColab->id)
-                                <button {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
+                            @if ($wearingEda->id == $edaColab->id && $edaColab->estado == 1)
+                                <button id="aprobar-eda-btn" data-id="{{ $edaColab->id }}"
+                                    {{ $totalPorcentaje != 100 ? 'disabled' : '' }} type="button"
                                     class="text-white ml-auto {{ $totalPorcentaje != 100 ? 'opacity-50 cursor-not-allowed select-none' : '' }} bg-pink-500 hover:bg-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 ">Aprobar
                                     EDA</button>
                             @endif
@@ -155,7 +171,7 @@
                                                         class="bg-orange-500 rounded-lg flex text-white p-1 px-3">{{ $objetivo->autoevaluacion }}</span>
                                                     /
                                                     <span
-                                                        class="bg-green-500 rounded-lg flex text-white p-1 px-3">{{ $objetivo->nota_super }}</span>
+                                                        class="bg-green-500 rounded-lg flex text-white p-1 px-3">{{ $objetivo->nota }}</span>
 
                                                 </div>
                                             </td>
@@ -175,46 +191,51 @@
                                             </td>
                                             <td class="px-3 py-4 bg-gray-50 dark:bg-gray-800">
                                                 <div class="flex gap-2">
-
                                                     @if ($wearingEda->id == $edaColab->id)
-                                                        <button data-modal-target="editObjModal{{ $objetivo->id }}"
-                                                            data-modal-show="editObjModal{{ $objetivo->id }}"
-                                                            type="button"
-                                                            class="focus:outline-none rounded-full text-black bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                                                            <svg class="w-4" aria-hidden="true"
-                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 21 21">
-                                                                <path stroke="currentColor" stroke-linecap="round"
-                                                                    stroke-linejoin="round" stroke-width="2"
-                                                                    d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
-                                                            </svg>
-                                                        </button>
+                                                        @if ($edaColab->estado == 0)
+                                                            <button data-modal-target="editObjModal{{ $objetivo->id }}"
+                                                                data-modal-show="editObjModal{{ $objetivo->id }}"
+                                                                type="button"
+                                                                class="focus:outline-none rounded-full text-black bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                                <svg class="w-4" aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 21 21">
+                                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
+                                                                </svg>
+                                                            </button>
+                                                            <button data-id="{{ $objetivo->id }}"
+                                                                class="focus:outline-none delete-objetivo rounded-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                                <svg class="w-4" aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 18 20">
+                                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                                                                </svg>
+                                                            </button>
+                                                        @endif
+                                                        @if ($youSupervise && $edaColab->estado == 0)
+                                                            <button data-modal-target="editObjModal{{ $objetivo->id }}"
+                                                                data-modal-show="editObjModal{{ $objetivo->id }}"
+                                                                type="button"
+                                                                class="focus:outline-none rounded-full text-black bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                                                <svg class="w-4" aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 21 21">
+                                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
+                                                                </svg>
+                                                            </button>
+                                                        @endif
 
-                                                        <a href="#"
-                                                            class="focus:outline-none rounded-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                                                            onclick="event.preventDefault(); 
-                                                            Swal.fire({
-                                                                title: '¿Estás seguro?',
-                                                                text: 'No podrás deshacer esta acción.',
-                                                                icon: 'warning',
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: '#d33',
-                                                                cancelButtonColor: '#3085d6',
-                                                                confirmButtonText: 'Sí, eliminar',
-                                                                cancelButtonText: 'Cancelar'
-                                                            }).then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    document.getElementById('delete-form-{{ $objetivo->id }}').submit();
-                                                                }
-                                                            });">
-                                                            <svg class="w-4" aria-hidden="true"
-                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 18 20">
-                                                                <path stroke="currentColor" stroke-linecap="round"
-                                                                    stroke-linejoin="round" stroke-width="2"
-                                                                    d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
-                                                            </svg>
-                                                        </a>
+                                                        @if ($edaColab->estado == 2 && $isMyprofile)
+                                                            <button type="button"
+                                                                class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Autocalifar</button>
+                                                        @endif
+
 
                                                         <form id="delete-form-{{ $objetivo->id }}" class="hidden"
                                                             action="{{ route('objetivos.destroy', $objetivo->id) }}"
@@ -258,20 +279,6 @@
                                                                                 'objetivo' => $objetivo,
                                                                             ])
                                                                             <footer class="flex mt-4">
-                                                                                <a href="#"
-                                                                                    class="focus:outline-none rounded-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 w-[40px] h-[40px] flex items-center justify-center  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                                                                                    onclick="">
-                                                                                    <svg class="w-4" aria-hidden="true"
-                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                        fill="none"
-                                                                                        viewBox="0 0 18 20">
-                                                                                        <path stroke="currentColor"
-                                                                                            stroke-linecap="round"
-                                                                                            stroke-linejoin="round"
-                                                                                            stroke-width="2"
-                                                                                            d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
-                                                                                    </svg>
-                                                                                </a>
                                                                                 <button
                                                                                     class="text-white ml-auto bg-green-600 hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-10 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                                                                     type="submit">
@@ -356,6 +363,91 @@
         //CHANGE DATE LIMIT EDA SEND COLAB
         const $formlimit = document.getElementById("form-limit-eda")
         const $formeobjupdate = document.querySelectorAll(".form-update-obj");
+        const deletesBtns = document.querySelectorAll('.delete-objetivo')
+
+        const enviaredabtn = document.getElementById('enviar-eda-btn')
+        const aprobaredabtn = document.getElementById('aprobar-eda-btn').addEventListener('click', function() {
+            Swal.fire({
+                title: '¿Estás seguro de aprobar el EDA?',
+                text: 'No podrás deshacer esta acción.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, Aprobar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const id = this.getAttribute('data-id');
+                    axios.post('/eda_colaborador/cambiar_estado', {
+                        id,
+                        estado: 2
+                    }).then(res => {
+                        location.reload();
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            });
+
+        })
+
+
+        enviaredabtn.addEventListener('click', () => {
+            const id = enviaredabtn.dataset.id
+            Swal.fire({
+                title: '¿Estás seguro de enviar el EDA?',
+                text: 'No podrás deshacer esta acción.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, Enviar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post('/eda_colaborador/cambiar_estado', {
+                        id,
+                        estado: 1
+                    }).then(res => {
+                        console.log(res.data)
+                        location.reload();
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            });
+
+        })
+
+
+        deletesBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+
+                Swal.fire({
+                    title: '¿Estás seguro de eliminar el objetivo?',
+                    text: 'No podrás deshacer esta acción.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const id = btn.dataset.id
+                        const tr = btn.closest('tr');
+                        axios.post(`/objetivos/delete/${id}`).then(res => {
+                            location.reload();
+                        }).catch(err => {
+                            console.log(err)
+                        })
+                    }
+                });
+
+            })
+        })
+
 
         // Itera sobre cada formulario y agrega el evento a cada uno
         $formeobjupdate.forEach((form) => {
@@ -379,32 +471,6 @@
                         });
                     });
             });
-        });
-
-
-        $formlimit.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            axios.post(this.action, formData)
-                .then(function(response) {
-                    if (response.data.message) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error al definir la fecha de limite',
-                            text: response.data.message,
-                        });
-                    } else if (response.data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Fecha definido correctamente!',
-                        }).then(() => {
-                            window.location.href = window.location.href;
-                        });
-                    }
-                })
-                .catch(function(error) {
-                    console.log(error)
-                });
         });
     </script>
 @endsection

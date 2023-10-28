@@ -103,6 +103,30 @@ class EdaColabController extends Controller
             ->with('success', 'EdaColab updated successfully');
     }
 
+
+    public function cambiarEstado(Request $request)
+    {
+
+        $id = $request->id;
+        $estado = $request->estado;
+
+        if (!$id || !$estado) {
+            return response()->json(['error' => 'El id y el estado es requerido'], 404);
+        }
+        if ($estado != 1 && $estado != 2 && $estado != 3 && $estado != 4) {
+            return response()->json(['error' => 'El estado debe ser 1, 2, 3 o 4'], 404);
+        }
+
+        try {
+            $edaColab = EdaColab::find($id);
+            $edaColab->estado = $estado;
+            $edaColab->save();
+            return response()->json(['msg' => 'Estado cambiado'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Eda no encontrado'], 404);
+        }
+    }
+
     /**
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse

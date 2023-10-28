@@ -32,7 +32,7 @@ class ProfileController extends GlobalController
         $objetivoNewForm = new Objetivo();
 
         $currentColabEda = $this->getEdaByColabId($colaborador->id);
-        $edas = EdaColab::where('id_colaborador', $this->getCurrentColab()->id)->orderBy('created_at', 'desc')->get();
+        $edas = EdaColab::where('id_colaborador', $id)->orderBy('created_at', 'desc')->get();
         return compact('id', 'colaborador', 'hasSupervisor', 'isMyprofile', 'objetivoNewForm', 'youSupervise', 'currentColabEda', 'edas');
     }
 
@@ -57,6 +57,36 @@ class ProfileController extends GlobalController
     public function getEda($id)
     {
         $data = $this->commonOperations($id);
+
+        $wearingEda = EdaColab::where('id_colaborador', $id)->where('wearing', 1)->first();
+        $objetivos = Objetivo::where('id_eda_colab', $wearingEda->id)->get();
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+        $totalNota = $objetivos->sum('nota_super');
+        $data['edaColab'] = $wearingEda;
+        $data['objetivos'] = $objetivos;
+        $data['totalPorcentaje'] = $totalPorcentaje;
+        $data['totalNota'] = $totalNota;
+        $data['wearingEda'] = $wearingEda;
+
+        return view('profile.eda', $data);
+    }
+
+    public function getEdaByEdaId($id, $id_eda)
+    {
+        $data = $this->commonOperations($id);
+        $edaColab = EdaColab::find($id_eda);
+
+        $wearingEda = EdaColab::where('id_colaborador', $id)->where('wearing', 1)->first();
+        $objetivos = Objetivo::where('id_eda_colab', $edaColab->id)->get();
+
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+        $totalNota = $objetivos->sum('nota_super');
+        $data['edaColab'] = $edaColab;
+        $data['objetivos'] = $objetivos;
+        $data['totalPorcentaje'] = $totalPorcentaje;
+        $data['totalNota'] = $totalNota;
+        $data['wearingEda'] = $wearingEda;
+
         return view('profile.eda', $data);
     }
 
@@ -66,18 +96,15 @@ class ProfileController extends GlobalController
         return view('profile.setting', $data);
     }
 
+
+
+
+
     public function myProfile()
     {
         $colab = $this->getCurrentColab();
         $data = $this->commonOperations($colab->id);
         return view('profile.index', $data);
-    }
-
-    public function myHistory()
-    {
-        $colab = $this->getCurrentColab();
-        $data = $this->commonOperations($colab->id);
-        return view('profile.history', $data);
     }
 
     public function mySetting()
@@ -98,6 +125,7 @@ class ProfileController extends GlobalController
         $edaColab = EdaColab::find($id_eda);
         $wearingEda = EdaColab::where('id_colaborador', $colab->id)->where('wearing', 1)->first();
         $data = $this->commonOperations($colab->id);
+
         $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota_super');

@@ -41,12 +41,19 @@ Route::get('/me', 'App\Http\Controllers\ProfileController@myProfile')->middlewar
 Route::get('/me/setting', 'App\Http\Controllers\ProfileController@mySetting')->middleware('authMiddleware')->name('profile.me');
 Route::get('/me/eda', 'App\Http\Controllers\ProfileController@myFirstEda')->middleware('authMiddleware')->name('profile.me');
 
-Route::get('/profile/{id}/eda/{id_eda}', 'App\Http\Controllers\ProfileController@getEda')->name('profile.eda')->middleware('authMiddleware');
+Route::get('/profile/{id}/eda/{id_eda}', 'App\Http\Controllers\ProfileController@getEdaByEdaId')->name('profile.eda')->middleware('authMiddleware');
 Route::get('/me/eda/{id_eda}', 'App\Http\Controllers\ProfileController@myEda')->middleware('authMiddleware')->name('profile.me');
+
+//OBJETIVOS
+Route::post('/objetivos/delete/{id}', 'App\Http\Controllers\ObjetivoController@deleteObjetivo');
 
 
 //EDA COLAB
-Route::post('/define-f-limite-envio-eda-colab', 'App\Http\Controllers\EdaColabController@defineFLimiteEnvio')->middleware('authMiddleware');
+Route::post('/eda_colaborador/cambiar_estado', 'App\Http\Controllers\EdaColabController@cambiarEstado');
+
+
+
+
 
 
 // EDA

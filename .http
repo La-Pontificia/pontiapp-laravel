@@ -1,3 +1,10 @@
 
 
-GET http://127.0.0.1:8000/accesos/colaborador/1
+POST http://127.0.0.1:8000/eda_colaborador/cambiar_estado
+content-type: application/json
+
+{
+    "id": 4,
+    "estado": 6
+}
+

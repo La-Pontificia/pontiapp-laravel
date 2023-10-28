@@ -1,23 +1,23 @@
 @extends('layouts.sidebar')
 
 @section('content-sidebar')
-    <section class="relative block h-[200px]">
+    {{-- <section class="relative block h-[200px]">
         <div class="absolute top-0 w-full h-full bg-center bg-cover"
             style="background-image: url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80');">
             <span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black/50"></span>
         </div>
-    </section>
+    </section> --}}
     <div class="px-6 bg-white sticky top-16 z-30 py-2">
         <div class="flex items-center w-full">
             <div class="p-3 flex">
                 <div class="relative">
                     <img alt="..." src="https://cataas.com/cat"
-                        class="shadow-xl rounded-full w-[11rem] h-[11rem] min-w-[11rem] border-none">
+                        class="shadow-xl rounded-full w-[8rem] h-[8rem] min-w-[8rem] border-none">
                 </div>
             </div>
             <div class="flex flex-col">
-                <div class="flex gap-2 items-center justify-start">
-                    <h3 class="text-4xl font-bold leading-normal text-gray-700">
+                <div class="flex gap-2 px-2 items-center justify-start">
+                    <h3 class="text-3xl font-bold text-gray-700">
                         {{ $colaborador->nombres }}
                         {{ $colaborador->apellidos }}
                     </h3>
@@ -33,17 +33,7 @@
                     Escuela Superior La pontificia
                 </div>
                 <div>
-                    @if (!$isMyprofile)
-                        {{-- <button type="button"
-                            class="text-blue-700 gap-2 max-w-max mt-2 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                viewBox="0 0 18 18">
-                                <path
-                                    d="M3 7H1a1 1 0 0 0-1 1v8a2 2 0 0 0 4 0V8a1 1 0 0 0-1-1Zm12.954 0H12l1.558-4.5a1.778 1.778 0 0 0-3.331-1.06A24.859 24.859 0 0 1 6 6.8v9.586h.114C8.223 16.969 11.015 18 13.6 18c1.4 0 1.592-.526 1.88-1.317l2.354-7A2 2 0 0 0 15.954 7Z" />
-                            </svg>
-                            <span>Enviar feedback</span>
-                        </button> --}}
-                    @else
+                    @if ($isMyprofile)
                         <button type="button"
                             class="text-blue-700 gap-2 max-w-max mt-2 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -69,7 +59,7 @@
             </div>
             <div class="px-4 ml-auto">
                 <div class="flex justify-center py-4 gap-3 lg:pt-4 pt-8">
-                    @if ($isMyprofile)
+                    {{-- @if ($isMyprofile)
                         <div class="p-2 text-center">
                             <span class="text-xl relative font-bold block uppercase tracking-wide text-gray-600">
                                 <svg class="w-8 mx-auto text-neutral-600" viewBox="0 0 24 24" fill="none">
@@ -86,22 +76,22 @@
                     @endif
                     <div class="p-1 text-center">
                         <span class="text-3xl font-bold block uppercase tracking-wide text-gray-600">
-                            {{-- {{ count($objetivos) }} --}}
+                            {{ count($objetivos) }}
                         </span>
                         <span class="text-sm text-gray-400">Objetivos</span>
                     </div>
                     <div class="p-1 text-center">
                         <span class="text-3xl font-bold block tracking-tighter uppercase text-gray-600">
-                            {{-- {{ $totalPorcentaje }}% --}}
+                            {{ $totalPorcentaje }}%
                         </span>
                         <span class="text-sm text-gray-400">Porcentaje</span>
                     </div>
                     <div class="p-1 text-center">
                         <span class="text-3xl font-bold block tracking-tighter uppercase text-gray-600">
-                            {{-- {{ $totalNota }} --}}
+                            {{ $totalNota }}
                         </span>
                         <span class="text-sm text-gray-400">Nota</span>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

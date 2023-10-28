@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_transmitter');
-            $table->unsignedBigInteger('id_receiver');
-            $table->foreign('id_transmitter')->references('id')->on('colaboradores')->onDelete('cascade');
-            $table->foreign('id_receiver')->references('id')->on('colaboradores')->onDelete('cascade');
+            $table->unsignedBigInteger('id_emisor');
+            $table->unsignedBigInteger('id_eda_colab');
+            $table->foreign('id_emisor')->references('id')->on('colaboradores')->onDelete('cascade');
+            $table->foreign('id_eda_colab')->references('id')->on('eda_colabs')->onDelete('cascade');
             $table->text('feedback');
-            $table->boolean('status');
+            $table->boolean('recibido');
+            $table->timestamp('fecha_recibido')->nullable()->default(null);
             $table->timestamps();
         });
     }

@@ -89,6 +89,18 @@ class ObjetivoController extends GlobalController
         return response()->json(['success' => true], 202);
     }
 
+    public function deleteObjetivo($id)
+    {
+        try {
+            $objetivo = Objetivo::findOrFail($id);
+            $objetivo->delete();
+            return response()->json(['msg' => 'Objetivo eliminado'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Objetivo no encontrado'], 404);
+        }
+    }
+
+
 
     /**
      * Display the specified resource.
@@ -168,6 +180,7 @@ class ObjetivoController extends GlobalController
             return response()->json(['error' => 'El porcentaje debe estar entre 1 y 100'], 400);
         }
 
+
         // Validar la descripción e indicadores
         $maxTextLength = 2000;
         $requiredFields = ['descripcion' => 'La descripción', 'indicadores' => 'Los indicadores'];
@@ -178,8 +191,14 @@ class ObjetivoController extends GlobalController
             }
         }
 
-        $objetivos = $this->getObjetivosByCurrentColab();
+        $objetivos = Objetivo::where('id_eda_colab', $objetivo->id_eda_colab);
         $totalPorcentaje = ($objetivos->sum('porcentaje') - $objetivo->porcentaje) + $request->porcentaje;
+
+        $edaColab = EdaColab::find($objetivo->id_eda_colab);
+
+        if ($edaColab->estado == 1) {
+            $objetivo->editado = 1;
+        }
 
         if ($totalPorcentaje > 100) {
             return response()->json(['error' => 'La suma total de porcentaje excede 100'], 400);
