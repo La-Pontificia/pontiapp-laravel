@@ -3,9 +3,7 @@
 @section('content-sidebar')
     <section class="relative block h-[200px]">
         <div class="absolute top-0 w-full h-full bg-center bg-cover"
-            style="
-        background-image: url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80');
-      ">
+            style="background-image: url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80');">
             <span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black/50"></span>
         </div>
     </section>
@@ -13,7 +11,7 @@
         <div class="flex items-center w-full">
             <div class="p-3 flex">
                 <div class="relative">
-                    <img alt="..." src="https://cataas.com/cat?type=sq"
+                    <img alt="..." src="https://cataas.com/cat"
                         class="shadow-xl rounded-full w-[11rem] h-[11rem] min-w-[11rem] border-none">
                 </div>
             </div>
@@ -23,15 +21,6 @@
                         {{ $colaborador->nombres }}
                         {{ $colaborador->apellidos }}
                     </h3>
-                    @if ($isMyprofile)
-                        <button title="Editar nombre">
-                            <svg class="w-6 h-6 text-gray-600 dark:text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 21">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
-                            </svg>
-                        </button>
-                    @endif
                 </div>
                 <div class="text-gray-600 capitalize">
                     <i class="fas fa-briefcase mr-2 text-lg text-gray-400"></i>
@@ -97,19 +86,19 @@
                     @endif
                     <div class="p-1 text-center">
                         <span class="text-3xl font-bold block uppercase tracking-wide text-gray-600">
-                            {{ count($objetivos) }}
+                            {{-- {{ count($objetivos) }} --}}
                         </span>
                         <span class="text-sm text-gray-400">Objetivos</span>
                     </div>
                     <div class="p-1 text-center">
                         <span class="text-3xl font-bold block tracking-tighter uppercase text-gray-600">
-                            {{ $totalPorcentaje }}%
+                            {{-- {{ $totalPorcentaje }}% --}}
                         </span>
                         <span class="text-sm text-gray-400">Porcentaje</span>
                     </div>
                     <div class="p-1 text-center">
                         <span class="text-3xl font-bold block tracking-tighter uppercase text-gray-600">
-                            {{ $totalNota }}
+                            {{-- {{ $totalNota }} --}}
                         </span>
                         <span class="text-sm text-gray-400">Nota</span>
                     </div>

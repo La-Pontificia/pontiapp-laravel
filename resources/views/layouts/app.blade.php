@@ -33,7 +33,7 @@
                             class="flex  text-sm bg-gray-100 w-full p-2 items-center gap-2 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                             id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                             data-dropdown-placement="bottom">
-                            <img class="w-9 h-8 rounded-full" src="https://cataas.com/cat?type=sq" alt="user photo">
+                            <img class="w-9 h-8 rounded-full" src="https://cataas.com/cat" alt="user photo">
                             <span class="font-medium">{{ Auth::user()->name }}</span>
                         </button>
                         <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
@@ -72,8 +72,7 @@
                                 class="flex items-center aria-[expanded=true]:bg-gray-200 aria-[expanded=true]:rounded-b-none rounded-xl w-full p-2 text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                 aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
                                 <div class="w-[35px] h-[35px] rounded-full overflow-hidden">
-                                    <img class="object-cover w-full h-full" src="https://cataas.com/cat?type=sq"
-                                        alt="user photo">
+                                    <img class="object-cover w-full h-full" src="https://cataas.com/cat" alt="user photo">
                                 </div>
                                 <span class="flex-1 ml-3 text-left whitespace-nowrap">Personal</span>
                                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -166,9 +165,9 @@
                             <li>
                                 <a href="{{ route('accesos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('accesos*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg height="33"viewBox="0 0 64 64" id="Layer_1" version="1.1" xml:space="preserve"
-                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        fill="#000000">
+                                    <svg height="33"viewBox="0 0 64 64" id="Layer_1" version="1.1"
+                                        xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                         <g id="SVGRepo_iconCarrier">
