@@ -36,18 +36,16 @@ Route::get('/calificar', 'App\Http\Controllers\ObjetivoController@indexCalificar
 //PROFILE
 Route::get('/profile/{id}', 'App\Http\Controllers\ProfileController@getProfile')->name('profile.index')->middleware('authMiddleware');
 Route::get('/profile/{id}/eda', 'App\Http\Controllers\ProfileController@getEda')->name('profile.eda')->middleware('authMiddleware');
-Route::get('/profile/{id}/setting', 'App\Http\Controllers\ProfileController@getSetting')->name('profile.setting')->middleware('authMiddleware');
-Route::get('/me', 'App\Http\Controllers\ProfileController@myProfile')->middleware('authMiddleware')->name('profile.me');
-Route::get('/me/setting', 'App\Http\Controllers\ProfileController@mySetting')->middleware('authMiddleware')->name('profile.me');
-Route::get('/me/eda', 'App\Http\Controllers\ProfileController@myFirstEda')->middleware('authMiddleware')->name('profile.me');
-
 Route::get('/profile/{id}/eda/{id_eda}', 'App\Http\Controllers\ProfileController@getEdaByEdaId')->name('profile.eda')->middleware('authMiddleware');
+
+Route::get('/me', 'App\Http\Controllers\ProfileController@myProfile')->middleware('authMiddleware')->name('profile.me');
+Route::get('/me/eda', 'App\Http\Controllers\ProfileController@myFirstEda')->middleware('authMiddleware')->name('profile.me');
 Route::get('/me/eda/{id_eda}', 'App\Http\Controllers\ProfileController@myEda')->middleware('authMiddleware')->name('profile.me');
 
 //OBJETIVOS
 Route::post('/objetivos/delete/{id}', 'App\Http\Controllers\ObjetivoController@deleteObjetivo');
 Route::post('/objetivos/autocalificar', 'App\Http\Controllers\ObjetivoController@autocalificarObjetivo');
-
+Route::post('/objetivos/calificar', 'App\Http\Controllers\ObjetivoController@calificarObjetivo');
 
 
 
@@ -84,3 +82,8 @@ Route::post('/accesos/update', 'App\Http\Controllers\AccesoController@updateAcce
 // COLABORADORES
 Route::get('/search-colaboradores', 'App\Http\Controllers\ColaboradoreController@searchColaboradores');
 Route::post('/colaboradores/update-supervisor', 'App\Http\Controllers\ColaboradoreController@updateSupervisor');
+
+
+// FEEDBACK
+
+Route::post('/feedback', 'App\Http\Controllers\FeedbackController@createFeedback');

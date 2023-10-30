@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Colaboradore;
 use App\Models\Eda;
 use App\Models\EdaColab;
+use App\Models\Feedback;
 use App\Models\Objetivo;
 
 use App\Models\Supervisore;
@@ -12,14 +13,15 @@ use Illuminate\Http\Request;
 
 class ProfileController extends GlobalController
 {
-    private function commonOperations($id)
+    private function commonOperations($id_colab, $id_eda_colab)
     {
         $currentColab = $this->getCurrentColab();
-        $colaborador = Colaboradore::find($id);
+        $colaborador = Colaboradore::find($id_colab);
         $isMyprofile = false;
         $youSupervise = false;
         $hasSupervisor = false;
         $supervisor = null;
+        $feedback = null;
 
         if ($colaborador->id_supervisor) {
             $supervisor = Colaboradore::find($colaborador->id_supervisor);
@@ -28,153 +30,94 @@ class ProfileController extends GlobalController
         }
 
         if ($colaborador->id == $currentColab->id) $isMyprofile = true;
+
+        // COMMONS
+        $edaColab = EdaColab::find($id_eda_colab);
+        $wearingEda = EdaColab::where('id_colaborador', $colaborador->id)->where('wearing', 1)->first();
+        $objetivos = Objetivo::where('id_eda_colab', $id_eda_colab)->get();
+        $totalPorcentaje = $objetivos->sum('porcentaje');
+        $totalNota = $objetivos->sum('nota');
+        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
+        $autocalificado = true;
+        foreach ($objetivos as $objetivo) {
+            if (!$objetivo->autoevaluacion > 0) {
+                $autocalificado = false;
+                break;
+            }
+        }
+        $feedback = Feedback::where('id_eda_colab', $id_eda_colab)->first();
         // SUMMARY
         $objetivoNewForm = new Objetivo();
-
         $currentColabEda = $this->getEdaByColabId($colaborador->id);
-        $edas = EdaColab::where('id_colaborador', $id)->orderBy('created_at', 'desc')->get();
-        return compact('id', 'colaborador', 'hasSupervisor', 'isMyprofile', 'objetivoNewForm', 'youSupervise', 'currentColabEda', 'edas');
+        $edas = EdaColab::where('id_colaborador', $colaborador->id)->orderBy('created_at', 'desc')->get();
+        return compact(
+            'id_colab',
+            'colaborador',
+            'hasSupervisor',
+            'isMyprofile',
+            'objetivoNewForm',
+            'youSupervise',
+            'currentColabEda',
+            'edas',
+            'wearingEda',
+            'edaColab',
+            'supervisor',
+            'objetivos',
+            'totalPorcentaje',
+            'totalNota',
+            'totalNotalAutoevaluacion',
+            'autocalificado',
+            'feedback'
+
+        );
     }
 
     public function getProfile($id)
     {
-        $data = $this->commonOperations($id);
+        $data = $this->commonOperations($id, $this->getEdaByColabId($id)->id);
         return view('profile.eda', $data);
     }
 
-    public function getInformation($id)
+
+
+
+    public function getEdaByColabId($id)
     {
-        $data = $this->commonOperations($id);
-        return view('profile.information', $data);
+        $edaColab = EdaColab::where('id_colaborador', $id)->where('wearing', 1)->first();
+        return $edaColab;
     }
 
-    public function getHistory($id)
+    public function getEdaByEdaId($id, $id_eda_colab)
     {
-        $data = $this->commonOperations($id);
-        return view('profile.history', $data);
-    }
-
-    public function getEda($id)
-    {
-        $data = $this->commonOperations($id);
-
-        $wearingEda = EdaColab::where('id_colaborador', $id)->where('wearing', 1)->first();
-        $objetivos = Objetivo::where('id_eda_colab', $wearingEda->id)->get();
-        $totalPorcentaje = $objetivos->sum('porcentaje');
-        $totalNota = $objetivos->sum('nota_super');
-        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
-
-        $autocalificado = true;
-
-        foreach ($objetivos as $objetivo) {
-            if (!$objetivo->autoevaluacion > 0) {
-                $autocalificado = false;
-                break;
-            }
-        }
-        $data['autocalificado'] = $autocalificado;
-        $data['edaColab'] = $wearingEda;
-        $data['objetivos'] = $objetivos;
-        $data['totalPorcentaje'] = $totalPorcentaje;
-        $data['totalNota'] = $totalNota;
-        $data['totalNotalAutoevaluacion'] = $totalNotalAutoevaluacion;
-        $data['wearingEda'] = $wearingEda;
-
+        $data = $this->commonOperations($id, $id_eda_colab);
         return view('profile.eda', $data);
     }
-
-    public function getEdaByEdaId($id, $id_eda)
-    {
-        $data = $this->commonOperations($id);
-        $edaColab = EdaColab::find($id_eda);
-
-        $wearingEda = EdaColab::where('id_colaborador', $id)->where('wearing', 1)->first();
-        $objetivos = Objetivo::where('id_eda_colab', $edaColab->id)->get();
-
-        $totalPorcentaje = $objetivos->sum('porcentaje');
-        $totalNota = $objetivos->sum('nota_super');
-        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
-
-        $autocalificado = true;
-
-        foreach ($objetivos as $objetivo) {
-            if (!$objetivo->autoevaluacion > 0) {
-                $autocalificado = false;
-                break;
-            }
-        }
-
-        $data['edaColab'] = $edaColab;
-        $data['objetivos'] = $objetivos;
-        $data['totalPorcentaje'] = $totalPorcentaje;
-        $data['totalNota'] = $totalNota;
-        $data['totalNotalAutoevaluacion'] = $totalNotalAutoevaluacion;
-        $data['wearingEda'] = $wearingEda;
-        $data['autocalificado'] = $autocalificado;
-
-
-        return view('profile.eda', $data);
-    }
-
-    public function getSetting($id)
-    {
-        $data = $this->commonOperations($id);
-        return view('profile.setting', $data);
-    }
-
-
-
-
 
     public function myProfile()
     {
         $colab = $this->getCurrentColab();
-        $data = $this->commonOperations($colab->id);
+        $data = $this->commonOperations($colab->id, $this->getEdaByColabId($colab->id)->id);
         return view('profile.index', $data);
     }
 
-    public function mySetting()
-    {
-        $colab = $this->getCurrentColab();
-        $data = $this->commonOperations($colab->id);
-        return view('profile.setting', $data);
-    }
     public function myFirstEda()
     {
-        $edaColab = EdaColab::where('id_colaborador', $this->getCurrentColab()->id)->where('wearing', 1)->first();
+        $edaColab = $this->getEdaByColabId($this->getCurrentColab()->id);
         return redirect("/me/eda/$edaColab->id");
     }
+
+
+    public function getEda($id)
+    {
+        $data = $this->commonOperations($id, $this->getEdaByColabId($id)->id);
+        return view('profile.eda', $data);
+    }
+
 
     public function myEda($id_eda)
     {
         $colab = $this->getCurrentColab();
-        $edaColab = EdaColab::find($id_eda);
-        $wearingEda = EdaColab::where('id_colaborador', $colab->id)->where('wearing', 1)->first();
-        $data = $this->commonOperations($colab->id);
-
-        $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
-        $autocalificado = true;
-
-        foreach ($objetivos as $objetivo) {
-            if (!$objetivo->autoevaluacion > 0) {
-                $autocalificado = false;
-                break;
-            }
-        }
-
-
-
-        $totalPorcentaje = $objetivos->sum('porcentaje');
-        $totalNota = $objetivos->sum('nota_super');
-        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
-
-        $data['edaColab'] = $edaColab;
-        $data['objetivos'] = $objetivos;
-        $data['totalPorcentaje'] = $totalPorcentaje;
-        $data['totalNota'] = $totalNota;
-        $data['totalNotalAutoevaluacion'] = $totalNotalAutoevaluacion;
-        $data['wearingEda'] = $wearingEda;
-        $data['autocalificado'] = $autocalificado;
+        $data = $this->commonOperations($colab->id, $id_eda);
         return view('profile.eda', $data);
     }
 }

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_eda_colab');
             $table->foreign('id_emisor')->references('id')->on('colaboradores')->onDelete('cascade');
             $table->foreign('id_eda_colab')->references('id')->on('eda_colabs')->onDelete('cascade');
-            $table->text('feedback');
-            $table->boolean('recibido');
+            $table->text('feedback')->nullable()->default(null);
+            $table->integer('calificacion')->nullable()->default(3);
+            $table->boolean('recibido')->default(false);
             $table->timestamp('fecha_recibido')->nullable()->default(null);
             $table->timestamps();
         });

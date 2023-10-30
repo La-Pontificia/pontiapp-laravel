@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const formactualizar = document.querySelectorAll(".form-update-obj");
     const botoneliminar = document.querySelectorAll('.delete-objetivo')
     const formautocalificar = document.querySelectorAll(".form-autocalificacion");
+    const formacalificacion = document.querySelectorAll(".form-calificacion");
+    const formfeedback = document.getElementById("form-feedback");
+
+
 
     // CREAR
     if (formcrear) {
@@ -127,6 +131,43 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 
+    // CALIFICACION
+    if (formacalificacion) {
+        formacalificacion.forEach((form) => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault()
+                e.stopPropagation()
+
+                const id = this.dataset.id
+                const nota = e.target.querySelector('select[name="nota"]').value;
+
+
+                Swal.fire({
+                    title: '¿Estás seguro de guardar la nota calificada?',
+                    text: 'No podrás deshacer esta acción.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, guardar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.post(`/objetivos/calificar`, {
+                            nota,
+                            id
+                        }).then(() => {
+                            window.location.reload()
+                        }).catch((error) => {
+                            alert(error)
+                        })
+                    }
+                });
+            })
+        })
+    }
+
+
 
 
 
@@ -185,4 +226,35 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-});
+
+    // ----------- FEEDBACK ---------------
+
+    if (formfeedback) {
+        formfeedback.addEventListener('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id_eda_colab = this.dataset.id;
+            const feedback = e.target.querySelector('textarea[name="feedback"]').value;
+            const calificacion = e.target.querySelector('input[name="calificacion"]:checked').value;
+
+            axios.post('/feedback', {
+                id_eda_colab,
+                feedback,
+                calificacion
+            }).then(res => {
+                window.location.href = window.location.href;
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Feedback enviado correctamente!',
+                }).then(() => {
+                });
+            }
+            ).catch(err => {
+                console.log(err);
+            })
+
+        })
+    }
+})
+

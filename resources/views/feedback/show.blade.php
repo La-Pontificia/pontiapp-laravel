@@ -21,20 +21,28 @@
                     <div class="card-body">
                         
                         <div class="form-group">
-                            <strong>Id Transmitter:</strong>
-                            {{ $feedback->id_transmitter }}
+                            <strong>Id Emisor:</strong>
+                            {{ $feedback->id_emisor }}
                         </div>
                         <div class="form-group">
-                            <strong>Id Receiver:</strong>
-                            {{ $feedback->id_receiver }}
+                            <strong>Id Eda Colab:</strong>
+                            {{ $feedback->id_eda_colab }}
                         </div>
                         <div class="form-group">
                             <strong>Feedback:</strong>
                             {{ $feedback->feedback }}
                         </div>
                         <div class="form-group">
-                            <strong>Status:</strong>
-                            {{ $feedback->status }}
+                            <strong>Calificacion:</strong>
+                            {{ $feedback->calificacion }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Recibido:</strong>
+                            {{ $feedback->recibido }}
+                        </div>
+                        <div class="form-group">
+                            <strong>Fecha Recibido:</strong>
+                            {{ $feedback->fecha_recibido }}
                         </div>
 
                     </div>

@@ -36,10 +36,12 @@
                                     <tr>
                                         <th>No</th>
                                         
-										<th>Id Transmitter</th>
-										<th>Id Receiver</th>
+										<th>Id Emisor</th>
+										<th>Id Eda Colab</th>
 										<th>Feedback</th>
-										<th>Status</th>
+										<th>Calificacion</th>
+										<th>Recibido</th>
+										<th>Fecha Recibido</th>
 
                                         <th></th>
                                     </tr>
@@ -49,10 +51,12 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-											<td>{{ $feedback->id_transmitter }}</td>
-											<td>{{ $feedback->id_receiver }}</td>
+											<td>{{ $feedback->id_emisor }}</td>
+											<td>{{ $feedback->id_eda_colab }}</td>
 											<td>{{ $feedback->feedback }}</td>
-											<td>{{ $feedback->status }}</td>
+											<td>{{ $feedback->calificacion }}</td>
+											<td>{{ $feedback->recibido }}</td>
+											<td>{{ $feedback->fecha_recibido }}</td>
 
                                             <td>
                                                 <form action="{{ route('feedback.destroy',$feedback->id) }}" method="POST">

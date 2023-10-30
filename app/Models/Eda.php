@@ -26,7 +26,6 @@ class Eda extends Model
   static $rules = [
     'year' => 'required',
     'n_evaluacion' => 'required',
-    // 'wearing' => 'required',
   ];
 
   protected $perPage = 20;

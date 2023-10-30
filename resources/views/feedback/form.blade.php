@@ -2,14 +2,14 @@
     <div class="box-body">
         
         <div class="form-group">
-            {{ Form::label('id_transmitter') }}
-            {{ Form::text('id_transmitter', $feedback->id_transmitter, ['class' => 'form-control' . ($errors->has('id_transmitter') ? ' is-invalid' : ''), 'placeholder' => 'Id Transmitter']) }}
-            {!! $errors->first('id_transmitter', '<div class="invalid-feedback">:message</div>') !!}
+            {{ Form::label('id_emisor') }}
+            {{ Form::text('id_emisor', $feedback->id_emisor, ['class' => 'form-control' . ($errors->has('id_emisor') ? ' is-invalid' : ''), 'placeholder' => 'Id Emisor']) }}
+            {!! $errors->first('id_emisor', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('id_receiver') }}
-            {{ Form::text('id_receiver', $feedback->id_receiver, ['class' => 'form-control' . ($errors->has('id_receiver') ? ' is-invalid' : ''), 'placeholder' => 'Id Receiver']) }}
-            {!! $errors->first('id_receiver', '<div class="invalid-feedback">:message</div>') !!}
+            {{ Form::label('id_eda_colab') }}
+            {{ Form::text('id_eda_colab', $feedback->id_eda_colab, ['class' => 'form-control' . ($errors->has('id_eda_colab') ? ' is-invalid' : ''), 'placeholder' => 'Id Eda Colab']) }}
+            {!! $errors->first('id_eda_colab', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
             {{ Form::label('feedback') }}
@@ -17,9 +17,19 @@
             {!! $errors->first('feedback', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('status') }}
-            {{ Form::text('status', $feedback->status, ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => 'Status']) }}
-            {!! $errors->first('status', '<div class="invalid-feedback">:message</div>') !!}
+            {{ Form::label('calificacion') }}
+            {{ Form::text('calificacion', $feedback->calificacion, ['class' => 'form-control' . ($errors->has('calificacion') ? ' is-invalid' : ''), 'placeholder' => 'Calificacion']) }}
+            {!! $errors->first('calificacion', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
+        <div class="form-group">
+            {{ Form::label('recibido') }}
+            {{ Form::text('recibido', $feedback->recibido, ['class' => 'form-control' . ($errors->has('recibido') ? ' is-invalid' : ''), 'placeholder' => 'Recibido']) }}
+            {!! $errors->first('recibido', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
+        <div class="form-group">
+            {{ Form::label('fecha_recibido') }}
+            {{ Form::text('fecha_recibido', $feedback->fecha_recibido, ['class' => 'form-control' . ($errors->has('fecha_recibido') ? ' is-invalid' : ''), 'placeholder' => 'Fecha Recibido']) }}
+            {!! $errors->first('fecha_recibido', '<div class="invalid-feedback">:message</div>') !!}
         </div>
 
     </div>
