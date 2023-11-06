@@ -117,7 +117,6 @@
                                     <div class="px-4 py-4">
                                         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Registrar nuevo
                                             colaborador</h3>
-
                                         <form method="POST" id="formColaborador" class="space-y-6 relative"
                                             action="{{ route('colaboradores.store') }}" role="form"
                                             enctype="multipart/form-data">
@@ -207,7 +206,7 @@
                         </div>
                     </span>
                 </div>
-                <div class="border-gray-100 border bg-gray-50 flex pl-2 items-center gap-2 w-[500px] p-1 rounded-lg mt-2">
+                {{-- <div class="border-gray-100 border bg-gray-50 flex pl-2 items-center gap-2 w-[500px] p-1 rounded-lg mt-2">
                     <h3 class="font-semibold text-gray-900 dark:text-white">Estado</h3>
                     <ul
                         class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -242,12 +241,12 @@
                             </div>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
 
             </header>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-base text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
                                 Colaborador

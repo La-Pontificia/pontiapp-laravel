@@ -17,13 +17,21 @@ return new class extends Migration
             $table->foreign('id_eda')->references('id')->on('edas')->onDelete('cascade');
             $table->unsignedBigInteger('id_colaborador');
             $table->foreign('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
-            $table->integer('estado')->default(0); // 0 NO ENVIADO | 1 PENDIENTE | 3 APROBADO | 4 AUTOCALIFICADO | 5 CERRADO
-            $table->integer('nota_final')->default(0);
-            $table->integer('wearing')->default(0); // SI SE ESTA USANDO ESTA EDA EL COLABORADOR
-            $table->timestamp('f_envio')->nullable()->default(null);
-            $table->timestamp('f_aprobacion')->nullable()->default(null);
-            $table->timestamp('f_autocalificacion')->nullable()->default(null);
-            $table->timestamp('f_cerrado')->nullable()->default(null);
+
+            $table->unsignedBigInteger('id_evaluacion');
+            $table->foreign('id_evaluacion')->references('id')->on('evaluaciones')->onDelete('cascade');
+            $table->unsignedBigInteger('id_evaluacion_2');
+            $table->foreign('id_evaluacion_2')->references('id')->on('evaluaciones')->onDelete('cascade');
+
+            $table->boolean('enviado')->default(false);
+            $table->boolean('aprobado')->default(false);
+            $table->boolean('cerrado')->default(false);
+
+            $table->timestamp('fecha_envio')->nullable()->default(null);
+            $table->timestamp('fecha_aprobado')->nullable()->default(null);
+            $table->timestamp('fecha_cerrado')->nullable()->default(null);
+
+            $table->integer('promedio')->default(0);
             $table->timestamps();
         });
     }

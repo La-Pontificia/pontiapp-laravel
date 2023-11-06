@@ -33,7 +33,7 @@ class ProfileController extends GlobalController
 
         // COMMONS
         $edaColab = EdaColab::find($id_eda_colab);
-        $wearingEda = EdaColab::where('id_colaborador', $colaborador->id)->where('wearing', 1)->first();
+        $wearingEda = EdaColab::where('id_colaborador', $colaborador->id)->where('cerrado', 0)->first();
         $objetivos = Objetivo::where('id_eda_colab', $id_eda_colab)->get();
         $totalPorcentaje = $objetivos->sum('porcentaje');
         $totalNota = $objetivos->sum('nota');
@@ -83,7 +83,7 @@ class ProfileController extends GlobalController
 
     public function getEdaByColabId($id)
     {
-        $edaColab = EdaColab::where('id_colaborador', $id)->where('wearing', 1)->first();
+        $edaColab = EdaColab::where('id_colaborador', $id)->where('cerrado', 0)->first();
         return $edaColab;
     }
 

@@ -10,23 +10,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property $id
  * @property $id_eda
  * @property $id_colaborador
- * @property $estado
- * @property $cant_obj
- * @property $nota_final
- * @property $wearing
- * @property $f_envio
- * @property $f_aprobacion
- * @property $f_cerrado
- * @property $flimit_send_obj_from
- * @property $flimit_send_obj_at
- * @property $flimit_white_autoeva_from
- * @property $flimit_white_autoeva_at
+ * @property $id_evaluacion
+ * @property $id_evaluacion_2
+ * @property $enviado
+ * @property $aprobado
+ * @property $cerrado
+ * @property $fecha_envio
+ * @property $fecha_aprobado
+ * @property $fecha_cerrado
+ * @property $promedio
  * @property $created_at
  * @property $updated_at
  *
  * @property Colaboradore $colaboradore
- * @property EdaObj[] $edaObjs
  * @property Eda $eda
+ * @property Evaluacione $evaluacione
+ * @property Evaluacione $evaluacione
+ * @property Objetivo[] $objetivos
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -36,10 +36,8 @@ class EdaColab extends Model
     static $rules = [
         'id_eda' => 'required',
         'id_colaborador' => 'required',
-        'estado' => 'required',
-        'cant_obj' => 'required',
-        'nota_final' => 'required',
-        'wearing' => 'required',
+        'id_evaluacion' => 'required',
+        'id_evaluacion_2' => 'required',
     ];
 
     protected $perPage = 20;
@@ -49,7 +47,7 @@ class EdaColab extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_eda', 'id_colaborador', 'estado', 'cant_obj', 'nota_final', 'wearing', 'f_envio', 'f_aprobacion', 'f_cerrado'];
+    protected $fillable = ['id_eda', 'id_colaborador', 'id_evaluacion', 'id_evaluacion_2', 'enviado', 'aprobado', 'cerrado', 'fecha_envio', 'fecha_aprobado', 'fecha_cerrado', 'promedio'];
 
 
     /**
@@ -61,18 +59,34 @@ class EdaColab extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function edaObjs()
-    {
-        return $this->hasMany('App\Models\EdaObj', 'id_eda_colab', 'id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function eda()
     {
         return $this->hasOne('App\Models\Eda', 'id', 'id_eda');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function evaluacion2()
+    {
+        return $this->hasOne('App\Models\Evaluacione', 'id', 'id_evaluacion_2');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function evaluacion()
+    {
+        return $this->hasOne('App\Models\Evaluacione', 'id', 'id_evaluacion');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function objetivos()
+    {
+        return $this->hasMany('App\Models\Objetivo', 'id_eda_colab', 'id');
     }
 }

@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const id = btn.dataset.id
-                        axios.post(`/objetivos/delete/${id}`).then(res => {
+                        axios.post(`/meta/objetivos/${id}`).then(res => {
                             location.reload();
                         }).catch(err => {
                             console.log(err)

@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('edas', function (Blueprint $table) {
             $table->id();
-            $table->integer('year'); // 2023, 2024, 2025 ...
-            $table->integer('n_evaluacion'); // 1 , 2
-            $table->string('descripcion')->nullable();
-            $table->boolean('wearing')->default(false);
+            $table->integer('año');
+            $table->boolean('cerrado')->default(true);
             $table->timestamps();
         });
     }

@@ -9,6 +9,7 @@ use App\Models\Colaboradore;
 use App\Models\Departamento;
 use App\Models\Eda;
 use App\Models\EdaColab;
+use App\Models\Evaluacione;
 use App\Models\Puesto;
 use App\Models\Sede;
 use App\Models\User;
@@ -175,14 +176,18 @@ class ColaboradoreController extends GlobalController
 
     public function createEdas($id_colab)
     {
+
+        $eva1 = Evaluacione::create();
+        $eva2 = Evaluacione::create();
+
+
         $edas = Eda::all();
         foreach ($edas as $eda) {
             EdaColab::create([
                 'id_eda' => $eda->id,
                 'id_colaborador' => $id_colab,
-                'estado' => 0, // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
-                'wearing' => $eda->wearing,
-                'nota_final' => 0,
+                'id_evaluacion' => $eva1->id,
+                'id_evaluacion_2' => $eva2->id,
             ]);
         }
     }

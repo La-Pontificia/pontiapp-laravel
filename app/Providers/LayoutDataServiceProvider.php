@@ -25,7 +25,7 @@ class LayoutDataServiceProvider extends ServiceProvider
     {
         View::composer('layouts.app', function ($view) {
             $edas = Eda::orderBy('created_at', 'desc')->get();
-            $currentEda = Eda::where('wearing', 1)->first();
+            $currentEda = Eda::where('cerrado', 0)->first();
             $view->with('edas', $edas);
             $view->with('currentEda', $currentEda);
         });

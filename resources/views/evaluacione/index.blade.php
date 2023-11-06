@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Notificacione
+    Evaluacione
 @endsection
 
 @section('content')
@@ -13,11 +13,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Notificacione') }}
+                                {{ __('Evaluacione') }}
                             </span>
 
                              <div class="float-right">
-                                <a href="{{ route('notificaciones.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <a href="{{ route('evaluaciones.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Create New') }}
                                 </a>
                               </div>
@@ -36,26 +36,32 @@
                                     <tr>
                                         <th>No</th>
                                         
-										<th>Id Colaborador</th>
-										<th>Id Objetivo</th>
-										<th>Mensaje</th>
+										<th>Promedio</th>
+										<th>Autocalificacion</th>
+										<th>Cerrado</th>
+										<th>Fecha Promedio</th>
+										<th>Fecha Autocalificacion</th>
+										<th>Fecha Cerrado</th>
 
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($notificaciones as $notificacione)
+                                    @foreach ($evaluaciones as $evaluacione)
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-											<td>{{ $notificacione->id_colaborador }}</td>
-											<td>{{ $notificacione->id_objetivo }}</td>
-											<td>{{ $notificacione->mensaje }}</td>
+											<td>{{ $evaluacione->promedio }}</td>
+											<td>{{ $evaluacione->autocalificacion }}</td>
+											<td>{{ $evaluacione->cerrado }}</td>
+											<td>{{ $evaluacione->fecha_promedio }}</td>
+											<td>{{ $evaluacione->fecha_autocalificacion }}</td>
+											<td>{{ $evaluacione->fecha_cerrado }}</td>
 
                                             <td>
-                                                <form action="{{ route('notificaciones.destroy',$notificacione->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('notificaciones.show',$notificacione->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('notificaciones.edit',$notificacione->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                <form action="{{ route('evaluaciones.destroy',$evaluacione->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('evaluaciones.show',$evaluacione->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('evaluaciones.edit',$evaluacione->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
@@ -68,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                {!! $notificaciones->links() !!}
+                {!! $evaluaciones->links() !!}
             </div>
         </div>
     </div>

@@ -54,12 +54,6 @@ class GlobalController extends Controller
 
 
 
-    public function getSupervisoresByColabID($id)
-    {
-        $supervisores = Supervisore::where('id_colaborador', $id)->get();
-        return $supervisores;
-    }
-
     public function getCurrentColab()
     {
         $user = auth()->user();

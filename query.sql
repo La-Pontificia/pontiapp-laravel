@@ -1,18 +1,14 @@
 INSERT INTO
     `edas` (
-        `year`,
-        `n_evaluacion`,
-        `descripcion`,
-        `wearing`,
+        `año`,
+        `cerrado`,
         `created_at`,
         `updated_at`
     )
 VALUES
     (
         2024,
-        2,
-        NULL,
-        1,
+        0,
         '2023-10-04 18:32:10',
         '2023-10-04 18:32:10'
     );

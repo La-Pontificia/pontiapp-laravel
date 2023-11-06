@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Colaboradore;
 use App\Models\Eda;
 use App\Models\EdaColab;
+use App\Models\Evaluacione;
 use Illuminate\Http\Request;
 
 /**
@@ -47,48 +48,47 @@ class EdaController extends Controller
     {
 
         // Realizar las validaciones personalizadas aquí
-        $year = $request->input('year');
-        $numero = $request->input('n_evaluacion');
+        $año = $request->input('año');
 
         // Realiza las validaciones
-        if ($this->validarEdaExistente($year, $numero)) {
-            return response()->json(['message' => 'Ya existe un registro con el mismo año y número de evaluacion'], 202);
+        if ($this->validarEdaExistente($año)) {
+            return response()->json(['message' => 'Ya existe una con el mismo año ingresado'], 202);
         }
-
-        $wearing = $request->wearing === 'on' ? 1 : 0;
-        $request->merge(['wearing' => $wearing]);
 
         request()->validate(Eda::$rules);
 
         $eda = Eda::create($request->all());
-        if ($wearing === 1) Eda::where('id', '<>', $eda->id)->update(['wearing' => 0]);
+        $this->createEdaByColab($eda->id);
 
-        $this->createEdaByColab($eda->id, 1);
         return response()->json(['success' => true], 202);
     }
 
 
-    private function validarEdaExistente($year, $numero)
+
+
+
+
+
+
+
+
+
+
+
+    private function validarEdaExistente($año)
     {
-        $edaExistente = Eda::where('year', $year)
-            ->where('n_evaluacion', $numero)
+        $edaExistente = Eda::where('año', $año)
             ->first();
 
         return $edaExistente !== null;
     }
 
 
-    public function changeWearing($id)
+    public function cambiarEstadoEda($id)
     {
-        // Primero, establecemos wearing = 0 para todos los registros
-        Eda::where('id', '<>', $id)->update(['wearing' => 0]);
-
-        // Luego, establecemos wearing = 1 para el registro específico
         $eda = Eda::findOrFail($id);
-        $eda->wearing = 1;
+        $eda->cerrado = !$eda->cerrado;
         $eda->save();
-
-        $this->changeEdaWearingByColab($eda->id);
 
         return response()->json(['success' => true], 200);
     }
@@ -97,19 +97,24 @@ class EdaController extends Controller
 
 
 
-    public function createEdaByColab($id_eda, $wearing)
+    public function createEdaByColab($id_eda)
     {
+        $eva1 = Evaluacione::create();
+        $eva2 = Evaluacione::create();
+
         $colaboradores = Colaboradore::get();
         foreach ($colaboradores as $colaborador) {
             EdaColab::create([
                 'id_eda' => $id_eda,
                 'id_colaborador' => $colaborador->id,
-                'wearing' => $wearing,
-                'estado' => 0, // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
-                'nota_final' => 0,
+                'id_evaluacion' => $eva1->id,
+                'id_evaluacion_2' => $eva2->id,
             ]);
         }
     }
+
+
+
 
     public function changeEdaWearingByColab($id_eda)
     {

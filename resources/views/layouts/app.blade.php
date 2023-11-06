@@ -6,7 +6,7 @@
             @if (Route::has('login'))
             @endif
         @else
-            <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 bg-white backdrop-blur-sm z-30">
+            {{-- <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 bg-white backdrop-blur-sm z-30">
                 <div class=" flex w-full gap-3 px-4 items-center h-16">
                     <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
                         aria-controls="cta-button-sidebar" type="button"
@@ -19,15 +19,7 @@
                             </path>
                         </svg>
                     </button>
-                    <a href="/" class="flex items-center">
-                        <img src="/elp.gif" class="w-32" alt="Flowbite Logo" />
-                    </a>
-                    <span class="bg-amber-200 mx-auto text-amber-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full ">
-                        <div class="flex items-center gap-2 divide-x divide-amber-500 p-2 rounded-xl">
-                            <h4 class="min-w-max text-xl tracking-tight font-semibold leading-4">
-                                {{-- EDA actual: {{ $currentEda->year }}-{{ $currentEda->n_evaluacion }}</h4> --}}
-                        </div>
-                    </span>
+
                     <div class="flex ml-auto items-center md:order-2">
                         <button type="button"
                             class="flex  text-sm bg-gray-100 w-full p-2 items-center gap-2 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -61,11 +53,14 @@
                         </div>
                     </div>
                 </div>
-            </nav>
+            </nav> --}}
             <aside id="cta-button-sidebar"
                 class="fixed top-0 left-0 z-40 w-[250px] h-screen transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar">
-                <div class="h-full px-3 py-4 pt-2 flex flex-col overflow-y-auto bg-white shadow-lg">
+                <div class="h-full px-3 py-5 pt-2 flex flex-col overflow-y-auto bg-sky-950 shadow-lg">
+                    <a href="/" class="flex justify-center items-center">
+                        <img src="/elp.gif" class="w-32" alt="Flowbite Logo" />
+                    </a>
                     <ul class="h-full flex mt-2 flex-col font-medium text-neutral-500">
                         <li class="">
                             <button type="button" aria-expanded="{{ request()->is('me*') ? 'true' : 'false' }}"
@@ -81,8 +76,7 @@
                                         d="m1 1 4 4 4-4" />
                                 </svg>
                             </button>
-                            <ul id="dropdown-example"
-                                class="{{ request()->is('me*') ? 'block' : 'hidden' }} bg-gray-200 rounded-xl rounded-t-none p-2 pl-5">
+                            <ul id="dropdown-example" class=" bg-gray-200 rounded-xl rounded-t-none p-2 pl-5">
                                 @if (
                                     $a_objetivo &&
                                         ($a_objetivo->crear == 1 ||
@@ -102,26 +96,28 @@
                                                     fill="currentColor"></path>
                                             </svg>
                                             <span>
-                                                Objetivos
+                                                Edas
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/me/eda"
+                                            class="flex gap-2 text-gray-900 {{ request()->is('me/eda') ? 'bg-gray-800 text-white' : 'hover:bg-gray-100' }} items-center w-full p-2  transition duration-75 rounded-lg group">
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.5 2C8.67157 2 8 2.67157 8 3.5V4.5C8 5.32843 8.67157 6 9.5 6H14.5C15.3284 6 16 5.32843 16 4.5V3.5C16 2.67157 15.3284 2 14.5 2H9.5Z"
+                                                    fill="currentColor"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M6.5 4.03662C5.24209 4.10719 4.44798 4.30764 3.87868 4.87694C3 5.75562 3 7.16983 3 9.99826V15.9983C3 18.8267 3 20.2409 3.87868 21.1196C4.75736 21.9983 6.17157 21.9983 9 21.9983H15C17.8284 21.9983 19.2426 21.9983 20.1213 21.1196C21 20.2409 21 18.8267 21 15.9983V9.99826C21 7.16983 21 5.75562 20.1213 4.87694C19.552 4.30764 18.7579 4.10719 17.5 4.03662V4.5C17.5 6.15685 16.1569 7.5 14.5 7.5H9.5C7.84315 7.5 6.5 6.15685 6.5 4.5V4.03662ZM7 9.75C6.58579 9.75 6.25 10.0858 6.25 10.5C6.25 10.9142 6.58579 11.25 7 11.25H7.5C7.91421 11.25 8.25 10.9142 8.25 10.5C8.25 10.0858 7.91421 9.75 7.5 9.75H7ZM10.5 9.75C10.0858 9.75 9.75 10.0858 9.75 10.5C9.75 10.9142 10.0858 11.25 10.5 11.25H17C17.4142 11.25 17.75 10.9142 17.75 10.5C17.75 10.0858 17.4142 9.75 17 9.75H10.5ZM7 13.25C6.58579 13.25 6.25 13.5858 6.25 14C6.25 14.4142 6.58579 14.75 7 14.75H7.5C7.91421 14.75 8.25 14.4142 8.25 14C8.25 13.5858 7.91421 13.25 7.5 13.25H7ZM10.5 13.25C10.0858 13.25 9.75 13.5858 9.75 14C9.75 14.4142 10.0858 14.75 10.5 14.75H17C17.4142 14.75 17.75 14.4142 17.75 14C17.75 13.5858 17.4142 13.25 17 13.25H10.5ZM7 16.75C6.58579 16.75 6.25 17.0858 6.25 17.5C6.25 17.9142 6.58579 18.25 7 18.25H7.5C7.91421 18.25 8.25 17.9142 8.25 17.5C8.25 17.0858 7.91421 16.75 7.5 16.75H7ZM10.5 16.75C10.0858 16.75 9.75 17.0858 9.75 17.5C9.75 17.9142 10.0858 18.25 10.5 18.25H17C17.4142 18.25 17.75 17.9142 17.75 17.5C17.75 17.0858 17.4142 16.75 17 16.75H10.5Z"
+                                                    fill="currentColor"></path>
+                                            </svg>
+                                            <span>
+                                                Feedbacks
                                             </span>
                                         </a>
                                     </li>
                                 @endif
-                                <li>
-                                    <a href="/me/setting"
-                                        class="flex gap-2 items-center w-full p-2 text-gray-900 {{ request()->is('me/setting') ? 'bg-gray-800 text-white' : 'hover:bg-gray-100' }} transition duration-75 rounded-lg group  ">
-                                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-
-                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M22 8.29344C22 11.7692 19.1708 14.5869 15.6807 14.5869C15.0439 14.5869 13.5939 14.4405 12.8885 13.8551L12.0067 14.7333C11.4883 15.2496 11.6283 15.4016 11.8589 15.652C11.9551 15.7565 12.0672 15.8781 12.1537 16.0505C12.1537 16.0505 12.8885 17.075 12.1537 18.0995C11.7128 18.6849 10.4783 19.5045 9.06754 18.0995L8.77362 18.3922C8.77362 18.3922 9.65538 19.4167 8.92058 20.4412C8.4797 21.0267 7.30403 21.6121 6.27531 20.5876L5.2466 21.6121C4.54119 22.3146 3.67905 21.9048 3.33616 21.6121L2.45441 20.7339C1.63143 19.9143 2.1115 19.0264 2.45441 18.6849L10.0963 11.0743C10.0963 11.0743 9.3615 9.90338 9.3615 8.29344C9.3615 4.81767 12.1907 2 15.6807 2C19.1708 2 22 4.81767 22 8.29344ZM15.681 10.4889C16.8984 10.4889 17.8853 9.50601 17.8853 8.29353C17.8853 7.08105 16.8984 6.09814 15.681 6.09814C14.4635 6.09814 13.4766 7.08105 13.4766 8.29353C13.4766 9.50601 14.4635 10.4889 15.681 10.4889Z"
-                                                fill="currentColor"></path>
-                                        </svg>
-                                        <span>
-                                            Configuracion
-                                        </span>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         @if (

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_emisor');
-            $table->unsignedBigInteger('id_eda_colab');
+            $table->unsignedBigInteger('id_evaluacion');
             $table->foreign('id_emisor')->references('id')->on('colaboradores')->onDelete('cascade');
-            $table->foreign('id_eda_colab')->references('id')->on('eda_colabs')->onDelete('cascade');
+            $table->foreign('id_evaluacion')->references('id')->on('evaluaciones')->onDelete('cascade');
             $table->text('feedback')->nullable()->default(null);
             $table->integer('calificacion')->nullable()->default(3);
             $table->boolean('recibido')->default(false);

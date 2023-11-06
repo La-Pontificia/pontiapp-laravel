@@ -24,8 +24,7 @@ class Eda extends Model
 {
 
   static $rules = [
-    'year' => 'required',
-    'n_evaluacion' => 'required',
+    'año' => 'required',
   ];
 
   protected $perPage = 20;
@@ -35,7 +34,7 @@ class Eda extends Model
    *
    * @var array
    */
-  protected $fillable = ['year', 'n_evaluacion',  'wearing'];
+  protected $fillable = ['año', 'cerrado'];
 
 
   /**

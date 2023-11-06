@@ -15,15 +15,19 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_eda_colab');
             $table->foreign('id_eda_colab')->references('id')->on('eda_colabs')->onDelete('cascade');
-            //
+
             $table->string('objetivo', 255);
             $table->string('descripcion', 2000);
             $table->string('indicadores', 2000);
             $table->decimal('porcentaje', 5, 2);
-            $table->integer('autoevaluacion')->default(0);
-            $table->integer('nota')->default(0);
+
+            $table->integer('autocalificacion')->default(0);
+            $table->integer('promedio')->default(0);
+
+            $table->integer('autocalificacion_2')->default(0);
+            $table->integer('promedio_2')->default(0);
+
             $table->integer('editado')->default(0);
-            $table->timestamp('nota_fecha')->nullable();
             $table->timestamps();
         });
     }

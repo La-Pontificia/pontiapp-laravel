@@ -62,7 +62,7 @@ Route::post('/eda_colaborador/cambiar_estado', 'App\Http\Controllers\EdaColabCon
 
 
 // EDA
-Route::post('change-wearing/{id}', 'App\Http\Controllers\EdaController@changeWearing');
+Route::post('/cambiar-estado-eda/{id}', 'App\Http\Controllers\EdaController@cambiarEstadoEda');
 Route::post('/calificar/desaprobar', 'App\Http\Controllers\ObjetivoController@desaprobar')->name('objetivo.desaprobar');
 Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController@getAccesosColaborador')->name('colaborador.accesos');
 Route::get('/colaboradores/supervisor/{id}', 'App\Http\Controllers\SupervisoreController@getSupervisorDeColaborador')->name('colaborador.supervisor');
@@ -85,5 +85,19 @@ Route::post('/colaboradores/update-supervisor', 'App\Http\Controllers\Colaborado
 
 
 // FEEDBACK
-
 Route::post('/feedback', 'App\Http\Controllers\FeedbackController@createFeedback');
+
+
+
+
+//// --------------------- CUSTOM META ROUTES ROUTER
+
+Route::get('/meta', 'App\Http\Controllers\MetaController@index');
+Route::get('/meta/{id_colab}', 'App\Http\Controllers\MetaController@colaborador');
+Route::get('/meta/{id_colab}/eda/{id_eda}', 'App\Http\Controllers\MetaController@colaboradorEda');
+Route::get('/meta/{id_colab}/eda/{id_eda}/objetivos', 'App\Http\Controllers\MetaController@colaboradorEdaObjetivos');
+Route::get('/meta/{id_colab}/eda/{id_eda}/{id_eva}', 'App\Http\Controllers\MetaController@colaboradorEdaEva');
+
+// objetivos
+Route::post('/meta/{id_colab}/eda/{id_eda}/objetivos', 'App\Http\Controllers\MetaController@agregarObjetivo');
+Route::post('/meta/objetivos/{id_objetivo}', 'App\Http\Controllers\MetaController@eliminarObjetivo');

@@ -1,7 +1,7 @@
 @extends('layouts.sidebar')
 
 @section('content-sidebar')
-    <div class="max-w-4xl mx-auto p-3">
+    <div class="max-w-xl mx-auto p-3">
         <header class="pb-3">
             <button type="button" data-modal-target="crypto-modal" data-modal-toggle="crypto-modal"
                 class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
@@ -37,8 +37,6 @@
                         </div>
                         <!-- Modal body -->
                         <div class="p-6">
-                            <p class="text-sm mb-4 font-normal text-gray-500 dark:text-gray-400">Recuerda que al crer una
-                                eda y usarlo, todos los usuarios estaran relacionado a esa EDA.</p>
                             <form id="form-store-eda" method="POST" action="{{ route('edas.store') }}" role="form"
                                 enctype="multipart/form-data">
                                 @csrf
@@ -55,21 +53,17 @@
 
         </header>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3 w-[50px]">
                             Año
                         </th>
-                        <th scope="col" class="px-3 w-[90px] py-3">
-                            Evaluación
-                        </th>
                         <th scope="col" class="px-6 py-3">
                             Fecha registro
                         </th>
-
                         <th scope="col" class="px-6 py-3">
-                            Usar
+                            Cerrado
                         </th>
                         <th scope="col" class="px-6 py-3">
 
@@ -81,13 +75,12 @@
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <td scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $eda->year }}</td>
-                            <td class="px-6 py-4">{{ $eda->n_evaluacion }}</td>
+                                {{ $eda->año }}</td>
                             <td class="px-6 py-4">{{ \Carbon\Carbon::parse($eda->created_at)->format('d F Y') }}</td>
                             <td class="px-6 py-4">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <button data-eda-id="{{ $eda->id }}" name="wearing" type="button"
-                                        class="btn-wearing-eda flex gap-2 items-center font-medium {{ $eda->wearing ? 'text-green-500' : 'text-gray-300' }}">
+                                        class="btn-wearing-eda flex gap-2 items-center font-medium {{ $eda->cerrado ? 'text-gray-300' : 'text-green-500' }}">
                                         <svg class="w-7" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <g id="SVGRepo_iconCarrier">
@@ -96,7 +89,7 @@
                                                     fill="currentColor"></path>
                                             </g>
                                         </svg>
-                                        {{ $eda->wearing ? 'Usando' : 'usar' }}
+                                        {{ $eda->cerrado ? 'Cerrado' : 'Abierto' }}
                                 </label>
                             </td>
                             <td class="px-3">
@@ -154,7 +147,7 @@
                 const edaId = this.getAttribute('data-eda-id');
                 Swal.fire({
                     title: '¿Estás seguro?',
-                    text: 'No podrás deshacer esta acción.',
+                    text: 'Esta acción eliminará todos lo objetivos, edas del colaborador',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -176,17 +169,17 @@
                 const edaId = this.getAttribute('data-eda-id');
                 Swal.fire({
                     title: '¿Estás seguro?',
-                    text: 'Usar el EDA seleccionado',
+                    text: 'Cambiar estado del EDA',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sí, usar EDA',
+                    confirmButtonText: 'Sí, cambiar',
                     cancelButtonText: 'Cancelar'
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         try {
-                            const res = await axios.post(`/change-wearing/${edaId}`)
+                            const res = await axios.post(`/cambiar-estado-eda/${edaId}`)
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Se cambio correctamente',
