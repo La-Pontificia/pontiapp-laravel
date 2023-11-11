@@ -2,30 +2,25 @@
 
 @section('content-meta')
     @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'id_colab' => $id_colab, 'id_eda' => $id_eda])
-    <header class="p-4 bg-neutral-50">
-        <div class="border-b mb-2 pb-2">
-            <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}"
-                class="flex items-center gap-2 hover:bg-neutral-200 text-neutral-500 max-w-max px-3 rounded-xl">
-                <svg width="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_iconCarrier">
-                        <path d="M6 12H18M6 12L11 7M6 12L11 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round"></path>
-                    </g>
-                </svg>
-                <h2 class="text-xl p-2 font-semibold">Objetivos</h2>
-            </a>
-        </div>
-        <nav class="pt-2 flex gap-2">
-            <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
-                class="text-white w-[200px] bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2 text-center "
-                type="button">
-                Agregar objetivo
-            </button>
-            <div class="bg-neutral-300 font-medium px-4 rounded-xl p-2">
-                Total porcentaje {{ $objetivos->sum('porcentaje') }}%
-            </div>
-        </nav>
-    </header>
+    @if ($edaSeleccionado->enviado == true)
+        @if ($miPerfil)
+            <header class="p-10 text-center">
+                <h1 class=" text-xl max-w-[35ch] mx-auto font-medium">
+                    🎉 Felicidades enviaste tus objetivos para su aprobación
+                </h1>
+                <p>Una ves aprobado por tu supervisor podrás autocalificar tus objetivos</p>
+            </header>
+        @else
+            <header class="p-10 text-center">
+                <p>Una ves aprobado el colaborador podrá autocalificar sus objetivos</p>
+                <button id="aprobar-eda-btn" data-id="{{ $id_colab }}" type="button"
+                    class="text-white ml-auto bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-pink-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 ">Aprobar
+                    EDA</button>
+            </header>
+        @endif
+    @else
+        @include('meta.objetivos.header', ['enviado' => $edaSeleccionado->enviado == true])
+    @endif
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -50,7 +45,7 @@
                     </th>
                 </tr>
             </thead>
-            @include('meta.objetivos.tableBody')
+            @include('meta.objetivos.tableBody', ['enviado' => $edaSeleccionado->enviado == true])
         </table>
     </div>
 @endsection

@@ -69,27 +69,25 @@ class ObjetivoController extends GlobalController
 
         // Validar la suma total del porcentaje
         $validatedData = $request->validate(Objetivo::$rules);
+        $edaColab = $this->getCurrentEdaByCurrentColab();
 
-        // $objetivos = Objetivo::where('id_eda_colab', $edaColab->id);
-        // $totalPorcentaje = $objetivos->sum('porcentaje') + $request->porcentaje;
+        $objetivos = Objetivo::where('id_eda_colab', $edaColab->id);
+        $totalPorcentaje = $objetivos->sum('porcentaje') + $request->porcentaje;
 
-        // if ($totalPorcentaje > 100) {
-        //     return response()->json(['error' => 'La suma total de porcentaje excede 100'], 400);
-        // }
+        if ($totalPorcentaje > 100) {
+            return response()->json(['error' => 'La suma total de porcentaje excede 100'], 400);
+        }
 
-        // // Crear el nuevo objetivo
-        // $data = array_merge($validatedData, [
-        //     'id_eda_colab' => $edaColab->id,
-        //     'porcentaje' =>  $request->input('porcentaje'),
-        // ]);
+        // Crear el nuevo objetivo
+        $data = array_merge($validatedData, [
+            'id_eda_colab' => $edaColab->id,
+            'porcentaje' =>  $request->input('porcentaje'),
+            'porcentaje_inicial' => $request->input('porcentaje')
+        ]);
 
-        // Objetivo::create($data);
+        Objetivo::create($data);
         return response()->json(['success' => true], 202);
     }
-
-
-
-
 
     public function deleteObjetivo($id)
     {
@@ -209,6 +207,10 @@ class ObjetivoController extends GlobalController
         $objetivo->update($request->all());
         return response()->json(['success' => true], 200);
     }
+
+
+
+
 
     public function cambiarNota($id, $nota, $nombre_nota)
     {

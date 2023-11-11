@@ -101,3 +101,7 @@ Route::get('/meta/{id_colab}/eda/{id_eda}/{id_eva}', 'App\Http\Controllers\MetaC
 // objetivos
 Route::post('/meta/{id_colab}/eda/{id_eda}/objetivos', 'App\Http\Controllers\MetaController@agregarObjetivo');
 Route::post('/meta/objetivos/{id_objetivo}', 'App\Http\Controllers\MetaController@eliminarObjetivo');
+Route::post('/meta/{id_colab}/eda/{id_eda}/objetivos/{id_objetivo}', 'App\Http\Controllers\MetaController@actualizarObjetivo');
+
+//EDA
+Route::post('/meta/eda/cambiar_estado/{id_eda}', 'App\Http\Controllers\MetaController@cambiarEstadoEda');

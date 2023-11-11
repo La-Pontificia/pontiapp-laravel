@@ -6,7 +6,7 @@
             @if (Route::has('login'))
             @endif
         @else
-            {{-- <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 bg-white backdrop-blur-sm z-30">
+            <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 bg-white backdrop-blur-sm z-30">
                 <div class=" flex w-full gap-3 px-4 items-center h-16">
                     <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
                         aria-controls="cta-button-sidebar" type="button"
@@ -22,10 +22,10 @@
 
                     <div class="flex ml-auto items-center md:order-2">
                         <button type="button"
-                            class="flex  text-sm bg-gray-100 w-full p-2 items-center gap-2 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            class="flex text-sm border border-gray-300 w-full p-1 pr-3 items-center gap-2 rounded-lg md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                             id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                             data-dropdown-placement="bottom">
-                            <img class="w-9 h-8 rounded-full" src="https://cataas.com/cat" alt="user photo">
+                            <img class="w-9 h-9 rounded-full" src="/profile-user.png" alt="user photo">
                             <span class="font-medium">{{ Auth::user()->name }}</span>
                         </button>
                         <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
@@ -53,17 +53,17 @@
                         </div>
                     </div>
                 </div>
-            </nav> --}}
+            </nav>
             <aside id="cta-button-sidebar"
                 class="fixed top-0 left-0 z-40 w-[250px] h-screen transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar">
-                <div class="h-full px-3 py-5 pt-2 flex flex-col overflow-y-auto bg-sky-950 shadow-lg">
+                <div class="h-full px-3 py-5 pt-2 flex flex-col overflow-y-auto bg-gray-950 shadow-lg">
                     <a href="/" class="flex justify-center items-center">
                         <img src="/elp.gif" class="w-32" alt="Flowbite Logo" />
                     </a>
                     <ul class="h-full flex mt-2 flex-col font-medium text-neutral-500">
                         <li class="">
-                            <button type="button" aria-expanded="{{ request()->is('me*') ? 'true' : 'false' }}"
+                            <button type="button" aria-expanded="true"
                                 class="flex items-center aria-[expanded=true]:bg-gray-200 aria-[expanded=true]:rounded-b-none rounded-xl w-full p-2 text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                                 aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
                                 <div class="w-[35px] h-[35px] rounded-full overflow-hidden">

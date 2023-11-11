@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
                     })
                     .catch(function (error) {
+                        console.log(error)
                         Swal.fire({
                             icon: 'error',
                             title: 'Error en la actualización del objetivo',
@@ -189,8 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.post('/eda_colaborador/cambiar_estado', {
-                    id,
+                axios.post(`/meta/eda/cambiar_estado/${id}`, {
                     estado
                 }).then(res => {
                     location.reload();

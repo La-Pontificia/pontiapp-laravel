@@ -95,9 +95,7 @@ class ProfileController extends GlobalController
 
     public function myProfile()
     {
-        $colab = $this->getCurrentColab();
-        $data = $this->commonOperations($colab->id, $this->getEdaByColabId($colab->id)->id);
-        return view('profile.index', $data);
+        return view('profile.index');
     }
 
     public function myFirstEda()

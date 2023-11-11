@@ -2,10 +2,123 @@
 
 @section('content-meta')
     @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'eda' => $id_colab, 'id_eda' => $id_eda])
-    <div class="mt-4">
-        <h3 class="p-2 text-blue-700">Contenido disponible</h3>
-        <div class="flex ">
-            <div class="flex w-[600px] flex-col gap-2">
+    <div class="mt-4 flex p-5">
+        {{-- <ol class="items-center max-w-max p-4 border-b space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
+            <li class="flex items-center {{ $edaSeleccionado->enviado ? 'text-blue-600' : 'text-gray-500' }} space-x-2.5">
+                <span
+                    class="flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                    1
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">Objetivos</h3>
+                    <p class="text-sm">Objetivos enviados</p>
+                </span>
+            </li>
+            <li class="flex items-center {{ $edaSeleccionado->aprobado ? 'text-blue-600' : 'text-gray-500' }} space-x-2.5">
+                <span
+                    class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+                    2
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">Aprobado</h3>
+                    <p class="text-sm">Objetivos aprobados</p>
+                </span>
+            </li>
+            <li class="flex items-center {{ $edaSeleccionado->cerrado ? 'text-blue-600' : 'text-gray-500' }} space-x-2.5">
+                <span
+                    class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+                    3
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">1ra evaluación</h3>
+                    <p class="text-sm">1ra evaluación completado</p>
+                </span>
+            </li>
+            <li class="flex items-center {{ $edaSeleccionado->cerrado ? 'text-blue-600' : 'text-gray-500' }} space-x-2.5">
+                <span
+                    class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+                    4
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">2da evaluación</h3>
+                    <p class="text-sm">2da evaluación completado</p>
+                </span>
+            </li>
+            <li class="flex items-center {{ $edaSeleccionado->cerrado ? 'text-blue-600' : 'text-gray-500' }} space-x-2.5">
+                <span
+                    class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+                    5
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">Cerrado</h3>
+                    <p class="text-sm">Eda cerrado</p>
+                </span>
+            </li>
+        </ol> --}}
+        <ol class="relative text-gray-500 border-l border-gray-200 dark:border-gray-700 dark:text-gray-400">
+            <li class="mb-10 ml-6">
+                <span
+                    class="absolute flex items-center justify-center w-8 h-8 bg-green-200 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                    <svg class="w-3.5 h-3.5 text-green-500 dark:text-green-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M1 5.917 5.724 10.5 15 1.5" />
+                    </svg>
+                </span>
+                <h3 class="font-medium leading-tight">Objetivos</h3>
+                <p class="text-sm">Objetivos enviados</p>
+            </li>
+            <li class="mb-10 ml-6">
+                <span
+                    class="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                    <svg class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                        <path
+                            d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2ZM7 2h4v3H7V2Zm5.7 8.289-3.975 3.857a1 1 0 0 1-1.393 0L5.3 12.182a1.002 1.002 0 1 1 1.4-1.436l1.328 1.289 3.28-3.181a1 1 0 1 1 1.392 1.435Z" />
+                    </svg>
+                </span>
+                <h3 class="font-medium leading-tight">Aprobado</h3>
+                <p class="text-sm">Se aprobó {{ $miPerfil ? 'mis' : 'sus' }} objetivos</p>
+            </li>
+            <li class="mb-10 ml-6">
+                <span
+                    class="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                    <svg class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                        <path
+                            d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                    </svg>
+                </span>
+                <h3 class="font-medium leading-tight">1ra Evaluación</h3>
+                <p class="text-sm">Completado</p>
+            </li>
+            <li class="mb-10 ml-6">
+                <span
+                    class="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                    <svg class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                        <path
+                            d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                    </svg>
+                </span>
+                <h3 class="font-medium leading-tight">2da Evaluación</h3>
+                <p class="text-sm">Completado</p>
+            </li>
+            <li class="ml-6">
+                <span
+                    class="absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700">
+                    <svg class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                        <path
+                            d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                    </svg>
+                </span>
+                <h3 class="font-medium leading-tight">Eda cerrado</h3>
+                <p class="text-sm">Eda completado y cerrado</p>
+            </li>
+        </ol>
+        <div class="flex mx-auto flex-col">
+            <div class="flex w-[450px] flex-col gap-2">
                 <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/objetivos" class="group">
                     <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
                         <div class="flex gap-3 items-center w-full">
@@ -21,14 +134,14 @@
                             </div>
                             <div>
                                 <h1 class="text-neutral-800 text-lg font-medium">Objetivos</h1>
-                                <p class="font-medium text-sm">
+                                <p class="text-sm">
                                     @if ($edaSeleccionado->cerrado)
                                         <span class="text-red-500">
                                             Evaluacion cerrada
                                         </span>
                                     @else
                                         <span class="text-green-500">
-                                            Puedes agregar tus objetivos
+                                            {{ $edaSeleccionado->enviado ? 'Ya puedes aprobar sus objetivos' : 'Puedes agregar tus objetivos' }}
                                         </span>
                                     @endif
                                 </p>
@@ -102,9 +215,9 @@
                     </div>
                 </a>
             </div>
-            <div class="ml-auto p-4">
-                <h3 class="text-blue-600">Detalles del EDA</h3>
-            </div>
+        </div>
+        <div class="p-4">
+            <h3 class="text-blue-600">Detalles del EDA</h3>
         </div>
     </div>
 @endsection
