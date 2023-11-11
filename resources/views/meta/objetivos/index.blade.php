@@ -2,24 +2,52 @@
 
 @section('content-meta')
     @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'id_colab' => $id_colab, 'id_eda' => $id_eda])
+    @include('meta.objetivos.header', ['enviado' => $edaSeleccionado->enviado == true])
+
     @if ($edaSeleccionado->enviado == true)
         @if ($miPerfil)
-            <header class="p-10 text-center">
-                <h1 class=" text-xl max-w-[35ch] mx-auto font-medium">
-                    🎉 Felicidades enviaste tus objetivos para su aprobación
-                </h1>
-                <p>Una ves aprobado por tu supervisor podrás autocalificar tus objetivos</p>
-            </header>
+            @if ($objetivos->sum('porcentaje') == 100)
+                <header class="p-10 text-center">
+                    <h1 class=" text-xl max-w-[35ch] mx-auto font-medium">
+                        🎉 Felicidades enviaste tus objetivos para su aprobación
+                    </h1>
+                    <p>Una ves aprobado por tu supervisor podrás autocalificar tus objetivos</p>
+                </header>
+            @else
+                <header class="p-10 text-center">
+                    <div id="alert-additional-content-2"
+                        class="p-4 mb-4 max-w-max mx-auto text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-200/30"
+                        role="alert">
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <h3 class="text-2xl font-medium">Opps</h3>
+                        </div>
+                        <div class="mt-2 mb-4 text-base max-w-[500px]">
+                            <p>Lo sentimos tu supervisor modificó el porcentaje de algunos de tus objetivos. Por favor
+                                agrega mas
+                                objetivos para llegar a 100% de percentaje de la EDA</p>
+                        </div>
+                    </div>
+                </header>
+            @endif
         @else
             <header class="p-10 text-center">
                 <p>Una ves aprobado el colaborador podrá autocalificar sus objetivos</p>
-                <button id="aprobar-eda-btn" data-id="{{ $id_colab }}" type="button"
-                    class="text-white ml-auto bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-pink-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 ">Aprobar
-                    EDA</button>
+                @if ($objetivos->sum('porcentaje') == 100)
+                    <button id="aprobar-eda-btn" data-id="{{ $id_colab }}" type="button"
+                        class="text-white ml-auto bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-pink-300 font-medium rounded-md text-sm px-5 py-2.5 text-center mr-2 ">Aprobar
+                        EDA</button>
+                @else
+                    <div class="p-5 rounded-xl border-yellow-700 w-[500px] mx-auto bg-yellow-200/30">
+                        El porcentaje total no llega a 100%
+                    </div>
+                @endif
             </header>
         @endif
-    @else
-        @include('meta.objetivos.header', ['enviado' => $edaSeleccionado->enviado == true])
     @endif
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

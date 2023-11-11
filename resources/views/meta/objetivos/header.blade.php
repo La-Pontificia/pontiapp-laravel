@@ -12,7 +12,7 @@
         </a>
     </div>
     <nav class="pt-2 flex gap-2">
-        @if ($objetivos->sum('porcentaje') == 100)
+        @if ($objetivos->sum('porcentaje') == 100 && $edaSeleccionado->enviado == false)
             <button data-id="{{ $id_eda }}" id="enviar-eda-btn"
                 class="text-white w-[200px] flex justify-center gap-2 items-center bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2 text-center "
                 type="button">
@@ -26,7 +26,9 @@
                 </svg>
                 Enviar
             </button>
-        @else
+        @endif
+
+        @if ($objetivos->sum('porcentaje') != 100)
             <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
                 class="text-white w-[200px] bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2 text-center "
                 type="button">

@@ -29,7 +29,7 @@ class MetaController extends GlobalController
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equibocación comunicate con un administrador.']);
         }
 
-        return view('meta.colaborador', compact('id_colab', 'edas', 'colaborador'));
+        return view('meta.colaborador', compact('id_colab', 'edas', 'colaborador', 'miPerfil', 'suSupervisor'));
     }
 
     public function colaboradorEda($id_colab, $id_eda)
@@ -130,7 +130,7 @@ class MetaController extends GlobalController
             }
         }
         $objetivo = Objetivo::find($id_objetivo);
-        $objetivos = Objetivo::where('id_eda_colab', $id_colab);
+        $objetivos = Objetivo::where('id_eda_colab', $objetivo->id_eda_colab);
         $totalPorcentaje = ($objetivos->sum('porcentaje') - $objetivo->porcentaje) + $request->porcentaje;
         $edaColab = EdaColab::find($id_eda);
 
