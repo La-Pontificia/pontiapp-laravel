@@ -104,8 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.stopPropagation()
 
                 const id = this.dataset.id
-                const nota = e.target.querySelector('select[name="nota"]').value;
+                const eva = this.dataset.eva
 
+                const nota = e.target.querySelector('select[name="nota"]').value;
 
                 Swal.fire({
                     title: '¿Estás seguro de guardar la nota autocalificada?',
@@ -118,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.post(`/objetivos/autocalificar`, {
+                        axios.post(`/meta/objetivos/autocalificar/${eva}`, {
                             nota,
                             id
                         }).then(() => {
@@ -154,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.post(`/objetivos/calificar`, {
+                        axios.post(`/meta/objetivos/calificar/${eva}`, {
                             nota,
                             id
                         }).then(() => {

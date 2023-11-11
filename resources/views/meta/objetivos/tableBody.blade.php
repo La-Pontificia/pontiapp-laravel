@@ -33,7 +33,7 @@
             </td>
             <td class="px-2">
                 <div class="flex gap-2">
-                    @if (!$enviado || !$miPerfil)
+                    @if ($edicion)
                         <button data-modal-target="editObjModal{{ $objetivo->id }}"
                             data-modal-show="editObjModal{{ $objetivo->id }}" type="button"
                             class="focus:outline-none gap-2 rounded-md text-white bg-green-600 hover:bg-green-700 font-medium text-sm p-2 h-[35px] flex items-center justify-center ">
@@ -76,17 +76,19 @@
                                                 <input type="number" required name="porcentaje"
                                                     value="{{ $objetivo->porcentaje }}" placeholder="Porcentaje %"
                                                     class="w-[150px] border rounded-xl focus:outline-2 transition-all focus:outline-blue-600">
-                                                <button data-id="{{ $objetivo->id }}" type="button"
-                                                    class="focus:outline-none delete-objetivo rounded-md text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 h-[35px] flex items-center justify-center ">
-                                                    <svg class="w-3" aria-hidden="true"
-                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                        viewBox="0 0 18 20">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
-                                                    </svg>
-                                                    Eliminar
-                                                </button>
+                                                @if ($miPerfil)
+                                                    <button data-id="{{ $objetivo->id }}" type="button"
+                                                        class="focus:outline-none delete-objetivo rounded-md text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 h-[35px] flex items-center justify-center ">
+                                                        <svg class="w-3" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 18 20">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                                                        </svg>
+                                                        Eliminar
+                                                    </button>
+                                                @endif
                                                 <button data-modal-target="editObjModal{{ $objetivo->id }}"
                                                     type="button" type="button"
                                                     data-modal-toggle="editObjModal{{ $objetivo->id }}"
@@ -103,7 +105,7 @@
                             </div>
                         </div>
                     @endif
-                    @if (!$enviado)
+                    @if ($edicion)
                         <button data-id="{{ $objetivo->id }}"
                             class="focus:outline-none delete-objetivo rounded-md text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 h-[35px] flex items-center justify-center ">
                             <svg class="w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"

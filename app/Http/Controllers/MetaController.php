@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Colaboradore;
 use App\Models\EdaColab;
+use App\Models\Evaluacione;
 use App\Models\Objetivo;
 use Illuminate\Http\Request;
 
@@ -46,7 +47,7 @@ class MetaController extends GlobalController
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
         }
 
-        return view('meta.colaboradorEda', compact('id_colab', 'id_eda', 'edas', 'colaborador', 'edaSeleccionado', 'miPerfil'));
+        return view('meta.colaboradorEda', compact('id_colab', 'id_eda', 'edas', 'colaborador', 'edaSeleccionado', 'miPerfil', 'suSupervisor'));
     }
 
 
@@ -83,9 +84,38 @@ class MetaController extends GlobalController
         ));
     }
 
-    public function colaboradorEdaEva($id_colab, $id_eda, $id_eva)
+    public function colaboradorEdaEva($id_colab, $id_eda, $n_eva)
     {
-        return view('meta.colaboradorEdaEva', compact('id_colab', 'id_eda', 'id_eva'));
+        $colaborador = Colaboradore::find($id_colab);
+        $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
+        $edaSeleccionado = EdaColab::find($id_eda);
+        $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
+        $objetivoNewForm = new Objetivo();
+
+        //commons
+        $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
+        $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
+
+        if ($suSupervisor == false && $miPerfil == false) {
+            return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
+        }
+
+
+        $evaluacion = Evaluacione::find($edaSeleccionado->id);
+
+        return view('meta.colaboradorEdaEva', compact(
+            'id_colab',
+            'id_eda',
+            'edas',
+            'colaborador',
+            'edaSeleccionado',
+            'objetivoNewForm',
+            'objetivos',
+            'miPerfil',
+            'suSupervisor',
+            'n_eva',
+            'evaluacion'
+        ));
     }
 
 
@@ -154,6 +184,51 @@ class MetaController extends GlobalController
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'Objetivo no encontrado'], 404);
         }
+    }
+
+    public function cambiarNota($id, $nota, $nombre_nota, $n_eva)
+    {
+
+        $objetivo = Objetivo::find($id);
+        if ($n_eva == 1) {
+            if ($nombre_nota == 'promedio')  $objetivo->promedio = $nota;
+            else $objetivo->autocalificacion = $nota;
+        } else {
+            if ($nombre_nota == 'promedio')  $objetivo->promedio_2 = $nota;
+            else $objetivo->autocalificacion_2 = $nota;
+        }
+        $objetivo->save();
+        return response()->json(['success' => true, "objetivo autocalificado/calificado"], 200);
+    }
+
+
+    public function autocalificarObjetivo(Request $request, $n_eva)
+    {
+        $id = $request->id;
+        $nota = $request->nota;
+
+        if (!$id || !$nota) {
+            return response()->json(['error' => 'El id y la nota es requerido'], 404);
+        }
+        if ($nota != 1 && $nota != 2 && $nota != 3 && $nota != 4 && $nota != 5) {
+            return response()->json(['error' => 'La nora debe ser 1, 2, 3, 4 o 5'], 404);
+        }
+        return $this->cambiarNota($id, $nota, 'autoevaluacion', $n_eva);
+    }
+
+
+    public function calificarObjetivo(Request $request, $n_eva)
+    {
+        $id = $request->id;
+        $nota = $request->nota;
+
+        if (!$id || !$nota) {
+            return response()->json(['error' => 'El id y la nota es requerido'], 404);
+        }
+        if ($nota != 1 && $nota != 2 && $nota != 3 && $nota != 4 && $nota != 5) {
+            return response()->json(['error' => 'La nota debe ser 1, 2, 3, 4 o 5'], 404);
+        }
+        return $this->cambiarNota($id, $nota, 'nota', $n_eva);
     }
 
 

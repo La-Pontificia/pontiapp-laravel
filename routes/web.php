@@ -44,7 +44,6 @@ Route::get('/me/eda/{id_eda}', 'App\Http\Controllers\ProfileController@myEda')->
 
 //OBJETIVOS
 Route::post('/objetivos/delete/{id}', 'App\Http\Controllers\ObjetivoController@deleteObjetivo');
-Route::post('/objetivos/autocalificar', 'App\Http\Controllers\ObjetivoController@autocalificarObjetivo');
 Route::post('/objetivos/calificar', 'App\Http\Controllers\ObjetivoController@calificarObjetivo');
 
 
@@ -96,12 +95,14 @@ Route::get('/meta', 'App\Http\Controllers\MetaController@index');
 Route::get('/meta/{id_colab}', 'App\Http\Controllers\MetaController@colaborador');
 Route::get('/meta/{id_colab}/eda/{id_eda}', 'App\Http\Controllers\MetaController@colaboradorEda');
 Route::get('/meta/{id_colab}/eda/{id_eda}/objetivos', 'App\Http\Controllers\MetaController@colaboradorEdaObjetivos');
-Route::get('/meta/{id_colab}/eda/{id_eda}/{id_eva}', 'App\Http\Controllers\MetaController@colaboradorEdaEva');
+Route::get('/meta/{id_colab}/eda/{id_eda}/{n_eva}', 'App\Http\Controllers\MetaController@colaboradorEdaEva');
 
 // objetivos
 Route::post('/meta/{id_colab}/eda/{id_eda}/objetivos', 'App\Http\Controllers\MetaController@agregarObjetivo');
 Route::post('/meta/objetivos/{id_objetivo}', 'App\Http\Controllers\MetaController@eliminarObjetivo');
 Route::post('/meta/{id_colab}/eda/{id_eda}/objetivos/{id_objetivo}', 'App\Http\Controllers\MetaController@actualizarObjetivo');
+Route::post('/meta/objetivos/autocalificar/{n_eva}', 'App\Http\Controllers\MetaController@autocalificarObjetivo');
+Route::post('/meta/objetivos/calificar/{n_eva}', 'App\Http\Controllers\MetaController@calificarObjetivo');
 
 //EDA
 Route::post('/meta/eda/cambiar_estado/{id_eda}', 'App\Http\Controllers\MetaController@cambiarEstadoEda');

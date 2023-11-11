@@ -2,10 +2,15 @@
 
 @section('content-meta')
     @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'eda' => $id_colab, 'id_eda' => $id_eda])
+    @php
+        $aprobado = $edaSeleccionado->aprobado;
+        $paginaObjetivosDesabilitado = $suSupervisor && !$edaSeleccionado->enviado;
+    @endphp
     <div class="mt-4 flex p-5">
         <div class="flex w-[450px] flex-col gap-2">
-            <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/objetivos" class="group">
-                <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
+            <a class="{{ $paginaObjetivosDesabilitado ? 'opacity-50 select-none pointer-events-none' : '' }} group"
+                href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/objetivos">
+                <div class="p-3 border items-center rounded-xl flex gap-2 group-hover:bg-neutral-100">
                     <div class="flex gap-3 items-center w-full">
                         <div class="bg-pink-600 p-4 text-white rounded-xl">
                             <svg viewBox="0 0 24 24" width="24px" height="24px" fill="none"
@@ -17,88 +22,58 @@
                                 </g>
                             </svg>
                         </div>
-                        <div>
-                            <h1 class="text-neutral-800 text-lg font-medium">Objetivos</h1>
-                            <p class="text-sm">
-                                @if ($edaSeleccionado->cerrado)
-                                    <span class="text-red-500">
-                                        Evaluacion cerrada
-                                    </span>
-                                @else
-                                    <span class="text-green-500">
-                                        {{ $edaSeleccionado->enviado ? 'Ya puedes aprobar sus objetivos' : 'Puedes agregar tus objetivos' }}
-                                    </span>
-                                @endif
-                            </p>
-                        </div>
+                        <h1 class="text-neutral-800 text-lg font-medium">Objetivos</h1>
                     </div>
+                    @if ($aprobado)
+                        <h1 class="p-2 min-w-max rounded-xl text-green-600 border-green-500 bg-green-400/20 font-semibold">
+                            🎉 Aprobado
+                        </h1>
+                    @endif
                 </div>
             </a>
             <div class="w-full border-b my-5"></div>
-            <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/{{ $edaSeleccionado->evaluacion->id }}"
-                class="group">
-                <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
-                    <div class="flex gap-3 items-center w-full">
-                        <div class="bg-blue-500 p-4 text-white rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" version="1.1"
-                                id="Layer_1" x="0px" y="0px" viewBox="0 0 74.4 74.4" fill='currentColor'
-                                style="enable-background:new 0 0 74.4 74.4;" xml:space="preserve"
-                                preserveAspectRatio="xMinYMid meet">
-                                <g>
-                                    <path
-                                        d="M66.5,15.1L52.4,1c-0.7-0.7-1.6-1-2.6-1H10.3C8.2,0,6.6,1.6,6.6,3.7l0,0v67c0,2.1,1.6,3.7,3.7,3.7l0,0H64   c2.1,0,3.7-1.6,3.7-3.7l0,0V17.8C67.5,16.8,67.2,15.8,66.5,15.1z M48.4,6.7l12.5,12.5H48.4V6.7z M11.9,69.2V5h30.9v15.6   c0,2.2,1.7,3.8,3.8,3.8h15.6v44.7L11.9,69.2L11.9,69.2z" />
-                                </g>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-neutral-800 text-lg font-medium">1ra Evaluacion</h1>
-                            <p class="font-medium text-sm">
-                                @if ($edaSeleccionado->evaluacion->cerrado)
-                                    <span class="text-red-500">
-                                        Evaluacion cerrada
-                                    </span>
-                                @else
-                                    <span class="text-green-500">
-                                        Evaluacion disponible
-                                    </span>
-                                @endif
-                            </p>
+            <div class="{{ $aprobado ? '' : 'opacity-40 select-none pointer-events-none' }} flex flex-col gap-3 ">
+                <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/1" class="group">
+                    <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
+                        <div class="flex gap-3 items-center w-full">
+                            <div class="bg-blue-500 p-4 text-white rounded-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" version="1.1"
+                                    id="Layer_1" x="0px" y="0px" viewBox="0 0 74.4 74.4" fill='currentColor'
+                                    style="enable-background:new 0 0 74.4 74.4;" xml:space="preserve"
+                                    preserveAspectRatio="xMinYMid meet">
+                                    <g>
+                                        <path
+                                            d="M66.5,15.1L52.4,1c-0.7-0.7-1.6-1-2.6-1H10.3C8.2,0,6.6,1.6,6.6,3.7l0,0v67c0,2.1,1.6,3.7,3.7,3.7l0,0H64   c2.1,0,3.7-1.6,3.7-3.7l0,0V17.8C67.5,16.8,67.2,15.8,66.5,15.1z M48.4,6.7l12.5,12.5H48.4V6.7z M11.9,69.2V5h30.9v15.6   c0,2.2,1.7,3.8,3.8,3.8h15.6v44.7L11.9,69.2L11.9,69.2z" />
+                                    </g>
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 class="text-neutral-800 text-lg font-medium">1ra Evaluacion</h1>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
-            <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/{{ $edaSeleccionado->evaluacion2->id }}"
-                class="group">
-                <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
-                    <div class="flex gap-3 items-center w-full">
-                        <div class="bg-blue-500 p-4 text-white rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" version="1.1"
-                                id="Layer_1" x="0px" y="0px" viewBox="0 0 74.4 74.4" fill='currentColor'
-                                style="enable-background:new 0 0 74.4 74.4;" xml:space="preserve"
-                                preserveAspectRatio="xMinYMid meet">
-                                <g>
-                                    <path
-                                        d="M66.5,15.1L52.4,1c-0.7-0.7-1.6-1-2.6-1H10.3C8.2,0,6.6,1.6,6.6,3.7l0,0v67c0,2.1,1.6,3.7,3.7,3.7l0,0H64   c2.1,0,3.7-1.6,3.7-3.7l0,0V17.8C67.5,16.8,67.2,15.8,66.5,15.1z M48.4,6.7l12.5,12.5H48.4V6.7z M11.9,69.2V5h30.9v15.6   c0,2.2,1.7,3.8,3.8,3.8h15.6v44.7L11.9,69.2L11.9,69.2z" />
-                                </g>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-neutral-800 text-lg font-medium">2da Evaluacion</h1>
-                            <p class="font-medium text-sm">
-                                @if ($edaSeleccionado->evaluacion2->cerrado)
-                                    <span class="text-red-500">
-                                        Evaluacion cerrada
-                                    </span>
-                                @else
-                                    <span class="text-green-500">
-                                        Evaluacion disponible
-                                    </span>
-                                @endif
-                            </p>
+                </a>
+                <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/2" class="group">
+                    <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
+                        <div class="flex gap-3 items-center w-full">
+                            <div class="bg-blue-500 p-4 text-white rounded-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" version="1.1"
+                                    id="Layer_1" x="0px" y="0px" viewBox="0 0 74.4 74.4" fill='currentColor'
+                                    style="enable-background:new 0 0 74.4 74.4;" xml:space="preserve"
+                                    preserveAspectRatio="xMinYMid meet">
+                                    <g>
+                                        <path
+                                            d="M66.5,15.1L52.4,1c-0.7-0.7-1.6-1-2.6-1H10.3C8.2,0,6.6,1.6,6.6,3.7l0,0v67c0,2.1,1.6,3.7,3.7,3.7l0,0H64   c2.1,0,3.7-1.6,3.7-3.7l0,0V17.8C67.5,16.8,67.2,15.8,66.5,15.1z M48.4,6.7l12.5,12.5H48.4V6.7z M11.9,69.2V5h30.9v15.6   c0,2.2,1.7,3.8,3.8,3.8h15.6v44.7L11.9,69.2L11.9,69.2z" />
+                                    </g>
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 class="text-neutral-800 text-lg font-medium">2da Evaluacion</h1>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
         <div class="p-4 ml-auto">
             <h3 class="text-blue-600">Detalles del EDA</h3>
