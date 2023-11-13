@@ -25,6 +25,7 @@ class AccessComposerServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             if ($this->getColab()) {
                 $view->with('a_puesto', $this->getPuestos());
+                $view->with('colaborador_actual', $this->getColab());
                 $view->with('a_colaborador', $this->getColaboradores());
                 $view->with('a_area', $this->getAreas());
                 $view->with('a_eda', $this->getEdas());

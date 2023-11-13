@@ -26,30 +26,30 @@
                             id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                             data-dropdown-placement="bottom">
                             <img class="w-9 h-9 rounded-full" src="/profile-user.png" alt="user photo">
-                            <span class="font-medium">{{ Auth::user()->name }}</span>
+                            <span class="font-medium">{{ $colaborador_actual->nombres }}
+                                {{ $colaborador_actual->apellidos }}</span>
                         </button>
                         <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
                             id="user-dropdown">
-                            <div class="px-4 py-3">
-                                <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-                                <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
-                            </div>
                             <ul class="py-2" aria-labelledby="user-menu-button">
                                 <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                         document.getElementById('logout-form').submit();"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cerrar
-                                        sesión</a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
+                                    <a href="/meta/{{ $colaborador_actual->id }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                        Mis edas
+                                    </a>
                                 </li>
                             </ul>
+                            <li>
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cerrar
+                                    sesión</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
+
                         </div>
                     </div>
                 </div>
@@ -61,30 +61,20 @@
                     <a href="/" class="flex justify-center items-center">
                         <img src="/elp.gif" class="w-32" alt="Flowbite Logo" />
                     </a>
-                    <ul class="h-full flex mt-2 flex-col font-medium text-neutral-500">
-                        <li class="">
-                            <button type="button" aria-expanded="true"
-                                class="flex items-center aria-[expanded=true]:bg-gray-200 aria-[expanded=true]:rounded-b-none rounded-xl w-full p-2 text-base text-gray-900 transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                                aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
-                                <div class="w-[35px] h-[35px] rounded-full overflow-hidden">
-                                    <img class="object-cover w-full h-full" src="https://cataas.com/cat" alt="user photo">
+                    <ul class="h-full flex flex-col font-medium text-neutral-500">
+                        {{-- <li class="bg-gray-200 rounded-xl">
+                            <div
+                                class="flex items-center bg-gray-200 rounded-xl w-full p-2 pb-0 text-base text-gray-900 transition duration-75">
+                                <div class="w-[35px] h-[35px] rounded-full overflow-hidden border border-neutral-300">
+                                    <img class="object-cover w-full h-full" src="/profile-user.png" alt="user photo">
                                 </div>
-                                <span class="flex-1 ml-3 text-left whitespace-nowrap">Personal</span>
-                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                            <ul id="dropdown-example" class=" bg-gray-200 rounded-xl rounded-t-none p-2 pl-5">
-                                @if (
-                                    $a_objetivo &&
-                                        ($a_objetivo->crear == 1 ||
-                                            $a_objetivo->leer == 1 ||
-                                            $a_objetivo->eliminar == 1 ||
-                                            $a_objetivo->actualizar == 1))
+                                <span class="flex-1 ml-3 line-clamp-1 text-left">{{ $colaborador_actual->nombres }}
+                                    {{ $colaborador_actual->apellidos }}</span>
+                            </div>
+                            <ul class=" p-2 pl-5">
+                                @if ($a_objetivo && ($a_objetivo->crear == 1 || $a_objetivo->leer == 1 || $a_objetivo->eliminar == 1 || $a_objetivo->actualizar == 1))
                                     <li>
-                                        <a href="/me/eda"
+                                        <a href="/meta/{{ $colaborador_actual->id }}"
                                             class="flex gap-2 text-gray-900 {{ request()->is('me/eda') ? 'bg-gray-800 text-white' : 'hover:bg-gray-100' }} items-center w-full p-2  transition duration-75 rounded-lg group">
                                             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -119,37 +109,20 @@
                                     </li>
                                 @endif
                             </ul>
-                        </li>
+                        </li> --}}
                         @if (
                             $a_colaborador &&
                                 ($a_colaborador->crear == 1 ||
                                     $a_colaborador->leer == 1 ||
                                     $a_colaborador->eliminar == 1 ||
                                     $a_colaborador->actualizar == 1))
-                            <li>
+                            <li class="mt-2">
                                 <a href="{{ route('colaboradores.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('colaboradores*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 503.5 503.5"
-                                        xml:space="preserve" fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <g transform="translate(1 1)">
-                                                <path style="fill:#AE938D;"
-                                                    d="M404.671,421c25.6,0,38.1-18.9,38.1-18.9c13-6,13.2-14.1,20.8-20l0.9-0.9l-17.1-105.8 c-1.7-17.1-17.1-34.1-42.7-34.1c-7.7,0-14.5,1.7-20.5,4.3l0,0l-0.9-1.7l-12.8-87.9c-1.7-17.1-17.1-34.1-42.7-34.1 c-7.7,0-13.7,1.7-19.6,4.3c-4.3,1.7-7.7,4.3-10.2,6.8c-6.8,6.8-11.1,15.4-12.8,23.9l-2.3,3.5l1.4-3.5c1.7-8.5,6-17.1,12.8-23.9 c3.4-2.6,6.8-5.1,10.2-6.8v-0.9l-13.5-88.8c-1.7-17.1-17.1-34.1-42.7-34.1c-12.8,0-23,4.3-29.9,11.1c-6.8,6.8-11.1,15.4-12.8,23.9 l-13.5,94l-0.1-0.1c-6.8-6-17.1-9.4-29-9.4c-12.8,0-23,4.3-29.9,11.1c-6.8,6.8-11.1,15.4-12.8,23.9l-13.6,86.8 c-3.4-0.8-8-1.6-11.1-3.2c-12.8,0-23,4.3-29.9,11.1c-6.8,6.8-11.1,15.4-12.8,23.9l-16.2,106.6v0.9c0,0,32.3,35.1,58.9,38.9 c37.8,5.4,152.7-0.9,152.7-0.9H404.671z">
-                                                </path>
-                                                <path style="fill:#AAB1BA;"
-                                                    d="M463.571,383c-7.7-2.6-15.4-4.3-24.7-4.3c0,0-8.5,34.1-34.1,34.1s-34.1-34.1-34.1-34.1 c-9.4,0-17.9,1.7-24.7,4.3c-6.8,3.4-12.8,6.8-17.9,11.9c-4.3-5.1-10.2-9.4-17.9-11.9c-6.8-2.6-15.4-4.3-24.7-4.3 c0,0-8.5,34.1-34.1,34.1s-34.1-34.1-34.1-34.1c-9.4,0-17.9,1.7-24.7,4.3c-6.8,3.4-12.8,7.7-17.9,11.9l0,0 c-5.1-4.3-11.1-8.5-17.9-11.9c-6.8-2.6-15.4-4.3-24.7-4.3c0,0-8.5,34.1-34.1,34.1s-34.1-34.1-34.1-34.1c-9.4,0-17.9,1.7-24.7,4.3 c-24.7,10.2-35,34.1-35,46.9v51.2h153.6v17.1h187.7l0,0v-17.1h153.6v-51.2C498.571,417.1,488.271,393.2,463.571,383z M165.671,404.4c-0.2,0.4-0.4,0.7-0.6,1.1C165.271,405.2,165.471,404.8,165.671,404.4z M165.071,405.6c-0.4,0.6-0.8,1.1-1.1,1.7 C164.271,406.7,164.671,406.2,165.071,405.6z M162.071,410.6c-0.2,0.3-0.4,0.6-0.6,0.9C161.671,411.1,161.871,410.9,162.071,410.6z M158.071,422.3c0-1.7,0-2.6,0.9-4.3C158.971,419.7,158.071,421.4,158.071,422.3z M343.271,417.1c-0.9-0.9-0.9-2.6-1.7-3.4 C342.371,414.6,343.271,416.3,343.271,417.1z M336.371,404.3c-1.7-1.7-2.6-3.4-4.3-5.1C333.871,400.9,335.571,402.6,336.371,404.3z M344.071,423.1c0.9,0.9,0.9,2.6,0.9,3.4C344.971,425.7,344.071,424,344.071,423.1z">
-                                                </path>
-                                                <path style="fill:#FFD0A1;"
-                                                    d="M199.871,173.9V208c0,0,0,34.1-34.1,34.1s-34.1-34.1-34.1-34.1v-34.1L199.871,173.9L199.871,173.9z M131.571,293.4v34.1c0,0,0,34.1-34.1,34.1s-34.1-34.1-34.1-34.1v-34.1H131.571z M285.171,293.4v34.1c0,0,0,34.1-34.1,34.1 s-34.1-34.1-34.1-34.1v-34.1H285.171z M361.971,173.9V208c0,0,0,34.1-34.1,34.1s-34.1-34-34.1-34V174h68.2V173.9z M285.171,54.5 v34.1c0,0,0,34.1-34.1,34.1s-34.1-34.1-34.1-34.1V54.5H285.171z M438.771,293.4v34.1c0,0,0,34.1-34.1,34.1s-34.1-34.1-34.1-34.1 v-34.1H438.771z">
-                                                </path>
-                                            </g>
-                                            <path style="fill:#51565F;"
-                                                d="M499.571,503.5c-2.6,0-4.3-1.7-4.3-4.3v-68.3c0-7.7-4.3-21.3-14.5-30.7c-6.8-6.8-18.8-14.5-37.5-15.4 c-2.6,8.5-11.9,30.7-33.3,33.3V448c0,2.6-1.7,4.3-4.3,4.3s-4.3-1.7-4.3-4.3v-29.9c-20.5-2.6-29.9-24.7-33.3-33.3 c-4.3,0-8.5,0.9-12.8,1.7c-2.6,0.9-4.3-0.9-5.1-3.4s0.9-4.3,3.4-5.1c6-1.7,11.9-2.6,17.9-2.6c2.6,0,4.3,0.9,4.3,3.4 c0,0,7.7,30.7,29.9,30.7c22.2,0,29.9-30.7,29.9-30.7c0.9-1.7,2.6-3.4,4.3-3.4c23,0,38.4,10.2,46.1,17.9 c11.9,11.9,17.1,27.3,17.1,37.5v68.3C503.771,501.8,502.071,503.5,499.571,503.5z M345.971,503.5c-2.6,0-4.3-1.7-4.3-4.3v-68.3 c0-7.7-4.3-21.3-14.5-30.7c-6.8-6.8-18.8-14.5-37.5-15.4c-2.6,8.5-11.9,30.7-33.3,33.3V448c0,2.6-1.7,4.3-4.3,4.3 c-2.6,0-4.3-1.7-4.3-4.3v-29.9c-20.5-2.6-29.9-24.7-33.3-33.3c-18.8,0.9-30.7,8.5-37.5,15.4c-10.2,10.2-14.5,23-14.5,30.7v68.3 c0,2.6-1.7,4.3-4.3,4.3s-4.3-1.7-4.3-4.3v-68.3c0-10.2,5.1-25.6,17.1-37.5c8.5-8.5,23-17.9,46.9-17.9c1.7,0,3.4,1.7,4.3,3.4 c0,0,7.7,30.7,29.9,30.7s29.9-30.7,29.9-30.7c0.9-1.7,2.6-3.4,4.3-3.4c23,0,38.4,10.2,46.1,17.9c11.9,11.9,17.1,27.3,17.1,37.5v68.3 C350.171,501.8,348.471,503.5,345.971,503.5z M4.571,503.5c-2.6,0-4.3-1.7-4.3-4.3v-68.3c0-10.2,5.1-25.6,17.1-37.5 c8.5-8.5,23.9-17.9,46.9-17.9c1.7,0,3.4,1.7,4.3,3.4c0,0,7.7,30.7,29.9,30.7s29.9-30.7,29.9-30.7c0.9-1.7,2.6-3.4,4.3-3.4 c6,0,11.9,0.9,17.9,1.7c2.6,0.9,3.4,2.6,3.4,5.1c-0.9,2.6-2.6,3.4-5.1,3.4c-4.3-0.9-8.5-1.7-12.8-1.7c-2.6,8.5-11.9,30.7-33.3,33.3 v29.9c0,2.6-1.7,4.3-4.3,4.3c-2.6,0-4.3-1.7-4.3-4.3v-29.9c-20.5-2.6-29.9-24.7-33.3-33.3c-18.8,0.9-30.7,8.5-37.5,15.4 c-10.2,10.2-14.5,23-14.5,30.7v68.3C8.871,501.8,7.171,503.5,4.571,503.5z M456.871,349.9c-1.7,0-4.3-1.7-4.3-3.4l-8.5-68.3 c-1.7-14.5-14.5-30.7-38.4-30.7c-23,0-35.8,15.4-38.4,30.7l-8.5,68.3c0,2.6-2.6,4.3-5.1,3.4c-2.6,0-4.3-2.6-3.4-5.1l8.5-68.3 c3.4-18.8,18.8-37.5,46.9-37.5c29,0,44.4,19.6,46.9,37.5l8.5,68.3C461.171,347.3,459.471,349.9,456.871,349.9L456.871,349.9z M303.271,349.9c-1.7,0-4.3-1.7-4.3-3.4l-8.5-68.3c-1.7-14.5-14.5-30.7-38.4-30.7c-23,0-35.8,15.4-38.4,30.7l-8.5,68.3 c0,2.6-2.6,4.3-5.1,3.4c-2.6,0-4.3-2.6-3.4-5.1l8.5-68.3c3.4-18.8,18.8-37.5,46.9-37.5c29,0,44.4,19.6,46.9,37.5l8.5,68.3 C307.571,347.3,305.871,349.9,303.271,349.9L303.271,349.9z M149.671,349.9c-1.7,0-4.3-1.7-4.3-3.4l-8.5-68.3 c-1.7-14.5-14.5-30.7-38.4-30.7c-23,0-35.8,15.4-38.4,30.7l-8.5,68.3c0,2.6-2.6,4.3-5.1,3.4c-2.6,0-4.3-2.6-3.4-5.1l8.5-68.3 c3.4-18.8,18.8-37.5,46.9-37.5c29,0,44.4,19.6,46.9,37.5l8.5,68.3C153.971,347.3,152.271,349.9,149.671,349.9L149.671,349.9z M380.071,221.9c-1.7,0-4.3-1.7-4.3-3.4l-8.5-59.7c-1.7-14.5-14.5-30.7-38.4-30.7c-23,0-35.8,15.4-38.4,30.7l-8.5,59.7 c0,2.6-2.6,4.3-5.1,3.4c-2.6,0-4.3-2.6-3.4-5.1l8.5-59.7c3.4-18.8,18.8-37.5,46.9-37.5c29,0,44.4,19.6,46.9,37.5l8.5,59.7 C384.371,219.3,382.671,221.9,380.071,221.9L380.071,221.9z M217.971,221.9c-1.7,0-4.3-1.7-4.3-3.4l-8.5-59.7 c-1.7-14.5-14.5-30.7-38.4-30.7c-23,0-35.8,15.4-38.4,30.7l-8.5,59.7c0,2.6-2.6,4.3-5.1,3.4c-2.6,0-4.3-2.6-3.4-5.1l8.5-59.7 c3.4-18.8,18.8-37.5,46.9-37.5c29,0,44.4,19.6,46.9,37.5l8.5,59.7C222.171,219.3,220.471,221.9,217.971,221.9L217.971,221.9z M303.271,102.4c-1.7,0-4.3-1.7-4.3-3.4l-8.5-59.7c-1.7-14.6-14.5-30.8-38.4-30.8c-23,0-35.8,15.4-38.4,30.7l-8.5,59.7 c0,2.6-2.6,4.3-5.1,3.4c-2.6,0-4.3-2.6-3.4-5.1l8.5-59.7c3.4-18.8,18.8-37.5,46.9-37.5c29,0,44.4,19.6,46.9,37.5l8.5,59.7 C307.571,99.8,305.871,102.4,303.271,102.4L303.271,102.4z">
-                                            </path>
-                                        </g>
+                                    <svg class="w-6 h-6" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M4.333 6.764a3 3 0 1 1 3.141-5.023M2.5 16H1v-2a4 4 0 0 1 4-4m7.379-8.121a3 3 0 1 1 2.976 5M15 10a4 4 0 0 1 4 4v2h-1.761M13 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-4 6h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
                                     </svg>
                                     <span class="flex-1 ml-3 whitespace-nowrap">Colaboradores</span>
                                 </a>
@@ -258,83 +231,10 @@
                             <li class="border-t border-neutral-600 pt-2 mt-2">
                                 <a href="{{ route('edas.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('edas*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg height="28px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 60 60" xml:space="preserve"
-                                        fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <g>
-                                                <path style="fill:#424A60;"
-                                                    d="M24,35v-0.375V34.25v-8.625V25.25h0.034C24.013,25.374,24,25.499,24,25.625 c0-2.437,3.862-4.552,9.534-5.625H3.608C1.616,20,0,21.615,0,23.608v11.783C0,37.385,1.616,39,3.608,39H24V35z">
-                                                </path>
-                                            </g>
-                                            <g>
-                                                <path style="fill:#556080;"
-                                                    d="M24.034,53H24v-9v-0.375V43.25V39H3.608C1.616,39,0,40.615,0,42.608v11.783 C0,56.385,1.616,58,3.608,58h28.718C27.601,56.931,24.378,55.103,24.034,53z">
-                                                </path>
-                                            </g>
-                                            <path style="fill:#556080;"
-                                                d="M54.392,20H3.608C1.616,20,0,18.384,0,16.392V4.608C0,2.616,1.616,1,3.608,1h50.783 C56.384,1,58,2.616,58,4.608v11.783C58,18.384,56.384,20,54.392,20z">
-                                            </path>
-                                            <circle style="fill:#7383BF;" cx="9.5" cy="10.5" r="3.5">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="49" cy="9" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="45" cy="9" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="51" cy="12" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="47" cy="12" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="41" cy="9" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="43" cy="12" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="37" cy="9" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="39" cy="12" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="33" cy="9" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="35" cy="12" r="1">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="9.5" cy="29.5" r="3.5">
-                                            </circle>
-                                            <circle style="fill:#7383BF;" cx="9.5" cy="48.5" r="3.5">
-                                            </circle>
-                                            <g>
-                                                <path style="fill:#1A9172;"
-                                                    d="M42,48.75c-9.941,0-18-2.854-18-6.375V53h0.034c0.548,3.346,8.381,6,17.966,6s17.418-2.654,17.966-6 H60V42.375C60,45.896,51.941,48.75,42,48.75z">
-                                                </path>
-                                                <path style="fill:#1A9172;"
-                                                    d="M24,42v0.375c0-0.126,0.013-0.251,0.034-0.375H24z">
-                                                </path>
-                                                <path style="fill:#1A9172;"
-                                                    d="M59.966,42C59.987,42.124,60,42.249,60,42.375V42H59.966z"></path>
-                                            </g>
-                                            <g>
-                                                <path style="fill:#25AE88;"
-                                                    d="M42,38c-9.941,0-18-2.854-18-6.375V42.75h0.034c0.548,3.346,8.381,6,17.966,6s17.418-2.654,17.966-6 H60V31.625C60,35.146,51.941,38,42,38z">
-                                                </path>
-                                                <path style="fill:#25AE88;"
-                                                    d="M24,31.25v0.375c0-0.126,0.013-0.251,0.034-0.375H24z"></path>
-                                                <path style="fill:#25AE88;"
-                                                    d="M59.966,31.25C59.987,31.374,60,31.499,60,31.625V31.25H59.966z"></path>
-                                            </g>
-                                            <ellipse style="fill:#88C057;" cx="42" cy="21.375" rx="18"
-                                                ry="6.375"></ellipse>
-                                            <g>
-                                                <path style="fill:#61B872;"
-                                                    d="M42,27.75c-9.941,0-18-2.854-18-6.375V32h0.034c0.548,3.346,8.381,6,17.966,6s17.418-2.654,17.966-6 H60V21.375C60,24.896,51.941,27.75,42,27.75z">
-                                                </path>
-                                                <path style="fill:#61B872;"
-                                                    d="M24,21v0.375c0-0.126,0.013-0.251,0.034-0.375H24z">
-                                                </path>
-                                                <path style="fill:#61B872;"
-                                                    d="M59.966,21C59.987,21.124,60,21.249,60,21.375V21H59.966z"></path>
-                                            </g>
-                                        </g>
+                                    <svg class="w-6 h-6" aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M1 5v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H1Zm0 0V2a1 1 0 0 1 1-1h5.443a1 1 0 0 1 .8.4l2.7 3.6H1Z" />
                                     </svg>
                                     <span class="flex-1 ml-3 whitespace-nowrap">EDAS</span>
                                 </a>
@@ -345,30 +245,10 @@
                             <li class="border-t border-neutral-600 pt-2 mt-2">
                                 <a href="{{ route('areas.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('areas*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
-                                        fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path style="fill:#FBC176;"
-                                                d="M0,167.724v264.828c0,15.007,11.476,26.483,26.483,26.483h459.034 c15.007,0,26.483-11.476,26.483-26.483V167.724c0-15.007-11.476-26.483-26.483-26.483H26.483C11.476,141.241,0,153.6,0,167.724">
-                                            </path>
-                                            <path style="fill:#C39A6E;"
-                                                d="M476.69,141.241c0-19.421-15.89-35.31-35.31-35.31H300.138L256,52.966H61.793 c-15.007,0-26.483,12.359-26.483,26.483v61.793H476.69z">
-                                            </path>
-                                            <path style="fill:#F38774;"
-                                                d="M386.648,271.89l-33.545-33.545l-33.545,33.545c-3.531,3.531-10.593,0.883-10.593-4.414V141.241 h88.276v126.234C397.241,272.772,391.062,275.421,386.648,271.89">
-                                            </path>
-                                            <g>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,203.034H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,203.034,158.897,203.034">
-                                                </path>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,238.345H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,238.345,158.897,238.345">
-                                                </path>
-                                            </g>
-                                        </g>
+                                    <svg class="w-6 h-6" aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M1 5v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H1Zm0 0V2a1 1 0 0 1 1-1h5.443a1 1 0 0 1 .8.4l2.7 3.6H1Z" />
                                     </svg>
                                     <span class="flex-1 ml-3 whitespace-nowrap">Areas</span>
                                 </a>
@@ -385,30 +265,10 @@
                             <li>
                                 <a href="{{ route('departamentos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('departamentos*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
-                                        fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path style="fill:#FBC176;"
-                                                d="M0,167.724v264.828c0,15.007,11.476,26.483,26.483,26.483h459.034 c15.007,0,26.483-11.476,26.483-26.483V167.724c0-15.007-11.476-26.483-26.483-26.483H26.483C11.476,141.241,0,153.6,0,167.724">
-                                            </path>
-                                            <path style="fill:#C39A6E;"
-                                                d="M476.69,141.241c0-19.421-15.89-35.31-35.31-35.31H300.138L256,52.966H61.793 c-15.007,0-26.483,12.359-26.483,26.483v61.793H476.69z">
-                                            </path>
-                                            <path style="fill:#F38774;"
-                                                d="M386.648,271.89l-33.545-33.545l-33.545,33.545c-3.531,3.531-10.593,0.883-10.593-4.414V141.241 h88.276v126.234C397.241,272.772,391.062,275.421,386.648,271.89">
-                                            </path>
-                                            <g>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,203.034H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,203.034,158.897,203.034">
-                                                </path>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,238.345H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,238.345,158.897,238.345">
-                                                </path>
-                                            </g>
-                                        </g>
+                                    <svg class="w-6 h-6" aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M1 5v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H1Zm0 0V2a1 1 0 0 1 1-1h5.443a1 1 0 0 1 .8.4l2.7 3.6H1Z" />
                                     </svg>
                                     <span class="flex-1 ml-3 whitespace-nowrap">Departamentos</span>
                                 </a>
@@ -419,30 +279,10 @@
                             <li>
                                 <a href="{{ route('cargos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('cargos*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
-                                        fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path style="fill:#FBC176;"
-                                                d="M0,167.724v264.828c0,15.007,11.476,26.483,26.483,26.483h459.034 c15.007,0,26.483-11.476,26.483-26.483V167.724c0-15.007-11.476-26.483-26.483-26.483H26.483C11.476,141.241,0,153.6,0,167.724">
-                                            </path>
-                                            <path style="fill:#C39A6E;"
-                                                d="M476.69,141.241c0-19.421-15.89-35.31-35.31-35.31H300.138L256,52.966H61.793 c-15.007,0-26.483,12.359-26.483,26.483v61.793H476.69z">
-                                            </path>
-                                            <path style="fill:#F38774;"
-                                                d="M386.648,271.89l-33.545-33.545l-33.545,33.545c-3.531,3.531-10.593,0.883-10.593-4.414V141.241 h88.276v126.234C397.241,272.772,391.062,275.421,386.648,271.89">
-                                            </path>
-                                            <g>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,203.034H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,203.034,158.897,203.034">
-                                                </path>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,238.345H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,238.345,158.897,238.345">
-                                                </path>
-                                            </g>
-                                        </g>
+                                    <svg class="w-6 h-6" aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M1 5v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H1Zm0 0V2a1 1 0 0 1 1-1h5.443a1 1 0 0 1 .8.4l2.7 3.6H1Z" />
                                     </svg>
                                     <span class="flex-1 ml-3 whitespace-nowrap">Cargos</span>
                                 </a>
@@ -454,30 +294,10 @@
                             <li>
                                 <a href="{{ route('puestos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:bg-gray-100 group transition-colors {{ request()->is('puestos*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg height="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
-                                        fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path style="fill:#FBC176;"
-                                                d="M0,167.724v264.828c0,15.007,11.476,26.483,26.483,26.483h459.034 c15.007,0,26.483-11.476,26.483-26.483V167.724c0-15.007-11.476-26.483-26.483-26.483H26.483C11.476,141.241,0,153.6,0,167.724">
-                                            </path>
-                                            <path style="fill:#C39A6E;"
-                                                d="M476.69,141.241c0-19.421-15.89-35.31-35.31-35.31H300.138L256,52.966H61.793 c-15.007,0-26.483,12.359-26.483,26.483v61.793H476.69z">
-                                            </path>
-                                            <path style="fill:#F38774;"
-                                                d="M386.648,271.89l-33.545-33.545l-33.545,33.545c-3.531,3.531-10.593,0.883-10.593-4.414V141.241 h88.276v126.234C397.241,272.772,391.062,275.421,386.648,271.89">
-                                            </path>
-                                            <g>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,203.034H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,203.034,158.897,203.034">
-                                                </path>
-                                                <path style="fill:#FFFFFF;"
-                                                    d="M158.897,238.345H52.966c-5.297,0-8.828-3.531-8.828-8.828s3.531-8.828,8.828-8.828h105.931 c5.297,0,8.828,3.531,8.828,8.828S164.193,238.345,158.897,238.345">
-                                                </path>
-                                            </g>
-                                        </g>
+                                    <svg class="w-6 h-6" aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M1 5v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H1Zm0 0V2a1 1 0 0 1 1-1h5.443a1 1 0 0 1 .8.4l2.7 3.6H1Z" />
                                     </svg>
                                     <span class="flex-1 ml-3 whitespace-nowrap">Puestos</span>
                                 </a>

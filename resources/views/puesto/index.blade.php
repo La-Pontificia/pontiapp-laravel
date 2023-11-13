@@ -82,8 +82,8 @@
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Registrar Puestos</h3>
                     <form action="" method="POST">
                         @csrf
-                        
-                        
+
+
                         <div>
                             <label for="cargo"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cargo</label>
@@ -102,10 +102,11 @@
                             <select name="id_departamento" id="departamento"
                                 class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 @foreach ($departamentos as $departamento)
-                                    <option value="{{ $departamento->id }}">{{ $departamento->nombre_departamento }}</option>
+                                    <option value="{{ $departamento->id }}">{{ $departamento->nombre_departamento }}
+                                    </option>
                                 @endforeach
                             </select>
-                            
+
                         </div>
 
                         <div>
@@ -120,7 +121,7 @@
                         <footer class="pt-4">
                             <button type="submit"
                                 class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Registrar</button>
-                            
+
                         </footer>
 
 

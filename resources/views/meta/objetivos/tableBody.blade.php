@@ -33,7 +33,7 @@
             </td>
             <td class="px-2">
                 <div class="flex gap-2">
-                    @if ($edicion)
+                    @if ($btneditar)
                         <button data-modal-target="editObjModal{{ $objetivo->id }}"
                             data-modal-show="editObjModal{{ $objetivo->id }}" type="button"
                             class="focus:outline-none gap-2 rounded-md text-white bg-green-600 hover:bg-green-700 font-medium text-sm p-2 h-[35px] flex items-center justify-center ">
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($edicion)
+                    @if ($btneliminar)
                         <button data-id="{{ $objetivo->id }}"
                             class="focus:outline-none delete-objetivo rounded-md text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium text-sm p-2 h-[35px] flex items-center justify-center ">
                             <svg class="w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"

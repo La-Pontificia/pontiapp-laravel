@@ -20,8 +20,8 @@
             </svg>
         </button>
         @if (!$eva_cerrada)
-            <button id="btn-cerrar-eva" data-id="{{ $id_evaluacion }}"
-                class="bg-red-500 p-2 px-3 font-medium rounded-xl text-white">
+            <button id="btn-cerrar-eva" data-eda="{{ $id_eda }}" data-neva="{{ $n_eva }}"
+                data-id="{{ $id_evaluacion }}" class="bg-red-500 p-2 px-3 font-medium rounded-xl text-white">
                 Cerrar evaluación
             </button>
         @endif

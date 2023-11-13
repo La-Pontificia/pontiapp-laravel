@@ -32,12 +32,14 @@ class ColaboradoreController extends GlobalController
 
 
         $colab = $this->getCurrentColab();
-
+        $isAdmin = $colab->rol == 1;
         // NULLS VARIABLES
         $id_area = request('id_area');
         $id_departamento = request('id_departamento');
         $id_cargo = request('id_cargo');
         $id_puesto = request('id_puesto');
+        $search = request('search');
+
 
         $cargos = null;
         $puestos = null;
@@ -47,47 +49,64 @@ class ColaboradoreController extends GlobalController
 
         // areas
         $areas = Area::all();
-        // if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
+        if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
 
+        $colaborador = $this->getCurrentColab();
 
         // Departamentos
         if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
         else $departamentos = Departamento::all();
-        // if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
+        if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
 
 
         // Cargos
         $cargos = Cargo::all();
-        // if (!$cargos->isEmpty() && !$id_cargo) $id_cargo = $cargos[0]->id;
+        if (!$cargos->isEmpty() && !$id_cargo) $id_cargo = $cargos[0]->id;
 
 
         // Puestos
         if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
         else $puestos = Puesto::all();
 
-        // if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
+        if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
 
 
 
-        $colaboradores = Colaboradore
-            // ::join('puestos as P', 'colaboradores.id_puesto', '=', 'P.id')
-            // // ->where('id_supervisor', $colab->id)
-            ::when($id_cargo !== null, function ($query) use ($id_cargo) {
-                return $query->where('colaboradores.id_cargo', $id_cargo);
-            })
-            ->when($id_puesto !== null, function ($query) use ($id_puesto) {
-                return $query->where('colaboradores.id_puesto', $id_puesto);
-            })
-            ->get();
+        // $colaboradores = Colaboradore::where('colaboradores.id_supervisor', $colaborador->id)
+        //     ->get();
+        // ::join('puestos as P', 'colaboradores.id_puesto', '=', 'P.id')
+        // // ->where('id_supervisor', $colab->id)
+        // ::when($id_cargo !== null, function ($query) use ($id_cargo) {
+        //     return $query->where('colaboradores.id_cargo', $id_cargo);
+        // })
+        // ->when($id_puesto !== null, function ($query) use ($id_puesto) {
+        //     return $query->where('colaboradores.id_puesto', $id_puesto);
+        // })::where('colaboradores.id_supervisor', $colaborador->id)
 
         $colaboradorForm = new Colaboradore();
-        // $colaboradores = Colaboradore::paginate();
 
+        $search = request('search');
+        $colaboradores =  null;
+        $query = Colaboradore::query();
 
+        if (!$isAdmin) {
+            $query->where('id_supervisor', $colaborador->id);
+        }
+
+        if ($search) {
+            $query->where(function ($innerQuery) use ($search) {
+                $innerQuery->where('nombres', 'like', "%$search%")
+                    ->orWhere('apellidos', 'like', "%$search%")
+                    ->orWhere('dni', 'like', "%$search%");
+            });
+        }
+
+        $colaboradores = $query->paginate();
         // SEDES
         $sedes = Sede::all();
 
-        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'sedes', 'id_cargo', 'id_puesto'));
+        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'sedes', 'id_cargo', 'id_puesto'))
+            ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
 
     /**

@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const formfeedback = document.getElementById("form-feedback");
     const btnfeedbackpreview = document.getElementById("btn-feedback-preview");
     const btncerrareva = document.getElementById("btn-cerrar-eva");
+    const btncerrareda = document.getElementById("btn-cerrar-eda");
+
 
 
 
@@ -230,6 +232,32 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // cerrar
+
+    if (btncerrareda) {
+        btncerrareda.addEventListener('click', function () {
+            const id = btncerrareda.dataset.id;
+            Swal.fire({
+                title: '¿Estas seguro de cerrar el EDA?',
+                text: 'No podras deshacer esta acción',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: `Sí, cerrar`,
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post(`/meta/eda/cerrar/${id}`).then(res => {
+                        location.reload();
+                    }).catch(err => {
+                        console.log(err.message);
+                    });
+                }
+            });
+        });
+    }
+
 
     // --------------EVALUACIONES
 
@@ -237,6 +265,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btncerrareva) {
         btncerrareva.addEventListener('click', function () {
             const id = btncerrareva.dataset.id;
+            const id_eda = btncerrareva.dataset.eda;
+            const n_eva = btncerrareva.dataset.neva;
+
+
             Swal.fire({
                 title: '¿Estás seguro de guardar y cerrar esta evaluación?',
                 text: 'No podrás deshacer esta acción.',
@@ -248,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.post(`/meta/evaluaciones/cerrar/${id}`).then(res => {
+                    axios.post(`/meta/evaluaciones/cerrar/${id}/${id_eda}/${n_eva}`).then(res => {
                         location.reload();
                     }).catch(err => {
                         console.log(err.message);
@@ -275,13 +307,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 feedback,
                 calificacion
             }).then(res => {
-                console.log(res)
-                // Swal.fire({
-                //     icon: 'success',
-                //     title: '¡Feedback enviado correctamente!',
-                // }).then(() => {
-                //     // location.reload();
-                // });
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Feedback enviado correctamente!',
+                }).then(() => {
+                    location.reload();
+                });
             }
             ).catch(err => {
                 console.log(err);

@@ -14,7 +14,7 @@
         $totalpromedio = $n_eva == 1 ? $objetivos->sum('promedio') : $objetivos->sum('promedio_2');
         $autocalificacionterminada = $n_eva == 1 ? !$objetivos->contains('autocalificacion', 0) : !$objetivos->contains('autocalificacion_2', 0);
 
-        $autocalificaciondeshabilitada = $n_eva == 1 ? !$objetivos->contains('promedio', 0) : !$objetivos->contains('promedio_2', 0);
+        $autocalificaciondeshabilitada = $totalpromedio != 0;
         $calificacionterminada = $n_eva == 1 ? !$objetivos->contains('promedio', 0) : !$objetivos->contains('promedio_2', 0);
 
         // evaluaciones
@@ -25,8 +25,47 @@
     @endphp
 
     @include('meta.evaluaciones.header')
-    @include('meta.evaluaciones.index')
 
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+                <tr class="border-y text-sm divide-x border-gray-200 dark:border-gray-700">
+                    <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                        Objetivo
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Descripción
+                    </th>
+                    <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                        Indicadores
+                    </th>
+                    <th scope="col" class="px-4 text-center py-3">
+                        <div>
+                            <h1>Total</h1>
+                            <span
+                                class="bg-purple-100 text-purple-800 block rounded-full p-1">({{ $totalporcentaje }}%)</span>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-4 w-[200px] text-center py-3">
+                        <h1>Nota Autocalificada</h1>
+                        <span class="bg-green-200 text-green-800 p-1 px-3 rounded-full">
+                            ({{ $totalautocalificacion }})
+                        </span>
+                    </th>
+                    @if ($autocalificacionterminada)
+                        <th scope="col" class="px-4 w-[200px] text-center py-3">
+                            <h1>Promedio</h1>
+                            <span class="bg-orange-200 text-orange-800 p-1 px-3 rounded-full">
+                                ({{ $totalpromedio }})
+                            </span>
+                        </th>
+                    @endif
+                </tr>
+            </thead>
+            @include('meta.evaluaciones.tableBody', ['enviado' => $edaSeleccionado->enviado == true])
+        </table>
+    </div>
     {{-- modals --}}
     <div id="feedback-modal" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -35,7 +74,8 @@
             <button type="button"
                 class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                 data-modal-hide="feedback-modal">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                 </svg>
@@ -140,8 +180,8 @@
                                         </path>
                                     </g>
                                     <ellipse transform="matrix(0.2723 -0.9622 0.9622 0.2723 141.2787 350.4419)"
-                                        style="fill:#FCEB88;" cx="302.329" cy="81.817" rx="29.854" ry="53.46">
-                                    </ellipse>
+                                        style="fill:#FCEB88;" cx="302.329" cy="81.817" rx="29.854"
+                                        ry="53.46"></ellipse>
                                     <g>
                                         <path style="fill:#F9A880;"
                                             d="M145.987,240.152c-19.011,0-34.423,15.412-34.423,34.423h68.848 C180.41,255.564,164.998,240.152,145.987,240.152z">
@@ -482,7 +522,7 @@
                     $calificacion = $feedback->calificacion;
                 @endphp
                 <div class="p-6">
-                    <h1 class="text-xl text-center font-semibold">Recibiste un feedback de tu colaborador</h1>
+                    <h1 class="text-xl text-center font-semibold">Recibiste un feedback de tu supervisor</h1>
                     <div
                         class="h-[70px] block hover:scale-125 transition-all w-[70px] mx-auto peer-checked:bg-yellow-100 peer-checked:border-0 p-2 rounded-full">
                         @if ($calificacion == 1)

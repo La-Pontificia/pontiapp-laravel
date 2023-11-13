@@ -4,10 +4,19 @@
     @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'eda' => $id_colab, 'id_eda' => $id_eda])
     @php
         $aprobado = $edaSeleccionado->aprobado;
-        $habilitarobjetivos = !$edaSeleccionado->cerrado;
+        $enviado = $edaSeleccionado->enviado;
+        $habilitarobjetivos = true;
 
         $habilitareva1 = $edaSeleccionado->aprobado;
         $habilitareva2 = $edaSeleccionado->evaluacion->cerrado;
+
+        $eva_1 = $edaSeleccionado->evaluacion;
+        $eva_2 = $edaSeleccionado->evaluacion2;
+
+        $cerrareda = $edaSeleccionado->evaluacion->cerrado && $edaSeleccionado->evaluacion2->cerrado && $suSupervisor;
+        $cerrado = $edaSeleccionado->cerrado;
+
+        $autocalificacion = $eva_1->autocalificacion + $eva_2->autocalificacion;
 
     @endphp
     <div class="mt-4 flex p-5">
@@ -33,6 +42,12 @@
                             🎉 Aprobado
                         </h1>
                     @endif
+                    @if ($enviado && !$aprobado)
+                        <h1
+                            class="p-2 min-w-max rounded-xl text-orange-600 border-orange-500 bg-orange-400/20 font-semibold">
+                            🎉 Enviado
+                        </h1>
+                    @endif
                 </div>
             </a>
             <div class="w-full border-b my-5"></div>
@@ -55,6 +70,16 @@
                             <div>
                                 <h1 class="text-neutral-800 text-lg font-medium">1ra Evaluacion</h1>
                             </div>
+                            @if ($eva_1->cerrado)
+                                <h1
+                                    class="p-2 min-w-max rounded-xl ml-auto text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
+                                    🎉 Cerrado
+                                </h1>
+                                <h1
+                                    class="p-2 min-w-max rounded-xl text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
+                                    {{ $eva_1->promedio }}
+                                </h1>
+                            @endif
                         </div>
                     </div>
                 </a>
@@ -76,13 +101,46 @@
                             <div>
                                 <h1 class="text-neutral-800 text-lg font-medium">2da Evaluacion</h1>
                             </div>
+                            @if ($eva_2->cerrado)
+                                <h1
+                                    class="p-2 min-w-max rounded-xl ml-auto text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
+                                    🎉 Cerrado
+                                </h1>
+                                <h1
+                                    class="p-2 min-w-max rounded-xl text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
+                                    {{ $eva_2->promedio }}
+                                </h1>
+                            @endif
                         </div>
                     </div>
                 </a>
             </div>
         </div>
-        <div class="p-4 ml-auto">
+        <div class="p-4 ml-auto w-[300px]">
             <h3 class="text-blue-600">Detalles del EDA</h3>
+            <div>
+                @if ($cerrareda && !$cerrado)
+                    <button data-id="{{ $edaSeleccionado->id }}" id="btn-cerrar-eda" type="button"
+                        class="text-white w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center">
+                        Cerrar eda</button>
+                @endif
+                @if ($cerrado)
+                    <div class="border rounded-xl p-5 bg-green-100/20">
+                        <h2 class="font-bold text-lg">Eda cerrado</h2>
+                        <div class="text-sm opacity-70">
+                            {{ \Carbon\Carbon::parse($edaSeleccionado->fecha_cerrado)->format('d \d\e F \d\e\l Y') }}
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span>Promedio:</span>
+                            <h5 class="font-semibold">{{ $edaSeleccionado->promedio }}</h5>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span>Autocalificacion:</span>
+                            <h5 class="font-semibold">{{ $autocalificacion }}</h5>
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 @endsection

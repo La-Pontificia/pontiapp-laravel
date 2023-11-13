@@ -35,7 +35,7 @@ class Colaboradore extends Model
         'id_puesto' => 'required',
     ];
 
-    protected $perPage = 20;
+    protected $perPage = 10;
 
     /**
      * Attributes that should be mass-assignable.

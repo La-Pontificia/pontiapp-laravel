@@ -103,6 +103,7 @@ class MetaController extends GlobalController
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
         }
 
+        // return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
 
         $evaluacion = Evaluacione::find($edaSeleccionado->id);
 
