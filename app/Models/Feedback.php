@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property $id
  * @property $id_emisor
- * @property $id_eda_colab
+ * @property $id_evaluacion
  * @property $feedback
  * @property $calificacion
  * @property $recibido
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $updated_at
  *
  * @property Colaboradore $colaboradore
- * @property EdaColab $edaColab
+ * @property Evaluacione $evaluacione
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -27,18 +27,19 @@ class Feedback extends Model
 
     static $rules = [
         'id_emisor' => 'required',
-        'id_eda_colab' => 'required',
+        'id_evaluacion' => 'required',
+        'recibido' => 'required',
     ];
 
-    protected $perPage = 20;
     protected $table = 'feedbacks';
+    protected $perPage = 20;
 
     /**
      * Attributes that should be mass-assignable.
      *
      * @var array
      */
-    protected $fillable = ['id_emisor', 'id_eda_colab', 'feedback', 'calificacion', 'recibido', 'fecha_recibido'];
+    protected $fillable = ['id_emisor', 'id_evaluacion', 'feedback', 'calificacion', 'recibido', 'fecha_recibido'];
 
 
     /**
@@ -52,8 +53,8 @@ class Feedback extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function edaColab()
+    public function evaluacione()
     {
-        return $this->hasOne('App\Models\EdaColab', 'id', 'id_eda_colab');
+        return $this->hasOne('App\Models\Evaluacione', 'id', 'id_evaluacion');
     }
 }

@@ -7,9 +7,9 @@
             {!! $errors->first('id_emisor', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
-            {{ Form::label('id_eda_colab') }}
-            {{ Form::text('id_eda_colab', $feedback->id_eda_colab, ['class' => 'form-control' . ($errors->has('id_eda_colab') ? ' is-invalid' : ''), 'placeholder' => 'Id Eda Colab']) }}
-            {!! $errors->first('id_eda_colab', '<div class="invalid-feedback">:message</div>') !!}
+            {{ Form::label('id_evaluacion') }}
+            {{ Form::text('id_evaluacion', $feedback->id_evaluacion, ['class' => 'form-control' . ($errors->has('id_evaluacion') ? ' is-invalid' : ''), 'placeholder' => 'Id Evaluacion']) }}
+            {!! $errors->first('id_evaluacion', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
             {{ Form::label('feedback') }}

@@ -37,7 +37,7 @@
                                         <th>No</th>
                                         
 										<th>Id Emisor</th>
-										<th>Id Eda Colab</th>
+										<th>Id Evaluacion</th>
 										<th>Feedback</th>
 										<th>Calificacion</th>
 										<th>Recibido</th>
@@ -52,7 +52,7 @@
                                             <td>{{ ++$i }}</td>
                                             
 											<td>{{ $feedback->id_emisor }}</td>
-											<td>{{ $feedback->id_eda_colab }}</td>
+											<td>{{ $feedback->id_evaluacion }}</td>
 											<td>{{ $feedback->feedback }}</td>
 											<td>{{ $feedback->calificacion }}</td>
 											<td>{{ $feedback->recibido }}</td>

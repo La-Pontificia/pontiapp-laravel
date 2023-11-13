@@ -2,7 +2,7 @@
 
 @section('content-meta')
     @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'id_colab' => $id_colab, 'id_eda' => $id_eda])
-    @include('meta.objetivos.header', ['enviado' => $edaSeleccionado->enviado == true])
+    @include('meta.objetivos.header', ['enviado' => $edaSeleccionado->enviado])
 
     @php
         $edicion = $edaSeleccionado->enviado == true && $edaSeleccionado->aprobado == false && $edaSeleccionado->cerrado == false;

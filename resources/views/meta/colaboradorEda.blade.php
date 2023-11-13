@@ -4,11 +4,15 @@
     @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'eda' => $id_colab, 'id_eda' => $id_eda])
     @php
         $aprobado = $edaSeleccionado->aprobado;
-        $paginaObjetivosDesabilitado = $suSupervisor && !$edaSeleccionado->enviado;
+        $habilitarobjetivos = !$edaSeleccionado->cerrado;
+
+        $habilitareva1 = $edaSeleccionado->aprobado;
+        $habilitareva2 = $edaSeleccionado->evaluacion->cerrado;
+
     @endphp
     <div class="mt-4 flex p-5">
         <div class="flex w-[450px] flex-col gap-2">
-            <a class="{{ $paginaObjetivosDesabilitado ? 'opacity-50 select-none pointer-events-none' : '' }} group"
+            <a class="{{ $habilitarobjetivos ? '' : 'opacity-50 select-none pointer-events-none' }} group"
                 href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/objetivos">
                 <div class="p-3 border items-center rounded-xl flex gap-2 group-hover:bg-neutral-100">
                     <div class="flex gap-3 items-center w-full">
@@ -32,8 +36,9 @@
                 </div>
             </a>
             <div class="w-full border-b my-5"></div>
-            <div class="{{ $aprobado ? '' : 'opacity-40 select-none pointer-events-none' }} flex flex-col gap-3 ">
-                <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/1" class="group">
+            <div class="flex flex-col gap-3 ">
+                <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/1"
+                    class="group {{ $habilitareva1 ? '' : 'opacity-40 select-none pointer-events-none' }}">
                     <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
                         <div class="flex gap-3 items-center w-full">
                             <div class="bg-blue-500 p-4 text-white rounded-xl">
@@ -53,7 +58,8 @@
                         </div>
                     </div>
                 </a>
-                <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/2" class="group">
+                <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/2"
+                    class="group {{ $habilitareva2 ? '' : 'opacity-40 select-none pointer-events-none' }}">
                     <div class="p-3 border rounded-xl flex gap-2 group-hover:bg-neutral-100">
                         <div class="flex gap-3 items-center w-full">
                             <div class="bg-blue-500 p-4 text-white rounded-xl">

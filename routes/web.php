@@ -106,3 +106,12 @@ Route::post('/meta/objetivos/calificar/{n_eva}', 'App\Http\Controllers\MetaContr
 
 //EDA
 Route::post('/meta/eda/cambiar_estado/{id_eda}', 'App\Http\Controllers\MetaController@cambiarEstadoEda');
+
+
+// FEEDBACKS
+Route::post('/meta/feedback/{id_eva}', 'App\Http\Controllers\FeedbackController@createFeddback');
+Route::post('/meta/feedback/received/{id_feed}', 'App\Http\Controllers\FeedbackController@receivedFeedback');
+
+
+// EVALUACIONES 
+Route::post('/meta/evaluaciones/cerrar/{id}', 'App\Http\Controllers\EvaluacioneController@cerrar');

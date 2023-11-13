@@ -25,8 +25,8 @@
                             {{ $feedback->id_emisor }}
                         </div>
                         <div class="form-group">
-                            <strong>Id Eda Colab:</strong>
-                            {{ $feedback->id_eda_colab }}
+                            <strong>Id Evaluacion:</strong>
+                            {{ $feedback->id_evaluacion }}
                         </div>
                         <div class="form-group">
                             <strong>Feedback:</strong>

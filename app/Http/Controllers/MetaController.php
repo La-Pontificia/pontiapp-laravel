@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Colaboradore;
 use App\Models\EdaColab;
 use App\Models\Evaluacione;
+use App\Models\Feedback;
 use App\Models\Objetivo;
 use Illuminate\Http\Request;
 
@@ -91,10 +92,12 @@ class MetaController extends GlobalController
         $edaSeleccionado = EdaColab::find($id_eda);
         $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
         $objetivoNewForm = new Objetivo();
+        $feedback = Feedback::where('id_evaluacion', $n_eva == 1 ? $edaSeleccionado->id_evaluacion : $edaSeleccionado->id_evaluacion_2)->first();
 
         //commons
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
+
 
         if ($suSupervisor == false && $miPerfil == false) {
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
@@ -103,7 +106,7 @@ class MetaController extends GlobalController
 
         $evaluacion = Evaluacione::find($edaSeleccionado->id);
 
-        return view('meta.colaboradorEdaEva', compact(
+        return view('meta.evaluaciones.index', compact(
             'id_colab',
             'id_eda',
             'edas',
@@ -114,7 +117,8 @@ class MetaController extends GlobalController
             'miPerfil',
             'suSupervisor',
             'n_eva',
-            'evaluacion'
+            'evaluacion',
+            'feedback'
         ));
     }
 
@@ -228,7 +232,7 @@ class MetaController extends GlobalController
         if ($nota != 1 && $nota != 2 && $nota != 3 && $nota != 4 && $nota != 5) {
             return response()->json(['error' => 'La nota debe ser 1, 2, 3, 4 o 5'], 404);
         }
-        return $this->cambiarNota($id, $nota, 'nota', $n_eva);
+        return $this->cambiarNota($id, $nota, 'promedio', $n_eva);
     }
 
 

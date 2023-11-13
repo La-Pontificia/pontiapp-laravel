@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const formautocalificar = document.querySelectorAll(".form-autocalificacion");
     const formacalificacion = document.querySelectorAll(".form-calificacion");
     const formfeedback = document.getElementById("form-feedback");
+    const btnfeedbackpreview = document.getElementById("btn-feedback-preview");
+    const btncerrareva = document.getElementById("btn-cerrar-eva");
 
 
 
@@ -141,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.stopPropagation()
 
                 const id = this.dataset.id
+                const eva = this.dataset.eva
                 const nota = e.target.querySelector('select[name="nota"]').value;
 
 
@@ -228,6 +231,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    // --------------EVALUACIONES
+
+    // cerrar eva
+    if (btncerrareva) {
+        btncerrareva.addEventListener('click', function () {
+            const id = btncerrareva.dataset.id;
+            Swal.fire({
+                title: '¿Estás seguro de guardar y cerrar esta evaluación?',
+                text: 'No podrás deshacer esta acción.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: `Sí, cerrar`,
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post(`/meta/evaluaciones/cerrar/${id}`).then(res => {
+                        location.reload();
+                    }).catch(err => {
+                        console.log(err.message);
+                    });
+                }
+            });
+
+
+        })
+    }
+
     // ----------- FEEDBACK ---------------
 
     if (formfeedback) {
@@ -235,21 +267,21 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             e.stopPropagation();
 
-            const id_eda_colab = this.dataset.id;
+            const id_eva = this.dataset.id;
             const feedback = e.target.querySelector('textarea[name="feedback"]').value;
             const calificacion = e.target.querySelector('input[name="calificacion"]:checked').value;
 
-            axios.post('/feedback', {
-                id_eda_colab,
+            axios.post(`/meta/feedback/${id_eva}`, {
                 feedback,
                 calificacion
             }).then(res => {
-                window.location.href = window.location.href;
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Feedback enviado correctamente!',
-                }).then(() => {
-                });
+                console.log(res)
+                // Swal.fire({
+                //     icon: 'success',
+                //     title: '¡Feedback enviado correctamente!',
+                // }).then(() => {
+                //     // location.reload();
+                // });
             }
             ).catch(err => {
                 console.log(err);
@@ -257,5 +289,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         })
     }
+
+    // create received feedback
+    if (btnfeedbackpreview) {
+        btnfeedbackpreview.addEventListener('click', function () {
+            const id_feedback = btnfeedbackpreview.dataset.id;
+            axios.post(`/meta/feedback/received/${id_feedback}`).then(res => {
+                console.log(res)
+            }
+            ).catch(err => {
+                console.log(err);
+            })
+        })
+    }
+
 })
 

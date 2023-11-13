@@ -65,15 +65,6 @@ class EdaColabController extends Controller
         return view('eda-colab.show', compact('edaColab'));
     }
 
-
-    public function defineFLimiteEnvio(Request $request)
-    {
-        $edaColab = EdaColab::find($request->id);
-        $edaColab->flimit_send_obj_from = $request->flimit_send_obj_from;
-        $edaColab->flimit_send_obj_at = $request->flimit_send_obj_at;
-        $edaColab->save();
-        return response()->json(['success' => true], 200);
-    }
     /**
      * Show the form for editing the specified resource.
      *
