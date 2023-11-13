@@ -32,7 +32,7 @@ class ColaboradoreController extends GlobalController
 
 
         $colab = $this->getCurrentColab();
-        $isAdmin = $colab->rol == 1;
+        $isAdmin = $colab ? $colab->rol == 1 : false;
         // NULLS VARIABLES
         $id_area = request('id_area');
         $id_departamento = request('id_departamento');
@@ -89,7 +89,7 @@ class ColaboradoreController extends GlobalController
         $colaboradores =  null;
         $query = Colaboradore::query();
 
-        if (!$isAdmin) {
+        if (!$isAdmin && $colab) {
             $query->where('id_supervisor', $colaborador->id);
         }
 
