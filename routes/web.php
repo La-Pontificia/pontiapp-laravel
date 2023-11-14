@@ -105,3 +105,8 @@ Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController
 
 //ACCESOS
 Route::post('/accesos/cambiar/{id}', 'App\Http\Controllers\AccesoController@cambiar');
+
+
+// CUESTIONARIOS
+Route::get('/cuestionarios', 'App\Http\Controllers\CuestionarioController@index')->name('cuestionarios.index');
+Route::get('/cuestionarios/preguntas', 'App\Http\Controllers\CuestionarioController@preguntas')->name('cuestionarios.preguntas');
