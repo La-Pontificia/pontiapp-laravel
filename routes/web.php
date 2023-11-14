@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/me');
-})->middleware('authMiddleware');;
+    return redirect('/meta');
+})->middleware('authMiddleware');
+
 Auth::routes();
 Route::resource('/sedes', App\Http\Controllers\SedeController::class);
 Route::resource('/cargos', App\Http\Controllers\CargoController::class)->middleware('authMiddleware');
@@ -33,32 +34,12 @@ Route::resource('/calificaciones', App\Http\Controllers\CalificacioneController:
 Route::resource('/edas', App\Http\Controllers\EdaController::class)->middleware('authMiddleware');
 Route::get('/calificar', 'App\Http\Controllers\ObjetivoController@indexCalificar')->name('objetivo.calificarindex')->middleware('authMiddleware');
 
-//PROFILE
-Route::get('/profile/{id}', 'App\Http\Controllers\ProfileController@getProfile')->name('profile.index')->middleware('authMiddleware');
-Route::get('/profile/{id}/eda', 'App\Http\Controllers\ProfileController@getEda')->name('profile.eda')->middleware('authMiddleware');
-Route::get('/profile/{id}/eda/{id_eda}', 'App\Http\Controllers\ProfileController@getEdaByEdaId')->name('profile.eda')->middleware('authMiddleware');
-
-Route::get('/me', 'App\Http\Controllers\ProfileController@myProfile')->middleware('authMiddleware')->name('profile.me');
-Route::get('/me/eda', 'App\Http\Controllers\ProfileController@myFirstEda')->middleware('authMiddleware')->name('profile.me');
-Route::get('/me/eda/{id_eda}', 'App\Http\Controllers\ProfileController@myEda')->middleware('authMiddleware')->name('profile.me');
-
 //OBJETIVOS
 Route::post('/objetivos/delete/{id}', 'App\Http\Controllers\ObjetivoController@deleteObjetivo');
 Route::post('/objetivos/calificar', 'App\Http\Controllers\ObjetivoController@calificarObjetivo');
 
-
-
-
-
-
-
 //EDA COLAB
 Route::post('/eda_colaborador/cambiar_estado', 'App\Http\Controllers\EdaColabController@cambiarEstado');
-
-
-
-
-
 
 // EDA
 Route::post('/cambiar-estado-eda/{id}', 'App\Http\Controllers\EdaController@cambiarEstadoEda');
@@ -117,3 +98,10 @@ Route::post('/meta/feedback/received/{id_feed}', 'App\Http\Controllers\FeedbackC
 
 // EVALUACIONES 
 Route::post('/meta/evaluaciones/cerrar/{id}/{id_eda}/{n_eva}', 'App\Http\Controllers\EvaluacioneController@cerrar');
+
+
+// COLABORADORES
+Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController@index');
+
+//ACCESOS
+Route::post('/accesos/cambiar/{id}', 'App\Http\Controllers\AccesoController@cambiar');

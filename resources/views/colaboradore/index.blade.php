@@ -83,53 +83,73 @@
                             @endforeach
                         </select>
                     </span>
-                    <form class="relative p-0 m-0 col-span-5" action="/colaboradores">
+                    <form class="relative p-0 m-0 col-span-6" action="/colaboradores">
                         <input name="search" type="search"
                             class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl"
                             placeholder="Buscar colaborador" value="{{ request('search') }}">
                     </form>
                 </div>
-                <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
-                    class="text-white my-4 w-full h-10 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    type="button">
-                    Agregar
-                </button>
+                @if ($a_colaborador->crear)
+                    <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
+                        class="text-white my-4 w-full h-10 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-base px-5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        type="button">
+                        Agregar
+                    </button>
+                @endif
 
             </header>
-            <div class="relative  shadow-md sm:rounded-lg">
-                <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-base text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
-                                Colaborador
-                            </th>
-                            <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
-                                Supervisor
-                            </th>
-                            <th scope="col" class="px-2 py-3 min-w-[200px]">
-                                Cargo
-                            </th>
-                            <th scope="col" class="px-2 py-3 min-w-[200px]">
-                                Area
-                            </th>
-                            <th scope="col" class="px-2 py-3">
-                                Estado
-                            </th>
-                            <th>
+            @if ($a_colaborador->leer == 1)
+                <div class="relative  shadow-md sm:rounded-lg">
+                    <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-base text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
+                                    Colaborador
+                                </th>
+                                <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
+                                    Supervisor
+                                </th>
+                                <th scope="col" class="px-2 py-3 ">
+                                    Cargo
+                                </th>
+                                <th scope="col" class="px-2 py-3 ">
+                                    Puesto
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    Area
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    Estado
+                                </th>
+                                <th>
 
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($colaboradores as $colaborador)
-                            @include('colaboradore.item', ['colaborador' => $colaborador])
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <footer class="mt-4">
-                {!! $colaboradores->links() !!}
-            </footer>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($colaboradores as $colaborador)
+                                @include('colaboradore.item', ['colaborador' => $colaborador])
+                            @empty
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="p-10 grid place-content-center">
+                                            No hay colaboradores disponibles
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <footer class="mt-4">
+                    {!! $colaboradores->links() !!}
+                </footer>
+            @else
+                @include('meta.commons.errorPageModular', [
+                    'titulo' => '',
+                    'descripcion' => 'No tienes acceso a ver las lista de colaboradores',
+                ])
+            @endif
         </div>
 
 

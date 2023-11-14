@@ -13,7 +13,8 @@ class MetaController extends GlobalController
 {
     public function index()
     {
-        return view('meta.index');
+
+        return redirect("/meta/" . $this->getCurrentColab()->id);
     }
 
     public function colaborador($id_colab)

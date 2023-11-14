@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acceso;
+use App\Models\Colaboradore;
 use Illuminate\Http\Request;
 
 /**
@@ -11,129 +12,120 @@ use Illuminate\Http\Request;
  */
 class AccesoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $accesos = Acceso::paginate();
 
-        return view('acceso.index', compact('accesos'))
-            ->with('i', (request()->input('page', 1) - 1) * $accesos->perPage());
+    public function index($id)
+    {
+        $colaborador = Colaboradore::find($id);
+        $acceso_colaborador = $this->getColaboradores($id);
+        $acceso_area = $this->getAreas($id);
+        $acceso_eda = $this->getEdas($id);
+        $acceso_departamento = $this->getDepartamentos($id);
+        $acceso_acceso = $this->getAccesos($id);
+        $acceso_cargo = $this->getCargos($id);
+        $acceso_sede = $this->getSedes($id);
+        $acceso_objetivo = $this->getObjetivos($id);
+        $acceso_reporte = $this->getReportes($id);
+        $acceso_puesto = $this->getPuestos($id);
+
+        return view('acceso.index', compact(
+            'colaborador',
+            'acceso_colaborador',
+            'acceso_area',
+            'acceso_eda',
+            'acceso_departamento',
+            'acceso_acceso',
+            'acceso_cargo',
+            'acceso_sede',
+            'acceso_puesto',
+            'acceso_objetivo',
+            'acceso_reporte'
+        ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function cambiar(Request $request, $id)
     {
-        $acceso = new Acceso();
-        return view('acceso.create', compact('acceso'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        request()->validate(Acceso::$rules);
-
-        $acceso = Acceso::create($request->all());
-
-        return redirect()->route('accesos.index')
-            ->with('success', 'Acceso created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $acceso = Acceso::find($id);
-
-        return view('acceso.show', compact('acceso'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $acceso = Acceso::find($id);
-
-        return view('acceso.edit', compact('acceso'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  Acceso $acceso
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Acceso $acceso)
-    {
-        request()->validate(Acceso::$rules);
-
-        $acceso->update($request->all());
-
-        return redirect()->route('accesos.index')
-            ->with('success', 'Acceso updated successfully');
-    }
-
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function destroy($id)
-    {
-        $acceso = Acceso::find($id)->delete();
-
-        return redirect()->route('accesos.index')
-            ->with('success', 'Acceso deleted successfully');
+        try {
+            $name = $request->name;
+            $value = $request->value;
+            $acceso = Acceso::find($id);
+            $acceso->$name = $value;
+            $acceso->save();
+            return response()->json(['success' => 'true'], 202);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 'false'], 401);
+        }
     }
 
 
 
 
 
-
-
-    public function getAccesos($id)
+    function getColab($id)
     {
-        $accesos = Acceso::where('id_colaborador', $id)->paginate();
-        return response()->json($accesos, 200);
+        return Colaboradore::where([
+            'id_usuario' => $id,
+        ])->first();
     }
 
-
-    public function updateAcceso(Request $request)
+    function getPuestos($id)
     {
-        $modulo = $request->modulo;
-        $metodo = $request->metodo;
-        $id_colab = $request->id_colab;
-        $value = $request->value;
-
-        $acceso = Acceso::where('id_colaborador', $id_colab)->where('modulo', $modulo)->first();
-        if ($metodo == 'crear') $acceso->crear = $value;
-        if ($metodo == 'editar') $acceso->actualizar = $value;
-        if ($metodo == 'eliminar') $acceso->eliminar = $value;
-        if ($metodo == 'ver') $acceso->leer = $value;
-        $acceso->save();
-
-        return response()->json($acceso, 200);
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'puestos')
+            ->first();
+    }
+    function getColaboradores($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'colaboradores')
+            ->first();
+    }
+    function getAreas($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'areas')
+            ->first();
+    }
+    function getEdas($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'edas')
+            ->first();
+    }
+    function getDepartamentos($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'departamentos')
+            ->first();
+    }
+    function getAccesos($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'accesos')
+            ->first();
+    }
+    function getCargos($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'cargos')
+            ->first();
+    }
+    function getSedes($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'sedes')
+            ->first();
+    }
+    function getObjetivos($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'objetivos')
+            ->first();
+    }
+    function getReportes($id)
+    {
+        return Acceso::where('id_colaborador', $id)
+            ->where('modulo', 'reportes')
+            ->first();
     }
 }

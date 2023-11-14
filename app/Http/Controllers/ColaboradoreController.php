@@ -22,17 +22,18 @@ use Illuminate\Support\Facades\Auth;
  */
 class ColaboradoreController extends GlobalController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
 
 
         $colab = $this->getCurrentColab();
-        $isAdmin = $colab ? $colab->rol == 1 : false;
+        $acceso = $this->getAccesoColaboradores();
+        $accesoModulo = $acceso->crear == 1 || $acceso->leer == 1 || $acceso->actualizar == 1 || $acceso->eliminar == 1;
+        $isAccess = $colab && $colab->rol == 1 || $colab && $colab->rol == 2 || $this->getAccesoColaboradores()->crear;
+        if (!$isAccess && !$accesoModulo) {
+            return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este modulo, si crees que fue un error comunicate con un administrador.']);
+        }
         // NULLS VARIABLES
         $id_area = request('id_area');
         $id_departamento = request('id_departamento');
@@ -41,9 +42,9 @@ class ColaboradoreController extends GlobalController
         $search = request('search');
 
 
-        $cargos = null;
-        $puestos = null;
-        $departamentos = null;
+        $cargos = Cargo::all();
+        $puestos = Puesto::all();
+        $departamentos = Departamento::all();
         $colaboradores = null;
 
 
@@ -56,19 +57,12 @@ class ColaboradoreController extends GlobalController
         // Departamentos
         if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
         else $departamentos = Departamento::all();
-        if (!$departamentos->isEmpty() && !$id_departamento) $id_departamento = $departamentos[0]->id;
-
 
         // Cargos
         $cargos = Cargo::all();
-        if (!$cargos->isEmpty() && !$id_cargo) $id_cargo = $cargos[0]->id;
-
 
         // Puestos
         if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
-        else $puestos = Puesto::all();
-
-        if (!$puestos->isEmpty() && !$id_puesto) $id_puesto = $puestos[0]->id;
 
 
 
@@ -89,8 +83,16 @@ class ColaboradoreController extends GlobalController
         $colaboradores =  null;
         $query = Colaboradore::query();
 
-        if (!$isAdmin && $colab) {
+        if (!$isAccess && $colab) {
             $query->where('id_supervisor', $colaborador->id);
+        }
+
+        if ($id_cargo) {
+            $colaboradores = $query->where('colaboradores.id_cargo', $id_cargo);
+        }
+
+        if ($id_puesto) {
+            $colaboradores = $query->where('colaboradores.id_puesto', $id_puesto);
         }
 
         if ($search) {

@@ -50,6 +50,11 @@
         </span>
     </td>
     <td class=" capitalize text-gray-600 font-medium">
+        <span>
+            {{ strtolower($colaborador->puesto->nombre_puesto) }}
+        </span>
+    </td>
+    <td class=" capitalize text-gray-600 font-medium">
         {{ strtolower($colaborador->puesto->departamento->area->nombre_area) }}
     </td>
     <td class="">
@@ -88,7 +93,7 @@
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edas</a>
                 </li>
                 <li>
-                    <a href="/meta/accesos/{{ $colaborador->id }}"
+                    <a href="/colaboradores/accesos/{{ $colaborador->id }}"
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Accesos</a>
                 </li>
 

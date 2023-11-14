@@ -5,6 +5,15 @@ window.jQuery = $;
 window.$ = $;
 
 
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-left',
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+})
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
     // --------------OBJETIVOS-----------
@@ -333,6 +342,32 @@ document.addEventListener("DOMContentLoaded", function () {
             })
         })
     }
+
+
+
+    // --------------------------------ACCESOS
+
+    const toggleaccess = document.querySelectorAll(".toggle-access");
+
+    toggleaccess.forEach(toggleinput => {
+        toggleinput.addEventListener("change", function (e) {
+            e.preventDefault();
+            const isChecked = toggleinput.checked;
+            const name = toggleinput.name;
+            const dataId = toggleinput.dataset.id;
+            axios.post(`/accesos/cambiar/${dataId}`, {
+                name,
+                value: isChecked
+            }).then(res => {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Cambiado correctamente',
+                })
+            }).catch(err => {
+                console.log(err.message)
+            })
+        });
+    });
 
 })
 
