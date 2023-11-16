@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('plantillas', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 255);
-            $table->enum('para', ['colaborador', 'supervisor']);
+            $table->boolean('usando')->default(false);
+            $table->enum('para', ['colaboradores', 'supervisores']);
             $table->timestamps();
         });
     }

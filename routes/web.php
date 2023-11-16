@@ -108,5 +108,13 @@ Route::post('/accesos/cambiar/{id}', 'App\Http\Controllers\AccesoController@camb
 
 
 // CUESTIONARIOS
-Route::get('/cuestionarios', 'App\Http\Controllers\CuestionarioController@index')->name('cuestionarios.index');
+Route::get('/cuestionarios', 'App\Http\Controllers\PlantillaController@index')->name('cuestionarios.index');
 Route::get('/cuestionarios/preguntas', 'App\Http\Controllers\CuestionarioController@preguntas')->name('cuestionarios.preguntas');
+
+Route::post('/preguntas', 'App\Http\Controllers\PreguntaController@crear');
+Route::post('/preguntas/{id}', 'App\Http\Controllers\PreguntaController@eliminar');
+
+Route::post('/plantilla', 'App\Http\Controllers\PlantillaController@crear');
+Route::get('/plantilla/usar/{id}', 'App\Http\Controllers\PlantillaController@usar');
+Route::get('/plantilla/pregunta/{id}', 'App\Http\Controllers\PlantillaController@eliminarPregunta');
+Route::post('/plantilla/pregunta/{id}', 'App\Http\Controllers\PlantillaController@agregarPregunta');

@@ -26,6 +26,7 @@ class PlantillaPregunta extends Model
         'id_pregunta' => 'required',
     ];
 
+    protected $table = 'plantilla_pregunta';
     protected $perPage = 20;
 
     /**

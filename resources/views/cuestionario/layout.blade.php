@@ -1,7 +1,7 @@
 @extends('layouts.sidebar')
 
 @section('content-sidebar')
-    <div class="border-b border-gray-200">
+    <nav class="border-b sticky top-16 bg-neutral-50 border-gray-200">
         <ul class="flex flex-wrap -mb-px text-base font-medium text-center text-gray-500">
             <li class="me-2">
                 <a href="{{ route('cuestionarios.index') }}"
@@ -25,7 +25,7 @@
                 </a>
             </li>
         </ul>
-    </div>
+    </nav>
     <section class="p-2">
         @yield('content-cuestionario')
     </section>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cuestionario;
+use App\Models\Plantilla;
+use App\Models\Pregunta;
 use Illuminate\Http\Request;
 
 /**
@@ -13,10 +15,13 @@ class CuestionarioController extends Controller
 {
     public function index()
     {
-        return view('cuestionario.index');
+        $preguntas = Pregunta::get();
+        $plantillas = Plantilla::get();
+        return view('cuestionario.index', compact('preguntas', 'plantillas'));
     }
     public function preguntas()
     {
-        return view('cuestionario.preguntas');
+        $preguntas = Pregunta::get();
+        return view('cuestionario.preguntas.index', compact('preguntas'));
     }
 }

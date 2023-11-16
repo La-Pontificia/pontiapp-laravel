@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $created_at
  * @property $updated_at
  *
- * @property PlantillaPreguntum[] $plantillaPreguntas
+ * @property PlantillaPregunta[] $plantillaPreguntas
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -32,14 +32,15 @@ class Plantilla extends Model
    *
    * @var array
    */
-  protected $fillable = ['nombre', 'para'];
+  protected $fillable = ['nombre', 'para', 'usando'];
 
 
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
+
   public function plantillaPreguntas()
   {
-    return $this->hasMany('App\Models\PlantillaPreguntum', 'id_plantilla', 'id');
+    return $this->hasMany('App\Models\PlantillaPregunta', 'id_plantilla', 'id');
   }
 }

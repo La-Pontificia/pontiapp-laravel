@@ -39,7 +39,7 @@ class Pregunta extends Model
      */
     public function cuestionarioPreguntas()
     {
-        return $this->hasMany('App\Models\CuestionarioPreguntum', 'id_pregunta', 'id');
+        return $this->hasMany('App\Models\CuestionarioPregunta', 'id_pregunta', 'id');
     }
 
     /**
@@ -47,6 +47,6 @@ class Pregunta extends Model
      */
     public function plantillaPreguntas()
     {
-        return $this->hasMany('App\Models\PlantillaPreguntum', 'id_pregunta', 'id');
+        return $this->hasMany('App\Models\PlantillaPregunta', 'id_pregunta', 'id');
     }
 }
