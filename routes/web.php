@@ -118,3 +118,7 @@ Route::post('/plantilla', 'App\Http\Controllers\PlantillaController@crear');
 Route::get('/plantilla/usar/{id}', 'App\Http\Controllers\PlantillaController@usar');
 Route::get('/plantilla/pregunta/{id}', 'App\Http\Controllers\PlantillaController@eliminarPregunta');
 Route::post('/plantilla/pregunta/{id}', 'App\Http\Controllers\PlantillaController@agregarPregunta');
+
+
+// CUESTIONARIO EDA
+Route::post('/cuestionario/eda/{id_cuestionario}', 'App\Http\Controllers\CuestionarioController@cuestionarioEda');

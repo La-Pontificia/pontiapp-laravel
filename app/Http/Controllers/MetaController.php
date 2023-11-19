@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Colaboradore;
+use App\Models\Cuestionario;
 use App\Models\EdaColab;
 use App\Models\Evaluacione;
 use App\Models\Feedback;
 use App\Models\Objetivo;
+use App\Models\Plantilla;
 use Illuminate\Http\Request;
 
 class MetaController extends GlobalController
@@ -45,11 +47,38 @@ class MetaController extends GlobalController
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
 
+        $cuestionarioColab = Cuestionario::where('id_eda', $id_eda)->where('de', 'colaborador')->first();
+        $cuestionarioSuper = Cuestionario::where('id_eda', $id_eda)->where('de', 'supervisor')->first();
+
+
+
+        $plantilla = null;
+        if ($miPerfil) {
+            $plantilla = Plantilla::where('usando', true)
+                ->where('para', 'colaboradores')
+                ->first();
+        } else {
+            $plantilla = Plantilla::where('usando', true)
+                ->where('para', 'supervisores')
+                ->first();
+        }
+
         if ($suSupervisor == false && $miPerfil == false) {
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
         }
 
-        return view('meta.colaboradorEda', compact('id_colab', 'id_eda', 'edas', 'colaborador', 'edaSeleccionado', 'miPerfil', 'suSupervisor'));
+        return view('meta.colaboradorEda', compact(
+            'id_colab',
+            'id_eda',
+            'edas',
+            'colaborador',
+            'edaSeleccionado',
+            'miPerfil',
+            'suSupervisor',
+            'plantilla',
+            'cuestionarioColab',
+            'cuestionarioSuper'
+        ));
     }
 
 

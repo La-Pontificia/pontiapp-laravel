@@ -21,10 +21,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Cuestionario extends Model
 {
-    
+
     static $rules = [
-		'id_colaborador' => 'required',
-		'id_eda' => 'required',
+        'id_colaborador' => 'required',
+        'id_eda' => 'required',
     ];
 
     protected $perPage = 20;
@@ -34,7 +34,7 @@ class Cuestionario extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_colaborador','id_eda'];
+    protected $fillable = ['id_colaborador', 'id_eda', 'de'];
 
 
     /**
@@ -44,15 +44,15 @@ class Cuestionario extends Model
     {
         return $this->hasOne('App\Models\Colaboradore', 'id', 'id_colaborador');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function cuestionarioPreguntas()
     {
-        return $this->hasMany('App\Models\CuestionarioPreguntum', 'id_cuestionario', 'id');
+        return $this->hasMany('App\Models\CuestionarioPregunta', 'id_cuestionario', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -60,6 +60,4 @@ class Cuestionario extends Model
     {
         return $this->hasOne('App\Models\EdaColab', 'id', 'id_eda');
     }
-    
-
 }

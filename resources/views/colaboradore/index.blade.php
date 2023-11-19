@@ -222,22 +222,17 @@
         /// FORMULARIO Y LOADING
 
         const loading = document.getElementById("loading")
-        const loading2 = document.getElementById("loading2")
 
 
 
         function loadingActive() {
             loading.classList.add('grid');
             loading.classList.remove('hidden');
-            loading2.classList.add('grid');
-            loading2.classList.remove('hidden');
         }
 
         function loadingRemove() {
             loading.classList.add('hidden');
             loading.classList.remove('grid');
-            loading2.classList.add('hidden');
-            loading2.classList.remove('grid');
         }
 
         const $formColaborador = document.getElementById("formColaborador")

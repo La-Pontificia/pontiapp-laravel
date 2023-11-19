@@ -28,6 +28,7 @@ class CuestionarioPregunta extends Model
         'respuesta' => 'required',
     ];
 
+    protected $table = 'cuestionario_pregunta';
     protected $perPage = 20;
 
     /**

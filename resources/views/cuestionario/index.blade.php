@@ -199,6 +199,115 @@
             @endforeach
         </div>
     </div>
+    <div class="pt-0">
+        <h4 class="p-2 text-xl font-medium">Plantilla de cuestionarios para colaboradores</h4>
+        <div class="rounded-2xl overflow-hidden border bg-white" data-accordion="collapse">
+            @foreach ($colaboradores as $index => $colaborador)
+                <h2 class="relative flex" id="accordion-collapse-heading-{{ $supervisor->id }}">
+                    @if ($colaborador->usando)
+                        <div
+                            class="absolute p-1 font-medium rounded-full px-3 bg-green-500/20 text-green-600 top-2 right-10">
+                            Usando
+                        </div>
+                    @else
+                        <button type="button" data-id="{{ $colaborador->id }}"
+                            class="flex absolute btn-usar top-1 right-10 font-medium items-center gap-2 px-4 w-full text-left py-2 hover:bg-gray-200 bg-gray-100 text-neutral-700 rounded-xl max-w-max">
+                            <span class="w-4 h-4 block">
+                                <svg aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 1v16M1 9h16" />
+                                </svg>
+                            </span>
+                            Usar
+                        </button>
+                    @endif
+                    <button type="button"
+                        class="flex items-center justify-between w-full p-3 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                        data-accordion-target="#accordion-collapse-body-{{ $colaborador->id }}" aria-expanded="true"
+                        aria-controls="accordion-collapse-body-{{ $colaborador->id }}">
+                        <span>{{ $index + 1 }}. {{ $colaborador->nombre }}</span>
+                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5 5 1 1 5" />
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-collapse-body-{{ $colaborador->id }}" class="hidden"
+                    aria-labelledby="accordion-collapse-heading-{{ $colaborador->id }}">
+                    <div class="p-5 border border-gray-200 dark:border-gray-700">
+                        <ul class="flex pb-2 flex-col gap-2">
+                            @foreach ($colaborador->plantillaPreguntas as $plantillaPregunta)
+                                <li class="bg-white flex items-center group gap-3 p-4 rounded-2xl border max-w-max">
+                                    <button class="btn-eliminar" data-id="{{ $plantillaPregunta->id }}">
+                                        <svg class="w-4 h-4 text-gray-400 group-hover:text-neutral-700" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                                        </svg>
+                                    </button>
+                                    <p class="">
+                                        {{ $plantillaPregunta->pregunta->pregunta }} ·
+                                        <span
+                                            class="opacity-50 text-sm min-w-max pl-1">{{ $pregunta->created_at->format('d \d\e F \d\e\l Y') }}</span>
+                                    </p>
+                                </li>
+                            @endforeach
+                        </ul>
+
+                        <button data-modal-target="agregar-preguntas-{{ $colaborador->id }}"
+                            data-modal-toggle="agregar-preguntas-{{ $colaborador->id }}" type="button"
+                            class="flex font-medium items-center gap-2 px-4 w-full text-left py-2 hover:bg-gray-200 bg-gray-100 text-neutral-700 rounded-xl max-w-max">
+                            <span class="w-4 h-4 block">
+                                <svg aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 1v16M1 9h16" />
+                                </svg>
+                            </span>
+                            Agregar
+                        </button>
+
+                        <div id="agregar-preguntas-{{ $colaborador->id }}" data-modal-backdrop="static" tabindex="-1"
+                            aria-hidden="true"
+                            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                                <div class="relative bg-white rounded-2xl shadow dark:bg-gray-700">
+                                    <div
+                                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                            {{ $colaborador->nombre }}
+                                        </h3>
+                                        <button type="button"
+                                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                            data-modal-hide="agregar-preguntas-{{ $colaborador->id }}">
+                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <h1 class="p-4 px-7 pt-0 font-semibold text-lg">Agrega una pregunta</h1>
+                                    <ul class="flex max-h-[500px] overflow-y-auto p-5 pt-0 flex-col font-medium gap-3">
+                                        @foreach ($preguntasNoAsociadas[$colaborador->id] as $pregunta)
+                                            <button data-id="{{ $colaborador->id }}" data-pre="{{ $pregunta->id }}"
+                                                class="bg-neutral-100 hover:bg-neutral-200 text-left btn-add-more flex items-center group gap-3 p-4 rounded-2xl border">
+                                                <p class="">
+                                                    {{ $pregunta->pregunta }}
+                                                </p>
+                                            </button>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
 @endsection
 
 @section('script')

@@ -115,6 +115,10 @@
                     </div>
                 </a>
             </div>
+            @if ($cerrado)
+                <div class="w-full border-b my-5"></div>
+                @include('meta.cuestionario.index')
+            @endif
         </div>
         <div class="p-4 ml-auto w-[300px]">
             <h3 class="text-blue-600">Detalles del EDA</h3>
