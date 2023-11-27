@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Auditoria;
 use App\Models\Colaboradore;
 use App\Models\Eda;
 use App\Models\EdaColab;
@@ -12,13 +13,9 @@ use Illuminate\Http\Request;
  * Class EdaController
  * @package App\Http\Controllers
  */
-class EdaController extends Controller
+class EdaController extends GlobalController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $edas = Eda::paginate();
@@ -27,30 +24,11 @@ class EdaController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $edas->perPage());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $eda = new Eda();
-        return view('eda.create', compact('eda'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
 
-        // Realizar las validaciones personalizadas aquí
+        $colab = $this->getCurrentColab();
         $año = $request->input('año');
-
-        // Realiza las validaciones
         if ($this->validarEdaExistente($año)) {
             return response()->json(['message' => 'Ya existe una con el mismo año ingresado'], 202);
         }
@@ -59,6 +37,13 @@ class EdaController extends Controller
 
         $eda = Eda::create($request->all());
         $this->createEdaByColab($eda->id);
+
+        Auditoria::create([
+            'id_colab' => $colab->id,
+            'modulo' => 'eda',
+            'titulo' => 'Creacion de un nuevo EDA',
+            'descripcion' => 'Se creó una nueva EDA ' . $año,
+        ]);
 
         return response()->json(['success' => true], 202);
     }
@@ -185,17 +170,25 @@ class EdaController extends Controller
      */
     public function destroy($id)
     {
+        $colab = $this->getCurrentColab();
         $eda = Eda::find($id);
         if ($eda && $eda->wearing === 1) {
             $ultimoEda = Eda::where('id', '<>', $eda->id)->orderBy('created_at', 'desc')->first();
             if ($ultimoEda) {
-                $ultimoEda->update(['wearing' => 1]);
+                $ultimoEda->update(['cerrado' => 1]);
             }
         }
 
         if ($eda) {
             $eda->delete();
         }
+
+        Auditoria::create([
+            'id_colab' => $colab->id,
+            'modulo' => 'Eda',
+            'titulo' => 'Eda eliminado',
+            'descripcion' => 'se eliminio el eda: ' . $eda->año,
+        ]);
 
         return redirect()->route('edas.index')
             ->with('success', 'Eda deleted successfully');

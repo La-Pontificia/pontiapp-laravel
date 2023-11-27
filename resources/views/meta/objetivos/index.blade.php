@@ -118,14 +118,25 @@
                 </button>
             @endif
             @if ($objetivos->sum('porcentaje') != 100 && $miPerfil)
-                <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
-                    class="text-white w-[200px] bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2 text-center "
-                    type="button">
-                    Agregar objetivo
-                </button>
+                @if (count($objetivos) > 0)
+                    <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
+                        class="text-white w-[200px] bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-base px-5 py-2 text-center "
+                        type="button">
+                        Agregar objetivo
+                    </button>
+                @else
+                    <button data-modal-target="form-multiple-objetivos" data-modal-toggle="form-multiple-objetivos"
+                        class="text-white w-[200px] bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-base px-5 py-2 text-center "
+                        type="button">
+                        Agregar objetivo
+                    </button>
+                @endif
             @endif
         </nav>
     </footer>
+
+    @include('meta.objetivos.formmultiple')
+
 
     {{-- GLOBALS MODALS --}}
     <!-- CREATE -->
@@ -142,7 +153,6 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                     </svg>
-                    <span class="sr-only">Close modal</span>
                 </button>
                 @includeif('partials.errors')
                 <div class="px-4 py-4">

@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.post(`/meta/eda/cerrar/${id}`).then(res => {
+                    axios.post(`/eda/cerrar/${id}`).then(res => {
                         location.reload();
                     }).catch(err => {
                         console.log(err.message);

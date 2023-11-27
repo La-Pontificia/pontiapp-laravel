@@ -47,25 +47,43 @@
                                 class="bg-purple-100 text-purple-800 block rounded-full p-1">({{ $totalporcentaje }}%)</span>
                         </div>
                     </th>
-                    <th scope="col" class="px-4 w-[200px] text-center py-3">
-                        <h1>Nota Autocalificada</h1>
-                        <span class="bg-green-200 text-green-800 p-1 px-3 rounded-full">
-                            ({{ $totalautocalificacion }})
-                        </span>
+                    <th scope="col" class="px-4 text-base text-center py-3">
+                        <h1 class="min-w-max">NA</h1>
+                        <div class="min-w-max font-semibold">
+                            {{ $totalautocalificacion }}
+                        </div>
                     </th>
-                    @if ($autocalificacionterminada)
-                        <th scope="col" class="px-4 w-[200px] text-center py-3">
-                            <h1>Promedio</h1>
-                            <span class="bg-orange-200 text-orange-800 p-1 px-3 rounded-full">
-                                ({{ $totalpromedio }})
-                            </span>
-                        </th>
-                    @endif
+                    <th scope="col" class="px-4 text-base text-center py-3">
+                        <h1 class="min-w-max">PRO</h1>
+                        <div class="min-w-max font-semibold">
+                            {{ $totalpromedio }}
+                        </div>
+                    </th>
                 </tr>
             </thead>
             @include('meta.evaluaciones.tableBody', ['enviado' => $edaSeleccionado->enviado == true])
         </table>
     </div>
+
+    @if (!$autocalificacionterminada && $miPerfil)
+        <footer class="p-10 grid place-content-center">
+            <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="autocalificar-objs"
+                data-modal-toggle="autocalificar-objs" type="button"
+                class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-[#2557D6]/50' focus:ring-4 focus:outline-none font-medium rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center">
+                Autocalificar objetivos
+            </button>
+        </footer>
+    @endif
+
+    @if (!$calificacionterminada && $autocalificacionterminada && $suSupervisor)
+        <footer class="p-10 grid place-content-center">
+            <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="calificar-objs"
+                data-modal-toggle="calificar-objs" type="button"
+                class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-[#2557D6]/50' focus:ring-4 focus:outline-none font-medium rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center">
+                Calificar objetivos
+            </button>
+        </footer>
+    @endif
     {{-- modals --}}
     <div id="feedback-modal" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -155,7 +173,8 @@
                                         d="M303.907,395.565c-27.587,0-53.073-14.986-66.51-39.108c-2.799-5.025-0.996-11.367,4.03-14.166 c5.023-2.802,11.367-0.996,14.165,4.03c9.763,17.527,28.277,28.415,48.315,28.415c19.528,0,38.252-10.998,48.865-28.702 c2.959-4.932,9.351-6.536,14.287-3.577c4.934,2.958,6.535,9.354,3.577,14.287C356.28,380.69,330.712,395.565,303.907,395.565z">
                                     </path>
                                     <ellipse transform="matrix(0.2723 -0.9622 0.9622 0.2723 146.9873 336.7422)"
-                                        style="fill:#FCEB88;" cx="296.126" cy="71.193" rx="29.854" ry="53.46">
+                                        style="fill:#FCEB88;" cx="296.126" cy="71.193" rx="29.854"
+                                        ry="53.46">
                                     </ellipse>
                                 </g>
                             </svg>
@@ -713,4 +732,13 @@
             @endif
         </div>
     </div>
+
+    @if (!$autocalificacionterminada && $miPerfil)
+        @include('meta.evaluaciones.modalAutocalificacion')
+    @endif
+
+    @if ($autocalificacionterminada && $suSupervisor)
+        @include('meta.evaluaciones.modalCalificacion')
+    @endif
+
 @endsection

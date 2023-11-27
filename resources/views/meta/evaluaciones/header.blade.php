@@ -9,7 +9,7 @@
         </svg>
         <h2 class="text-xl p-2 font-semibold">{{ $n_eva == 1 ? '1ra Evaluación' : '2da Evaluación' }}</h2>
     </a>
-    @if ($calificacionterminada && $suSupervisor)
+    @if ($eva_cerrada)
         <button type="button" data-modal-target="feedback-modal" data-modal-toggle="feedback-modal"
             class="text-white ml-auto gap-3 bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
             <span>{{ $feedback ? 'Feedback enviado' : 'Enviar feedback' }}</span>
@@ -19,13 +19,16 @@
                     d="M5.5 6.5h.01m4.49 0h.01m4.49 0h.01M18 1H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z" />
             </svg>
         </button>
-        @if (!$eva_cerrada)
-            <button id="btn-cerrar-eva" data-eda="{{ $id_eda }}" data-neva="{{ $n_eva }}"
-                data-id="{{ $id_evaluacion }}" class="bg-red-500 p-2 px-3 font-medium rounded-xl text-white">
-                Cerrar evaluación
-            </button>
-        @endif
     @endif
+
+    @if ($calificacionterminada && $suSupervisor && !$eva_cerrada)
+        <button id="btn-cerrar-eva" data-eda="{{ $id_eda }}" data-neva="{{ $n_eva }}"
+            data-id="{{ $id_evaluacion }}" class="bg-red-700 p-2 px-3 font-medium rounded-md ml-auto text-white">
+            Cerrar evaluación
+        </button>
+    @endif
+
+
     @if ($feedback && $miPerfil)
         @php
             $calificacion = $feedback->calificacion;
@@ -221,6 +224,7 @@
             </button>
         </div>
     @endif
+
     @if ($eva_cerrada)
         <div class="text-center text-red-600">
             <h1 class="font-medium">

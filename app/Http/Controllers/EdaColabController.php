@@ -44,14 +44,14 @@ class EdaColabController extends Controller
             return response()->json(['error' => 'Eda no encontrado'], 404);
         }
     }
+
     public function cerrar($id)
     {
         try {
 
             $eda = EdaColab::find($id);
-            $evaluacion1 = $eda->evaluacion;
             $evaluacion2 = $eda->evaluacion2;
-            $promedio = ($evaluacion1->promedio + $evaluacion2->promedio);
+            $promedio = $evaluacion2->promedio;
 
             $eda->cerrado = true;
             $eda->promedio = $promedio;

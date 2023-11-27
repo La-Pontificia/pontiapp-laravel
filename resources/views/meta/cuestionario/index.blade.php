@@ -19,16 +19,6 @@
                 <div>
                     <h1 class="text-neutral-800 text-lg font-medium">Cuestionario anual</h1>
                 </div>
-                {{-- @if ($eva_2->cerrado)
-                                <h1
-                                    class="p-2 min-w-max rounded-xl ml-auto text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
-                                    🎉 Cerrado
-                                </h1>
-                                <h1
-                                    class="p-2 min-w-max rounded-xl text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
-                                    {{ $eva_2->promedio }}
-                                </h1>
-                            @endif --}}
             </div>
         </button>
     @endif

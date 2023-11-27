@@ -38,27 +38,6 @@
                          Enviar cuestionario
                      </button>
                  </footer>
-                 {{-- <form method="POST" id="form-store-obj" class=""
-                     action="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/objetivos" role="form"
-                     style="margin: 0" class="mb-0" enctype="multipart/form-data">
-                     @csrf
-                     @include('meta.objetivos.form', [
-                         'objetivo' => $objetivoNewForm,
-                     ])
-                     <footer class="flex justify-end gap-2 mt-2 items-center">
-                         <input type="number" required name="porcentaje" value="{{ $objetivoNewForm->porcentaje }}"
-                             placeholder="Porcentaje %"
-                             class="w-[150px] border rounded-xl focus:outline-2 transition-all focus:outline-blue-600">
-                         <button data-modal-target="create-colab-modal" type="button" type="button"
-                             data-modal-toggle="create-colab-modal"
-                             class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5">Cerrar</button>
-                         <button
-                             class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-10 py-2.5 text-center"
-                             type="submit">
-                             Entregar objetivo
-                         </button>
-                     </footer>
-                 </form> --}}
              </div>
          </div>
      </div>
@@ -87,14 +66,29 @@
              });
 
              if (todasRespuestasLlenas) {
-                 axios.post(`/cuestionario/eda/${id_eda}`, {
-                     respuestas,
-                     de
-                 }).then(res => {
-                     console.log(res.data)
-                 }).catch((err) => {
-                     console.log(err)
-                 })
+
+                 Swal.fire({
+                     title: '¿Estas seguro de enviar el cuestionario?',
+                     text: 'No podras deshacer esta acción',
+                     icon: 'info',
+                     showCancelButton: true,
+                     confirmButtonColor: '#d33',
+                     cancelButtonColor: '#3085d6',
+                     confirmButtonText: `Sí, enviar`,
+                     cancelButtonText: 'Cancelar'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         axios.post(`/cuestionario/eda/${id_eda}`, {
+                             respuestas,
+                             de
+                         }).then(res => {
+                             location.reload()
+                         }).catch((err) => {
+                             console.log(err)
+                         })
+                     }
+                 });
+
              } else {
                  Swal.fire({
                      icon: 'info',

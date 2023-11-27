@@ -30,13 +30,11 @@ Route::resource('/accesos', App\Http\Controllers\AccesoController::class);
 Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class)->middleware('authMiddleware');
 Route::resource('/calificaciones', App\Http\Controllers\CalificacioneController::class)->middleware('authMiddleware');
 
-
 Route::resource('/edas', App\Http\Controllers\EdaController::class)->middleware('authMiddleware');
 Route::get('/calificar', 'App\Http\Controllers\ObjetivoController@indexCalificar')->name('objetivo.calificarindex')->middleware('authMiddleware');
 
 //OBJETIVOS
 Route::post('/objetivos/delete/{id}', 'App\Http\Controllers\ObjetivoController@deleteObjetivo');
-Route::post('/objetivos/calificar', 'App\Http\Controllers\ObjetivoController@calificarObjetivo');
 
 //EDA COLAB
 Route::post('/eda_colaborador/cambiar_estado', 'App\Http\Controllers\EdaColabController@cambiarEstado');
@@ -85,9 +83,15 @@ Route::post('/meta/{id_colab}/eda/{id_eda}/objetivos/{id_objetivo}', 'App\Http\C
 Route::post('/meta/objetivos/autocalificar/{n_eva}', 'App\Http\Controllers\MetaController@autocalificarObjetivo');
 Route::post('/meta/objetivos/calificar/{n_eva}', 'App\Http\Controllers\MetaController@calificarObjetivo');
 
+Route::post('/objetivos/autocalificar', 'App\Http\Controllers\ObjetivoController@guardarAutocalificacion');
+Route::post('/objetivos/calificar', 'App\Http\Controllers\ObjetivoController@guardarCalificacion');
+Route::post('/objetivos/{id_eda}', 'App\Http\Controllers\ObjetivoController@agregarObjetivos');
+
+
+
 //EDA
 Route::post('/meta/eda/cambiar_estado/{id_eda}', 'App\Http\Controllers\MetaController@cambiarEstadoEda');
-Route::post('/meta/eda/cerrar/{id}', 'App\Http\Controllers\EdaColabController@cerrar');
+Route::post('/eda/cerrar/{id}', 'App\Http\Controllers\EdaColabController@cerrar');
 
 
 
@@ -122,3 +126,8 @@ Route::post('/plantilla/pregunta/{id}', 'App\Http\Controllers\PlantillaControlle
 
 // CUESTIONARIO EDA
 Route::post('/cuestionario/eda/{id_cuestionario}', 'App\Http\Controllers\CuestionarioController@cuestionarioEda');
+
+
+/// AUDITORIA
+
+Route::get('/auditoria', 'App\Http\Controllers\AuditoriaController@index')->name('auditoria.index');

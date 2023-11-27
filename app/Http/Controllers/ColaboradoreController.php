@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Acceso;
 use App\Models\Area;
+use App\Models\Auditoria;
 use App\Models\Cargo;
 use App\Models\Colaboradore;
 use App\Models\Departamento;
@@ -64,19 +65,6 @@ class ColaboradoreController extends GlobalController
         // Puestos
         if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
 
-
-
-        // $colaboradores = Colaboradore::where('colaboradores.id_supervisor', $colaborador->id)
-        //     ->get();
-        // ::join('puestos as P', 'colaboradores.id_puesto', '=', 'P.id')
-        // // ->where('id_supervisor', $colab->id)
-        // ::when($id_cargo !== null, function ($query) use ($id_cargo) {
-        //     return $query->where('colaboradores.id_cargo', $id_cargo);
-        // })
-        // ->when($id_puesto !== null, function ($query) use ($id_puesto) {
-        //     return $query->where('colaboradores.id_puesto', $id_puesto);
-        // })::where('colaboradores.id_supervisor', $colaborador->id)
-
         $colaboradorForm = new Colaboradore();
 
         $search = request('search');
@@ -111,11 +99,6 @@ class ColaboradoreController extends GlobalController
             ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $colaboradore = new Colaboradore();
@@ -126,15 +109,12 @@ class ColaboradoreController extends GlobalController
         return view('colaboradore.create', compact('colaboradore', 'puestos', 'cargos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         request()->validate(Colaboradore::$rules);
+
+        $colab = $this->getCurrentColab();
 
         $validateUser = User::where('email', $request->input('dni'))->first();
         if ($validateUser) {
@@ -142,12 +122,10 @@ class ColaboradoreController extends GlobalController
         }
 
 
-        // Crear el usuario en la tabla users
         $user = User::create([
             'name' => $request->input('nombres'),
             'email' => $request->input('dni'),
-            'password' => bcrypt($request->input('dni')), // Recuerda cifrar la contraseña
-            // Otras columnas del usuario si es necesario
+            'password' => bcrypt($request->input('dni')),
         ]);
 
 
@@ -158,11 +136,19 @@ class ColaboradoreController extends GlobalController
             'id_cargo' => $request->input('id_cargo'),
             'id_sede' => $request->input('id_sede'),
             'id_puesto' => $request->input('id_puesto'),
-            'id_usuario' => $user->id, // Asignar el id del usuario al campo id_usuario
+            'id_usuario' => $user->id,
         ]);
 
         $this->createAccesByColaborador($colaborador->id);
         $this->createEdas($colaborador->id);
+
+
+        Auditoria::create([
+            'id_colab' => $colab->id,
+            'modulo' => 'Colaborador',
+            'titulo' => 'Nuevo colaborador',
+            'descripcion' => 'Se creo un nuevo colaborador con el DNI: ' . $colaborador->dni,
+        ]);
 
         return redirect()->route('colaboradores.index')
             ->with('success', 'Colaboradore created successfully.');
@@ -171,11 +157,20 @@ class ColaboradoreController extends GlobalController
 
     public function updateSupervisor()
     {
+        $colab = $this->getCurrentColab();
         $id_colab = request('id_colab');
         $id_super = request('id_super');
         $Colab = Colaboradore::find($id_colab);
         $Colab->id_supervisor = $id_super;
         $Colab->save();
+
+        Auditoria::create([
+            'id_colab' => $colab->id,
+            'modulo' => 'Colaborador',
+            'titulo' => 'Supervisor agregado',
+            'descripcion' => 'Se le asignó un nuevo supervisor al colaborador con el DNI: ' . $Colab->dni,
+        ]);
+
         return response()->json(['success' => 'Colaborador actualizado correctamente.'], 202);
     }
 

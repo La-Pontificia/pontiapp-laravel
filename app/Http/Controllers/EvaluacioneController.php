@@ -13,20 +13,28 @@ class EvaluacioneController extends Controller
 {
     public function cerrar($id, $id_eda, $n_eva)
     {
-
-
         try {
-            $objetivos = Objetivo::where('id_eda_colab', $id_eda);
-            $autocalificacion =  $n_eva == 1 ? $objetivos->sum('autocalificacion') : $objetivos->sum('autocalificacion_2');
-            $promedio =  $n_eva == 1 ? $objetivos->sum('promedio') : $objetivos->sum('promedio_2');
-            $evaluacione = Evaluacione::find($id);
-            $evaluacione->autocalificacion = $autocalificacion;
-            $evaluacione->promedio = $promedio;
-            $evaluacione->cerrado = true;
-            $evaluacione->fecha_cerrado = date('Y-m-d H:i:s');
-            $evaluacione->save();
+            $autocalificacion = 0;
+            $promedio = 0;
+            $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
+
+            foreach ($objetivos as $objetivo) {
+                $pro = $n_eva == 1 ?  $objetivo['promedio'] : $objetivo['promedio_2'];
+                $nota =  $pro * ($objetivo['porcentaje'] / 100);
+                $autocalificacion += $objetivo['autocalificacion'];
+                $promedio += $nota;
+            }
+
+            $promedioRedondeado = round($promedio);
+
+            $evaluacion = Evaluacione::find($id);
+            $evaluacion->autocalificacion = $autocalificacion;
+            $evaluacion->promedio = $promedioRedondeado;
+            $evaluacion->cerrado = true;
+            $evaluacion->fecha_cerrado = date('Y-m-d H:i:s');
+            $evaluacion->save();
             return response()->json([
-                'message' => 'Evaluacione cerrada con exito'
+                'message' => 'Evaluacione cerrada con exito',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
