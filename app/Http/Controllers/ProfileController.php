@@ -9,113 +9,37 @@ use App\Models\Feedback;
 use App\Models\Objetivo;
 
 use App\Models\Supervisore;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProfileController extends GlobalController
 {
-    private function commonOperations($id_colab, $id_eda_colab)
+    public function index()
     {
-        $currentColab = $this->getCurrentColab();
-        $colaborador = Colaboradore::find($id_colab);
-        $isMyprofile = false;
-        $youSupervise = false;
-        $hasSupervisor = false;
-        $supervisor = null;
-        $feedback = null;
+        $colaborador = $this->getCurrentColab();
+        return view('profile.index', compact('colaborador'));
+    }
 
-        if ($colaborador->id_supervisor) {
-            $supervisor = Colaboradore::find($colaborador->id_supervisor);
-            if ($supervisor->id == $currentColab->id) $youSupervise = true;
-            $hasSupervisor = true;
+    public function changePassword(Request $request)
+    {
+        $currentPassword = $request->input('current_password');
+        $newPassword = $request->input('new_password');
+
+        if (!$this->matchPassword($currentPassword)) {
+            return response()->json(['error' => 'La contraseña actual ingresada no es correcta.'], 404);
         }
 
-        if ($colaborador->id == $currentColab->id) $isMyprofile = true;
+        $userAuth = auth()->user();
+        $user = User::find($userAuth->id);
+        $user->password = bcrypt($newPassword);
+        $user->save();
 
-        // COMMONS
-        $edaColab = EdaColab::find($id_eda_colab);
-        $wearingEda = EdaColab::where('id_colaborador', $colaborador->id)->where('cerrado', 0)->first();
-        $objetivos = Objetivo::where('id_eda_colab', $id_eda_colab)->get();
-        $totalPorcentaje = $objetivos->sum('porcentaje');
-        $totalNota = $objetivos->sum('nota');
-        $totalNotalAutoevaluacion = $objetivos->sum('autoevaluacion');
-        $autocalificado = true;
-        foreach ($objetivos as $objetivo) {
-            if (!$objetivo->autoevaluacion > 0) {
-                $autocalificado = false;
-                break;
-            }
-        }
-        $feedback = Feedback::where('id_eda_colab', $id_eda_colab)->first();
-        // SUMMARY
-        $objetivoNewForm = new Objetivo();
-        $currentColabEda = $this->getEdaByColabId($colaborador->id);
-        $edas = EdaColab::where('id_colaborador', $colaborador->id)->orderBy('created_at', 'desc')->get();
-        return compact(
-            'id_colab',
-            'colaborador',
-            'hasSupervisor',
-            'isMyprofile',
-            'objetivoNewForm',
-            'youSupervise',
-            'currentColabEda',
-            'edas',
-            'wearingEda',
-            'edaColab',
-            'supervisor',
-            'objetivos',
-            'totalPorcentaje',
-            'totalNota',
-            'totalNotalAutoevaluacion',
-            'autocalificado',
-            'feedback'
-
-        );
+        return response()->json(['msg' => 'Contraseña actualizada correctamente'], 200);
     }
 
-    public function getProfile($id)
+    public function matchPassword($password)
     {
-        $data = $this->commonOperations($id, $this->getEdaByColabId($id)->id);
-        return view('profile.eda', $data);
-    }
-
-
-
-
-    public function getEdaByColabId($id)
-    {
-        $edaColab = EdaColab::where('id_colaborador', $id)->where('cerrado', 0)->first();
-        return $edaColab;
-    }
-
-    public function getEdaByEdaId($id, $id_eda_colab)
-    {
-        $data = $this->commonOperations($id, $id_eda_colab);
-        return view('profile.eda', $data);
-    }
-
-    public function myProfile()
-    {
-        return view('profile.index');
-    }
-
-    public function myFirstEda()
-    {
-        $edaColab = $this->getEdaByColabId($this->getCurrentColab()->id);
-        return redirect("/me/eda/$edaColab->id");
-    }
-
-
-    public function getEda($id)
-    {
-        $data = $this->commonOperations($id, $this->getEdaByColabId($id)->id);
-        return view('profile.eda', $data);
-    }
-
-
-    public function myEda($id_eda)
-    {
-        $colab = $this->getCurrentColab();
-        $data = $this->commonOperations($colab->id, $id_eda);
-        return view('profile.eda', $data);
+        $hashedPassword = auth()->user()->password;
+        return password_verify($password, $hashedPassword);
     }
 }

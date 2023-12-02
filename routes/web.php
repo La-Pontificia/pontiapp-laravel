@@ -144,3 +144,10 @@ Route::post('/colaboradores/cambiar-perfil', 'App\Http\Controllers\ColaboradoreC
 Route::post('/colaboradores/cambiar-estado/{id}', 'App\Http\Controllers\ColaboradoreController@cambiarEstado')->middleware('authMiddleware');
 Route::post('/colaboradores/cambiar-clave/{id}', 'App\Http\Controllers\ColaboradoreController@cambiarClave')->middleware('authMiddleware');
 Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController@index')->middleware('authMiddleware');
+
+
+
+//// PERFIL
+
+Route::get('/profile', 'App\Http\Controllers\ProfileController@index')->middleware('authMiddleware');
+Route::post('/change-password', 'App\Http\Controllers\ProfileController@changePassword')->middleware('authMiddleware');

@@ -47,6 +47,11 @@
                                         Mis edas
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                        Datos personales
+                                    </a>
+                                </li>
                             </ul>
                             <li>
                                 <a href="{{ route('logout') }}"

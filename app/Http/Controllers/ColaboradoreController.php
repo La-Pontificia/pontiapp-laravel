@@ -102,16 +102,6 @@ class ColaboradoreController extends GlobalController
             ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
 
-    public function create()
-    {
-        $colaboradore = new Colaboradore();
-        $puestos = Puesto::pluck('nombre_puesto', 'id');
-        $cargos = Cargo::pluck('nombre_cargo', 'id');
-
-
-        return view('colaboradore.create', compact('colaboradore', 'puestos', 'cargos'));
-    }
-
     public function cambiarPerfil(Request $request)
     {
         $colaborador = $this->getCurrentColab();
