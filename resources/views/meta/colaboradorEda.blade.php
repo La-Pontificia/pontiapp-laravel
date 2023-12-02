@@ -72,12 +72,9 @@
                             </div>
                             @if ($eva_1->cerrado)
                                 <h1
-                                    class="p-2 min-w-max rounded-xl ml-auto text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
-                                    🎉 Cerrado
-                                </h1>
-                                <h1
-                                    class="p-2 min-w-max rounded-xl text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
-                                    {{ $eva_1->promedio }}
+                                    class="p-2 min-w-max flex items-center gap-2 rounded-xl ml-auto text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
+                                    🎉 Cerrado <span
+                                        class="w-[20px] h-[20px] rounded-full grid place-content-center text-sm bg-blue-700 text-white">{{ $eva_1->promedio }}</span>
                                 </h1>
                             @endif
                         </div>
@@ -103,12 +100,9 @@
                             </div>
                             @if ($eva_2->cerrado)
                                 <h1
-                                    class="p-2 min-w-max rounded-xl ml-auto text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
-                                    🎉 Cerrado
-                                </h1>
-                                <h1
-                                    class="p-2 min-w-max rounded-xl text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
-                                    {{ $eva_2->promedio }}
+                                    class="p-2 min-w-max flex items-center gap-2 rounded-xl ml-auto text-blue-600 border-blue-500 bg-blue-400/20 font-semibold">
+                                    🎉 Cerrado <span
+                                        class="w-[20px] h-[20px] rounded-full grid place-content-center text-sm bg-blue-700 text-white">{{ $eva_2->promedio }}</span>
                                 </h1>
                             @endif
                         </div>

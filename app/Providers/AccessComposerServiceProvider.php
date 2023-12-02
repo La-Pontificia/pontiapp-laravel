@@ -42,12 +42,7 @@ class AccessComposerServiceProvider extends ServiceProvider
     function getColab()
     {
         $user = auth()->user();
-        if ($user) {
-            $id = $user->id;
-            return Colaboradore::where([
-                'id_usuario' => $id,
-            ])->first();
-        }
+        if ($user) return $user->colaborador;
     }
     function getPuestos()
     {

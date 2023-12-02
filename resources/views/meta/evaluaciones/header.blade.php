@@ -9,7 +9,7 @@
         </svg>
         <h2 class="text-xl p-2 font-semibold">{{ $n_eva == 1 ? '1ra Evaluación' : '2da Evaluación' }}</h2>
     </a>
-    @if ($eva_cerrada)
+    @if ($eva_cerrada && $suSupervisor)
         <button type="button" data-modal-target="feedback-modal" data-modal-toggle="feedback-modal"
             class="text-white ml-auto gap-3 bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
             <span>{{ $feedback ? 'Feedback enviado' : 'Enviar feedback' }}</span>

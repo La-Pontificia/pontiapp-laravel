@@ -1,27 +1,20 @@
-@extends('layouts.app')
+@extends('layouts.sidebar')
 
-@section('template_title')
-    {{ __('Update') }} Colaboradore
-@endsection
-
-@section('content')
+@section('content-sidebar')
     <section class="content container-fluid">
         <div class="">
             <div class="col-md-12">
-
-                @includeif('partials.errors')
-
                 <div class="card card-default">
                     <div class="card-header">
                         <span class="card-title">{{ __('Update') }} Colaboradore</span>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('colaboradores.update', $colaboradore->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('colaboradores.update', $colaboradore->id) }}" role="form"
+                            enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
                             @include('colaboradore.form')
-
                         </form>
                     </div>
                 </div>

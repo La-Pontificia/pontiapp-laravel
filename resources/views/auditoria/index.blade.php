@@ -28,9 +28,16 @@
                         <tr class="bg-white border-b text-base">
                             <th scope="row"
                                 class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                <div class="flex flex-col">
-                                    {{ $item->colaborador->nombres }} {{ $item->colaborador->apellidos }}
-                                    <span class="opacity-60">{{ $item->colaborador->dni }} </span>
+                                <div class="flex gap-2">
+                                    <span class="w-10 h-10 block overflow-hidden rounded-full">
+                                        <img class="w-full h-full object-cover"
+                                            src={{ $item->colaborador->perfil ? $item->colaborador->perfil : '/profile-user.png' }}
+                                            alt="">
+                                    </span>
+                                    <div class="flex flex-col">
+                                        {{ $item->colaborador->nombres }} {{ $item->colaborador->apellidos }}
+                                        <span class="opacity-60">{{ $item->colaborador->dni }} </span>
+                                    </div>
                                 </div>
                             </th>
                             <td class="px-6 py-2">

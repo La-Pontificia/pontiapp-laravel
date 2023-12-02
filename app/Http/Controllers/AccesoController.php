@@ -58,16 +58,6 @@ class AccesoController extends Controller
     }
 
 
-
-
-
-    function getColab($id)
-    {
-        return Colaboradore::where([
-            'id_usuario' => $id,
-        ])->first();
-    }
-
     function getPuestos($id)
     {
         return Acceso::where('id_colaborador', $id)

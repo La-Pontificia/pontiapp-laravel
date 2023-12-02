@@ -61,9 +61,7 @@ class GlobalController extends Controller
         if (!$user) {
             return;
         }
-        $id = $user->id;
-        $colab = $this->getColabByUser($id);
-        return $colab;
+        return $user->colaborador;
     }
 
     public function getColabByUser($id)
@@ -100,12 +98,7 @@ class GlobalController extends Controller
     function getColab()
     {
         $user = auth()->user();
-        if ($user) {
-            $id = $user->id;
-            return Colaboradore::where([
-                'id_usuario' => $id,
-            ])->first();
-        }
+        if ($user) return $user->colaborador;
     }
     function getAccesoPuestos()
     {

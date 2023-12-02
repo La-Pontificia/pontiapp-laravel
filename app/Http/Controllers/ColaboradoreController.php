@@ -14,8 +14,10 @@ use App\Models\Evaluacione;
 use App\Models\Puesto;
 use App\Models\Sede;
 use App\Models\User;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 /**
  * Class ColaboradoreController
@@ -71,7 +73,8 @@ class ColaboradoreController extends GlobalController
         $colaboradores =  null;
         $query = Colaboradore::query();
 
-        if (!$isAccess && $colab) {
+        $isAccessAll = $colab->rol == 1 ||  $colab->rol == 2;
+        if (!$isAccessAll && $colab) {
             $query->where('id_supervisor', $colaborador->id);
         }
 
@@ -92,9 +95,9 @@ class ColaboradoreController extends GlobalController
         }
 
         $colaboradores = $query->paginate();
+
         // SEDES
         $sedes = Sede::all();
-
         return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'sedes', 'id_cargo', 'id_puesto'))
             ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
@@ -109,35 +112,61 @@ class ColaboradoreController extends GlobalController
         return view('colaboradore.create', compact('colaboradore', 'puestos', 'cargos'));
     }
 
+    public function cambiarPerfil(Request $request)
+    {
+        $colaborador = $this->getCurrentColab();
+        if ($request->id) $colaborador = Colaboradore::find($request->id);
+        $colaborador->perfil = $request->url;
+        $colaborador->save();
+        return response()->json(['success' => 'Perfil catualizado correctamente.'], 202);
+    }
+
+    public function cambiarEstado($id)
+    {
+        $colaborador = Colaboradore::find($id);
+        $colaborador->estado = !$colaborador->estado;
+        $colaborador->save();
+        return response()->json(['success' => 'Estado catualizado correctamente.'], 202);
+    }
+
+    public function cambiarClave(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'required|min:5',
+        ]);
+        $user = User::where('id_colaborador', $id)->first();
+        $user->password = bcrypt($request->password);
+        $user->save();
+        return response()->json(['success' => 'Clave actualizada correctamente.'], 200);
+    }
 
     public function store(Request $request)
     {
         request()->validate(Colaboradore::$rules);
-
         $colab = $this->getCurrentColab();
-
         $validateUser = User::where('email', $request->input('dni'))->first();
-        if ($validateUser) {
-            return response()->json(['error' => 'El usuario con el DNI ingresado ya existe'], 400);
-        }
-
-
-        $user = User::create([
-            'name' => $request->input('nombres'),
-            'email' => $request->input('dni'),
-            'password' => bcrypt($request->input('dni')),
-        ]);
+        if ($validateUser) return response()->json(['error' => 'El usuario con el DNI ingresado ya existe'], 400);
 
 
         $colaborador = Colaboradore::create([
             'dni' => $request->input('dni'),
             'apellidos' => $request->input('apellidos'),
             'nombres' => $request->input('nombres'),
+            'correo_institucional' => $request->input('correo_institucional'),
             'id_cargo' => $request->input('id_cargo'),
             'id_sede' => $request->input('id_sede'),
             'id_puesto' => $request->input('id_puesto'),
-            'id_usuario' => $user->id,
         ]);
+
+        User::create([
+            'name' => $request->input('nombres'),
+            'email' => $request->input('dni'),
+            'id_colaborador' => $colaborador->id,
+            'password' => bcrypt($request->input('dni')),
+        ]);
+
+
+
 
         $this->createAccesByColaborador($colaborador->id);
         $this->createEdas($colaborador->id);
@@ -208,25 +237,17 @@ class ColaboradoreController extends GlobalController
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        $colaboradore = Colaboradore::find($id);
+        $cargos = Cargo::all();
+        $sedes = Sede::all();
+        $puestos = Puesto::all();
 
-        return view('colaboradore.show', compact('colaboradore'));
+        $colaboradorForm = Colaboradore::find($id);
+        return view('colaboradore.show', compact('colaboradorForm', 'cargos', 'sedes', 'puestos'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $colaboradore = Colaboradore::find($id);
@@ -235,32 +256,20 @@ class ColaboradoreController extends GlobalController
         return view('colaboradore.edit', compact('colaboradore', 'puestos', 'cargos'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  Colaboradore $colaboradore
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Colaboradore $colaboradore)
     {
         request()->validate(Colaboradore::$rules);
-
         $colaboradore->update($request->all());
 
         return redirect()->route('colaboradores.index')
             ->with('success', 'Colaboradore updated successfully');
     }
 
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
+
     public function destroy($id)
     {
         $colaboradore = Colaboradore::find($id)->delete();
-
         return redirect()->route('colaboradores.index')
             ->with('success', 'Colaboradore deleted successfully');
     }

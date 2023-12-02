@@ -11,13 +11,16 @@
             <div class="flex gap-3 items-center">
                 <div>
                     <h3 class="text-2xl font-bold">Accesos / Previlegios</h3>
-                    <p class="text-base opacity-70">{{ $colaborador->nombres }} {{ $colaborador->apellidos }}</p>
+                    <p class="text-base opacity-70">{{ $colaborador->nombres }} {{ $colaborador->apellidos }}<span
+                            class="p-2 py-1 rounded-lg font-normal bg-violet-600 text-sm text-white">
+                            {{ $colaborador->rol == 1 ? 'Admin' : 'Developer' }}
+                        </span></p>
                 </div>
                 <div class="ml-auto flex flex-col gap-1">
                     @if ($isDev)
                         <label class="relative opacity-50 inline-flex items-center cursor-pointer">
-                            <input disabled data-id="{{ $colaborador->id }}" type="checkbox" class="sr-only toggle-access peer"
-                                {{ $isDev ? 'checked' : '' }}>
+                            <input disabled data-id="{{ $colaborador->id }}" type="checkbox"
+                                class="sr-only toggle-access peer" {{ $isDev ? 'checked' : '' }}>
                             <div
                                 class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
                             </div>
@@ -35,7 +38,7 @@
                     @endif
                 </div>
             </div>
-            @if (($isAdmin && !$isAccesCurrentColab) || $isAccesCurrentColab)
+            @if (!$isDev)
                 <div class="relative">
                     <div class="flex flex-col divide-y gap-10 border-t pt-3 mt-3">
                         <div>

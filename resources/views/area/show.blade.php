@@ -1,8 +1,5 @@
 @extends('layouts.maintenance')
 
-@section('template_title')
-    {{ $area->name ?? "{{ __('Show') Area" }}
-@endsection
 
 @section('content')
     <section class="content container-fluid">

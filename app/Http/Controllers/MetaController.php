@@ -22,13 +22,17 @@ class MetaController extends GlobalController
     public function colaborador($id_colab)
     {
         $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
-
         $colaborador = Colaboradore::find($id_colab);
+        $prior_access = $this->getCurrentColab()->rol == 1 ||  $this->getCurrentColab()->rol == 2;
 
         //commons
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
 
+        if ($prior_access) {
+            $miPerfil = true;
+            $suSupervisor = true;
+        }
 
         if ($suSupervisor == false && $miPerfil == false) {
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equibocación comunicate con un administrador.']);
@@ -39,13 +43,22 @@ class MetaController extends GlobalController
 
     public function colaboradorEda($id_colab, $id_eda)
     {
+
+        $prior_access = $this->getCurrentColab()->rol == 2;
+
         $colaborador = Colaboradore::find($id_colab);
         $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
         $edaSeleccionado = EdaColab::find($id_eda);
 
         //commons
+
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
+
+        if ($prior_access) {
+            $miPerfil = true;
+            $suSupervisor = true;
+        }
 
         $cuestionarioColab = Cuestionario::where('id_eda', $id_eda)->where('de', 'colaborador')->first();
         $cuestionarioSuper = Cuestionario::where('id_eda', $id_eda)->where('de', 'supervisor')->first();
@@ -88,6 +101,9 @@ class MetaController extends GlobalController
 
     public function colaboradorEdaObjetivos($id_colab, $id_eda)
     {
+
+        $prior_access = $this->getCurrentColab()->rol == 2;
+
         $colaborador = Colaboradore::find($id_colab);
         $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
         $edaSeleccionado = EdaColab::find($id_eda);
@@ -97,6 +113,11 @@ class MetaController extends GlobalController
         //commons
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
+
+        if ($prior_access) {
+            $miPerfil = true;
+            $suSupervisor = true;
+        }
 
         if ($suSupervisor == false && $miPerfil == false) {
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
@@ -117,6 +138,10 @@ class MetaController extends GlobalController
 
     public function colaboradorEdaEva($id_colab, $id_eda, $n_eva)
     {
+
+        $prior_access = $this->getCurrentColab()->rol == 2;
+
+
         $colaborador = Colaboradore::find($id_colab);
         $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
         $edaSeleccionado = EdaColab::find($id_eda);
@@ -128,12 +153,14 @@ class MetaController extends GlobalController
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
 
+        if ($prior_access) {
+            $miPerfil = true;
+            $suSupervisor = true;
+        }
 
         if ($suSupervisor == false && $miPerfil == false) {
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
         }
-
-        // return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
 
         $evaluacion = Evaluacione::find($edaSeleccionado->id);
 

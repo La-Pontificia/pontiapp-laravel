@@ -1,32 +1,121 @@
-<div class="box box-info padding-1">
-    <div class="box-body">
-        <div class="form-group">
-            {{ Form::label('dni') }}
-            {{ Form::text('dni', $colaboradore->dni, ['class' => 'form-control' . ($errors->has('dni') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('dni', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('apellidos') }}
-            {{ Form::text('apellidos', $colaboradore->apellidos, ['class' => 'form-control' . ($errors->has('apellidos') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('apellidos', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('nombres') }}
-            {{ Form::text('nombres', $colaboradore->nombres, ['class' => 'form-control' . ($errors->has('nombres') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('nombres', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('Cargo') }}
-            {{ Form::select('id_cargo', $cargos, $colaboradore->id_cargo, ['class' => 'form-control' . ($errors->has('id_cargo') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('id_cargo', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('Puesto') }}
-            {{ Form::select('id_puesto', $puestos, $colaboradore->id_puesto, ['class' => 'form-control' . ($errors->has('id_puesto') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('id_puesto', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
+<div class="grid gap-3 mb-6 md:grid-cols-2">
+    <div>
+        <label>Nombres</label>
+        <input value="{{ $colaboradorForm->nombres }}" type="text" required name="nombres"
+            placeholder="Ingrese los nombres"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
     </div>
-    <div class="box-footer" style="margin-top: 10px">
-        <button type="submit" class="btn btn-primary" style="font-size: 16px;">{{ __('Guardar') }}</button>
+    <div>
+        <label>Apellidos</label>
+        <input value="{{ $colaboradorForm->apellidos }}" type="text" required name="apellidos"
+            placeholder="Ingrese los apellidos"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+    </div>
+
+    <div>
+        <label>DNI</label>
+        <input value="{{ $colaboradorForm->dni }}" type="text" required name="dni" placeholder="Ingrese el DNI"
+            pattern="[0-9]{8}" title="Ingresa un DNI válido de 8 dígitos"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+    </div>
+    <div class="col-span-2 relative">
+        <label>Correo Institucional</label>
+        <input value="{{ $colaboradorForm->correo_institucional }}" type="email"
+            title="Ingrese una dirección de correo electrónico válida" name="correo_institucional"
+            placeholder="Ingrese el correo institucional"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+    </div>
+    <div class="">
+        <label>Cargo</label>
+        <select name="id_cargo" required id="selectCargo"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+            <option selected value="">Selecciona un cargo</option>
+            @foreach ($cargos as $cargo)
+                <option {{ $colaboradorForm->id_cargo == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
+                    {{ $cargo->nombre_cargo }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="relative">
+        <label for="id_puesto">Puesto</label>
+        <select required name="id_puesto" id="selectPuesto"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+            <option value="" selected>Selecciona un puesto</option>
+            @foreach ($puestos as $puesto)
+                <option {{ $colaboradorForm->id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $cargo->id }}">
+                    {{ $puesto->nombre_puesto }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-span-2">
+        <label for="id_sede">Sede</label>
+        <select required name="id_sede"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+            <option selected value="">Selecciona un sede</option>
+            @foreach ($sedes as $sede)
+                <option {{ $colaboradorForm->id_sede == $sede->id ? 'selected' : '' }} value="{{ $sede->id }}">
+                    {{ $sede->nombre }}
+                </option>
+            @endforeach
+        </select>
     </div>
 </div>
+
+{{-- ETIQUETA LOADING --}}
+<div id="loading" class="absolute hidden inset-0  place-content-center bg-white/70">
+    <div role="status">
+        <svg aria-hidden="true" class="w-14 h-14 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor" />
+            <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill" />
+        </svg>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const loading = document.getElementById("loading")
+        const selectCargo = document.getElementById('selectCargo')
+
+
+        function loadingActive() {
+            loading.classList.add('grid');
+            loading.classList.remove('hidden');
+        }
+
+        function loadingRemove() {
+            loading.classList.add('hidden');
+            loading.classList.remove('grid');
+        }
+
+
+        selectCargo.addEventListener('change', async function() {
+            console.log('changed')
+            const id_cargo = this.value;
+            try {
+                loadingActive()
+                const response = await axios.get(`/get-puestos-by-area/${id_cargo}`)
+                selectPuesto.innerHTML = '<option value="" selected >Selecciona un cargo</option>';
+                const puestos = response.data;
+                puestos.forEach(function(area) {
+                    const option = document.createElement('option');
+                    option.value = area.id;
+                    option.textContent = area.nombre_puesto;
+                    selectPuesto.appendChild(option);
+                });
+
+            } catch (error) {
+                console.log(error)
+            } finally {
+                loadingRemove()
+            }
+        });
+    })
+</script>

@@ -1,10 +1,7 @@
-@extends('layouts.maintenance')
+@extends('layouts.sidebar')
 
-@section('template_title')
-    {{ __('Update') }} Departamento
-@endsection
 
-@section('content-2')
+@section('content-sidebar')
     <section class="content container-fluid">
         <div class="">
             <div class="col-md-12">

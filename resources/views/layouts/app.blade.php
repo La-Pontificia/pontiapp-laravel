@@ -25,9 +25,18 @@
                             class="flex text-sm border border-gray-300 w-full p-1 pr-3 items-center gap-2 rounded-lg md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                             id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                             data-dropdown-placement="bottom">
-                            <img class="w-9 h-9 rounded-full" src="/profile-user.png" alt="user photo">
+                            <span class="w-[40px] h-[40px] block overflow-hidden rounded-full">
+                                <img class="w-full h-full object-cover"
+                                    src={{ $colaborador_actual->perfil ? $colaborador_actual->perfil : '/profile-user.png' }}
+                                    alt="">
+                            </span>
                             <span class="font-medium">{{ $colaborador_actual->nombres }}
                                 {{ $colaborador_actual->apellidos }}</span>
+                            @if ($colaborador_actual->rol == 1 || $colaborador_actual->rol == 2)
+                                <span class="p-2 py-1 rounded-lg font-normal bg-violet-600 text-sm text-white">
+                                    {{ $colaborador_actual->rol == 1 ? 'Admin' : 'Developer' }}
+                                </span>
+                            @endif
                         </button>
                         <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
                             id="user-dropdown">
@@ -58,103 +67,30 @@
                 class="fixed top-0 left-0 z-40 w-[250px] h-screen transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar">
                 <div class="h-full px-3 py-5 pt-2 flex flex-col overflow-y-auto bg-gray-950 shadow-lg">
-                    <a href="/" class="flex justify-center items-center">
+                    <a href="/" class="flex justify-center py-5 items-center">
                         <img src="/elp.gif" class="w-32" alt="Flowbite Logo" />
                     </a>
                     <ul class="h-full flex flex-col font-medium text-neutral-400">
-                        @if (
-                            $a_colaborador &&
-                                ($a_colaborador->crear == 1 ||
-                                    $a_colaborador->leer == 1 ||
-                                    $a_colaborador->eliminar == 1 ||
-                                    $a_colaborador->actualizar == 1))
-                            <li class="mt-2">
-                                <a href="{{ route('colaboradores.index') }}"
-                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('colaboradores*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg class="w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M18.14 21.62C17.26 21.88 16.22 22 15 22H8.99998C7.77998 22 6.73999 21.88 5.85999 21.62C6.07999 19.02 8.74998 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                        <path
-                                            d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                        <path
-                                            d="M15.58 10.58C15.58 12.56 13.98 14.17 12 14.17C10.02 14.17 8.42004 12.56 8.42004 10.58C8.42004 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                    </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">Colaboradores</span>
-                                </a>
-                            </li>
-                        @endif
-
-                        @if ($a_eda && ($a_eda->crear == 1 || $a_eda->leer == 1 || $a_eda->eliminar == 1 || $a_eda->actualizar == 1))
-                            <li class="border-t border-neutral-600 pt-2 mt-2">
-                                <a href="{{ route('edas.index') }}"
-                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('edas*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
-                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
-                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">EDAS</span>
-                                </a>
-                            </li>
-                        @endif
-
-                        @if ($a_area && ($a_area->crear == 1 || $a_area->leer == 1 || $a_area->eliminar == 1 || $a_area->actualizar == 1))
-                            <li class="border-t border-neutral-600 pt-2 mt-2">
-                                <a href="{{ route('areas.index') }}"
-                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('areas*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
-                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
-                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">Areas</span>
-                                </a>
-                            </li>
-                        @endif
-
                         <li class="">
-                            <a href="{{ route('cuestionarios.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cuestionarios*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                <svg class="w-7 scale-110" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 2V5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M16 2V5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path
-                                        d="M21 8.5V13.63C20.11 12.92 18.98 12.5 17.75 12.5C16.52 12.5 15.37 12.93 14.47 13.66C13.26 14.61 12.5 16.1 12.5 17.75C12.5 18.73 12.78 19.67 13.26 20.45C13.63 21.06 14.11 21.59 14.68 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
-                                        stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M7 11H13" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M7 16H9.62" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path
-                                        d="M23 17.75C23 18.73 22.72 19.67 22.24 20.45C21.96 20.93 21.61 21.35 21.2 21.69C20.28 22.51 19.08 23 17.75 23C16.6 23 15.54 22.63 14.68 22C14.11 21.59 13.63 21.06 13.26 20.45C12.78 19.67 12.5 18.73 12.5 17.75C12.5 16.1 13.26 14.61 14.47 13.66C15.37 12.93 16.52 12.5 17.75 12.5C18.98 12.5 20.11 12.92 21 13.63C22.22 14.59 23 16.08 23 17.75Z"
-                                        stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path
-                                        d="M17.75 20.25C17.75 18.87 18.87 17.75 20.25 17.75C18.87 17.75 17.75 16.63 17.75 15.25C17.75 16.63 16.63 17.75 15.25 17.75C16.63 17.75 17.75 18.87 17.75 20.25Z"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
+                            <a href="/meta/{{ $colaborador_actual->id }}"
+                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is("meta/$colaborador_actual->id*") ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg class="w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M3 9H21M3 15H21M9 9L9 20M15 9L15 20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                    </g>
                                 </svg>
-                                <span class="flex-1 ml-3 whitespace-nowrap">Cuestionarios</span>
+                                <span class="flex-1 ml-3 whitespace-nowrap">Mis edas</span>
                             </a>
                         </li>
 
                         <li class="">
                             <a href="{{ route('auditoria.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cuestionarios*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('auditoria*') ? 'text-gray-700 bg-gray-100' : '' }}">
                                 <svg class="w-7" viewBox="0 0 24 24" fill="none">
                                     <g id="SVGRepo_iconCarrier">
                                         <path d="M12 8V12L14.5 14.5" stroke="currentColor" stroke-width="1.5"
@@ -168,12 +104,68 @@
                             </a>
                         </li>
 
-                        @if (
-                            $a_departamento &&
-                                ($a_departamento->crear == 1 ||
-                                    $a_departamento->leer == 1 ||
-                                    $a_departamento->eliminar == 1 ||
-                                    $a_departamento->actualizar == 1))
+                        <li class="">
+                            <a href="{{ route('auditoria.index') }}"
+                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cuestionarios*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                <svg class="w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path
+                                            d="M10.11 11.1501H7.46005C6.83005 11.1501 6.32007 11.6601 6.32007 12.2901V17.4101H10.11V11.1501V11.1501Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path
+                                            d="M12.7613 6.6001H11.2413C10.6113 6.6001 10.1013 7.11011 10.1013 7.74011V17.4001H13.8913V7.74011C13.8913 7.11011 13.3913 6.6001 12.7613 6.6001Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path
+                                            d="M16.5482 12.8501H13.8982V17.4001H17.6882V13.9901C17.6782 13.3601 17.1682 12.8501 16.5482 12.8501Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                        </path>
+                                    </g>
+                                </svg>
+                                <span class="flex-1 ml-3 whitespace-nowrap">Reportes</span>
+                            </a>
+                        </li>
+
+                        <button type="button"
+                            class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors"
+                            aria-controls="dropdown-people" data-collapse-toggle="dropdown-people">
+                            <svg class="w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M18.14 21.62C17.26 21.88 16.22 22 15 22H8.99998C7.77998 22 6.73999 21.88 5.85999 21.62C6.07999 19.02 8.74998 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                                <path
+                                    d="M15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62C6.08 19.02 8.75 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2ZM12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                                <path
+                                    d="M15.58 10.58C15.58 12.56 13.98 14.17 12 14.17C10.02 14.17 8.42004 12.56 8.42004 10.58C8.42004 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                            </svg>
+                            <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Personas</span>
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 1 4 4 4-4" />
+                            </svg>
+                        </button>
+                        <ul id="dropdown-people" class="hidden">
+                            <li class="pl-7">
+                                <a href="{{ route('colaboradores.index') }}"
+                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('colaboradores*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Colaboradores</span>
+                                </a>
+                            </li>
+                        </ul>
+
+
+                        {{-- @if ($a_departamento && ($a_departamento->crear == 1 || $a_departamento->leer == 1 || $a_departamento->eliminar == 1 || $a_departamento->actualizar == 1))
                             <li>
                                 <a href="{{ route('departamentos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('departamentos*') ? 'text-gray-700 bg-gray-100' : '' }}">
@@ -187,9 +179,9 @@
                                     <span class="flex-1 ml-3 whitespace-nowrap">Departamentos</span>
                                 </a>
                             </li>
-                        @endif
+                        @endif --}}
 
-                        @if ($a_cargo && ($a_cargo->crear == 1 || $a_cargo->leer == 1 || $a_cargo->eliminar == 1 || $a_cargo->actualizar == 1))
+                        {{-- @if ($a_cargo && ($a_cargo->crear == 1 || $a_cargo->leer == 1 || $a_cargo->eliminar == 1 || $a_cargo->actualizar == 1))
                             <li>
                                 <a href="{{ route('cargos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cargos*') ? 'text-gray-700 bg-gray-100' : '' }}">
@@ -203,11 +195,9 @@
                                     <span class="flex-1 ml-3 whitespace-nowrap">Cargos</span>
                                 </a>
                             </li>
-                        @endif
+                        @endif --}}
 
-                        @if (
-                            $a_puesto &&
-                                ($a_puesto->crear == 1 || $a_puesto->leer == 1 || $a_puesto->eliminar == 1 || $a_puesto->actualizar == 1))
+                        {{-- @if ($a_puesto && ($a_puesto->crear == 1 || $a_puesto->leer == 1 || $a_puesto->eliminar == 1 || $a_puesto->actualizar == 1))
                             <li>
                                 <a href="{{ route('puestos.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('puestos*') ? 'text-gray-700 bg-gray-100' : '' }}">
@@ -221,7 +211,121 @@
                                     <span class="flex-1 ml-3 whitespace-nowrap">Puestos</span>
                                 </a>
                             </li>
-                        @endif
+                        @endif --}}
+
+                        <button type="button"
+                            class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors"
+                            aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
+                            <svg class="w-7" viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
+                                <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
+                                    stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Mantenimiento</span>
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 1 4 4 4-4" />
+                            </svg>
+                        </button>
+                        <ul id="dropdown-example" class="hidden py-2">
+                            <li class="pl-7">
+                                <a href="{{ route('edas.index') }}"
+                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('edas*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
+                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
+                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Edas (Data)</span>
+                                </a>
+                            </li>
+                            <li class="pl-7">
+                                <a href="{{ route('cuestionarios.index') }}"
+                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cuestionarios*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                    <svg class="w-7 scale-110" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8 2V5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M16 2V5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path
+                                            d="M21 8.5V13.63C20.11 12.92 18.98 12.5 17.75 12.5C16.52 12.5 15.37 12.93 14.47 13.66C13.26 14.61 12.5 16.1 12.5 17.75C12.5 18.73 12.78 19.67 13.26 20.45C13.63 21.06 14.11 21.59 14.68 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M7 11H13" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M7 16H9.62" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path
+                                            d="M23 17.75C23 18.73 22.72 19.67 22.24 20.45C21.96 20.93 21.61 21.35 21.2 21.69C20.28 22.51 19.08 23 17.75 23C16.6 23 15.54 22.63 14.68 22C14.11 21.59 13.63 21.06 13.26 20.45C12.78 19.67 12.5 18.73 12.5 17.75C12.5 16.1 13.26 14.61 14.47 13.66C15.37 12.93 16.52 12.5 17.75 12.5C18.98 12.5 20.11 12.92 21 13.63C22.22 14.59 23 16.08 23 17.75Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path
+                                            d="M17.75 20.25C17.75 18.87 18.87 17.75 20.25 17.75C18.87 17.75 17.75 16.63 17.75 15.25C17.75 16.63 16.63 17.75 15.25 17.75C16.63 17.75 17.75 18.87 17.75 20.25Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Cuestionarios</span>
+                                </a>
+                            </li>
+                            <li class="pl-7">
+                                <a href="{{ route('areas.index') }}"
+                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('areas*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
+                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
+                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Areas</span>
+                                </a>
+                            </li>
+                            <li class="pl-7">
+                                <a href="{{ route('departamentos.index') }}"
+                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('departamentos*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
+                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
+                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Departamentos</span>
+                                </a>
+                            </li>
+                            <li class="pl-7">
+                                <a href="{{ route('cargos.index') }}"
+                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cargos*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
+                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
+                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Cargos</span>
+                                </a>
+                            </li>
+                            <li class="pl-7">
+                                <a href="{{ route('puestos.index') }}"
+                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('puestos*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
+                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
+                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span class="flex-1 ml-3 whitespace-nowrap">Puestos</span>
+                                </a>
+                            </li>
+                        </ul>
                     </ul>
                 </div>
             </aside>

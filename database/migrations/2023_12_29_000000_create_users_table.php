@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('email')->unique();
+            $table->unsignedBigInteger('id_colaborador')->nullable()->default(null);
+            $table->foreign('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
