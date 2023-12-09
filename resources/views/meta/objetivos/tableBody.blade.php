@@ -1,8 +1,32 @@
+<?php
+$animate_id = request()->query('animate');
+?>
+
+<style>
+    .animate-bounce-bg {
+        animation: bounceAnimation 2s ease-in-out;
+    }
+
+    @keyframes bounceAnimation {
+
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+            background-color: inherit;
+        }
+
+        40% {
+            background-color: #cacaca;
+        }
+    }
+</style>
 <tbody>
     @foreach ($objetivos as $objetivo)
-        <tr class="border-b border-gray-200 text-sm dark:border-gray-700">
-            <th scope="row"
-                class="px-6 py-4 text-sm font-semibold text-blue-900 bg-gray-50 dark:text-white dark:bg-gray-800">
+        <tr
+            class="{{ $animate_id == $objetivo->id ? 'animate-bounce-bg' : '' }} border-b border-gray-200 text-sm dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 text-sm font-semibold text-blue-900 ">
                 <h3 class="">{{ $objetivo->objetivo }}</h3>
             </th>
             <td class="px-6 py-4">
@@ -10,7 +34,7 @@
                     {{ $objetivo->descripcion }}
                 </div>
             </td>
-            <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+            <td class="px-6 py-4 ">
                 <div class=" text-sm overflow-ellipsis overflow-hidden">
                     {{ $objetivo->indicadores }}
                 </div>
@@ -21,7 +45,7 @@
                         class="bg-purple-100 text-purple-800 p-1 px-3 text-sm font-medium mr-2 rounded-full dark:bg-purple-900 dark:text-purple-300">{{ $objetivo->porcentaje }}%</span>
                 </div>
             </td>
-            <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+            <td class="px-6 py-4 ">
                 <div class="flex items-center">
                     @if ($objetivo->editado === 1)
                         <span

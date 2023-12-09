@@ -151,3 +151,10 @@ Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController
 
 Route::get('/profile', 'App\Http\Controllers\ProfileController@index')->middleware('authMiddleware');
 Route::post('/change-password', 'App\Http\Controllers\ProfileController@changePassword')->middleware('authMiddleware');
+
+
+
+//// REPORTES
+
+Route::get('/reportes', 'App\Http\Controllers\ReporteController@index')->middleware('authMiddleware')->name('reportes.index');
+Route::get('/reportes/objetivos', 'App\Http\Controllers\ReporteController@objetivos')->middleware('authMiddleware')->name('reportes.objetivos');

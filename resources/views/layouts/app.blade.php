@@ -110,8 +110,8 @@
                         </li>
 
                         <li class="">
-                            <a href="{{ route('auditoria.index') }}"
-                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cuestionarios*') ? 'text-gray-700 bg-gray-100' : '' }}">
+                            <a href="{{ route('reportes.index') }}"
+                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('reportes*') ? 'text-gray-700 bg-gray-100' : '' }}">
                                 <svg class="w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g id="SVGRepo_iconCarrier">
                                         <path
@@ -160,6 +160,7 @@
                                     d="m1 1 4 4 4-4" />
                             </svg>
                         </button>
+
                         <ul id="dropdown-people" class="hidden">
                             <li class="pl-7">
                                 <a href="{{ route('colaboradores.index') }}"
