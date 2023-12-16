@@ -35,7 +35,7 @@
                     </form>
                 @else
                     <div class="p-5 text-center">
-                        No se puede cambiar la contraseña de un desarollador
+                        No se puede cambiar la contraseña de un desarrollador
                     </div>
                 @endif
             </div>

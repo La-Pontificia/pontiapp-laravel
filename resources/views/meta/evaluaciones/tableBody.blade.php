@@ -7,15 +7,15 @@
                 $promedio = $n_eva == 1 ? $objetivo->promedio : $objetivo->promedio_2;
             @endphp
             <th scope="row" class="px-6 py-4 text-sm font-semibold text-blue-900 bg-gray-50">
-                <h3 class="line-clamp-3">{{ $objetivo->objetivo }}</h3>
+                <h3 class="">{{ $objetivo->objetivo }}</h3>
             </th>
             <td class="px-6 py-4">
-                <div class="line-clamp-3 text-sm overflow-ellipsis overflow-hidden">
+                <div class=" text-sm overflow-ellipsis overflow-hidden">
                     {{ $objetivo->descripcion }}
                 </div>
             </td>
             <td class="px-6 py-4 bg-gray-50">
-                <div class="line-clamp-3 text-sm overflow-ellipsis overflow-hidden">
+                <div class=" text-sm overflow-ellipsis overflow-hidden">
                     {{ $objetivo->indicadores }}
                 </div>
             </td>

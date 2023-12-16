@@ -70,7 +70,7 @@
                 <tr>
                     <td colspan="10">
                         <div class="p-10 grid place-content-center">
-                            No hay colaboradores disponibles
+                            No hay preguntas disponibles
                         </div>
                     </td>
                 </tr>

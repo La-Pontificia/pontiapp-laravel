@@ -2,79 +2,91 @@
     $ocultarCuestionario = ($miPerfil && $cuestionarioColab) || ($suSupervisor && $cuestionarioSuper);
     $mostrarPreview = ($miPerfil && $cuestionarioColab) || ($suSupervisor && $cuestionarioSuper);
 
+    // $mostrarPreviewColab = $cuestionarioColab
+    $mostrarPreviewSuper = ($miPerfil && $cuestionarioColab) || ($suSupervisor && $cuestionarioSuper);
+
 @endphp
-@if ($cerrado)
-    @if (!$ocultarCuestionario)
-        @include('meta.cuestionario.modal')
-        <button data-modal-target="cuestionario-modal" data-modal-toggle="cuestionario-modal"
-            class="p-3 border rounded-xl flex gap-2 hover:bg-neutral-100">
+
+@include('meta.cuestionario.modal')
+<div class="w-full border-b my-1"></div>
+<div class="flex flex-col gap-2 {{ !$cerrado ? 'opacity-50 pointer-events-none select-none' : '' }}">
+    <button data-modal-target="cuestionario-modal" data-modal-toggle="cuestionario-modal"
+        class="{{ !$cerrado ? 'grayscale' : '' }}">
+        <div class="p-3 border rounded-md text-left flex gap-2 group-hover:bg-neutral-100">
             <div class="flex gap-3 items-center w-full">
-                <div class="bg-violet-500 p-4 text-white rounded-xl">
-                    <svg class="w-[24px]" class="" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 16 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 1v4a1 1 0 0 1-1 1H1m4 10v-2m3 2v-6m3 6v-4m4-10v16a.97.97 0 0 1-.933 1H1.933A.97.97 0 0 1 1 18V5.828a2 2 0 0 1 .586-1.414l2.828-2.828A2 2 0 0 1 5.828 1h8.239A.97.97 0 0 1 15 2Z" />
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-neutral-800 text-lg font-medium">Cuestionario anual</h1>
-                </div>
-            </div>
-        </button>
-    @endif
-    @if ($mostrarPreview)
-        <button data-modal-target="cuestionario-modal-preview-{{ $miPerfil ? 'at' : 'me' }}"
-            data-modal-toggle="cuestionario-modal-preview-{{ $miPerfil ? 'at' : 'me' }}"
-            class="p-3 border rounded-xl flex gap-2 hover:bg-neutral-100">
-            <div class="flex gap-3 items-center w-full">
-                <div class="bg-violet-500 p-4 text-white rounded-xl">
-                    <svg class="w-[24px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 20 14">
-                        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                            <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                            <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z" />
+                <div class="bg-yellow-400 p-4 text-white rounded-xl">
+                    <svg class="w-[24px]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M4.4 3h15.2A3.4 3.4 0 0 1 23 6.4v11.2a3.4 3.4 0 0 1-3.4 3.4H4.4A3.4 3.4 0 0 1 1 17.6V6.4A3.4 3.4 0 0 1 4.4 3ZM7 9a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm1 2a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Zm-1 4a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Z"
+                                fill="currentColor"></path>
                         </g>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-neutral-800 text-lg font-medium">Mi cuestionario
+                    <h1 class="text-neutral-800 text-base font-medium">Cuestionario anual para colaboradores</h1>
+                    <span class="text-blue-500">Tarea 04</span>
                 </div>
+                {{-- @if ($eva_2->cerrado)
+                        <h1
+                            class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-md text-white bg-green-400 font-medium">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M19.375 5.063l-9.5 13.625-6.563-4.875-3.313 4.594 11.188 8.531 12.813-18.375z">
+                                    </path>
+                                </g>
+                            </svg> Hecho
+                        </h1>
+                    @endif --}}
             </div>
-        </button>
-        <button data-modal-target="cuestionario-modal-preview-{{ $miPerfil ? 'me' : 'at' }}"
-            data-modal-toggle="cuestionario-modal-preview-{{ $miPerfil ? 'me' : 'at' }}"
-            class="p-3 border rounded-xl flex gap-2 hover:bg-neutral-100">
+        </div>
+    </button>
+    <button data-modal-target="cuestionario-modal-preview-{{ $miPerfil ? 'at' : 'me' }}"
+        data-modal-toggle="cuestionario-modal-preview-{{ $miPerfil ? 'at' : 'me' }}"
+        class="{{ !$cerrado ? 'grayscale' : '' }}">
+        <div class="p-3 border rounded-md text-left flex gap-2 group-hover:bg-neutral-100">
             <div class="flex gap-3 items-center w-full">
-                <div class="bg-violet-500 p-4 text-white rounded-xl">
-                    <svg class="w-[24px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 20 14">
-                        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                            <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                            <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z" />
+                <div class="bg-yellow-400 p-4 text-white rounded-xl">
+                    <svg class="w-[24px]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M4.4 3h15.2A3.4 3.4 0 0 1 23 6.4v11.2a3.4 3.4 0 0 1-3.4 3.4H4.4A3.4 3.4 0 0 1 1 17.6V6.4A3.4 3.4 0 0 1 4.4 3ZM7 9a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm1 2a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Zm-1 4a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Z"
+                                fill="currentColor"></path>
                         </g>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-neutral-800 text-lg font-medium">Cuestionario del
-                        {{ $miPerfil ? 'supervisor' : 'colaborador' }}</h1>
+                    <h1 class="text-neutral-800 text-base font-medium">Cuestionario anual para supervisores</h1>
+                    <span class="text-blue-500">Tarea 04</span>
                 </div>
+                {{-- @if ($eva_2->cerrado)
+                    <h1
+                        class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-md text-white bg-green-400 font-medium">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M19.375 5.063l-9.5 13.625-6.563-4.875-3.313 4.594 11.188 8.531 12.813-18.375z">
+                                </path>
+                            </g>
+                        </svg> Hecho
+                    </h1>
+                @endif --}}
             </div>
-        </button>
-    @endif
-@endif
+        </div>
+    </button>
+</div>
 
-@if ($cuestionarioSuper)
-    @include('meta.cuestionario.modalpreview', [
-        'cuestionario' => $cuestionarioSuper,
-        'id' => '-me',
-        'titulo' => 'Cuestionario del supervisor',
-    ])
-@endif
+{{-- @include('meta.cuestionario.modalpreview', [
+    'cuestionario' => $cuestionarioSuper,
+    'id' => '-me',
+    'titulo' => 'Cuestionario del supervisor',
+]) --}}
 
-@if ($cuestionarioColab)
-    @include('meta.cuestionario.modalpreview', [
-        'cuestionario' => $cuestionarioColab,
-        'id' => '-at',
-        'titulo' => 'Cuestionario del colaborador',
-    ])
-@endif
+{{-- @include('meta.cuestionario.modalpreview', [
+    'cuestionario' => $cuestionarioColab,
+    'id' => '-at',
+    'titulo' => 'Cuestionario del colaborador',
+]) --}}

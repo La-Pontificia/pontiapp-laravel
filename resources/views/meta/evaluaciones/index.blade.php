@@ -27,17 +27,17 @@
     @include('meta.evaluaciones.header')
 
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="relative overflow-x-auto sm:rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
                 <tr class="border-y text-sm divide-x border-gray-200 dark:border-gray-700">
-                    <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                    <th scope="col" class="px-6 py-3 min-w-[300px] bg-gray-50 dark:bg-gray-800">
                         Objetivo
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 min-w-[300px] py-3">
                         Descripción
                     </th>
-                    <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                    <th scope="col" class="px-6 min-w-[300px] py-3 bg-gray-50 dark:bg-gray-800">
                         Indicadores
                     </th>
                     <th scope="col" class="px-4 text-center py-3">
@@ -69,7 +69,7 @@
         <footer class="p-10 grid place-content-center">
             <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="autocalificar-objs"
                 data-modal-toggle="autocalificar-objs" type="button"
-                class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-[#2557D6]/50' focus:ring-4 focus:outline-none font-medium rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center">
+                class="text-white bg-[#009c46] hover:bg-[#009c46]/90 focus:outline-none font-medium rounded-md text-base px-5 py-2 text-center items-center">
                 Autocalificar objetivos
             </button>
         </footer>
@@ -79,7 +79,7 @@
         <footer class="p-10 grid place-content-center">
             <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="calificar-objs"
                 data-modal-toggle="calificar-objs" type="button"
-                class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-[#2557D6]/50' focus:ring-4 focus:outline-none font-medium rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center">
+                class="text-white bg-[#009c46] hover:bg-[#009c46]/90 focus:outline-none font-medium rounded-md text-base px-5 py-2 text-center items-center">
                 Calificar objetivos
             </button>
         </footer>

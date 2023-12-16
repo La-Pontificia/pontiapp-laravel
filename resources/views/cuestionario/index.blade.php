@@ -10,7 +10,6 @@
             </svg>
             Crear nueva plantilla
         </button>
-
         <div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative p-4 w-full max-w-2xl max-h-full">
@@ -197,13 +196,18 @@
                     </div>
                 </div>
             @endforeach
+            @if (count($supervisores) < 1)
+                <div class="p-20 grid place-content-center font-medium">
+                    No hay plantillas y/o cuestionarios disponibles
+                </div>
+            @endif
         </div>
     </div>
     <div class="pt-0">
         <h4 class="p-2 text-xl font-medium">Plantilla de cuestionarios para colaboradores</h4>
         <div class="rounded-2xl overflow-hidden border bg-white" data-accordion="collapse">
             @foreach ($colaboradores as $index => $colaborador)
-                <h2 class="relative flex" id="accordion-collapse-heading-{{ $supervisor->id }}">
+                <h2 class="relative flex" id="accordion-collapse-heading-{{ $colaborador->id }}">
                     @if ($colaborador->usando)
                         <div
                             class="absolute p-1 font-medium rounded-full px-3 bg-green-500/20 text-green-600 top-2 right-10">
@@ -306,6 +310,12 @@
                     </div>
                 </div>
             @endforeach
+
+            @if (count($colaboradores) < 1)
+                <div class="p-20 grid place-content-center font-medium">
+                    No hay plantillas y/o cuestionarios disponibles
+                </div>
+            @endif
         </div>
     </div>
 @endsection
@@ -371,6 +381,7 @@
                 ids: selectedIds,
                 para: paraValue
             }).then(res => {
+                location.reload();
                 console.log(res.data)
             }).catch((err) => {
                 console.log(err)

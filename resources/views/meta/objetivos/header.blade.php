@@ -10,6 +10,5 @@
             </svg>
             <h2 class="text-xl p-2 font-semibold">Objetivos</h2>
         </a>
-
     </div>
 </header>

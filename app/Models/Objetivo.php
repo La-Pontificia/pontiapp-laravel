@@ -36,7 +36,7 @@ class Objetivo extends Model
         'porcentaje' => 'required',
     ];
 
-    protected $perPage = 10;
+    protected $perPage = 20;
 
     /**
      * Attributes that should be mass-assignable.
