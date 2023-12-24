@@ -6,12 +6,11 @@
             @if (Route::has('login'))
             @endif
         @else
-            <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 bg-white backdrop-blur-sm z-30">
+            <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 backdrop-blur-md z-30">
                 <div class=" flex w-full gap-3 px-4 items-center h-16">
                     <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
                         aria-controls="cta-button-sidebar" type="button"
                         class="inline-flex items-center p-2 mt-2  text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-100 dark:focus:ring-gray-600">
-                        <span class="sr-only">Open sidebar</span>
                         <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path clip-rule="evenodd" fill-rule="evenodd"
@@ -22,7 +21,7 @@
 
                     <div class="flex ml-auto items-center md:order-2">
                         <button type="button"
-                            class="flex text-sm border border-gray-300 w-full p-1 pr-3 items-center gap-2 rounded-lg md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            class="flex text-sm  rounded-full text-white w-full p-1 pr-3 items-center gap-2 md:mr-0 focus:ring-4 focus:ring-gray-300 bg-[#2b3235]"
                             id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                             data-dropdown-placement="bottom">
                             <span class="w-[40px] h-[40px] block overflow-hidden rounded-full">
@@ -33,7 +32,7 @@
                             <span class="font-medium">{{ $colaborador_actual->nombres }}
                                 {{ $colaborador_actual->apellidos }}</span>
                             @if ($colaborador_actual->rol == 1 || $colaborador_actual->rol == 2)
-                                <span class="p-2 py-1 rounded-lg font-normal bg-violet-600 text-sm text-white">
+                                <span class="p-2 py-1 rounded-full font-normal bg-[#fc5200] text-sm text-white">
                                     {{ $colaborador_actual->rol == 1 ? 'Admin' : 'Developer' }}
                                 </span>
                             @endif
@@ -71,29 +70,37 @@
             <aside id="cta-button-sidebar"
                 class="fixed top-0 left-0 z-40 w-[250px] h-screen transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar">
-                <div class="h-full px-3 py-5 pt-2 flex flex-col overflow-y-auto bg-gray-950 shadow-lg">
+                <div class="h-full px-3 py-5 pt-2 flex flex-col overflow-y-auto bg-[#020b0f] shadow-lg">
                     <a href="/" class="flex justify-center py-5 items-center">
                         <img src="/elp.gif" class="w-32" alt="Flowbite Logo" />
                     </a>
-                    <ul class="h-full flex flex-col font-medium text-neutral-400">
-                        <li class="">
-                            <a href="/meta/{{ $colaborador_actual->id }}"
-                                class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is("meta/$colaborador_actual->id*") ? 'text-gray-700 bg-gray-100' : '' }}">
-                                <svg class="w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path
-                                            d="M3 9H21M3 15H21M9 9L9 20M15 9L15 20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                    </g>
-                                </svg>
-                                <span class="flex-1 ml-3 whitespace-nowrap">Mis edas</span>
-                            </a>
-                        </li>
+                    <div
+                        class="h-full grid [&>a>svg]:w-10 [&>a>svg]:mx-auto [&>a>svg]:h-full grid-cols-2 [&>a]:rounded-2xl gap-1 font-medium text-neutral-400">
+                        <a href="/meta/{{ $colaborador_actual->id }}"
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is("meta/$colaborador_actual->id*") ? 'text-gray-700 bg-gray-100' : '' }}">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M3 9H21M3 15H21M9 9L9 20M15 9L15 20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                </path>
+                            </svg>
+                            <span class="flex-1 text-sm">Mis edas</span>
+                        </a>
 
-                        <li class="">
+                        <a href="/meta/{{ $colaborador_actual->id }}"
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('auditoria*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M12 8V12L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                                <path
+                                    d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                                    stroke="currentColor" stroke-width="1.5"></path>
+                            </svg>
+                            <span class="flex-1 text-sm">Auditoria</span>
+                        </a>
+
+
+                        {{-- <li class="">
                             <a href="{{ route('auditoria.index') }}"
                                 class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('auditoria*') ? 'text-gray-700 bg-gray-100' : '' }}">
                                 <svg class="w-7" viewBox="0 0 24 24" fill="none">
@@ -161,7 +168,7 @@
                             </svg>
                         </button>
 
-                        <ul id="dropdown-people" class="hidden">
+                        <ul id="dropdown-people" class="hidden [&>li>a]:rounded-full">
                             <li class="pl-7">
                                 <a href="{{ route('colaboradores.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('colaboradores*') ? 'text-gray-700 bg-gray-100' : '' }}">
@@ -169,55 +176,6 @@
                                 </a>
                             </li>
                         </ul>
-
-
-                        {{-- @if ($a_departamento && ($a_departamento->crear == 1 || $a_departamento->leer == 1 || $a_departamento->eliminar == 1 || $a_departamento->actualizar == 1))
-                            <li>
-                                <a href="{{ route('departamentos.index') }}"
-                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('departamentos*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
-                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
-                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">Departamentos</span>
-                                </a>
-                            </li>
-                        @endif --}}
-
-                        {{-- @if ($a_cargo && ($a_cargo->crear == 1 || $a_cargo->leer == 1 || $a_cargo->eliminar == 1 || $a_cargo->actualizar == 1))
-                            <li>
-                                <a href="{{ route('cargos.index') }}"
-                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('cargos*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
-                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
-                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">Cargos</span>
-                                </a>
-                            </li>
-                        @endif --}}
-
-                        {{-- @if ($a_puesto && ($a_puesto->crear == 1 || $a_puesto->leer == 1 || $a_puesto->eliminar == 1 || $a_puesto->actualizar == 1))
-                            <li>
-                                <a href="{{ route('puestos.index') }}"
-                                    class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('puestos*') ? 'text-gray-700 bg-gray-100' : '' }}">
-                                    <svg class="w-7" viewBox="0 0 24 24" fill="none">
-                                        <path
-                                            d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
-                                            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
-                                        <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
-                                            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">Puestos</span>
-                                </a>
-                            </li>
-                        @endif --}}
 
                         <button type="button"
                             class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors"
@@ -236,7 +194,8 @@
                                     d="m1 1 4 4 4-4" />
                             </svg>
                         </button>
-                        <ul id="dropdown-example" class="hidden py-2">
+
+                        <ul id="dropdown-example" class="hidden py-2 [&>li>a]:rounded-full">
                             <li class="pl-7">
                                 <a href="{{ route('edas.index') }}"
                                     class="flex items-center p-2 rounded-lg  hover:text-white group transition-colors {{ request()->is('edas*') ? 'text-gray-700 bg-gray-100' : '' }}">
@@ -331,12 +290,12 @@
                                     <span class="flex-1 ml-3 whitespace-nowrap">Puestos</span>
                                 </a>
                             </li>
-                        </ul>
-                    </ul>
+                        </ul> --}}
+                    </div>
                 </div>
             </aside>
         @endguest
-        <main class="min-h-screen">
+        <main class="min-h-screen bg-[#fffdfc]">
             @yield('content')
         </main>
     </div>

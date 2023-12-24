@@ -12,7 +12,7 @@
 <div class="flex flex-col gap-2 {{ !$cerrado ? 'opacity-50 pointer-events-none select-none' : '' }}">
     <button data-modal-target="cuestionario-modal" data-modal-toggle="cuestionario-modal"
         class="{{ !$cerrado ? 'grayscale' : '' }}">
-        <div class="p-3 border rounded-md text-left flex gap-2 group-hover:bg-neutral-100">
+        <div class="p-3 border rounded-2xl text-left flex gap-2 group-hover:bg-neutral-100">
             <div class="flex gap-3 items-center w-full">
                 <div class="bg-yellow-400 p-4 text-white rounded-xl">
                     <svg class="w-[24px]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +30,7 @@
                 </div>
                 {{-- @if ($eva_2->cerrado)
                         <h1
-                            class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-md text-white bg-green-400 font-medium">
+                            class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-2xl text-white bg-green-400 font-medium">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -46,7 +46,7 @@
     <button data-modal-target="cuestionario-modal-preview-{{ $miPerfil ? 'at' : 'me' }}"
         data-modal-toggle="cuestionario-modal-preview-{{ $miPerfil ? 'at' : 'me' }}"
         class="{{ !$cerrado ? 'grayscale' : '' }}">
-        <div class="p-3 border rounded-md text-left flex gap-2 group-hover:bg-neutral-100">
+        <div class="p-3 border rounded-2xl text-left flex gap-2 group-hover:bg-neutral-100">
             <div class="flex gap-3 items-center w-full">
                 <div class="bg-yellow-400 p-4 text-white rounded-xl">
                     <svg class="w-[24px]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +64,7 @@
                 </div>
                 {{-- @if ($eva_2->cerrado)
                     <h1
-                        class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-md text-white bg-green-400 font-medium">
+                        class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-2xl text-white bg-green-400 font-medium">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_iconCarrier">

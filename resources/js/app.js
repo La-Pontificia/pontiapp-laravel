@@ -1,4 +1,8 @@
 import "./bootstrap";
+import "./commons"
+import "./reportes/colaboradores"
+import "./reportes/edas"
+
 
 import $ from "jquery";
 window.jQuery = $;
@@ -368,6 +372,11 @@ document.addEventListener("DOMContentLoaded", function () {
             })
         });
     });
+
+
+
+
+    //
 
 })
 

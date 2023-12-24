@@ -56,6 +56,14 @@ class Colaboradore extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
+    public function sede()
+    {
+        return $this->hasOne('App\Models\Sede', 'id', 'id_sede');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function puesto()
     {
         return $this->hasOne('App\Models\Puesto', 'id', 'id_puesto');

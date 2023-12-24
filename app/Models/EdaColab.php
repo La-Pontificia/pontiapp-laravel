@@ -53,7 +53,7 @@ class EdaColab extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function colaboradore()
+    public function colaborador()
     {
         return $this->hasOne('App\Models\Colaboradore', 'id', 'id_colaborador');
     }

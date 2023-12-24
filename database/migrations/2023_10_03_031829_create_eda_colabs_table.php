@@ -23,6 +23,11 @@ return new class extends Migration
             $table->unsignedBigInteger('id_evaluacion_2');
             $table->foreign('id_evaluacion_2')->references('id')->on('evaluaciones')->onDelete('cascade');
 
+            $table->unsignedBigInteger('id_cuestionario_colab')->nullable()->default(null);
+            $table->foreign('id_cuestionario_colab')->references('id')->on('cuestionarios')->onDelete('cascade');
+            $table->unsignedBigInteger('id_cuestionario_super')->nullable()->default(null);
+            $table->foreign('id_cuestionario_super')->references('id')->on('cuestionarios')->onDelete('cascade');
+
             $table->boolean('enviado')->default(false);
             $table->boolean('aprobado')->default(false);
             $table->boolean('cerrado')->default(false);

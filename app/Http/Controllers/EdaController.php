@@ -30,13 +30,13 @@ class EdaController extends GlobalController
         $colab = $this->getCurrentColab();
         $año = $request->input('año');
         if ($this->validarEdaExistente($año)) {
-            return response()->json(['message' => 'Ya existe una con el mismo año ingresado'], 202);
+            return response()->json(['message' => 'Ya existe una eda con el mismo año ingresado'], 202);
         }
 
         request()->validate(Eda::$rules);
 
         $eda = Eda::create($request->all());
-        $this->createEdaByColab($eda->id);
+        // $this->createEdaByColab($eda->id);
 
         Auditoria::create([
             'id_colab' => $colab->id,

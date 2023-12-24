@@ -159,8 +159,6 @@ class ColaboradoreController extends GlobalController
 
 
         $this->createAccesByColaborador($colaborador->id);
-        $this->createEdas($colaborador->id);
-
 
         Auditoria::create([
             'id_colab' => $colab->id,
@@ -208,24 +206,6 @@ class ColaboradoreController extends GlobalController
         }
     }
 
-
-    public function createEdas($id_colab)
-    {
-
-        $eva1 = Evaluacione::create();
-        $eva2 = Evaluacione::create();
-
-
-        $edas = Eda::all();
-        foreach ($edas as $eda) {
-            EdaColab::create([
-                'id_eda' => $eda->id,
-                'id_colaborador' => $id_colab,
-                'id_evaluacion' => $eva1->id,
-                'id_evaluacion_2' => $eva2->id,
-            ]);
-        }
-    }
 
 
     public function show($id)

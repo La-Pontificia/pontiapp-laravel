@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Colaboradore;
 use App\Models\Cuestionario;
+use App\Models\Eda;
 use App\Models\EdaColab;
 use App\Models\Evaluacione;
 use App\Models\Feedback;
@@ -21,9 +22,11 @@ class MetaController extends GlobalController
 
     public function colaborador($id_colab)
     {
-        $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
+        $edas = Eda::orderBy('año', 'desc')->get();
         $colaborador = Colaboradore::find($id_colab);
-        $prior_access = $this->getCurrentColab()->rol == 1 ||  $this->getCurrentColab()->rol == 2;
+
+        if (!$colaborador) return view('not-found.index');
+        $prior_access = $this->getCurrentColab()->rol == 2;
 
         //commons
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
@@ -41,13 +44,17 @@ class MetaController extends GlobalController
         return view('meta.colaborador', compact('id_colab', 'edas', 'colaborador', 'miPerfil', 'suSupervisor'));
     }
 
+
+
+
+
     public function colaboradorEda($id_colab, $id_eda)
     {
 
         $prior_access = $this->getCurrentColab()->rol == 2;
 
         $colaborador = Colaboradore::find($id_colab);
-        $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
+        $edas = Eda::orderBy('año', 'desc')->get();
         $edaSeleccionado = EdaColab::find($id_eda);
 
         //commons
@@ -105,7 +112,7 @@ class MetaController extends GlobalController
         $prior_access = $this->getCurrentColab()->rol == 2;
 
         $colaborador = Colaboradore::find($id_colab);
-        $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
+        $edas = Eda::all();
         $edaSeleccionado = EdaColab::find($id_eda);
         $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
         $objetivoNewForm = new Objetivo();
@@ -143,7 +150,7 @@ class MetaController extends GlobalController
 
 
         $colaborador = Colaboradore::find($id_colab);
-        $edas = EdaColab::where('id_colaborador', $id_colab)->orderBy('created_at', 'desc')->get();
+        $edas = Eda::all();
         $edaSeleccionado = EdaColab::find($id_eda);
         $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
         $objetivoNewForm = new Objetivo();

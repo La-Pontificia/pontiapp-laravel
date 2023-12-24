@@ -33,10 +33,8 @@ Route::resource('/areas', App\Http\Controllers\AreaController::class)->middlewar
 Route::resource('/departamentos', App\Http\Controllers\DepartamentoController::class)->middleware('authMiddleware');
 Route::resource('/puestos', App\Http\Controllers\PuestoController::class)->middleware('authMiddleware');
 Route::resource('/colaboradores', App\Http\Controllers\ColaboradoreController::class)->middleware('authMiddleware');
-Route::resource('/supervisores', App\Http\Controllers\SupervisoreController::class)->middleware('authMiddleware');
 Route::resource('/accesos', App\Http\Controllers\AccesoController::class)->middleware('authMiddleware');
 Route::resource('/objetivos', App\Http\Controllers\ObjetivoController::class)->middleware('authMiddleware');
-Route::resource('/calificaciones', App\Http\Controllers\CalificacioneController::class)->middleware('authMiddleware');
 
 Route::resource('/edas', App\Http\Controllers\EdaController::class)->middleware('authMiddleware');
 Route::get('/calificar', 'App\Http\Controllers\ObjetivoController@indexCalificar')->name('objetivo.calificarindex')->middleware('authMiddleware');
@@ -158,3 +156,5 @@ Route::post('/change-password', 'App\Http\Controllers\ProfileController@changePa
 
 Route::get('/reportes', 'App\Http\Controllers\ReporteController@index')->middleware('authMiddleware')->name('reportes.index');
 Route::get('/reportes/objetivos', 'App\Http\Controllers\ReporteController@objetivos')->middleware('authMiddleware')->name('reportes.objetivos');
+Route::get('/reportes/edas', 'App\Http\Controllers\ReporteController@edas')->middleware('authMiddleware')->name('reportes.edas');
+Route::get('/reportes/colaboradores', 'App\Http\Controllers\ReporteController@colaboradores')->middleware('authMiddleware')->name('reportes.colaboradores');

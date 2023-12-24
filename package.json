@@ -22,6 +22,8 @@
         "@material-tailwind/html": "^2.0.0",
         "flowbite": "^1.8.1",
         "jquery": "^3.7.1",
+        "laravel-mix": "^6.0.49",
+        "lightweight-charts": "^4.1.1",
         "sweetalert2": "^11.7.31"
     }
 }

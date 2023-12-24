@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('cuestionarios', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_colaborador');
-            $table->enum('de', ['colaborador', 'supervisor']);
             $table->foreign('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
-            $table->unsignedBigInteger('id_eda');
-            $table->foreign('id_eda')->references('id')->on('eda_colabs')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -23,7 +23,7 @@
         <div class="flex w-[550px] flex-col gap-2">
             <a class="{{ $habilitarobjetivos ? '' : 'opacity-50 select-none pointer-events-none' }} group"
                 href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/objetivos">
-                <div class="p-3 border items-center rounded-md flex gap-2 group-hover:bg-neutral-100">
+                <div class="p-3 border items-center rounded-2xl flex gap-2 group-hover:bg-neutral-100">
                     <div class="flex gap-3 items-center w-full">
                         <div class="bg-pink-600 p-4 text-white rounded-xl">
                             <svg viewBox="0 0 24 24" width="24px" height="24px" fill="none"
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     @if ($aprobado)
-                        <h1 class="p-1 min-w-max flex items-center text-sm rounded-md text-white bg-green-400 font-medium">
+                        <h1 class="p-1 min-w-max flex items-center text-sm rounded-2xl text-white bg-green-400 font-medium">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -52,7 +52,7 @@
                         </h1>
                     @endif
                     @if ($enviado && !$aprobado)
-                        <h1 class="p-1 min-w-max flex items-center text-sm rounded-md text-white bg-green-400 font-medium">
+                        <h1 class="p-1 min-w-max flex items-center text-sm rounded-2xl text-white bg-green-400 font-medium">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -67,7 +67,7 @@
             <div class="w-full border-b my-1"></div>
             <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/1"
                 class="group {{ $habilitareva1 ? '' : 'opacity-40 grayscale select-none pointer-events-none' }}">
-                <div class="p-3 border rounded-md flex gap-2 group-hover:bg-neutral-100">
+                <div class="p-3 border rounded-2xl flex gap-2 group-hover:bg-neutral-100">
                     <div class="flex gap-3 items-center w-full">
                         <div class="bg-blue-500 p-4 text-white rounded-xl">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" version="1.1"
@@ -86,7 +86,7 @@
                         </div>
                         @if ($eva_1->cerrado)
                             <h1
-                                class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-md text-white bg-green-400 font-medium">
+                                class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-2xl text-white bg-green-400 font-medium">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_iconCarrier">
@@ -102,7 +102,7 @@
             </a>
             <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/2"
                 class="group {{ $habilitareva2 ? '' : 'opacity-40 grayscale select-none pointer-events-none' }}">
-                <div class="p-3 border rounded-md flex gap-2 group-hover:bg-neutral-100">
+                <div class="p-3 border rounded-2xl flex gap-2 group-hover:bg-neutral-100">
                     <div class="flex gap-3 items-center w-full">
                         <div class="bg-blue-500 p-4 text-white rounded-xl">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" version="1.1"
@@ -121,7 +121,7 @@
                         </div>
                         @if ($eva_2->cerrado)
                             <h1
-                                class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-md text-white bg-green-400 font-medium">
+                                class="p-1 px-2 min-w-max ml-auto flex items-center gap-2 text-sm rounded-2xl text-white bg-green-400 font-medium">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="-4 0 32 32" version="1.1">
                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                     <g id="SVGRepo_iconCarrier">
