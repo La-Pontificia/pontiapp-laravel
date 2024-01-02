@@ -1,7 +1,7 @@
 @extends('layouts.meta')
 
 @section('content-meta')
-    @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'id_colab' => $id_colab, 'id_eda' => $id_eda])
+
     @php
 
         // variables globales
@@ -21,6 +21,8 @@
         $id_evaluacion = $n_eva == 1 ? $edaSeleccionado->id_evaluacion : $edaSeleccionado->id_evaluacion_2;
         $eva_cerrada = $n_eva == 1 ? $edaSeleccionado->evaluacion->cerrado : $edaSeleccionado->evaluacion2->cerrado;
         $evaluacion = $n_eva == 1 ? $edaSeleccionado->evaluacion : $edaSeleccionado->evaluacion2;
+
+        $id_eda = $edaSeleccionado->id;
 
     @endphp
 
@@ -65,25 +67,9 @@
         </table>
     </div>
 
-    @if (!$autocalificacionterminada && $miPerfil)
-        <footer class="p-10 grid place-content-center">
-            <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="autocalificar-objs"
-                data-modal-toggle="autocalificar-objs" type="button"
-                class="text-white bg-[#009c46] hover:bg-[#009c46]/90 focus:outline-none font-medium rounded-md text-base px-5 py-2 text-center items-center">
-                Autocalificar objetivos
-            </button>
-        </footer>
-    @endif
-
-    @if (!$calificacionterminada && $autocalificacionterminada && $suSupervisor)
-        <footer class="p-10 grid place-content-center">
-            <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="calificar-objs"
-                data-modal-toggle="calificar-objs" type="button"
-                class="text-white bg-[#009c46] hover:bg-[#009c46]/90 focus:outline-none font-medium rounded-md text-base px-5 py-2 text-center items-center">
-                Calificar objetivos
-            </button>
-        </footer>
-    @endif
+    <footer class="p-10 grid place-content-center gap-4">
+        @include('meta.evaluaciones.footer')
+    </footer>
     {{-- modals --}}
     <div id="feedback-modal" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -173,8 +159,7 @@
                                         d="M303.907,395.565c-27.587,0-53.073-14.986-66.51-39.108c-2.799-5.025-0.996-11.367,4.03-14.166 c5.023-2.802,11.367-0.996,14.165,4.03c9.763,17.527,28.277,28.415,48.315,28.415c19.528,0,38.252-10.998,48.865-28.702 c2.959-4.932,9.351-6.536,14.287-3.577c4.934,2.958,6.535,9.354,3.577,14.287C356.28,380.69,330.712,395.565,303.907,395.565z">
                                     </path>
                                     <ellipse transform="matrix(0.2723 -0.9622 0.9622 0.2723 146.9873 336.7422)"
-                                        style="fill:#FCEB88;" cx="296.126" cy="71.193" rx="29.854"
-                                        ry="53.46">
+                                        style="fill:#FCEB88;" cx="296.126" cy="71.193" rx="29.854" ry="53.46">
                                     </ellipse>
                                 </g>
                             </svg>

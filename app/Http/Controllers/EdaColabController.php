@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colaboradore;
+use App\Models\Eda;
 use App\Models\EdaColab;
+use App\Models\Evaluacione;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 
@@ -35,8 +38,6 @@ class EdaColabController extends Controller
                 $edaColab->f_aprobacion = \Carbon\Carbon::now();
             } elseif ($estado == 3) {
                 $edaColab->f_autocalificacion = \Carbon\Carbon::now();
-            } elseif ($estado == 4) {
-                $edaColab->f_cerrado = \Carbon\Carbon::now();
             }
             $edaColab->save();
             return response()->json(['msg' => 'Estado cambiado'], 200);
@@ -52,7 +53,6 @@ class EdaColabController extends Controller
             $eda = EdaColab::find($id);
             $evaluacion2 = $eda->evaluacion2;
             $promedio = $evaluacion2->promedio;
-
             $eda->cerrado = true;
             $eda->promedio = $promedio;
             $eda->fecha_cerrado = \Carbon\Carbon::now();
@@ -61,5 +61,54 @@ class EdaColabController extends Controller
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['error' => 'Eda no encontrado'], 404);
         }
+    }
+
+    public function enviar($id)
+    {
+        try {
+
+            $eda = EdaColab::find($id);
+            $eda->enviado = true;
+            $eda->fecha_envio = \Carbon\Carbon::now();
+            $eda->save();
+            return response()->json(['msg' => 'Eda enviado'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Eda no encontrado'], 404);
+        }
+    }
+
+    public function aprobar($id)
+    {
+        try {
+
+            $eda = EdaColab::find($id);
+            $eda->aprobado = true;
+            $eda->fecha_aprobado = \Carbon\Carbon::now();
+            $eda->save();
+            return response()->json(['msg' => 'Eda Aprobado'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Eda no encontrado'], 404);
+        }
+    }
+
+    public function crear(Request $request)
+    {
+        $colaboradorExiste = Colaboradore::find($request->id_colab);
+        if (!$colaboradorExiste) return response()->json(['error' => 'El colaborador no existe'], 404);
+        $edaExiste = Eda::find($request->id_eda);
+        if (!$edaExiste) return response()->json(['error' => 'La eda no existe'], 404);
+        // evaluaciones
+
+        $eva1 = Evaluacione::create();
+        $eva2 = Evaluacione::create();
+
+        // nuevo edaColab
+        EdaColab::create([
+            'id_eda' => $edaExiste->id,
+            'id_colaborador' => $colaboradorExiste->id,
+            'id_evaluacion' => $eva1->id,
+            'id_evaluacion_2' => $eva2->id,
+        ]);
+        return response()->json(['msg' => 'Eda creada'], 200);
     }
 }

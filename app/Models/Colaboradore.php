@@ -31,7 +31,6 @@ class Colaboradore extends Model
         'dni' => 'required|numeric|digits:8', // Asegura que sea numérico y tenga 8 dígitos
         'apellidos' => 'required',
         'nombres' => 'required',
-        'id_cargo' => 'required',
         'id_puesto' => 'required',
     ];
 
@@ -42,16 +41,8 @@ class Colaboradore extends Model
      *
      * @var array
      */
-    protected $fillable = ['dni', 'apellidos', 'nombres', 'correo_institucional', 'perfil', 'rol', 'estado', 'id_cargo', 'id_puesto', 'id_usuario', 'id_sede', 'id_supervisor'];
+    protected $fillable = ['dni', 'apellidos', 'nombres', 'correo_institucional', 'perfil', 'rol', 'estado', 'id_puesto', 'id_usuario', 'id_sede', 'id_supervisor'];
 
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function cargo()
-    {
-        return $this->hasOne('App\Models\Cargo', 'id', 'id_cargo');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

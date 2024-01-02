@@ -143,7 +143,6 @@ class ColaboradoreController extends GlobalController
             'apellidos' => $request->input('apellidos'),
             'nombres' => $request->input('nombres'),
             'correo_institucional' => $request->input('correo_institucional'),
-            'id_cargo' => $request->input('id_cargo'),
             'id_sede' => $request->input('id_sede'),
             'id_puesto' => $request->input('id_puesto'),
         ]);
@@ -212,29 +211,33 @@ class ColaboradoreController extends GlobalController
     {
         $cargos = Cargo::all();
         $sedes = Sede::all();
-        $puestos = Puesto::all();
-
         $colaboradorForm = Colaboradore::find($id);
+        $puestos = Puesto::where('id_cargo', $colaboradorForm->puesto->cargo->id)->get();
         return view('colaboradore.show', compact('colaboradorForm', 'cargos', 'sedes', 'puestos'));
     }
 
     public function edit($id)
     {
         $colaboradore = Colaboradore::find($id);
-        $puestos = Puesto::pluck('nombre_puesto', 'id');
-        $cargos = Cargo::pluck('nombre_cargo', 'id');
         return view('colaboradore.edit', compact('colaboradore', 'puestos', 'cargos'));
     }
 
 
-    public function update(Request $request, Colaboradore $colaboradore)
+    public function update(Request $request, $id)
     {
-        request()->validate(Colaboradore::$rules);
-        $colaboradore->update($request->all());
-
-        return redirect()->route('colaboradores.index')
-            ->with('success', 'Colaboradore updated successfully');
+        $colaboradore = Colaboradore::find($id);
+        $colaboradore->update([
+            'dni' => $request->input('dni'),
+            'apellidos' => $request->input('apellidos'),
+            'nombres' => $request->input('nombres'),
+            'correo_institucional' => $request->input('correo_institucional'),
+            'id_sede' => $request->input('id_sede'),
+            'id_puesto' => $request->input('id_puesto'),
+        ]);
+        return redirect()->route('colaboradores.index');
     }
+
+
 
 
     public function destroy($id)

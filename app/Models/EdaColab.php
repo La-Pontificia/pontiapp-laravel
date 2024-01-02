@@ -47,7 +47,7 @@ class EdaColab extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_eda', 'id_colaborador', 'id_evaluacion', 'id_evaluacion_2', 'enviado', 'aprobado', 'cerrado', 'fecha_envio', 'fecha_aprobado', 'fecha_cerrado', 'promedio'];
+    protected $fillable = ['id_eda', 'id_colaborador', 'id_evaluacion', 'id_evaluacion_2', 'id_cuestionario_colab', 'id_cuestionario_super', 'enviado', 'aprobado', 'cerrado', 'fecha_envio', 'fecha_aprobado', 'fecha_cerrado', 'promedio'];
 
 
     /**
@@ -82,11 +82,19 @@ class EdaColab extends Model
         return $this->hasOne('App\Models\Evaluacione', 'id', 'id_evaluacion');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function objetivos()
     {
         return $this->hasMany('App\Models\Objetivo', 'id_eda_colab', 'id');
+    }
+
+
+    public function cuestionarioColab()
+    {
+        return $this->hasOne('App\Models\Cuestionario', 'id', 'id_cuestionario_colab');
+    }
+
+    public function cuestionarioSuper()
+    {
+        return $this->hasOne('App\Models\Cuestionario', 'id', 'id_cuestionario_super');
     }
 }

@@ -94,7 +94,6 @@ class ReporteController extends Controller
 
     public function edas()
     {
-
         $desde = request()->query('desde');
         $hasta = request()->query('hasta');
         $colaborador_id = request()->query('colaborador');
@@ -106,7 +105,9 @@ class ReporteController extends Controller
 
         if ($id_cargo && !$colaborador_id) {
             $query->whereHas('colaborador', function ($q) use ($id_cargo) {
-                $q->where('id_cargo', $id_cargo);
+                $q->whereHas('puesto', function ($q) use ($id_cargo) {
+                    $q->where('id_cargo', $id_cargo);
+                });
             });
         }
 
@@ -228,7 +229,12 @@ class ReporteController extends Controller
 
         /// COLABORADORES
         $query = Colaboradore::orderBy('created_at', 'desc');
-        if ($id_cargo) $query->where('id_cargo', $id_cargo);
+        if ($id_cargo) {
+            $query->whereHas('puesto', function ($q) use ($id_cargo) {
+                $q->where('id_cargo', $id_cargo);
+            });
+        }
+
         if ($id_puesto) $query->where('id_puesto', $id_puesto);
         if ($estado == '1') $query->where('estado', true);
         if ($estado == '2') $query->where('estado', false);
@@ -275,7 +281,7 @@ class ReporteController extends Controller
                     'SUPERVISOR' =>  $colab->id_supervisor ? $colab->supervisor->apellidos . ' ' . $colab->supervisor->nombres : '-',
                     'AREA' => $colab->puesto->departamento->area->nombre_area,
                     'DEPARTAMENTO' => $colab->puesto->departamento->nombre_departamento,
-                    'CARGO' => $colab->cargo->nombre_cargo,
+                    'CARGO' => $colab->puesto->cargo->nombre_cargo,
                     'PUESTO' => $colab->puesto->nombre_puesto,
                     'SEDE' => $colab->sede->nombre,
                     'ESTADO' => $colab->estado ? 'ACTIVO' : 'INACTIVO',
@@ -325,12 +331,14 @@ class ReporteController extends Controller
             'APELLIDOS Y NOMBRE' => $edaColab->colaborador->nombres . ' ' . $edaColab->colaborador->apellidos,
             'DNI' => $edaColab->colaborador->dni,
             'CORREO' => $edaColab->colaborador->correo_institucional ?: '-',
-            'CARG0' => $edaColab->colaborador->cargo->nombre_cargo,
+            'CARG0' => $edaColab->colaborador->puesto->cargo->nombre_cargo,
             'PUESTO' => $edaColab->colaborador->puesto->nombre_puesto,
             'APROBADO' => $edaColab->aprobado ? 'S' : 'N',
             'FECHA APROBADO' => $edaColab->aprobado ? $edaColab->fecha_aprobado : '-',
             'CERRADO' => $edaColab->cerrado ? 'S' : 'N',
             'FECHA CERRADO' => $edaColab->cerrado ? $edaColab->fecha_cerrado : '-',
+            'CUESTIONARIO COLABORADOR' => $edaColab->id_cuestionario_colab ? 'S' : 'N',
+            'CUESTIONARIO SUPERVISOR' => $edaColab->id_cuestionario_super ? 'S' : 'N',
             'EVA1 NA' => $edaColab->evaluacion->autocalificacion,
             'EVA1 PRO' => $edaColab->evaluacion->promedio,
             'EVA1 CERRADO' => $edaColab->evaluacion->cerrado ? 'S' : 'N',

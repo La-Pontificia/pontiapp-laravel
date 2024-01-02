@@ -319,9 +319,8 @@ VALUES
         'DAVID',
         '72377685@elp.edu.pe',
         NULL,
-        0,
+        2,
         1,
-        5,
         58,
         1,
         NULL,
@@ -421,39 +420,6 @@ VALUES
     );
 
 /*!40000 ALTER TABLE `departamentos` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
--- Dumping data for table `eda_colabs`
---
-LOCK TABLES `eda_colabs` WRITE;
-
-/*!40000 ALTER TABLE `eda_colabs` DISABLE KEYS */
-;
-
-INSERT INTO
-    `eda_colabs`
-VALUES
-    (
-        1,
-        1,
-        1,
-        1,
-        2,
-        0,
-        0,
-        0,
-        NULL,
-        NULL,
-        NULL,
-        0,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
-    );
-
-/*!40000 ALTER TABLE `eda_colabs` ENABLE KEYS */
 ;
 
 UNLOCK TABLES;

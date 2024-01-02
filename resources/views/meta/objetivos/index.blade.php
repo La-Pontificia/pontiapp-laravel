@@ -1,7 +1,6 @@
 @extends('layouts.meta')
 
 @section('content-meta')
-    @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'id_colab' => $id_colab, 'id_eda' => $id_eda])
     @include('meta.objetivos.header', ['enviado' => $edaSeleccionado->enviado])
 
     @php
@@ -16,6 +15,8 @@
 
         $enviarobjetivosbtn = $objetivos->sum('porcentaje') == 100 && !$edaSeleccionado->enviado && $miPerfil;
         $aprobarobjetivos = $objetivos->sum('porcentaje') == 100 && $edaSeleccionado->enviado && !$aprobado && $suSupervisor;
+
+        $id_eda = $edaSeleccionado->id;
 
     @endphp
 

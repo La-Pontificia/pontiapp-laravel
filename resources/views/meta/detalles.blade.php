@@ -1,4 +1,4 @@
-<div class="p-4 ml-auto w-[300px] bg-neutral-100 border rounded-md">
+<div class="p-4 ml-auto w-[300px] max-md:w-full bg-neutral-100 border rounded-2xl">
     <div class="flex items-center pb-2">
         <h3 class="text-blue-600">Detalles</h3>
         @if ($cerrado)

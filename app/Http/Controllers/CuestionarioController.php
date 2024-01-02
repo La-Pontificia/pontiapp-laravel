@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cuestionario;
 use App\Models\CuestionarioPregunta;
+use App\Models\Eda;
+use App\Models\EdaColab;
 use App\Models\Plantilla;
 use App\Models\Pregunta;
 use Illuminate\Http\Request;
@@ -20,23 +22,23 @@ class CuestionarioController extends GlobalController
         $plantillas = Plantilla::get();
         return view('cuestionario.index', compact('preguntas', 'plantillas'));
     }
+
     public function preguntas()
     {
         $preguntas = Pregunta::get();
         return view('cuestionario.preguntas.index', compact('preguntas'));
     }
 
-    public function cuestionarioEda(Request $request, $id_eda)
+    public function cuestionarioEda(Request $request)
     {
         try {
+            $id_eda_colab = $request->id_eda;
+            $isColab = $request->isColab;
             $respuestas = $request->respuestas;
-            $de = $request->de == '1' ? 'colaborador' : 'supervisor'; // 1 colaborador, 2 supervisor
-            $colab = $this->getCurrentColab();
 
+            $current = $this->getCurrentColab();
             $cuestionario = Cuestionario::create([
-                'id_eda' => $id_eda,
-                'id_colaborador' => $colab->id,
-                'de' => $de
+                'id_colaborador' => $current->id,
             ]);
 
             foreach ($respuestas as $respuesta) {
@@ -47,6 +49,18 @@ class CuestionarioController extends GlobalController
                 ]);
             }
 
+            $edaColab = EdaColab::find($id_eda_colab);
+            if (!$edaColab) return response()->json(['success' => false, 'error' => 'Eda no encontrada'], 400);
+
+            if ($isColab) {
+                $edaColab->update([
+                    'id_cuestionario_colab' => $cuestionario->id,
+                ]);
+            } else {
+                $edaColab->update([
+                    'id_cuestionario_super' => $cuestionario->id,
+                ]);
+            }
             return response()->json(['success' => true], 202);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e], 400);

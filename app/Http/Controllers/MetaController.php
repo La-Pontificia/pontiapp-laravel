@@ -25,7 +25,7 @@ class MetaController extends GlobalController
         $edas = Eda::orderBy('año', 'desc')->get();
         $colaborador = Colaboradore::find($id_colab);
 
-        if (!$colaborador) return view('not-found.index');
+        if (!$colaborador) abort(404);
         $prior_access = $this->getCurrentColab()->rol == 2;
 
         //commons
@@ -44,44 +44,49 @@ class MetaController extends GlobalController
         return view('meta.colaborador', compact('id_colab', 'edas', 'colaborador', 'miPerfil', 'suSupervisor'));
     }
 
-
-
-
-
     public function colaboradorEda($id_colab, $id_eda)
     {
 
         $prior_access = $this->getCurrentColab()->rol == 2;
-
         $colaborador = Colaboradore::find($id_colab);
         $edas = Eda::orderBy('año', 'desc')->get();
-        $edaSeleccionado = EdaColab::find($id_eda);
+        $eda = Eda::find($id_eda);
 
-        //commons
+
+        // validators
+        if (!$eda) abort(404);
+
+        // validators
+        if (!$colaborador) abort(404);
+
+        $edaSeleccionado = EdaColab::where('id_eda', $eda->id)->where('id_colaborador', $colaborador->id)->first();
 
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
+
+        if (!$edaSeleccionado) return view('meta.create', compact('colaborador', 'edas', 'miPerfil', 'eda', 'suSupervisor', 'id_eda'));
+
+        // validators
+        if (!$edaSeleccionado->id_colaborador == $colaborador->id) abort(404);
 
         if ($prior_access) {
             $miPerfil = true;
             $suSupervisor = true;
         }
 
-        $cuestionarioColab = Cuestionario::where('id_eda', $id_eda)->where('de', 'colaborador')->first();
-        $cuestionarioSuper = Cuestionario::where('id_eda', $id_eda)->where('de', 'supervisor')->first();
+        $cuestionarioColab = $edaSeleccionado->id_cuestionario_colab ?  $edaSeleccionado->cuestionarioColab : null;
+        $cuestionarioSuper = $edaSeleccionado->id_cuestionario_super ?  $edaSeleccionado->cuestionarioSuper : null;
 
+        $plantillaColab = null;
+        $plantillaSuper = null;
 
+        $plantillaColab = Plantilla::where('usando', true)
+            ->where('para', 'colaboradores')
+            ->first();
 
-        $plantilla = null;
-        if ($miPerfil) {
-            $plantilla = Plantilla::where('usando', true)
-                ->where('para', 'colaboradores')
-                ->first();
-        } else {
-            $plantilla = Plantilla::where('usando', true)
-                ->where('para', 'supervisores')
-                ->first();
-        }
+        $plantillaSuper = Plantilla::where('usando', true)
+            ->where('para', 'supervisores')
+            ->first();
 
         if ($suSupervisor == false && $miPerfil == false) {
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este recurso, si crees que es una equivocación comunicate con un administrador.']);
@@ -89,37 +94,48 @@ class MetaController extends GlobalController
 
         return view('meta.colaboradorEda', compact(
             'id_colab',
-            'id_eda',
             'edas',
             'colaborador',
             'edaSeleccionado',
             'miPerfil',
             'suSupervisor',
-            'plantilla',
+            'plantillaColab',
+            'plantillaSuper',
             'cuestionarioColab',
             'cuestionarioSuper'
         ));
     }
 
-
-
-
-
-
     public function colaboradorEdaObjetivos($id_colab, $id_eda)
     {
 
-        $prior_access = $this->getCurrentColab()->rol == 2;
-
-        $colaborador = Colaboradore::find($id_colab);
-        $edas = Eda::all();
-        $edaSeleccionado = EdaColab::find($id_eda);
-        $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
         $objetivoNewForm = new Objetivo();
+        $prior_access = $this->getCurrentColab()->rol == 2;
+        $colaborador = Colaboradore::find($id_colab);
+        $edas = Eda::orderBy('año', 'desc')->get();
+        $eda = Eda::find($id_eda);
+
+
+        // validators
+        if (!$eda) abort(404);
+
+        // validators
+        if (!$colaborador) abort(404);
 
         //commons
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;
         $suSupervisor = $this->getCurrentColab()->id == $colaborador->id_supervisor ? true : false;
+
+        $edaSeleccionado = EdaColab::where('id_eda', $eda->id)->where('id_colaborador', $colaborador->id)->first();
+
+        if (!$edaSeleccionado) return view('meta.create', compact('colaborador', 'edas', 'miPerfil', 'eda', 'suSupervisor', 'id_eda'));
+
+        $objetivos = Objetivo::where('id_eda_colab', $edaSeleccionado->id)->get();
+
+
+        // validators
+        if (!$edaSeleccionado->id_colaborador == $colaborador->id) abort(404);
+
 
         if ($prior_access) {
             $miPerfil = true;
@@ -148,12 +164,23 @@ class MetaController extends GlobalController
 
         $prior_access = $this->getCurrentColab()->rol == 2;
 
-
-        $colaborador = Colaboradore::find($id_colab);
-        $edas = Eda::all();
-        $edaSeleccionado = EdaColab::find($id_eda);
-        $objetivos = Objetivo::where('id_eda_colab', $id_eda)->get();
         $objetivoNewForm = new Objetivo();
+        $prior_access = $this->getCurrentColab()->rol == 2;
+        $colaborador = Colaboradore::find($id_colab);
+        $edas = Eda::orderBy('año', 'desc')->get();
+        $eda = Eda::find($id_eda);
+
+
+        // validators
+        if (!$eda) abort(404);
+
+        // validators
+        if (!$colaborador) abort(404);
+
+
+        $edaSeleccionado = EdaColab::where('id_eda', $eda->id)->where('id_colaborador', $colaborador->id)->first();
+
+        $objetivos = Objetivo::where('id_eda_colab', $edaSeleccionado->id)->get();
         $feedback = Feedback::where('id_evaluacion', $n_eva == 1 ? $edaSeleccionado->id_evaluacion : $edaSeleccionado->id_evaluacion_2)->first();
 
         //commons
@@ -173,7 +200,6 @@ class MetaController extends GlobalController
 
         return view('meta.evaluaciones.index', compact(
             'id_colab',
-            'id_eda',
             'edas',
             'colaborador',
             'edaSeleccionado',

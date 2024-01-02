@@ -22,13 +22,11 @@ return new class extends Migration
             $table->integer('rol')->default(0); // 0 = colaborador // 1 = admin // 2 = developer
 
             $table->integer('estado')->default(1);
-            $table->unsignedBigInteger('id_cargo');
             $table->unsignedBigInteger('id_puesto');
             $table->unsignedBigInteger('id_sede');
             $table->unsignedBigInteger('id_supervisor')->nullable()->default(null);
 
             $table->foreign('id_sede')->references('id')->on('sedes');
-            $table->foreign('id_cargo')->references('id')->on('cargos');
             $table->foreign('id_puesto')->references('id')->on('puestos');
             $table->foreign('id_supervisor')->references('id')->on('colaboradores');
             $table->timestamps();

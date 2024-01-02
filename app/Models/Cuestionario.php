@@ -24,7 +24,6 @@ class Cuestionario extends Model
 
     static $rules = [
         'id_colaborador' => 'required',
-        'id_eda' => 'required',
     ];
 
     protected $perPage = 20;
@@ -34,7 +33,7 @@ class Cuestionario extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_colaborador', 'id_eda', 'de'];
+    protected $fillable = ['id_colaborador'];
 
 
     /**
@@ -51,13 +50,5 @@ class Cuestionario extends Model
     public function cuestionarioPreguntas()
     {
         return $this->hasMany('App\Models\CuestionarioPregunta', 'id_cuestionario', 'id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function edaColab()
-    {
-        return $this->hasOne('App\Models\EdaColab', 'id', 'id_eda');
     }
 }

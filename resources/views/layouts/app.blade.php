@@ -6,11 +6,11 @@
             @if (Route::has('login'))
             @endif
         @else
-            <nav class="fixed pl-[250px] border-b dark:border-gray-700 w-full border-gray-200 backdrop-blur-md z-30">
+            <nav class="fixed pl-[250px] max-sm:pl-0 border-b dark:border-gray-700 w-full border-gray-200 backdrop-blur-md z-30">
                 <div class=" flex w-full gap-3 px-4 items-center h-16">
                     <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
                         aria-controls="cta-button-sidebar" type="button"
-                        class="inline-flex items-center p-2 mt-2  text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-100 dark:focus:ring-gray-600">
+                        class="inline-flex items-center p-2 mt-2  text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 ">
                         <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                             <path clip-rule="evenodd" fill-rule="evenodd"
                                 d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
@@ -23,12 +23,12 @@
                             class="flex text-sm  rounded-full text-white w-full p-1 pr-3 items-center gap-2 md:mr-0 focus:ring-4 focus:ring-gray-300 bg-[#2b3235]"
                             id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                             data-dropdown-placement="bottom">
-                            <span class="w-[40px] h-[40px] block overflow-hidden rounded-full">
+                            <span class="w-[40px] min-w-[40px] h-[40px] block overflow-hidden rounded-full">
                                 <img class="w-full h-full object-cover"
                                     src={{ $colaborador_actual->perfil ? $colaborador_actual->perfil : '/profile-user.png' }}
                                     alt="">
                             </span>
-                            <span class="font-medium">{{ $colaborador_actual->nombres }}
+                            <span class="font-medium max-sm:hidden">{{ $colaborador_actual->nombres }}
                                 {{ $colaborador_actual->apellidos }}</span>
                             @if ($colaborador_actual->rol == 1 || $colaborador_actual->rol == 2)
                                 <span class="p-2 py-1 rounded-full font-normal bg-[#fc5200] text-sm text-white">
@@ -77,7 +77,7 @@
                         class="grid [&>a>svg]:w-10 [&>a>svg]:mx-auto [&>a>svg]:h-full grid-cols-2 [&>a]:rounded-2xl gap-2 font-medium text-neutral-400">
 
                         <a href="/meta/{{ $colaborador_actual->id }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is("meta/$colaborador_actual->id*") ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is("meta/$colaborador_actual->id*") ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path
                                     d="M3 9H21M3 15H21M9 9L9 20M15 9L15 20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z"
@@ -88,7 +88,7 @@
                         </a>
 
                         <a href="{{ route('auditoria.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('auditoria*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('auditoria*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path d="M12 8V12L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                     stroke-linejoin="round"></path>
@@ -100,7 +100,7 @@
                         </a>
 
                         <a href="{{ route('reportes.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('reportes*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('reportes*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path
                                     d="M10.11 11.1501H7.46005C6.83005 11.1501 6.32007 11.6601 6.32007 12.2901V17.4101H10.11V11.1501V11.1501Z"
@@ -122,7 +122,7 @@
                         </a>
 
                         <a href="{{ route('colaboradores.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('colaboradores*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('colaboradores*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg class="w-7" viewBox="0 0 24 24" fill="none">
                                 <path
                                     d="M18.14 21.62C17.26 21.88 16.22 22 15 22H8.99998C7.77998 22 6.73999 21.88 5.85999 21.62C6.07999 19.02 8.74998 16.97 12 16.97C15.25 16.97 17.92 19.02 18.14 21.62Z"
@@ -140,8 +140,10 @@
                             <span class="flex-1 text-sm">Colaboradores</span>
                         </a>
 
+                        <div class="border-b col-span-2 my-1 border-neutral-700"></div>
+
                         <a href="{{ route('edas.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('edas*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('edas*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg class="w-7" viewBox="0 0 24 24" fill="none">
                                 <path
                                     d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
@@ -153,7 +155,7 @@
                         </a>
 
                         <a href="{{ route('cuestionarios.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('cuestionarios*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('cuestionarios*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path d="M8 2V5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
                                     stroke-linecap="round" stroke-linejoin="round"></path>
@@ -180,7 +182,7 @@
                         </a>
 
                         <a href="{{ route('areas.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('areas*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('areas*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path
                                     d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
@@ -192,7 +194,7 @@
                         </a>
 
                         <a href="{{ route('departamentos.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('departamentos*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('departamentos*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path
                                     d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
@@ -203,20 +205,8 @@
                             <span class="flex-1 text-sm">Departamentos</span>
                         </a>
 
-                        <a href="{{ route('cargos.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('cargos*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <path
-                                    d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
-                                    stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
-                                <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
-                                    stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                            <span class="flex-1 text-sm">Cargos</span>
-                        </a>
-
                         <a href="{{ route('puestos.index') }}"
-                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('puestos*') ? 'text-gray-700 bg-gray-100' : 'bg-slate-200/20 text-neutral-200' }}">
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('puestos*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path
                                     d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
@@ -225,6 +215,18 @@
                                     stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                             <span class="flex-1 text-sm">Puestos</span>
+                        </a>
+
+                        <a href="{{ route('cargos.index') }}"
+                            class="flex flex-col justify-center items-center text-center p-2 h-[100px] group transition-colors {{ request()->is('cargos*') ? 'text-gray-900 bg-gradient-to-tr from-rose-200 via-blue-200 to-green-200' : 'text-slate-300 bg-slate-800/60 hover:bg-neutral-700/50' }}">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M22 11V17C22 21 21 22 17 22H7C3 22 2 21 2 17V7C2 3 3 2 7 2H8.5C10 2 10.33 2.44 10.9 3.2L12.4 5.2C12.78 5.7 13 6 14 6H17C21 6 22 7 22 11Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
+                                <path d="M8 2H17C19 2 20 3 20 5V6.38" stroke="currentColor" stroke-width="1.5"
+                                    stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <span class="flex-1 text-sm">Cargos</span>
                         </a>
                     </div>
                 </div>

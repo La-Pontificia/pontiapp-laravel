@@ -56,14 +56,14 @@
             <label for="" class="col-span-2">
                 <span class="font-normal px-1 opacity-70">Rol</span>
                 <input type="text"
-                    value="{{ ($colaborador->rol == 1 ? 'Administrador' : $colaborador->rol == 2) ? 'Developer' : 'Colabordor' }}"
+                    value="{{ ($colaborador->rol == 1 ? 'Administrador' : $colaborador->rol == 2) ? 'Developer' : 'Colaborador' }}"
                     disabled class="w-full rounded-md border-0 text-neutral-500 bg-neutral-200 block">
             </label>
             <span class="border-b my-3 col-span-2"></span>
 
             <label for="">
                 <span class="font-normal px-1 opacity-70">Cargo:</span>
-                <input type="text" value="{{ $colaborador->cargo->nombre_cargo }}" disabled
+                <input type="text" value="{{ $colaborador->puesto->cargo->nombre_cargo }}" disabled
                     class="w-full rounded-md border-0 text-neutral-500 bg-neutral-200 block">
             </label>
             <label for="">

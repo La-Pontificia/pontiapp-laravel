@@ -110,7 +110,6 @@ Route::post('/meta/feedback/received/{id_feed}', 'App\Http\Controllers\FeedbackC
 Route::post('/meta/evaluaciones/cerrar/{id}/{id_eda}/{n_eva}', 'App\Http\Controllers\EvaluacioneController@cerrar')->middleware('authMiddleware');
 
 
-
 //ACCESOS
 Route::post('/accesos/cambiar/{id}', 'App\Http\Controllers\AccesoController@cambiar')->middleware('authMiddleware');
 
@@ -129,11 +128,12 @@ Route::post('/plantilla/pregunta/{id}', 'App\Http\Controllers\PlantillaControlle
 
 
 // CUESTIONARIO EDA
-Route::post('/cuestionario/eda/{id_cuestionario}', 'App\Http\Controllers\CuestionarioController@cuestionarioEda')->middleware('authMiddleware');
+Route::post('/cuestionario/eda', 'App\Http\Controllers\CuestionarioController@cuestionarioEda')->middleware('authMiddleware');
+
+
 
 
 /// AUDITORIA
-
 Route::get('/auditoria', 'App\Http\Controllers\AuditoriaController@index')->name('auditoria.index')->middleware('authMiddleware');
 
 
@@ -158,3 +158,18 @@ Route::get('/reportes', 'App\Http\Controllers\ReporteController@index')->middlew
 Route::get('/reportes/objetivos', 'App\Http\Controllers\ReporteController@objetivos')->middleware('authMiddleware')->name('reportes.objetivos');
 Route::get('/reportes/edas', 'App\Http\Controllers\ReporteController@edas')->middleware('authMiddleware')->name('reportes.edas');
 Route::get('/reportes/colaboradores', 'App\Http\Controllers\ReporteController@colaboradores')->middleware('authMiddleware')->name('reportes.colaboradores');
+
+
+/// EDA COLABS
+Route::post('/eda_colab', 'App\Http\Controllers\EdaColabController@crear')->middleware('authMiddleware');
+Route::post('/eda_colab/aprobar/{id}', 'App\Http\Controllers\EdaColabController@aprobar')->middleware('authMiddleware');
+Route::post('/eda_colab/cerrar/{id}', 'App\Http\Controllers\EdaColabController@cerrar')->middleware('authMiddleware');
+
+
+/// COLABORADORES 
+Route::post('/colaborador/{id}', 'App\Http\Controllers\ColaboradoreController@update')->middleware('authMiddleware')->name('colaborador.update');
+
+//// 404 NOT FOUND
+Route::fallback(function () {
+    return view('errors.404');
+});

@@ -7,7 +7,7 @@ $cuestionario = request()->query('cuestionario');
 
 ?>
 
-<nav class="flex gap-2 items-center">
+<nav class="flex gap-2 flex-wrap items-center">
     <div class="flex gap-2 items-center rounded-full border p-1">
         <select class="bg-neutral-200 rounded-full combobox-dinamic border-neutral-400 w-[120px]" name="desde">
             <option value="" selected>Año</option>

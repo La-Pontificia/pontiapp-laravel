@@ -1,7 +1,6 @@
 @extends('layouts.meta')
 
 @section('content-meta')
-    @include('meta.listaEdas', ['eda' => $edaSeleccionado, 'eda' => $id_colab, 'id_eda' => $id_eda])
     @php
         $aprobado = $edaSeleccionado->aprobado;
         $enviado = $edaSeleccionado->enviado;
@@ -18,9 +17,12 @@
 
         $autocalificacion = $eva_1->autocalificacion + $eva_2->autocalificacion;
 
+        $id_colab = $colaborador->id;
+        $id_eda = request()->route('id_eda');
+
     @endphp
-    <div class="mt-4 flex items-start p-5">
-        <div class="flex w-[550px] flex-col gap-2">
+    <div class="mt-4 flex gap-4 max-md:flex-col-reverse items-start p-5">
+        <div class="flex w-[550px] max-md:w-full flex-col gap-2">
             <a class="{{ $habilitarobjetivos ? '' : 'opacity-50 select-none pointer-events-none' }} group"
                 href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}/objetivos">
                 <div class="p-3 border items-center rounded-2xl flex gap-2 group-hover:bg-neutral-100">

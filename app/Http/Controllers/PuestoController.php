@@ -23,11 +23,11 @@ class PuestoController extends Controller
      */
     public function index()
     {
-       $puesto = new Puesto();
-       $puestos = Puesto::paginate();
-       $cargos = Cargo::all();
-       $departamentos = Departamento::all();
-        return view('puesto.index', compact('puestos', 'puesto', 'cargos','departamentos'))
+        $puesto = new Puesto();
+        $puestos = Puesto::paginate();
+        $cargos = Cargo::all();
+        $departamentos = Departamento::all();
+        return view('puesto.index', compact('puestos', 'puesto', 'cargos', 'departamentos'))
             ->with('i', (request()->input('page', 1) - 1) * $puestos->perPage());
     }
 
@@ -57,28 +57,28 @@ class PuestoController extends Controller
      */
     public function store(Request $request)
     {
-     // obtenemos el ultimo codigo de puesto
-     $codeUltimate = Puesto::max('codigo_puesto');
+        // obtenemos el ultimo codigo de puesto
+        $codeUltimate = Puesto::max('codigo_puesto');
 
-     // creamos el nuevo codigo
-     $numero = (int)substr($codeUltimate, 1) + 1;
-     $newCode = 'P' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+        // creamos el nuevo codigo
+        $numero = (int)substr($codeUltimate, 1) + 1;
+        $newCode = 'P' . str_pad($numero, 3, '0', STR_PAD_LEFT);
 
-     // validamos los datos
-     $validatedData = $request->validate(Puesto::$rules);
+        // validamos los datos
+        $validatedData = $request->validate(Puesto::$rules);
 
-     // creamos el puesto
-     $data = array_merge($validatedData, [
-        'codigo_puesto' => $newCode,
-    ]);
-    Puesto::create($data);
+        // creamos el puesto
+        $data = array_merge($validatedData, [
+            'codigo_puesto' => $newCode,
+        ]);
+        Puesto::create($data);
 
-    return redirect()->route('puestos.index')
-        ->with('success', 'Puesto created successfully.');
-}
+        return redirect()->route('puestos.index')
+            ->with('success', 'Puesto created successfully.');
+    }
 
-        
-    
+
+
 
     /**
      * Display the specified resource.

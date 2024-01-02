@@ -39,7 +39,7 @@
         </select>
     </div>
     @if ($colaborador)
-        <div class="flex relative items-start gap-2 bg-slate-950 text-amber-50 p-3 rounded-2xl">
+        <div class="flex relative items-start gap-2 bg-slate-950 text-amber-50 p-3 rounded-3xl">
             @if ($colaborador->perfil)
                 <div class="rounded-2xl overflow-hidden w-32 h-32">
                     <img src="{{ $colaborador->perfil }}" alt="">
@@ -48,7 +48,7 @@
             <div class="flex flex-col">
                 <h2 class="font-semibold text-lg pb-2">{{ $colaborador->nombres }} {{ $colaborador->apellidos }}</h2>
                 <span class="text-neutral-300"><b>DNI:</b> {{ $colaborador->dni }}</span>
-                <span class="text-neutral-300"><b>Cargo:</b> {{ $colaborador->cargo->nombre_cargo }}</span>
+                <span class="text-neutral-300"><b>Cargo:</b> {{ $colaborador->puesto->cargo->nombre_cargo }}</span>
                 <span class="text-neutral-300"><b>Puesto:</b> {{ $colaborador->puesto->nombre_puesto }}</span>
             </div>
             <button onclick="removeColaboradorParam()"

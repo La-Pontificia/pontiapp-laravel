@@ -1,5 +1,5 @@
 
-
+import ExcelJS from 'exceljs'
 const btn = document.getElementById('exportBtn');
 const comboboxs = document.querySelectorAll('.combobox-dinamic');
 
@@ -90,3 +90,5 @@ function handleSelectChange(selectedValue, paramName) {
     }
     window.location.href = currentURL;
 }
+
+

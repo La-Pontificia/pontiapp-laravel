@@ -27,13 +27,20 @@
     </div>
     <div class="">
         <label>Cargo</label>
-        <select name="id_cargo" required id="selectCargo"
+        <select name="id_cargo" id="selectCargo"
             class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
             <option selected value="">Selecciona un cargo</option>
             @foreach ($cargos as $cargo)
-                <option {{ $colaboradorForm->id_cargo == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
-                    {{ $cargo->nombre_cargo }}
-                </option>
+                @if ($colaboradorForm->puesto && $colaboradorForm->puesto->cargo)
+                    <option {{ $colaboradorForm->puesto->cargo->id == $cargo->id ? 'selected' : '' }}
+                        value="{{ $cargo->id }}">
+                        {{ $cargo->nombre_cargo }}
+                    </option>
+                @else
+                    <option value="{{ $cargo->id }}">
+                        {{ $cargo->nombre_cargo }}
+                    </option>
+                @endif
             @endforeach
         </select>
     </div>
@@ -43,7 +50,7 @@
             class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
             <option value="" selected>Selecciona un puesto</option>
             @foreach ($puestos as $puesto)
-                <option {{ $colaboradorForm->id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $cargo->id }}">
+                <option {{ $colaboradorForm->id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
                     {{ $puesto->nombre_puesto }}
                 </option>
             @endforeach
