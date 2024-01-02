@@ -148,9 +148,7 @@
                                         href="{{ route('departamentos.edit', $departamento->id) }}"><i
                                             class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i>
-                                        {{ __('Eliminar') }}</button>
+                                    
                                 </form>
                             </td>
                         </tr>
