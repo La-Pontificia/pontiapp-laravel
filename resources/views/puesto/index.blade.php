@@ -139,8 +139,6 @@
                     <tr>
                         <th scope="col" class="px-6 py-3">Codigo</th>
                         <th scope="col" class="px-6 py-3">Puesto</th>
-                        <th scope="col" class="px-6 py-3">Departamento</th>
-                        <th scope="col" class="px-6 py-3">Cargo</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -152,14 +150,14 @@
                                 {{ $puesto->codigo_puesto }}</td>
                             <td class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
                                 {{ $puesto->nombre_puesto }}</td>
-                            <td class="px-6 py-4">{{ $puesto->departamento->nombre_departamento }}</td>
-                            <td class="px-6 py-4">{{ $puesto->cargo->nombre_cargo }}</td>
+                            {{-- <td class="px-6 py-4">{{ $puesto->cargo->departamento->nombre }}</td> --}}
+                            {{-- <td class="px-6 py-4">{{ $puesto->cargo->nombre_cargo }}</td> --}}
                             <td class="px6 -py-4">
                                 <form action="{{ route('puestos.destroy', $puesto->id) }}" method="POST">
                                     <a class="btn btn-sm btn-success" href="{{ route('puestos.edit', $puesto->id) }}"><i
                                             class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
                                     @csrf
-                                    
+
                                 </form>
                             </td>
                         </tr>
