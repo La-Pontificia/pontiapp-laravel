@@ -2,6 +2,13 @@
     <div class="box-body">
 
         <div class="form-group">
+            <label for="codigo_departamento">Código de departamento</label>
+            <input type="text" class="form-control input-md input-primary" id="codigo_departamento" name="codigo_departamento" placeholder="Ingrese el código de departamento">
+          </div>
+          
+        
+        <div class="form-group">
+            <input name="codigo_departamento" type="text">
             {{ Form::label('Código') }}
             {{ Form::text('codigo_departamento', $departamento->codigo_departamento, ['class' => 'form-control' . ($errors->has('codigo_departamento') ? ' is-invalid' : '')]) }}
             {!! $errors->first('codigo_departamento', '<div class="invalid-feedback">:message</div>') !!}
