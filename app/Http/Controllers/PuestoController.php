@@ -102,7 +102,7 @@ class PuestoController extends Controller
     public function edit($id)
     {
         $puesto = Puesto::find($id);
-        $depas = Departamento::pluck('nombre_departamento', 'id');
+        $depas = Departamento::all();
         return view('puesto.edit', compact('puesto', 'depas'));
     }
 

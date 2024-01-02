@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('cargos', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo_cargo', 50)->require();
-            $table->string('nombre_cargo', 50)->require();
+            $table->string('codigo', 255)->require();
+            $table->string('nombre', 255)->require();
+            $table->unsignedBigInteger('id_puesto');
+            $table->unsignedBigInteger('id_departamento');
+            $table->foreign('id_departamento')->references('id')->on('departamentos')->onDelete('cascade');
+            $table->foreign('id_puesto')->references('id')->on('puestos')->onDelete('cascade');
             $table->timestamps();
         });
     }

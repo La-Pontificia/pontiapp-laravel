@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departamentos', function (Blueprint $table) {
+        Schema::create('areas', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo_departamento', 50)->require();
-            $table->string('nombre_departamento', 50)->require();
-            $table->unsignedBigInteger('id_area');
-            $table->foreign('id_area')->references('id')->on('areas')->onDelete('cascade');
+            $table->string('codigo', 10)->require();
+            $table->string('nombre', 50)->require();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departamentos');
+        Schema::dropIfExists('areas');
     }
 };

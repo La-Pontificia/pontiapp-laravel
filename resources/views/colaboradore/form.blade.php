@@ -25,34 +25,34 @@
             placeholder="Ingrese el correo institucional"
             class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
     </div>
+    <div class="relative">
+        <label for="id_puesto">Puesto</label>
+        <select name="id_puesto" id="selectPuesto"
+            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+            <option value="" selected>Selecciona un puesto</option>
+            @foreach ($puestos as $puesto)
+                <option {{ $colaboradorForm->id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
+                    {{ $puesto->nombre }}
+                </option>
+            @endforeach
+        </select>
+    </div>
     <div class="">
         <label>Cargo</label>
-        <select name="id_cargo" id="selectCargo"
+        <select required name="id_cargo" id="selectCargo"
             class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
             <option selected value="">Selecciona un cargo</option>
             @foreach ($cargos as $cargo)
                 @if ($colaboradorForm->puesto && $colaboradorForm->puesto->cargo)
                     <option {{ $colaboradorForm->puesto->cargo->id == $cargo->id ? 'selected' : '' }}
                         value="{{ $cargo->id }}">
-                        {{ $cargo->nombre_cargo }}
+                        {{ $cargo->nombre }}
                     </option>
                 @else
                     <option value="{{ $cargo->id }}">
-                        {{ $cargo->nombre_cargo }}
+                        {{ $cargo->nombre }}
                     </option>
                 @endif
-            @endforeach
-        </select>
-    </div>
-    <div class="relative">
-        <label for="id_puesto">Puesto</label>
-        <select required name="id_puesto" id="selectPuesto"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
-            <option value="" selected>Selecciona un puesto</option>
-            @foreach ($puestos as $puesto)
-                <option {{ $colaboradorForm->id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
-                    {{ $puesto->nombre_puesto }}
-                </option>
             @endforeach
         </select>
     </div>
@@ -103,19 +103,18 @@
         }
 
 
-        selectCargo.addEventListener('change', async function() {
-            console.log('changed')
-            const id_cargo = this.value;
+        selectPuesto.addEventListener('change', async function() {
+            const id_puesto = this.value;
             try {
                 loadingActive()
-                const response = await axios.get(`/get-puestos-by-area/${id_cargo}`)
-                selectPuesto.innerHTML = '<option value="" selected >Selecciona un cargo</option>';
-                const puestos = response.data;
-                puestos.forEach(function(area) {
+                const response = await axios.get(`/cargos/json/${id_puesto}`)
+                selectCargo.innerHTML = '<option value="" selected >Selecciona un cargo</option>';
+                const cargos = response.data;
+                cargos.forEach(function(cargo) {
                     const option = document.createElement('option');
-                    option.value = area.id;
-                    option.textContent = area.nombre_puesto;
-                    selectPuesto.appendChild(option);
+                    option.value = cargo.id;
+                    option.textContent = cargo.nombre;
+                    selectCargo.appendChild(option);
                 });
 
             } catch (error) {

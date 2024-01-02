@@ -19,29 +19,31 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Cargo extends Model
 {
-    
-    static $rules = [
-		// 'codigo_cargo' => 'required',
-		'nombre_cargo' => 'required',
-    ];
 
-    protected $perPage = 20;
+  static $rules = [
+    'nombre_cargo' => 'required',
+    'id_departamento' => 'required',
+    'id_puesto' => 'required',
+  ];
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['codigo_cargo','nombre_cargo'];
+  protected $perPage = 25;
+
+  /**
+   * Attributes that should be mass-assignable.
+   *
+   * @var array
+   */
+  protected $fillable = ['codigo_cargo', 'nombre_cargo', 'id_departamento', 'id_puesto'];
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function colaboradores()
-    {
-        return $this->hasMany('App\Models\Colaboradore', 'id_cargo', 'id');
-    }
-    
 
+  public function departamento()
+  {
+    return $this->hasOne('App\Models\Departamento', 'id', 'id_departamento');
+  }
+
+  public function puesto()
+  {
+    return $this->hasOne('App\Models\Puesto', 'id', 'id_puesto');
+  }
 }

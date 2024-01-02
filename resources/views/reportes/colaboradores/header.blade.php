@@ -5,7 +5,7 @@
             <option selected value="">Area</option>
             @foreach ($areas as $area)
                 <option {{ $areaRecover == $area->id ? 'selected' : '' }} value="{{ $area->id }}">
-                    {{ $area->nombre_area }}
+                    {{ $area->nombre }}
                 </option>
             @endforeach
         </select>
@@ -15,7 +15,7 @@
             @foreach ($departamentos as $departamento)
                 <option {{ $departamentoRecover == $departamento->id ? 'selected' : '' }}
                     value="{{ $departamento->id }}">
-                    {{ $departamento->nombre_departamento }}
+                    {{ $departamento->nombre }}
                 </option>
             @endforeach
         </select>
@@ -24,7 +24,7 @@
             <option selected value="">Cargo</option>
             @foreach ($cargos as $cargo)
                 <option {{ $cargoRecover == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
-                    {{ $cargo->nombre_cargo }}
+                    {{ $cargo->nombre }}
                 </option>
             @endforeach
         </select>
@@ -33,7 +33,7 @@
             <option selected value="">Puesto</option>
             @foreach ($puestos as $puesto)
                 <option {{ $puestoRecover == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
-                    {{ $puesto->nombre_puesto }}
+                    {{ $puesto->nombre }}
                 </option>
             @endforeach
         </select>

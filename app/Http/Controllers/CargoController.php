@@ -19,12 +19,28 @@ class CargoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id_puesto)
     {
         $cargos = Cargo::paginate();
         $cargo = new Cargo();
+
+
         return view('cargo.index', compact('cargos', 'cargo'))
             ->with('i', (request()->input('page', 1) - 1) * $cargos->perPage());
+    }
+
+    public function byPuesto($id_puesto)
+    {
+        $cargos = Cargo::where('id_puesto', $id_puesto)->get();
+        $data = $cargos->map(function ($cargo, $index) {
+            $item = [
+                'index' => $index,
+                'id' => $cargo->id,
+                'nombre' => $cargo->nombre,
+            ];
+            return $item;
+        });
+        return response()->json($data);
     }
 
     /**
@@ -63,8 +79,6 @@ class CargoController extends Controller
         Cargo::create($data);
 
         return redirect("/cargos");
-            
-        
     }
 
     /**

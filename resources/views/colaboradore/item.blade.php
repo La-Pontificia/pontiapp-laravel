@@ -54,17 +54,17 @@
     </td>
     <td class=" capitalize text-gray-600 text-sm font-medium">
         <span>
-            {{ mb_strtolower($colaborador->puesto->cargo->nombre_cargo) }}
+            {{ mb_strtolower($colaborador->cargo->nombre) }}
         </span>
     </td>
     <td class=" capitalize text-gray-600 text-sm font-medium">
         <span class="line-clamp-1 min-w-max">
-            {{ mb_strtolower($colaborador->puesto->nombre_puesto) }}
+            {{ mb_strtolower($colaborador->cargo->puesto->nombre) }}
         </span>
     </td>
     <td class=" capitalize  text-gray-600 text-sm font-medium">
         <span class="line-clamp-1 min-w-max">
-            {{ mb_strtolower($colaborador->puesto->departamento->area->nombre_area) }}
+            {{ mb_strtolower($colaborador->cargo->departamento->area->nombre) }}
         </span>
     </td>
     <td class="">

@@ -26,9 +26,9 @@
                 </h3>
                 <div class="flex flex-col">
                     <div class="text-gray-500 capitalize flex gap-1">
-                        {{ mb_strtolower($colaborador->puesto->nombre_puesto, 'UTF-8') }}
+                        {{ mb_strtolower($colaborador->cargo->puesto->nombre, 'UTF-8') }}
                         -
-                        {{ mb_strtolower($colaborador->puesto->departamento->area->nombre_area, 'UTF-8') }}
+                        {{ mb_strtolower($colaborador->cargo->departamento->area->nombre, 'UTF-8') }}
                     </div>
                 </div>
             </div>

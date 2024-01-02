@@ -131,22 +131,22 @@
                                     </td>
                                     <td>
                                         <div class="font-normal">
-                                            {{ $colaborador->puesto->departamento->area->nombre_area }}
+                                            {{ $colaborador->cargo->departamento->area->nombre }}
                                         </div>
                                     </td>
                                     <td>
                                         <div class="font-normal">
-                                            {{ $colaborador->puesto->departamento->nombre_departamento }}
+                                            {{ $colaborador->cargo->departamento->nombre }}
                                         </div>
                                     </td>
                                     <td>
                                         <div class="font-normal">
-                                            {{ $colaborador->puesto->cargo->nombre_cargo }}
+                                            {{ $colaborador->cargo->nombre }}
                                         </div>
                                     </td>
                                     <td>
                                         <div class="font-normal">
-                                            {{ $colaborador->puesto->nombre_puesto }}
+                                            {{ $colaborador->cargo->puesto->nombre }}
                                         </div>
                                     </td>
                                     <td>

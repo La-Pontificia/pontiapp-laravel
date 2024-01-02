@@ -52,7 +52,8 @@ Route::get('/colaboradores/accesos/{id}', 'App\Http\Controllers\AccesoController
 Route::get('/colaboradores/supervisor/{id}', 'App\Http\Controllers\SupervisoreController@getSupervisorDeColaborador')->name('colaborador.supervisor')->middleware('authMiddleware');
 
 // PUESTOS
-Route::get('/get-puestos-by-area/{id}', 'App\Http\Controllers\PuestoController@getPuestosByArea')->middleware('authMiddleware');
+Route::get('/cargos/json/{id_puesto}', 'App\Http\Controllers\CargoController@byPuesto')->middleware('authMiddleware');
+
 
 
 Route::get('/accesos/{id}/disable', 'App\Http\Controllers\AccesoController@disableAccess')

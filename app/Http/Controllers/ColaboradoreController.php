@@ -32,7 +32,8 @@ class ColaboradoreController extends GlobalController
 
         $colab = $this->getCurrentColab();
         $acceso = $this->getAccesoColaboradores();
-        $accesoModulo = $acceso->crear == 1 || $acceso->leer == 1 || $acceso->actualizar == 1 || $acceso->eliminar == 1;
+        $accesoModulo = true;
+        // $accesoModulo = $acceso->crear == 1 || $acceso->leer == 1 || $acceso->actualizar == 1 || $acceso->eliminar == 1;
         $isAccess = $colab && $colab->rol == 1 || $colab && $colab->rol == 2 || $this->getAccesoColaboradores()->crear;
         if (!$isAccess && !$accesoModulo) {
             return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este modulo, si crees que fue un error comunicate con un administrador.']);
@@ -144,7 +145,7 @@ class ColaboradoreController extends GlobalController
             'nombres' => $request->input('nombres'),
             'correo_institucional' => $request->input('correo_institucional'),
             'id_sede' => $request->input('id_sede'),
-            'id_puesto' => $request->input('id_puesto'),
+            'id_cargo' => $request->input('id_cargo'),
         ]);
 
         User::create([

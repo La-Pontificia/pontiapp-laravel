@@ -104,15 +104,14 @@ class ReporteController extends Controller
         $id_puesto = request('puesto');
 
         if ($id_cargo && !$colaborador_id) {
+
             $query->whereHas('colaborador', function ($q) use ($id_cargo) {
-                $q->whereHas('puesto', function ($q) use ($id_cargo) {
-                    $q->where('id_cargo', $id_cargo);
-                });
+                $q->where('id_cargo', $id_cargo);
             });
         }
 
         if ($id_puesto && !$colaborador_id) {
-            $query->whereHas('colaborador', function ($q) use ($id_puesto) {
+            $query->whereHas('cargo', function ($q) use ($id_puesto) {
                 $q->where('id_puesto', $id_puesto);
             });
         }
@@ -158,7 +157,7 @@ class ReporteController extends Controller
         $edas->appends(request()->query());
         $cargos = Cargo::all();
         $puestos = Puesto::all();
-        if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
+        if ($id_puesto) $cargos = Cargo::where('id_puesto', $id_puesto)->get();
 
 
 
@@ -215,33 +214,33 @@ class ReporteController extends Controller
         $departamentos = Departamento::all();
         $areas = Area::all();
 
-        if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
+        if ($id_puesto) $cargos = Cargo::where('id_puesto', $id_puesto)->get();
         if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
-        if ($id_cargo) {
+        if ($id_puesto) {
             if ($id_departamento) {
-                $puestos = Puesto::where('id_cargo', $id_cargo)
+                $cargos = Cargo::where('id_puesto', $id_puesto)
                     ->where('id_departamento', $id_departamento)
                     ->get();
             }
-            $puestos = Puesto::where('id_cargo', $id_cargo)
+            $cargos = Cargo::where('id_puesto', $id_puesto)
                 ->get();
         }
 
         /// COLABORADORES
         $query = Colaboradore::orderBy('created_at', 'desc');
-        if ($id_cargo) {
-            $query->whereHas('puesto', function ($q) use ($id_cargo) {
-                $q->where('id_cargo', $id_cargo);
+        if ($id_cargo) $query->where('id_cargo', $id_cargo);
+
+        if ($id_puesto) {
+            $query->whereHas('cargo', function ($q) use ($id_puesto) {
+                $q->where('id_puesto', $id_puesto);
             });
         }
-
-        if ($id_puesto) $query->where('id_puesto', $id_puesto);
         if ($estado == '1') $query->where('estado', true);
         if ($estado == '2') $query->where('estado', false);
 
 
         if ($id_area) {
-            $query->whereHas('puesto', function ($q) use ($id_area) {
+            $query->whereHas('cargo', function ($q) use ($id_area) {
                 $q->whereHas('departamento', function ($q) use ($id_area) {
                     $q->where('id_area', $id_area);
                 });
@@ -279,10 +278,10 @@ class ReporteController extends Controller
                     'CORREO' => $colab->correo_institucional ?? '-',
                     'PERFIL' => $colab->perfil ?? '-',
                     'SUPERVISOR' =>  $colab->id_supervisor ? $colab->supervisor->apellidos . ' ' . $colab->supervisor->nombres : '-',
-                    'AREA' => $colab->puesto->departamento->area->nombre_area,
-                    'DEPARTAMENTO' => $colab->puesto->departamento->nombre_departamento,
-                    'CARGO' => $colab->puesto->cargo->nombre_cargo,
-                    'PUESTO' => $colab->puesto->nombre_puesto,
+                    'AREA' => $colab->cargo->departamento->area->nombre,
+                    'DEPARTAMENTO' => $colab->cargo->departamento->nombre,
+                    'CARGO' => $colab->cargo->nombre,
+                    'PUESTO' => $colab->cargo->puesto->nombre,
                     'SEDE' => $colab->sede->nombre,
                     'ESTADO' => $colab->estado ? 'ACTIVO' : 'INACTIVO',
                     'ROL' => $rol,
@@ -331,8 +330,8 @@ class ReporteController extends Controller
             'APELLIDOS Y NOMBRE' => $edaColab->colaborador->nombres . ' ' . $edaColab->colaborador->apellidos,
             'DNI' => $edaColab->colaborador->dni,
             'CORREO' => $edaColab->colaborador->correo_institucional ?: '-',
-            'CARG0' => $edaColab->colaborador->puesto->cargo->nombre_cargo,
-            'PUESTO' => $edaColab->colaborador->puesto->nombre_puesto,
+            'CARG0' => $edaColab->colaborador->cargo->nombre,
+            'PUESTO' => $edaColab->colaborador->cargo->puesto->nombre,
             'APROBADO' => $edaColab->aprobado ? 'S' : 'N',
             'FECHA APROBADO' => $edaColab->aprobado ? $edaColab->fecha_aprobado : '-',
             'CERRADO' => $edaColab->cerrado ? 'S' : 'N',

@@ -60,67 +60,63 @@
                             placeholder="Buscar colaborador" value="{{ request('search') }}">
                     </form>
                 </div>
-                @if ($a_colaborador->crear)
-                    <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
-                        class="text-white w-[200px] my-4 h-10 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-xl text-base px-5 text-center"
-                        type="button">
-                        Agregar
-                    </button>
-                @endif
+                {{-- @if ($a_colaborador->crear) --}}
+                <button data-modal-target="create-colab-modal" data-modal-toggle="create-colab-modal"
+                    class="text-white w-[200px] my-4 h-10 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-xl text-base px-5 text-center"
+                    type="button">
+                    Agregar
+                </button>
+                {{-- @endif --}}
 
             </header>
-            @if ($a_colaborador->leer)
-                <div class="relative min-h-[calc(100vh-300px)] shadow-md overflow-x-auto sm:rounded-lg">
-                    <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-base text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
-                                    Colaborador
-                                </th>
-                                <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
-                                    Supervisor
-                                </th>
-                                <th scope="col" class="px-2 py-3 ">
-                                    Cargo
-                                </th>
-                                <th scope="col" class="px-2 py-3 ">
-                                    Puesto
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Area
-                                </th>
-                                <th scope="col" class="px-2 py-3">
-                                    Estado
-                                </th>
-                                <th>
+            {{-- @if ($a_colaborador->leer) --}}
+            <div class="relative min-h-[calc(100vh-300px)] shadow-md overflow-x-auto sm:rounded-lg">
+                <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-base text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
+                                Colaborador
+                            </th>
+                            <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
+                                Supervisor
+                            </th>
+                            <th scope="col" class="px-2 py-3 ">
+                                Cargo
+                            </th>
+                            <th scope="col" class="px-2 py-3 ">
+                                Puesto
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Area
+                            </th>
+                            <th scope="col" class="px-2 py-3">
+                                Estado
+                            </th>
+                            <th>
 
-                                </th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($colaboradores as $colaborador)
+                            @include('colaboradore.item', ['colaborador' => $colaborador])
+                        @empty
+                            <tr>
+                                <td colspan="10">
+                                    <div class="p-10 grid place-content-center">
+                                        No hay colaboradores disponibles
+                                    </div>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($colaboradores as $colaborador)
-                                @include('colaboradore.item', ['colaborador' => $colaborador])
-                            @empty
-                                <tr>
-                                    <td colspan="10">
-                                        <div class="p-10 grid place-content-center">
-                                            No hay colaboradores disponibles
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-                <footer class="mt-4">
-                    {!! $colaboradores->links() !!}
-                </footer>
-            @else
-                @include('meta.commons.errorPageModular', [
-                    'titulo' => '',
-                    'descripcion' => 'No tienes acceso a ver las lista de colaboradores',
-                ])
-            @endif
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            <footer class="mt-4">
+                {!! $colaboradores->links() !!}
+            </footer>
+            {{-- @endif --}}
+
         </div>
     </div>
 
@@ -173,7 +169,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Error al crear el colaborador',
-                    text: error.message,
+                    text: err.response.data.error,
                 });
             }
 

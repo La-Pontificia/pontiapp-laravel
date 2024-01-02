@@ -31,38 +31,25 @@ class Colaboradore extends Model
         'dni' => 'required|numeric|digits:8', // Asegura que sea numérico y tenga 8 dígitos
         'apellidos' => 'required',
         'nombres' => 'required',
-        'id_puesto' => 'required',
+        'id_cargo' => 'required',
     ];
 
-    protected $perPage = 10;
-
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['dni', 'apellidos', 'nombres', 'correo_institucional', 'perfil', 'rol', 'estado', 'id_puesto', 'id_usuario', 'id_sede', 'id_supervisor'];
+    protected $perPage = 25;
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
+    protected $fillable = ['dni', 'apellidos', 'nombres', 'correo_institucional', 'perfil', 'rol', 'estado', 'id_cargo', 'id_usuario', 'id_sede', 'id_supervisor'];
+
+
     public function sede()
     {
         return $this->hasOne('App\Models\Sede', 'id', 'id_sede');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function puesto()
+    public function cargo()
     {
-        return $this->hasOne('App\Models\Puesto', 'id', 'id_puesto');
+        return $this->hasOne('App\Models\Cargo', 'id', 'id_cargo');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
     public function user()
     {
         return $this->hasOne('App\Models\User', 'id', 'id_usuario');

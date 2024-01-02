@@ -45,114 +45,114 @@ INSERT INTO
     `accesos`
 VALUES
     (
-        1,
+        11,
         'colaboradores',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        2,
+        12,
         'accesos',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        3,
+        13,
         'edas',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        4,
+        14,
         'areas',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        5,
+        15,
         'departamentos',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        6,
+        16,
         'cargos',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        7,
+        17,
         'puestos',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        8,
+        18,
         'sedes',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        9,
+        19,
         'reportes',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     ),
     (
-        10,
+        20,
         'objetivos',
         1,
         1,
         1,
         1,
-        1,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        3,
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     );
 
 /*!40000 ALTER TABLE `accesos` ENABLE KEYS */
@@ -171,78 +171,22 @@ LOCK TABLES `areas` WRITE;
 INSERT INTO
     `areas`
 VALUES
-    (
-        1,
-        'A001',
-        'ACADÉMICA',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        2,
-        'A002',
-        'ADMINISTRATIVO',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        3,
-        'A003',
-        'CENTRO DE IDIOMAS',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        4,
-        'A004',
-        'CONTABILIDAD Y FINANZAS',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        5,
-        'A005',
-        'EDUCACIÓN CONTINUA ',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        6,
-        'A006',
-        'INVESTIGACIÓN E INNOVACIÓN',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        7,
-        'A007',
-        'MARKETING Y COMERCIAL',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        8,
-        'A008',
-        'SECRETARÍA GENERAL ',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        9,
-        'A009',
-        'SISTEMAS',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        10,
-        'A010',
-        'GESTIÓN DE PERSONAS',
-        '2023-11-14 19:00:07',
-        NULL
-    );
+    (1, 'A001', 'Administrativo', NULL, NULL);
 
 /*!40000 ALTER TABLE `areas` ENABLE KEYS */
+;
+
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `auditoria`
+--
+LOCK TABLES `auditoria` WRITE;
+
+/*!40000 ALTER TABLE `auditoria` DISABLE KEYS */
+;
+
+/*!40000 ALTER TABLE `auditoria` ENABLE KEYS */
 ;
 
 UNLOCK TABLES;
@@ -261,40 +205,12 @@ VALUES
     (
         1,
         'C001',
-        'GERENTE GENERAL',
-        '2023-11-14 19:00:07',
+        'Director Administrativo',
+        1,
+        1,
+        NULL,
         NULL
-    ),
-    (
-        2,
-        'C002',
-        'DIRECTOR',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (3, 'C003', 'JEFE', '2023-11-14 19:00:07', NULL),
-    (
-        4,
-        'C004',
-        'COORDINADOR',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        5,
-        'C005',
-        'ASISTENTE',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        6,
-        'C006',
-        'ANALISTA',
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (7, 'C007', 'ASESOR', '2023-11-14 19:00:07', NULL);
+    );
 
 /*!40000 ALTER TABLE `cargos` ENABLE KEYS */
 ;
@@ -313,19 +229,19 @@ INSERT INTO
     `colaboradores`
 VALUES
     (
-        1,
-        '72377685',
-        'BENDEZU ÑAHUI',
-        'DAVID',
-        '72377685@elp.edu.pe',
+        3,
+        '00000000',
+        'DEV',
+        'Developer',
+        NULL,
         NULL,
         2,
         1,
-        58,
+        1,
         1,
         NULL,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     );
 
 /*!40000 ALTER TABLE `colaboradores` ENABLE KEYS */
@@ -370,56 +286,22 @@ LOCK TABLES `departamentos` WRITE;
 INSERT INTO
     `departamentos`
 VALUES
-    (
-        1,
-        'D001',
-        'ACADÉMICA DE C. GESTIÓN...',
-        1,
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        2,
-        'D002',
-        'ATENCIÓN AL ESTUDIANTE',
-        2,
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        3,
-        'D003',
-        'CONTABILIDAD',
-        4,
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        4,
-        'D004',
-        'BIENESTAR',
-        2,
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        5,
-        'D005',
-        'SISTEMAS',
-        9,
-        '2023-11-14 19:00:07',
-        NULL
-    ),
-    (
-        6,
-        'D006',
-        'TALENTO HUMANO',
-        10,
-        '2023-11-14 19:00:07',
-        NULL
-    );
+    (1, 'D001', 'Administrativo', 1, NULL, NULL);
 
 /*!40000 ALTER TABLE `departamentos` ENABLE KEYS */
+;
+
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `eda_colabs`
+--
+LOCK TABLES `eda_colabs` WRITE;
+
+/*!40000 ALTER TABLE `eda_colabs` DISABLE KEYS */
+;
+
+/*!40000 ALTER TABLE `eda_colabs` ENABLE KEYS */
 ;
 
 UNLOCK TABLES;
@@ -437,10 +319,10 @@ INSERT INTO
 VALUES
     (
         1,
-        2024,
-        0,
-        '2023-10-04 23:32:10',
-        '2023-10-04 23:32:10'
+        2023,
+        1,
+        '2024-01-03 04:03:43',
+        '2024-01-03 04:03:43'
     );
 
 /*!40000 ALTER TABLE `edas` ENABLE KEYS */
@@ -455,32 +337,6 @@ LOCK TABLES `evaluaciones` WRITE;
 
 /*!40000 ALTER TABLE `evaluaciones` DISABLE KEYS */
 ;
-
-INSERT INTO
-    `evaluaciones`
-VALUES
-    (
-        1,
-        0,
-        0,
-        0,
-        NULL,
-        NULL,
-        NULL,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
-    ),
-    (
-        2,
-        0,
-        0,
-        0,
-        NULL,
-        NULL,
-        NULL,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
-    );
 
 /*!40000 ALTER TABLE `evaluaciones` ENABLE KEYS */
 ;
@@ -509,6 +365,104 @@ LOCK TABLES `feedbacks` WRITE;
 ;
 
 /*!40000 ALTER TABLE `feedbacks` ENABLE KEYS */
+;
+
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `media`
+--
+LOCK TABLES `media` WRITE;
+
+/*!40000 ALTER TABLE `media` DISABLE KEYS */
+;
+
+/*!40000 ALTER TABLE `media` ENABLE KEYS */
+;
+
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `migrations`
+--
+LOCK TABLES `migrations` WRITE;
+
+/*!40000 ALTER TABLE `migrations` DISABLE KEYS */
+;
+
+INSERT INTO
+    `migrations`
+VALUES
+    (
+        1,
+        '2014_10_12_100000_create_password_reset_tokens_table',
+        1
+    ),
+    (
+        2,
+        '2014_10_12_100000_create_password_resets_table',
+        1
+    ),
+    (
+        3,
+        '2019_08_19_000000_create_failed_jobs_table',
+        1
+    ),
+    (
+        4,
+        '2019_12_14_000001_create_personal_access_tokens_table',
+        1
+    ),
+    (5, '2020_06_14_000001_create_media_table', 1),
+    (6, '2023_08_09_031813_create_edas_table', 1),
+    (7, '2023_08_09_193109_create_evaluaciones', 1),
+    (8, '2023_08_10_031629_create_sedes', 1),
+    (9, '2023_08_23_152448_create_areas_table', 1),
+    (
+        10,
+        '2023_08_24_152503_create_departamentos_table',
+        1
+    ),
+    (11, '2023_08_24_152509_create_puestos_table', 1),
+    (12, '2023_08_25_152456_create_cargos_table', 1),
+    (
+        13,
+        '2023_08_25_152523_create_colaboradores_table',
+        1
+    ),
+    (14, '2023_08_25_163913_create_accesos_table', 1),
+    (15, '2023_10_02_171137_create_cuestionarios', 1),
+    (
+        16,
+        '2023_10_03_031829_create_eda_colabs_table',
+        1
+    ),
+    (
+        17,
+        '2023_10_03_031936_create_feedbacks_table',
+        1
+    ),
+    (
+        18,
+        '2023_10_04_221122_create_objetivos_table',
+        1
+    ),
+    (19, '2023_11_14_170503_create_preguntas', 1),
+    (20, '2023_11_14_170650_create_plantillas', 1),
+    (
+        21,
+        '2023_11_14_171033_create_plantilla_pregunta',
+        1
+    ),
+    (
+        22,
+        '2023_11_14_171653_create_cuestionario_pregunta',
+        1
+    ),
+    (23, '2023_11_26_223605_create_auditoria', 1),
+    (24, '2023_12_29_000000_create_users_table', 1);
+
+/*!40000 ALTER TABLE `migrations` ENABLE KEYS */
 ;
 
 UNLOCK TABLES;
@@ -573,101 +527,6 @@ LOCK TABLES `plantilla_pregunta` WRITE;
 /*!40000 ALTER TABLE `plantilla_pregunta` DISABLE KEYS */
 ;
 
-INSERT INTO
-    `plantilla_pregunta`
-VALUES
-    (
-        9,
-        3,
-        3,
-        '2023-11-15 06:23:47',
-        '2023-11-15 06:23:47'
-    ),
-    (
-        10,
-        3,
-        5,
-        '2023-11-15 06:23:47',
-        '2023-11-15 06:23:47'
-    ),
-    (
-        11,
-        3,
-        6,
-        '2023-11-15 06:23:47',
-        '2023-11-15 06:23:47'
-    ),
-    (
-        12,
-        3,
-        8,
-        '2023-11-15 06:23:47',
-        '2023-11-15 06:23:47'
-    ),
-    (
-        13,
-        4,
-        2,
-        '2023-11-15 06:24:30',
-        '2023-11-15 06:24:30'
-    ),
-    (
-        14,
-        4,
-        5,
-        '2023-11-15 06:24:30',
-        '2023-11-15 06:24:30'
-    ),
-    (
-        15,
-        5,
-        2,
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    ),
-    (
-        16,
-        5,
-        3,
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    ),
-    (
-        17,
-        5,
-        4,
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    ),
-    (
-        18,
-        5,
-        5,
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    ),
-    (
-        19,
-        5,
-        6,
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    ),
-    (
-        20,
-        5,
-        7,
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    ),
-    (
-        21,
-        5,
-        8,
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    );
-
 /*!40000 ALTER TABLE `plantilla_pregunta` ENABLE KEYS */
 ;
 
@@ -681,34 +540,6 @@ LOCK TABLES `plantillas` WRITE;
 /*!40000 ALTER TABLE `plantillas` DISABLE KEYS */
 ;
 
-INSERT INTO
-    `plantillas`
-VALUES
-    (
-        3,
-        'Cuestionario 1',
-        0,
-        'supervisores',
-        '2023-11-15 06:23:47',
-        '2023-11-15 06:23:47'
-    ),
-    (
-        4,
-        'Cuestionario 2',
-        0,
-        'colaboradores',
-        '2023-11-15 06:24:30',
-        '2023-11-15 06:24:30'
-    ),
-    (
-        5,
-        'Cuestionario 2023',
-        0,
-        'supervisor',
-        '2023-11-15 06:55:19',
-        '2023-11-15 06:55:19'
-    );
-
 /*!40000 ALTER TABLE `plantillas` ENABLE KEYS */
 ;
 
@@ -721,52 +552,6 @@ LOCK TABLES `preguntas` WRITE;
 
 /*!40000 ALTER TABLE `preguntas` DISABLE KEYS */
 ;
-
-INSERT INTO
-    `preguntas`
-VALUES
-    (
-        2,
-        '¿Qué le aconsejas a tu colaborador que continúe mejorando?',
-        '2023-11-15 01:24:54',
-        '2023-11-15 01:24:54'
-    ),
-    (
-        3,
-        '¿Cuales son las fortalezas de tu colaborador?',
-        '2023-11-15 01:24:59',
-        '2023-11-15 01:24:59'
-    ),
-    (
-        4,
-        '¿Cuales son tus compromisos como líder para contribuir con el desempeño de tu colaborador?',
-        '2023-11-15 01:25:04',
-        '2023-11-15 01:25:04'
-    ),
-    (
-        5,
-        '¿Cuáles consideras que han sido tus principales logros (aquella tarea extra, actividad donde hayas logrado optimizar o reducir costos y tiempo, entre otras)?',
-        '2023-11-15 01:25:09',
-        '2023-11-15 01:25:09'
-    ),
-    (
-        6,
-        '¿En qué consideras que debes seguir trabajando?',
-        '2023-11-15 01:25:13',
-        '2023-11-15 01:25:13'
-    ),
-    (
-        7,
-        '¿Que le aconsejas a tu lider que deje de hacer?',
-        '2023-11-15 01:25:24',
-        '2023-11-15 01:25:24'
-    ),
-    (
-        8,
-        '¿Qué le aconsejas a tu líder que empiece hacer que hoy no está haciendo?',
-        '2023-11-15 01:25:29',
-        '2023-11-15 01:25:29'
-    );
 
 /*!40000 ALTER TABLE `preguntas` ENABLE KEYS */
 ;
@@ -784,654 +569,8 @@ LOCK TABLES `puestos` WRITE;
 INSERT INTO
     `puestos`
 VALUES
-    (
-        1,
-        'P001',
-        'COORDINADOR ACADÉMICO C. GESTIÓN Y TI',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        2,
-        'P002',
-        'JEFE ACADÉMICO C. GESTIÓN Y TI',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        3,
-        'P003',
-        'DIRECTOR ACADÉMICO',
-        2,
-        2,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        4,
-        'P004',
-        'JEFE ACADÉMICO C. SALUD',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        5,
-        'P006',
-        'DIRECTOR ADMINISTRATIVO',
-        2,
-        2,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        6,
-        'P007',
-        'DIRECTOR DE INVESTIGACIÓN E INNOVACIÓN ',
-        2,
-        2,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        7,
-        'P008',
-        'DIRECTOR GENERAL',
-        2,
-        2,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        8,
-        'P009',
-        'DIRECTORA DE GESTIÓN Y FINANZAS ',
-        2,
-        2,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        9,
-        'P010',
-        'DIRECTORA DE MARKETING Y COMERCIAL',
-        2,
-        2,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        10,
-        'P011',
-        'JEFE DE ADMISIÓN',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        11,
-        'P012',
-        'JEFE DE ADMISIÓN ELP',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        12,
-        'P013',
-        'JEFE DE COMUNICACIONES ',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        13,
-        'P014',
-        'JEFE DE GESTIÓN DE PERSONAS',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        14,
-        'P015',
-        'JEFE DE REGISTRO DE GRADOS Y TÍTULOS ',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        15,
-        'P016',
-        'JEFE DE SECRETARÍA ACADÉMICA  ',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        16,
-        'P017',
-        'JEFE DE SISTEMAS',
-        3,
-        3,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        17,
-        'P018',
-        'COORDINADOR ACADÉMICO C. SALUD',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        18,
-        'P019',
-        'COORDINADOR DE ATENCIÓN AL ESTUDIANTE',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        19,
-        'P020',
-        'COORDINADOR DE BIENESTAR ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        20,
-        'P021',
-        'COORDINADOR DE CALIDAD EDUCATIVA',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        21,
-        'P022',
-        'COORDINADOR DE CESTIFICACIONES',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        22,
-        'P023',
-        'COORDINADOR DE CLOUD, REDES Y CONECTIVIDAD  ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        23,
-        'P024',
-        'COORDINADOR DE COMUNICACIONES DE EC Y CI ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        24,
-        'P025',
-        'COORDINADOR DE COMUNICACIONES ELP ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        25,
-        'P026',
-        'COORDINADOR DE COMUNICACIONES ILP ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        26,
-        'P027',
-        'COORDINADOR DE CONTABILIDAD',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        27,
-        'P028',
-        'COORDINADOR DE EDUCACIÓN CONTINUA ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        28,
-        'P029',
-        'COORDINADOR DE EXPERIENCIA DEL ESTUDIANTE',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        29,
-        'P030',
-        'COORDINADOR DE RECAUDACIONES  ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        30,
-        'P031',
-        'COORDINADOR DE SECRETARÍA ACADÉMICA ILP',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        31,
-        'P032',
-        'COORDINADOR DE SERVICIOS Y DEMANDA',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        32,
-        'P033',
-        'COORDINADOR DE TALENTO ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        33,
-        'P034',
-        'COORDINADOR DE TESORERÍA ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        34,
-        'P035',
-        'COORDINADOR DEL CENTRO DE IDIOMAS ',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        35,
-        'P036',
-        'COORDINADOR DEL CENTRO DE INFORMACIÓN',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        36,
-        'P037',
-        'COORDINADOR DE INFRAESTRUCTURA',
-        4,
-        4,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        37,
-        'P038',
-        'ASESOR DE ADMISIÓN CI  ',
-        7,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        38,
-        'P039',
-        'ASESOR DE ADMISIÓN EC  ',
-        7,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        39,
-        'P040',
-        'ASESOR DE ADMISIÓN ELP ',
-        7,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        40,
-        'P041',
-        'ASESOR DE ADMISIÓN ELP Y ILP  ',
-        7,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        41,
-        'P042',
-        'ASESOR DE ADMISIÓN ILP ',
-        7,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        42,
-        'P043',
-        'ASISTENTE ACADÉMICO C. GESTIÓN Y TI  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        43,
-        'P044',
-        'ASISTENTE ACADÉMICO C. SALUD  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        44,
-        'P045',
-        'ASISTENTE ADMINISTRATIVO ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        45,
-        'P046',
-        'ASISTENTE DE ATENCIÓN AL ESTUDIANTE  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        46,
-        'P047',
-        'ASISTENTE DE BIENESTAR ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        47,
-        'P048',
-        'ASISTENTE DE BOLSA DE TRABAJO ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        48,
-        'P049',
-        'ASISTENTE DE CERTIFICACIONES  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        49,
-        'P050',
-        'ASISTENTE DE COMUNICACIONES DE EC Y CI ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        50,
-        'P051',
-        'ASISTENTE DE CONTABILIDAD',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        51,
-        'P052',
-        'ASISTENTE DE DIRECCIÓN GENERAL',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        52,
-        'P053',
-        'ASISTENTE DE EXPERIENCIA DEL ESTUDIANTE',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        53,
-        'P054',
-        'ASISTENTE DE GRADOS Y TÍTULOS ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        54,
-        'P055',
-        'ASISTENTE DE INFRAESTRUCTURA  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        55,
-        'P056',
-        'ASISTENTE DE MENTORIA  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        56,
-        'P057',
-        'ASISTENTE DE RECAUDACIÓN ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        57,
-        'P058',
-        'ASISTENTE DE REDES SOCIALES',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        58,
-        'P059',
-        'ASISTENTE DE SISTEMAS  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        59,
-        'P060',
-        'ASISTENTE DE TESORERÍA ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        60,
-        'P061',
-        'ASISTENTE DE TÓPICO ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        61,
-        'P062',
-        'ASISTENTE DEL CENTRO DE INDORMACIÓN  ',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        62,
-        'P063',
-        'ASISTENTE SECRETARÍA ACADÉMICA ELP',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        63,
-        'P064',
-        'ASISTENTE SECRETARÍA ACADÉMICA ILP',
-        5,
-        5,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        64,
-        'P065',
-        'ANALISTA DE CALIDAD EDUCATIVA ',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        65,
-        'P066',
-        'ANALISTA DE DISEÑO Y PRODUCCIÓN ILP  ',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        66,
-        'P067',
-        'ANALISTA DE GESTIÓN DE PERSONAS ',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        67,
-        'P068',
-        'ANALISTA DE MENTORIA',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        68,
-        'P069',
-        'ANALISTA DE MESA DE AYUDA',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        69,
-        'P070',
-        'ANALISTA DE TALENTO ',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        70,
-        'P071',
-        'ANALISTA LEGAL  ',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        71,
-        'P072',
-        'ANALISTA SECRETARIA ACADÉMICA ILP ',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    ),
-    (
-        72,
-        'P073',
-        'ANALISTA SENIOR DE FINANZAS',
-        6,
-        6,
-        '2023-11-14 19:00:08',
-        NULL
-    );
+    (1, 'P001', 'Director', NULL, NULL),
+    (2, 'P002', 'Asesor', NULL, NULL);
 
 /*!40000 ALTER TABLE `puestos` ENABLE KEYS */
 ;
@@ -1449,9 +588,7 @@ LOCK TABLES `sedes` WRITE;
 INSERT INTO
     `sedes`
 VALUES
-    (1, 'ALAMEDA', NULL, NULL, NULL),
-    (2, 'JAZMINES', NULL, NULL, NULL),
-    (3, 'CASUARINAS', NULL, NULL, NULL);
+    (1, 'Alameda', '', NULL, NULL);
 
 /*!40000 ALTER TABLE `sedes` ENABLE KEYS */
 ;
@@ -1470,15 +607,15 @@ INSERT INTO
     `users`
 VALUES
     (
-        1,
-        'DAVID',
-        '72377685',
-        1,
+        3,
+        'Developer',
+        '00000000',
+        3,
         NULL,
-        '$2y$10$Gb6hxDzJ/RktUr78H3DIu.abnJ7PjWdBp1MghWvhL1BdlVFmBDq1e',
+        '$2y$10$84jG7KS6Qm75ZqfojudaU.G.r8DrL8jOoHQzVXNkkKlyt54q2njsG',
         NULL,
-        '2023-11-15 00:00:35',
-        '2023-11-15 00:00:35'
+        '2024-01-03 04:47:06',
+        '2024-01-03 04:47:06'
     );
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */
@@ -1510,4 +647,4 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */
 ;
 
--- Dump completed on 2023-11-14 21:06:14
+-- Dump completed on 2024-01-02 18:50:19

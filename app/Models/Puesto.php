@@ -23,10 +23,8 @@ class Puesto extends Model
 {
 
     static $rules = [
-        // 'codigo_puesto' => 'required',
         'nombre_puesto' => 'required',
-        'id_departamento' => 'required',
-        'id_cargo' => 'required',
+
     ];
 
     protected $perPage = 20;
@@ -36,27 +34,5 @@ class Puesto extends Model
      *
      * @var array
      */
-    protected $fillable = ['codigo_puesto', 'nombre_puesto', 'id_departamento', 'id_cargo'];
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function colaboradores()
-    {
-        return $this->hasMany('App\Models\Colaboradore', 'id_puesto', 'id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function departamento()
-    {
-        return $this->hasOne('App\Models\Departamento', 'id', 'id_departamento');
-    }
-
-    public function cargo()
-    {
-        return $this->hasOne('App\Models\Cargo', 'id', 'id_cargo');
-    }
+    protected $fillable = ['codigo_puesto', 'nombre_puesto'];
 }
