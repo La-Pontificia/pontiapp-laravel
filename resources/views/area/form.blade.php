@@ -3,13 +3,13 @@
 
         <div class="form-group">
             {{ Form::label('Código') }}
-            {{ Form::text('codigo_area', $area->codigo_area, ['class' => 'form-control' . ($errors->has('codigo_area') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('codigo_area', '<div class="invalid-feedback">:message</div>') !!}
+            {{ Form::text('codigo', $area->codigo, ['class' => 'form-control' . ($errors->has('codigo') ? ' is-invalid' : '')]) }}
+            {!! $errors->first('codigo', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
             {{ Form::label('Nombre') }}
-            {{ Form::text('nombre_area', $area->nombre_area, ['class' => 'form-control' . ($errors->has('nombre_area') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('nombre_area', '<div class="invalid-feedback">:message</div>') !!}
+            {{ Form::text('nombre', $area->nombre, ['class' => 'form-control' . ($errors->has('nombre') ? ' is-invalid' : '')]) }}
+            {!! $errors->first('nombre', '<div class="invalid-feedback">:message</div>') !!}
         </div>
 
     </div>
