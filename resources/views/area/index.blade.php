@@ -145,9 +145,9 @@
                     <tr class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                         {{-- <td>{{ ++$i }}</td> --}}
                         <td class="px-6 py-4 font-medium  whitespace-nowrap dark:text-white">
-                            {{ $area->codigo_area }}</td>
+                            {{ $area->codigo }}</td>
                         <td class="px-6 py-4">
-                            {{ $area->nombre_area }}</td>
+                            {{ $area->nombre }}</td>
                         {{-- <td class="px-6 py-4">{{ $area->created_at }}</td>
                                             <td class="px-6 py-4">{{ $area->updated_at }}</td> --}}
                         <td class="px-6 py-4">
@@ -155,7 +155,7 @@
                                 <a class="btn btn-sm btn-success" href="{{ route('areas.edit', $area->id) }}"><i
                                         class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
                                 @csrf
-                                
+
                             </form>
                         </td>
                     </tr>
