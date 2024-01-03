@@ -147,9 +147,9 @@
                         <tr
                             class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="px-6 py-4 font-medium  whitespace-nowrap dark:text-white">
-                                {{ $puesto->codigo_puesto }}</td>
+                                {{ $puesto->codigo }}</td>
                             <td class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
-                                {{ $puesto->nombre_puesto }}</td>
+                                {{ $puesto->nombre}}</td>
                             {{-- <td class="px-6 py-4">{{ $puesto->cargo->departamento->nombre }}</td> --}}
                             {{-- <td class="px-6 py-4">{{ $puesto->cargo->nombre_cargo }}</td> --}}
                             <td class="px6 -py-4">

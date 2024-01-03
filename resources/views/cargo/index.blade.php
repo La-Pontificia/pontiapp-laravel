@@ -180,9 +180,9 @@
                             class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                             {{-- <td>{{ ++$i }}</td> --}}
                             <td class="px-6 py-4">
-                                {{ $cargo->codigo_cargo }}</td>
+                                {{ $cargo->codigo }}</td>
                             <td class="px-6 py-4">
-                                {{ $cargo->nombre_cargo }}</td>
+                                {{ $cargo->nombre}}</td>
                             <td class="px-6 py-4">
                                 <form action="{{ route('cargos.destroy', $cargo->id) }}" method="POST">
                                     <a class="btn btn-sm btn-success" href="{{ route('cargos.edit', $cargo->id) }}"><i

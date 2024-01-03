@@ -57,7 +57,7 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         // obtenemos el ultimo codigo de area
-        $codeUltimate = Area::max('codigo_area');
+        $codeUltimate = Area::max('codigo');
 
         // creamos el nuevo codigo
         $numero = (int)substr($codeUltimate, 1) + 1;
@@ -67,7 +67,7 @@ class AreaController extends Controller
 
         // creamos el area
         $data = array_merge($validatedData, [
-            'codigo_area' => $newCode,
+            'codigo' => $newCode,
         ]);
 
         Area::create($data);

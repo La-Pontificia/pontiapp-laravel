@@ -137,11 +137,11 @@
                             class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                             {{-- <td>{{ ++$i }}</td> --}}
                             <td class="px-6 py-4">
-                                {{ $departamento->codigo_departamento }}</td>
+                                {{ $departamento->codigo}}</td>
                             <td class="px-6 py-4">
-                                {{ $departamento->nombre_departamento }}</td>
+                                {{ $departamento->nombre}}</td>
                             <td class="px-6 py-4">
-                                {{ $departamento->area->nombre_area }}</td>
+                                {{ $departamento->area->nombre}}</td>
                             <td class="px-6 py-4">
                                 <form action="{{ route('departamentos.destroy', $departamento->id) }}" method="POST">
                                     <a class="btn btn-sm btn-success"
