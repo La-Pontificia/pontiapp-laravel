@@ -1,201 +1,145 @@
 @extends('layouts.sidebar')
 
 @section('content-sidebar')
-    <!-- Modal toggle -->
-    <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
-        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        type="button">
-        Nueva Cargo
-    </button>
-
-    <!-- Main modal -->
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
-        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <button type="button"
-                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                    data-modal-hide="authentication-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-                <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Registrar Cargo</h3>
-                    {{-- <form action="" method="POST">
-                        @csrf --}}
-                    {{-- <div>
-                            <label for="codigo"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Codigo</label>
-                            <input type="text" id="codigo"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required>
-                        </div> --}}
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('cargos.store') }}" role="form"
-                            enctype="multipart/form-data">
-                            @csrf
-
-                            {{-- <div>
-                                <label for="nuevo cargo"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nuevo
-                                    Cargo<!-- Main modal -->
-                                    <div id="nuevo cargo" tabindex="-1" aria-hidden="true"
-                                        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                        <div class="relative w-full max-w-md max-h-full">
-                                            <!-- Modal content -->
-                                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                <button type="button"
-                                                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                                    data-modal-hide="authentication-modal">
-                                                    <svg class="w-3 h-3" aria-hidden="true"
-                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                        viewBox="0 0 14 14">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                    </svg>
-                                                    <span class="sr-only">Close modal</span>
-                                                </button>
-                                                <div class="px-6 py-6 lg:px-8">
-                                                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                                                        Registrar
-                                                        Cargos</h3>
-
-                                                    <form method="POST" action="{{ route('cargos.store') }}" role="form"
-                                                        enctype="multipart/form-data">
-                                                        @csrf --}}
-
-                            <div>
-                                <label for="nuevo_cargo"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nueva
-                                    Cargo</label>
-                                <input name="nombre_cargo" type="text" id="nuevo_cargo"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="" required>
-                            </div>
-                            <footer class="pt-4">
-                                <button type="submit"
-                                    class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Registrar</button>
-                                {{-- <button type="button"
-                                                        class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cerrar</button> --}}
-                            </footer>
-                        </form>
-
-                    </div>
-
-                </div>
-            </div>
+    <div class="max-w-3xl mx-auto w-full">
+        <div class="py-3">
+            <h1 class="font-semibold text-3xl">Gestión de cargos</h1>
+            <button data-modal-target="crear-modal" data-modal-toggle="crear-modal"
+                class="flex items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                type="button">
+                <svg class="w-4" aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 1v16M1 9h16" />
+                </svg>
+                Agregar nuevo cargo
+            </button>
         </div>
-
-
-
-
-
-
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-base text-left text-gray-800 font-medium">
+                    <thead class="thead">
+                        <tr class="[&>th]:p-3">
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th>Puesto</th>
+                            <th>Cargo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($cargos as $cargo)
+                            <tr class="border-b even:bg-gray-100 bg-white hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    {{ $cargo->codigo }}</td>
+                                <td class="px-6 py-4">
+                                    {{ $cargo->nombre }}</td>
+                                <td class="px-6 py-4">
+                                    {{ $cargo->puesto->nombre }}</td>
+                                <td class="px-6 py-4">
+                                    {{ $cargo->departamento->nombre }}</td>
+                                <td class="px-6 py-4">
+                                    <button data-modal-target="{{ $cargo->id }}-editar"
+                                        data-modal-toggle="{{ $cargo->id }}-editar"
+                                        class="flex items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                        type="button">
+                                        <svg class="w-4" aria-hidden="true" fill="none" viewBox="0 0 21 21">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
+                                        </svg>
+                                        Editar
+                                    </button>
+                                    <div id="{{ $cargo->id }}-editar" data-modal-backdrop="static" tabindex="-1"
+                                        aria-hidden="true"
+                                        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative p-4 w-full max-w-xl max-h-full">
+                                            <div class="relative bg-white rounded-lg shadow">
+                                                <div
+                                                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                                                    <h3 class="text-xl font-semibold text-gray-900 ">
+                                                        Editar cargo
+                                                    </h3>
+                                                    <button type="button"
+                                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                                        data-modal-hide="{{ $cargo->id }}-editar">
+                                                        <svg class="w-3 h-3" aria-hidden="true" fill="none"
+                                                            viewBox="0 0 14 14">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <form method="POST" action="{{ route('cargos.update', $cargo->id) }}"
+                                                    role="form" class="edit-form" enctype="multipart/form-data">
+                                                    <div class="p-2">
+                                                        {{ method_field('PATCH') }}
+                                                        @csrf
+                                                        @include('cargo.form', [
+                                                            'enableCode' => true,
+                                                        ])
+                                                    </div>
+                                                    <div
+                                                        class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                                                        <button data-modal-hide="static-modal" type="submit"
+                                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center ">
+                                                            Editar
+                                                        </button>
+                                                        <button data-modal-hide="{{ $cargo->id }}-editar" type="button"
+                                                            class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">Cancelar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            {!! $cargos->links() !!}
+        </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
-    {{-- inicio del comentario --}}
-
-    {{-- <div class="container-fluid">
-        <div class="row">
-
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Nuevo cargo</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST" id="form-carg" action="{{ route('cargos.store') }}" role="form"
-                                enctype="multipart/form-data">
-                                @csrf
-                                @include('cargo.form')
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
+    {{-- modals --}}
+    <div id="crear-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900 ">
+                        Agregar cargo
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                        data-modal-hide="crear-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                    </button>
                 </div>
-            </div>
-
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span id="card_title">
-                                {{ __('Cargo') }}
-                            </span>
-                            <button type="button" style="width: 200px;" class="btn btn-primary" data-toggle="modal"
-                                data-target="#exampleModal">
-                                Crear nuevo
-                            </button>
-                        </div>
+                <form class="create-form" method="POST" action="{{ route('cargos.store') }}" role="form"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="space-y-4">
+                        @include('cargo.form', [
+                            'enableCode' => false,
+                            'cargo' => $cargoForm,
+                        ])
                     </div>
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif --}}
-
-    {{-- fin del comentario --}}
-
-
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="thead">
-                    <tr>
-                        <th>N°</th>
-                        <th>Codigo</th>
-                        <th>Nombre</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-
-                <tbody>
-
-                    @foreach ($cargos as $cargo)
-                        <tr
-                            class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            {{-- <td>{{ ++$i }}</td> --}}
-                            <td class="px-6 py-4">
-                                {{ $cargo->codigo }}</td>
-                            <td class="px-6 py-4">
-                                {{ $cargo->nombre}}</td>
-                            <td class="px-6 py-4">
-                                <form action="{{ route('cargos.destroy', $cargo->id) }}" method="POST">
-                                    <a class="btn btn-sm btn-success" href="{{ route('cargos.edit', $cargo->id) }}"><i
-                                            class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
-                                    @csrf
-                                    
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
+                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                        <button data-modal-hide="static-modal" type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center ">
+                            Crear
+                        </button>
+                        <button data-modal-hide="crear-modal" type="button"
+                            class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">Cancelar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        {!! $cargos->links() !!}
-    @endsection
+    </div>
+@endsection

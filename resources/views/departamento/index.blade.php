@@ -2,127 +2,21 @@
 
 
 @section('content-sidebar')
-    <!-- Modal toggle -->
-    <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
-        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        type="button">
-        Nuevo Departamento
-    </button>
-
-    {{-- <div class="container-fluid">
-        <div class="row">
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Nuevo Departamento</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST" id="form-carg" action="{{ route('departamentos.store') }}" role="form"
-                                enctype="multipart/form-data">
-                                @csrf
-                                @include('departamento.form')
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-
-                            <span id="card_title">
-                                {{ __('Departamentos') }}
-                            </span>
-
-                            <button type="button" style="width: 200px;" class="btn btn-primary" data-toggle="modal"
-                                data-target="#exampleModal">
-                                Crear nuevo
-                            </button>
-                        </div>
-                    </div>
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif --}}
-
-
-    {{-- modal --}}
-
-    <!-- Main modal -->
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
-        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <button type="button"
-                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                    data-modal-hide="authentication-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-                @includeif('partials.errors')
-                <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Registrar Departamento</h3>
-                    <form method="POST" action="{{ route('departamentos.store') }}" role="form"
-                        enctype="multipart/form-data">
-                        @csrf
-                        <div>
-                            <label for="area"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Area</label>
-                            <select name="id_area" id="area"
-                                class="block w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                @foreach ($areas as $area)
-                                    <option value="{{ $area->id }}">{{ $area->nombre_area }}</option>
-                                @endforeach
-
-                                {{-- <option value="US">United States</option>
-                                                            <option value="CA">Canada</option>
-                                                            <option value="FR">France</option>
-                                                            <option value="DE">Germany</option> --}}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="departamento"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Departamento</label>
-                            <input name="nombre_departamento" type="text" id="departamento"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required>
-                        </div>
-
-                        <footer class="pt-4">
-                            <button
-                                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Registrar</button>
-                            {{-- <button type="button"
-                                                            class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cerrar</button> --}}
-                        </footer>
-                    </form>
-
-                </div>
-            </div>
+    <div class="max-w-3xl mx-auto w-full">
+        <div class="py-3">
+            <h1 class="font-semibold text-3xl">Gestión de departamentos</h1>
+            <button data-modal-target="crear-modal" data-modal-toggle="crear-modal"
+                class="flex items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                type="button">
+                <svg class="w-4" aria-hidden="true" fill="none" viewBox="0 0 18 18">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 1v16M1 9h16" />
+                </svg>
+                Agregar nuevo departamento
+            </button>
         </div>
-    </div>
-
-
-
-
-    <div class="card-body">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <table class="w-full text-base font-medium text-left text-gray-800">
                 <thead class="thead">
                     <tr>
                         <th class="px-6 py-4">Codigo</th>
@@ -133,33 +27,149 @@
                 </thead>
                 <tbody>
                     @foreach ($departamentos as $departamento)
-                        <tr
-                            class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            {{-- <td>{{ ++$i }}</td> --}}
+                        <tr class="border-b even:bg-gray-100 bg-white hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="px-6 py-4">
-                                {{ $departamento->codigo}}</td>
+                                {{ $departamento->codigo }}</td>
                             <td class="px-6 py-4">
-                                {{ $departamento->nombre}}</td>
+                                {{ $departamento->nombre }}</td>
                             <td class="px-6 py-4">
-                                {{ $departamento->area->nombre}}</td>
+                                {{ $departamento->area->nombre }}</td>
                             <td class="px-6 py-4">
-                                <form action="{{ route('departamentos.destroy', $departamento->id) }}" method="POST">
-                                    <a class="btn btn-sm btn-success"
-                                        href="{{ route('departamentos.edit', $departamento->id) }}"><i
-                                            class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
-                                    @csrf
-                                    
-                                </form>
+                                <button data-modal-target="{{ $departamento->id }}-editar"
+                                    data-modal-toggle="{{ $departamento->id }}-editar"
+                                    class="flex items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                                    type="button">
+                                    <svg class="w-4" aria-hidden="true" fill="none" viewBox="0 0 21 21">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279" />
+                                    </svg>
+                                    Editar
+                                </button>
+                                <div id="{{ $departamento->id }}-editar" data-modal-backdrop="static" tabindex="-1"
+                                    aria-hidden="true"
+                                    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                    <div class="relative p-4 w-full max-w-xl max-h-full">
+                                        <!-- Modal content -->
+                                        <div class="relative bg-white rounded-lg shadow">
+                                            <!-- Modal header -->
+                                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                                                <h3 class="text-xl font-semibold text-gray-900 ">
+                                                    Editar departamento
+                                                </h3>
+                                                <button type="button"
+                                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                                    data-modal-hide="{{ $departamento->id }}-editar">
+                                                    <svg class="w-3 h-3" aria-hidden="true" fill="none"
+                                                        viewBox="0 0 14 14">
+                                                        <path stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="2"
+                                                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <!-- Modal body -->
+                                            <form method="POST"
+                                                action="{{ route('departamentos.update', $departamento->id) }}"
+                                                role="form" class="edit-form" enctype="multipart/form-data">
+                                                <div class="p-4 md:p-5 space-y-4">
+                                                    {{ method_field('PATCH') }}
+                                                    @csrf
+                                                    @include('departamento.form', ['enableCode' => true])
+                                                </div>
+                                                <div
+                                                    class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                                                    <button data-modal-hide="static-modal" type="submit"
+                                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center ">
+                                                        Editar
+                                                    </button>
+                                                    <button data-modal-hide="{{ $departamento->id }}-editar" type="button"
+                                                        class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">Cancelar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+        {!! $departamentos->links() !!}
     </div>
+
+
+    {{-- modals --}}
+
+
+    <div id="crear-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900 ">
+                        Agregar departamento
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                        data-modal-hide="crear-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                    </button>
+                </div>
+                <form class="create-form" method="POST" action="{{ route('departamentos.store') }}" role="form"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="p-4 md:p-5 space-y-4">
+                        @include('departamento.form', [
+                            'enableCode' => false,
+                            'departamento' => $departamentoForm,
+                        ])
+                    </div>
+
+                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                        <button data-modal-hide="static-modal" type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center ">
+                            Crear
+                        </button>
+                        <button data-modal-hide="crear-modal" type="button"
+                            class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    {!! $departamentos->links() !!}
-    </div>
-    </div>
-    </div>
+@endsection
+
+
+@section('script')
+    <script>
+        const formsEdit = document.querySelectorAll('.edit-form');
+        formsEdit.forEach((form) => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                axios.post(this.action, formData)
+                    .then(function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Registro actualizado correctamente!',
+                        }).then(() => {
+                            window.location.href = window.location.href;
+                        });
+                    })
+                    .catch(function(error) {
+                        console.log(error)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al actualizar el Registro',
+                            text: error.response.data.error,
+                        });
+                    });
+            });
+        });
+    </script>
 @endsection

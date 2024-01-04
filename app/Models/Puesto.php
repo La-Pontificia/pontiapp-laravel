@@ -23,7 +23,7 @@ class Puesto extends Model
 {
 
     static $rules = [
-        'nombre_puesto' => 'required',
+        'nombre' => 'required',
 
     ];
 
@@ -34,5 +34,5 @@ class Puesto extends Model
      *
      * @var array
      */
-    protected $fillable = ['codigo_puesto', 'nombre_puesto'];
+    protected $fillable = ['codigo', 'nombre'];
 }

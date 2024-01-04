@@ -1,31 +1,26 @@
-<div class="box box-info padding-1">
-    <div class="box-body">
+<div class="p-2 grid gap-2">
+    @if ($enableCode)
+        <label>Código
+            <input value="{{ $departamento->codigo }}" required type="text" class="p-3 w-full rounded-full px-4"
+                name="codigo" placeholder="Ingrese el código ">
+        </label>
+    @endif
 
-        <div class="form-group">
-            <label for="codigo_departamento">Código de departamento</label>
-            <input type="text" class="form-control input-md input-primary" id="codigo_departamento" name="codigo_departamento" placeholder="Ingrese el código de departamento">
-          </div>
-          
-        
-        <div class="form-group">
-            <input name="codigo_departamento" type="text">
-            {{ Form::label('Código') }}
-            {{ Form::text('codigo_departamento', $departamento->codigo_departamento, ['class' => 'form-control' . ($errors->has('codigo_departamento') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('codigo_departamento', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('Nombre') }}
-            {{ Form::text('nombre_departamento', $departamento->nombre_departamento, ['class' => 'form-control' . ($errors->has('nombre_departamento') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('nombre_departamento', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
-        <div class="form-group">
-            {{ Form::label('Area') }}
-            {{ Form::select('id_area', $areas, $departamento->id_area, ['class' => 'form-control' . ($errors->has('id_area') ? ' is-invalid' : '')]) }}
-            {!! $errors->first('id_area', '<div class="invalid-feedback">:message</div>') !!}
-        </div>
+    <label>Nombre
+        <input value="{{ $departamento->nombre }}" type="text" class="p-3 w-full rounded-full px-4" name="nombre"
+            placeholder="Ingrese el nombre">
+    </label>
 
-    </div>
-    <div class="box-footer mt20">
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">{{ __('Crear') }}</button>
-    </div>
+    <label for="">
+        <span>Area</span>
+        <select required name="id_area" class="p-3 w-full rounded-full px-4">
+            <option selected value="">Selecciona una area</option>
+            @foreach ($areas as $area)
+                <option {{ $departamento->id_area == $area->id ? 'selected' : '' }} value="{{ $area->id }}">
+                    {{ $area->nombre }}
+                </option>
+            @endforeach
+        </select>
+    </label>
+
 </div>

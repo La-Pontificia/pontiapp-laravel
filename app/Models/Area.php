@@ -22,7 +22,7 @@ class Area extends Model
 
   static $rules = [
     // 'codigo_area' => 'required',
-    'nombre_area' => 'required',
+    'nombre' => 'required',
   ];
 
   protected $perPage = 20;
@@ -32,7 +32,7 @@ class Area extends Model
    *
    * @var array
    */
-  protected $fillable = ['codigo_area', 'nombre_area'];
+  protected $fillable = ['codigo', 'nombre'];
 
 
   /**

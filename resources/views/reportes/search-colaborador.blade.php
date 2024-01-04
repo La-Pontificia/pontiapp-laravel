@@ -24,7 +24,7 @@
             <option selected value="">Cargo</option>
             @foreach ($cargos as $cargo)
                 <option {{ $cargoRecover == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
-                    {{ $cargo->nombre_cargo }}
+                    {{ $cargo->nombre }}
                 </option>
             @endforeach
         </select>
@@ -33,7 +33,7 @@
             <option selected value="">Puesto</option>
             @foreach ($puestos as $puesto)
                 <option {{ $puestoRecover == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
-                    {{ $puesto->nombre_puesto }}
+                    {{ $puesto->nombre }}
                 </option>
             @endforeach
         </select>

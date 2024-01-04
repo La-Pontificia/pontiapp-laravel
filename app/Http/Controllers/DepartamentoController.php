@@ -2,151 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Acceso;
 use App\Models\Area;
-use App\Models\Colaboradore;
 use App\Models\Departamento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-/**
- * Class DepartamentoController
- * @package App\Http\Controllers
- */
 class DepartamentoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $departamento = new Departamento();
-        $departamentos = Departamento::paginate();
+        $departamentoForm = new Departamento();
+        $departamentos = Departamento::orderBy('codigo', 'asc')->paginate();
         $areas = Area::all();
-        return view('departamento.index', compact('departamentos', 'departamento', 'areas'))
+        return view('departamento.index', compact('departamentos', 'departamentoForm', 'areas'))
             ->with('i', (request()->input('page', 1) - 1) * $departamentos->perPage());
     }
 
 
-
-
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $departamento = new Departamento();
-        return view('departamento.create', compact('departamento'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-
-
-
-
-
-
-
-
-
-
-
-
     public function store(Request $request)
     {
-        // obtenemos el ultimo codigo de departamento
-        $codeUltimate = Departamento::max('codigo_departamento');
-
-        // creamos el nuevo codigo
+        $codeUltimate = Departamento::max('codigo');
         $numero = (int)substr($codeUltimate, 1) + 1;
         $newCode = 'D' . str_pad($numero, 3, '0', STR_PAD_LEFT);
-
-        // validamos los datos
         $validatedData = $request->validate(Departamento::$rules);
-
-        // creamos el departamento
         $data = array_merge($validatedData, [
-            'codigo_departamento' => $newCode,
+            'codigo' => $newCode,
         ]);
-
         Departamento::create($data);
-
         return redirect()->route('departamentos.index')
             ->with('success', 'Departamento created successfully.');
     }
 
-
-
-
-
-
-
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $departamento = Departamento::find($id);
-
-        return view('departamento.show', compact('departamento'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $departamento = Departamento::find($id);
-        $areas = Area::pluck('nombre_area', 'id');
-        return view('departamento.edit', compact('departamento', 'areas'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  Departamento $departamento
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Departamento $departamento)
     {
         request()->validate(Departamento::$rules);
+        $exiteCodigo = Departamento::where('codigo', $request->codigo)->first();
+        if ($exiteCodigo && $exiteCodigo->id != $departamento->id) {
+            return response()->json(['error' => 'Ya hay un registro con en mismo codigo'], 404);
+        }
 
         $departamento->update($request->all());
         return redirect()->route('departamentos.index')
             ->with('success', 'Departamento updated successfully');
-    }
-
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function destroy($id)
-    {
-        $departamento = Departamento::find($id)->delete();
-
-        return redirect()->route('departamentos.index')
-            ->with('success', 'Departamento deleted successfully');
     }
 }

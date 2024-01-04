@@ -23,7 +23,7 @@ class Departamento extends Model
 {
 
     static $rules = [
-        'nombre_departamento' => 'required',
+        'nombre' => 'required',
         'id_area' => 'required',
     ];
 
@@ -34,7 +34,7 @@ class Departamento extends Model
      *
      * @var array
      */
-    protected $fillable = ['codigo_departamento', 'nombre_departamento', 'id_area'];
+    protected $fillable = ['codigo', 'nombre', 'id_area'];
 
 
     /**

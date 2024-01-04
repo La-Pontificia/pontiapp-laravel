@@ -21,7 +21,7 @@ class Cargo extends Model
 {
 
   static $rules = [
-    'nombre_cargo' => 'required',
+    'nombre' => 'required',
     'id_departamento' => 'required',
     'id_puesto' => 'required',
   ];
@@ -33,7 +33,7 @@ class Cargo extends Model
    *
    * @var array
    */
-  protected $fillable = ['codigo_cargo', 'nombre_cargo', 'id_departamento', 'id_puesto'];
+  protected $fillable = ['codigo', 'nombre', 'id_departamento', 'id_puesto'];
 
 
 
