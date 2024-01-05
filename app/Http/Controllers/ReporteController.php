@@ -85,9 +85,7 @@ class ReporteController extends Controller
 
         $objetivos = $query->paginate();
         $edas = Eda::all();
-
         $objetivos->appends(request()->query());
-
         return view('reportes.objetivos.index', compact('objetivos', 'edas', 'colaborador'))
             ->with('i', (request()->input('page', 1) - 1) * $objetivos->perPage());
     }

@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuestionarios', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_colaborador');
-            $table->foreign('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->uuid('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
             $table->timestamps();
         });
     }

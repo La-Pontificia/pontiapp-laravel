@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 class Objetivo extends Model
 {
 
+    use HasUuids;
     static $rules = [
         'objetivo' => 'required',
         'descripcion' => 'required',
@@ -45,7 +47,8 @@ class Objetivo extends Model
      */
     protected $fillable = ['id_eda_colab', 'objetivo', 'descripcion', 'indicadores', 'porcentaje', 'autoevaluacion', 'promedio', 'autoevaluacion_2', 'promedio_2', 'editado'];
 
-
+    protected $keyType = 'string';
+    public $incrementing = false;
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

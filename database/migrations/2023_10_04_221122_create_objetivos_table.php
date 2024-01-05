@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('objetivos', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_eda_colab');
-            $table->foreign('id_eda_colab')->references('id')->on('eda_colabs')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->uuid('id_eda_colab')->references('id')->on('eda_colabs')->onDelete('cascade');
 
             $table->string('objetivo', 255);
             $table->string('descripcion', 2000);

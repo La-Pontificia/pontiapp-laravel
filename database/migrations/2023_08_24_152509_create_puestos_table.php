@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('puestos', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->integer('nivel')->default(10);
             $table->string('codigo', 255)->require();
             $table->string('nombre', 255)->require();
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,17 +23,15 @@ use Illuminate\Database\Eloquent\Model;
 class Puesto extends Model
 {
 
+    use HasUuids;
     static $rules = [
+        'nivel' => 'required',
         'nombre' => 'required',
-
     ];
 
     protected $perPage = 20;
+    protected $keyType = 'string';
+    public $incrementing = false;
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['codigo', 'nombre'];
+    protected $fillable = ['codigo', 'nivel', 'nombre'];
 }

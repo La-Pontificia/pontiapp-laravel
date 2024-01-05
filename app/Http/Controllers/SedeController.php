@@ -19,8 +19,9 @@ class SedeController extends Controller
     public function index()
     {
         $sedes = Sede::paginate();
+        $sedeForm = new Sede();
 
-        return view('sede.index', compact('sedes'))
+        return view('sede.index', compact('sedes', 'sedeForm'))
             ->with('i', (request()->input('page', 1) - 1) * $sedes->perPage());
     }
 

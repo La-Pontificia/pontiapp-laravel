@@ -305,34 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 
-    // ----------- FEEDBACK ---------------
 
-    if (formfeedback) {
-        formfeedback.addEventListener('submit', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const id_eva = this.dataset.id;
-            const feedback = e.target.querySelector('textarea[name="feedback"]').value;
-            const calificacion = e.target.querySelector('input[name="calificacion"]:checked').value;
-
-            axios.post(`/meta/feedback/${id_eva}`, {
-                feedback,
-                calificacion
-            }).then(res => {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Feedback enviado correctamente!',
-                }).then(() => {
-                    location.reload();
-                });
-            }
-            ).catch(err => {
-                console.log(err);
-            })
-
-        })
-    }
 
     // create received feedback
     if (btnfeedbackpreview) {

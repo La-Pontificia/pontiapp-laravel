@@ -2,7 +2,7 @@
     $id_eda = request()->route('id_eda');
 @endphp
 
-<header class="p-2 pt-0 sticky flex items-center gap-3 top-28 z-10 bg-gray-50">
+<header class="p-2 sticky flex items-center gap-3 top-16 z-10 bg-gray-50">
     <a href="/meta/{{ $id_colab }}/eda/{{ $id_eda }}"
         class="flex items-center gap-2 hover:bg-neutral-200 text-neutral-500 max-w-max px-3 rounded-xl">
         <svg width="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,6 +11,6 @@
                     stroke-linejoin="round"></path>
             </g>
         </svg>
-        <h2 class="text-xl p-2 font-semibold">{{ $n_eva == 1 ? '1ra Evaluación' : '2da Evaluación' }}</h2>
+        <h2 class="text-xl p-2 font-semibold">{{ $title }}</h2>
     </a>
 </header>

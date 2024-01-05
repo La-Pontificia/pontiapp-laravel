@@ -6,31 +6,31 @@
                 $autocalificacion = $n_eva == 1 ? $objetivo->autocalificacion : $objetivo->autocalificacion_2;
                 $promedio = $n_eva == 1 ? $objetivo->promedio : $objetivo->promedio_2;
             @endphp
-            <th scope="row" class="px-6 py-4 text-sm font-semibold text-blue-900 bg-gray-50">
+            <th scope="row" class="px-2 py-1 text-sm font-semibold text-blue-900 bg-gray-50">
                 <h3 class="">{{ $objetivo->objetivo }}</h3>
             </th>
-            <td class="px-6 py-4">
+            <td class="px-2 py-1">
                 <div class=" text-sm overflow-ellipsis overflow-hidden">
-                    {{ $objetivo->descripcion }}
+                    {!! nl2br(e($objetivo->descripcion)) !!}
                 </div>
             </td>
-            <td class="px-6 py-4 bg-gray-50">
+            <td class="px-2 py-1 bg-gray-50">
                 <div class=" text-sm overflow-ellipsis overflow-hidden">
-                    {{ $objetivo->indicadores }}
+                    {!! nl2br(e($objetivo->indicadores)) !!}
                 </div>
             </td>
-            <td class="px-2 py-4">
+            <td class="px-2 py-1">
                 <div class="justify-center w-full flex">
                     <span
                         class="bg-purple-100 text-purple-800 p-1 px-3 text-sm font-medium mr-2 rounded-full">{{ $objetivo->porcentaje }}%</span>
                 </div>
             </td>
-            <td class="px-3 py-4 font-bold text-neutral-700 text-base">
+            <td class="px-3 py-1 font-bold text-neutral-700 text-base">
                 <div class="flex items-center justify-center gap-2">
                     {{ $autocalificacion }}
                 </div>
             </td>
-            <td class="px-3 py-4 font-bold text-neutral-700 text-base">
+            <td class="px-3 py-1 font-bold text-neutral-700 text-base">
                 <div class="flex items-center justify-center gap-2">
                     {{ $promedio }}
                 </div>

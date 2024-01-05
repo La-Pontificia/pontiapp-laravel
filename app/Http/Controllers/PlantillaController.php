@@ -72,49 +72,39 @@ class PlantillaController extends Controller
 
     public function eliminarPregunta($id)
     {
-        if (is_numeric($id)) {
-            try {
-                $pregunta = PlantillaPregunta::findOrFail($id);
-                $pregunta->delete();
-                return response()->json(['success' => true], 202);
-            } catch (\Exception $e) {
-                return response()->json(['success' => false, 'error' => $e], 400);
-            }
+        try {
+            $pregunta = PlantillaPregunta::findOrFail($id);
+            $pregunta->delete();
+            return response()->json(['success' => true], 202);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e], 400);
         }
     }
 
     public function agregarPregunta(Request $request, $id)
     {
-        if (is_numeric($id)) {
-            try {
-                $id_pregunta = $request->id_pregunta;
-                $plantilla = Plantilla::findOrFail($id);
-                PlantillaPregunta::create([
-                    "id_plantilla" => $plantilla->id,
-                    "id_pregunta" => $id_pregunta
-                ]);
-                return response()->json(['success' => true], 202);
-            } catch (\Exception $e) {
-                return response()->json(['success' => false, 'error' => $e], 400);
-            }
+        try {
+            $id_pregunta = $request->id_pregunta;
+            $plantilla = Plantilla::findOrFail($id);
+            PlantillaPregunta::create([
+                "id_plantilla" => $plantilla->id,
+                "id_pregunta" => $id_pregunta
+            ]);
+            return response()->json(['success' => true], 202);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e], 400);
         }
     }
     public function usar($id)
     {
-        if (is_numeric($id)) {
-            try {
-                $plantilla = Plantilla::findOrFail($id);
-
-                // Establece 'usando' a false para todas las plantillas con el mismo 'para'
-                Plantilla::where('para', $plantilla->para)->update(['usando' => false]);
-
-                // Establece 'usando' a true para la plantilla específica
-                $plantilla->usando = true;
-                $plantilla->save();
-                return response()->json(['success' => true], 202);
-            } catch (\Exception $e) {
-                return response()->json(['success' => false, 'error' => $e], 400);
-            }
+        try {
+            $plantilla = Plantilla::find($id);
+            Plantilla::where('para', $plantilla->para)->update(['usando' => false]);
+            $plantilla->usando = true;
+            $plantilla->save();
+            return response()->json(['success' => true], 202);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e], 400);
         }
     }
 }

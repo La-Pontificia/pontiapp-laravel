@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 class Departamento extends Model
 {
 
+    use HasUuids;
     static $rules = [
         'nombre' => 'required',
         'id_area' => 'required',
@@ -35,7 +37,8 @@ class Departamento extends Model
      * @var array
      */
     protected $fillable = ['codigo', 'nombre', 'id_area'];
-
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

@@ -97,8 +97,6 @@ class EdaColabController extends Controller
         if (!$colaboradorExiste) return response()->json(['error' => 'El colaborador no existe'], 404);
         $edaExiste = Eda::find($request->id_eda);
         if (!$edaExiste) return response()->json(['error' => 'La eda no existe'], 404);
-        // evaluaciones
-
         $eva1 = Evaluacione::create();
         $eva2 = Evaluacione::create();
 

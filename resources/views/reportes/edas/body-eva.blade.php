@@ -13,8 +13,8 @@
             </td>
             <td class="">
                 <div class="">
-                    @if ($eva->cerrado)
-                        <span title="{{ \Carbon\Carbon::parse($eva->fecha_cerrado)->format('d/m/Y') }}"
+                    @if ($feedback)
+                        <span title="{{ \Carbon\Carbon::parse($feedback->created_at)->format('d/m/Y') }}"
                             class="w-7 block">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path fill-rule="evenodd" clip-rule="evenodd"

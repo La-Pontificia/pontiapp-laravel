@@ -9,7 +9,7 @@
     <tr class="bg-white border-b">
         <th scope="row" class="px-3 py-4 font-semibold text-gray-900">
             <a class="hover:underline bg-[#203740] p-1 rounded-full px-2 text-white"
-                href="/meta/{{ $eda->id_colaborador }}/eda/{{ $eda->id }}">
+                href="/meta/{{ $eda->id_colaborador }}/eda/{{ $eda->eda->id }}">
                 {{ $eda->eda->año }}
             </a>
         </th>
@@ -33,16 +33,12 @@
         </td>
         <td class="px-3 py-0">
             <p class="text-xs font-medium">
-                {{ $eda->colaborador->puesto->cargo->nombre_cargo }}
+                {{ $eda->colaborador->cargo->nombre }}
             </p>
-            {{-- <a class="hover:underline"
-                    href="/meta/{{ $objetivo->edaColab->id_colaborador }}/eda/{{ $objetivo->edaColab->id }}/objetivos?animate={{ $objetivo->id }}">
-                    {{ $objetivo->promedio }}
-                </a> --}}
         </td>
         <td class="px-3 py-0 text-xs font-medium">
             <p class="flex min-w-max flex-nowrap">
-                {{ $eda->colaborador->puesto->nombre_puesto }}
+                {{ $eda->colaborador->cargo->puesto->nombre }}
             </p>
         </td>
         <td class="px-3 py-0 text-center">
@@ -87,11 +83,9 @@
                 @endif
             </div>
         </td>
-        @include('reportes.edas.body-eva', ['eva' => $eva1])
-        {{-- @if ($mostrareva1)
-        @endif --}}
+        @include('reportes.edas.body-eva', ['eva' => $eva1, 'feedback' => $eda->feedback])
         @if ($mostrareva2)
-            @include('reportes.edas.body-eva', ['eva' => $eva2])
+            @include('reportes.edas.body-eva', ['eva' => $eva2, 'feedback' => $eda->feedback2])
         @endif
         <td class="px-3 py-0 text-right">
             @if ($eda->id_cuestionario_colab)
@@ -104,7 +98,6 @@
                     </svg>
                 </span>
             @endif
-            {{-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> --}}
         </td>
     </tr>
 @empty

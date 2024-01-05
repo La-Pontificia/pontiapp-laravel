@@ -1,16 +1,21 @@
 @extends('layouts.meta')
 
 @section('content-meta')
+    @php
+        $hasCreate = in_array('crear_eda', $colaborador_actual->privilegios);
+    @endphp
     <div class="grid text-center gap-2 place-content-center p-10">
         <div class="w-48 mx-auto">
             <img src="/sad-2.png" alt="">
         </div>
         <h2 class="text-xl">EDA NO REGISTRADO</h2>
         <p class="text-neutral-400">Aun no se registró el eda del año {{ $eda->año }}</p>
-        <button data-eda="{{ $eda->id }}" data-colab="{{ $colaborador->id }}" id="create"
-            class="p-2 disabled:opacity-50 rounded-full bg-slate-800 text-neutral-300 font-semibold text-lg">
-            Registrar ahora
-        </button>
+        @if ($hasCreate)
+            <button data-eda="{{ $eda->id }}" data-colab="{{ $colaborador->id }}" id="create"
+                class="p-2 disabled:opacity-50 rounded-full bg-slate-800 text-neutral-300 font-semibold text-lg">
+                Registrar ahora
+            </button>
+        @endif
     </div>
 @endsection
 

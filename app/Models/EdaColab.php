@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 class EdaColab extends Model
 {
 
+    use HasUuids;
     static $rules = [
         'id_eda' => 'required',
         'id_colaborador' => 'required',
@@ -41,42 +43,35 @@ class EdaColab extends Model
     ];
 
     protected $perPage = 20;
+    protected $fillable = ['id_eda', 'id_colaborador', 'id_feedback_1', 'id_feedback_2', 'id_evaluacion', 'id_evaluacion_2', 'id_cuestionario_colab', 'id_cuestionario_super', 'enviado', 'aprobado', 'cerrado', 'fecha_envio', 'fecha_aprobado', 'fecha_cerrado', 'promedio'];
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['id_eda', 'id_colaborador', 'id_evaluacion', 'id_evaluacion_2', 'id_cuestionario_colab', 'id_cuestionario_super', 'enviado', 'aprobado', 'cerrado', 'fecha_envio', 'fecha_aprobado', 'fecha_cerrado', 'promedio'];
+    protected $keyType = 'string';
+    public $incrementing = false;
 
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
     public function colaborador()
     {
         return $this->hasOne('App\Models\Colaboradore', 'id', 'id_colaborador');
     }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
     public function eda()
     {
         return $this->hasOne('App\Models\Eda', 'id', 'id_eda');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
+    public function feedback()
+    {
+        return $this->belongsTo(Feedback::class, 'id_feedback_1');
+    }
+
+    public function feedback2()
+    {
+        return $this->belongsTo(Feedback::class, 'id_feedback_2');
+    }
+
     public function evaluacion2()
     {
         return $this->hasOne('App\Models\Evaluacione', 'id', 'id_evaluacion_2');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
     public function evaluacion()
     {
         return $this->hasOne('App\Models\Evaluacione', 'id', 'id_evaluacion');

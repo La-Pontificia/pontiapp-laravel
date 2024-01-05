@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
 class Auditoria extends Model
 {
 
+  use HasUuids;
+
   static $rules = [
     'id_colab' => 'required',
     'titulo' => 'required',
@@ -38,7 +41,8 @@ class Auditoria extends Model
    * @var array
    */
   protected $fillable = ['id_colab', 'titulo', 'descripcion', 'modulo'];
-
+  protected $keyType = 'string';
+  public $incrementing = false;
 
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasOne

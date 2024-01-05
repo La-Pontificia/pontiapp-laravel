@@ -1,10 +1,27 @@
-@if (!$autocalificacionterminada && $miPerfil)
+@php
+    $hasAuto = in_array('autocalificar', $colaborador_actual->privilegios);
+    $hasClose = in_array('cerrar_eva', $colaborador_actual->privilegios);
+@endphp
+
+
+@if (!$autocalificacionterminada && $miPerfil && $hasAuto)
     <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="autocalificar-objs"
         data-modal-toggle="autocalificar-objs" type="button"
         class="text-white bg-[#009c46] hover:bg-[#009c46]/90 focus:outline-none font-medium rounded-lg text-base px-5 py-2 text-center items-center">
         Autocalificar objetivos
     </button>
 @endif
+
+@if (!$hasAuto)
+    No tienes permiso para autocalificar
+@endif
+
+@if ($autocalificacionterminada && !$eva_cerrada)
+    <h1 class=" text-xl bg-lime-300/20 rounded-xl max-w-[35ch] mx-auto font-medium p-5">
+        🎉 Autocalificado
+    </h1>
+@endif
+
 
 @if (!$calificacionterminada && $autocalificacionterminada && $suSupervisor)
     <button data-id="{{ $edaSeleccionado->id }}" data-modal-target="calificar-objs" data-modal-toggle="calificar-objs"
@@ -14,10 +31,9 @@
     </button>
 @endif
 
-@if ($calificacionterminada && $suSupervisor && !$eva_cerrada)
+@if ($calificacionterminada && $suSupervisor && !$eva_cerrada && $hasClose)
     <button id="btn-cerrar-eva" data-eda="{{ $id_eda }}" data-neva="{{ $n_eva }}"
-        data-id="{{ $id_evaluacion }}"
-        class="flex gap-2 items-center bg-red-700 p-2 px-3 font-medium rounded-lg  text-white">
+        data-id="{{ $id_evaluacion }}" class="gap-2text-center bg-red-700 p-2 px-3 font-medium rounded-lg  text-white">
         Cerrar {{ $n_eva == 1 ? '1ra' : '2da' }} evaluación
     </button>
 @endif

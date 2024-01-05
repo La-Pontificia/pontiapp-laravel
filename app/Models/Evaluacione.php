@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Evaluacione extends Model
 {
+    use HasUuids;
 
     static $rules = [
         'cerrado' => 'required',
@@ -39,7 +41,8 @@ class Evaluacione extends Model
      */
     protected $fillable = ['promedio', 'autocalificacion', 'cerrado', 'fecha_promedio', 'fecha_autocalificacion', 'fecha_cerrado'];
 
-
+    protected $keyType = 'string';
+    public $incrementing = false;
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

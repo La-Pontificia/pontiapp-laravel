@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('evaluaciones', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->integer('promedio')->default(0);
             $table->integer('autocalificacion')->default(0);
             $table->boolean('cerrado')->default(false);

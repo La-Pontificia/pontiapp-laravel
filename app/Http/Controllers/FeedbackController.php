@@ -2,34 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EdaColab;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 
-/**
- * Class FeedbackController
- * @package App\Http\Controllers
- */
+
 class FeedbackController extends GlobalController
 {
-    public function createFeddback(Request $request, $id_eva)
+    public function store(Request $request)
     {
-        try {
-            $emisor = $this->getCurrentColab();
-            $feedback = $request->feedback;
-            $calificacion = $request->calificacion;
+        $emisor = $this->getCurrentColab();
+        $feedback = $request->feedback;
+        $calificacion = $request->calificacion;
+        $id_eva = $request->id_eva;
+        $id_eda = $request->id_eda;
 
-            $data = array_merge([
-                'id_emisor' => $emisor->id,
-                'id_evaluacion' => $id_eva,
-                'feedback' => $feedback,
-                'calificacion' => $calificacion,
-            ]);
-            Feedback::create($data);
-
-            return response()->json(['success' => true], 202);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e], 202);
+        $eda = EdaColab::find($id_eda);
+        if ($id_eva != $eda->id_evaluacion && $id_eva != $eda->id_evaluacion_2) {
+            return response()->json(['success' => false, 'error' => 'Evaluación no coincide'], 202);
         }
+        $primera = $id_eva == $eda->id_evaluacion;
+
+        $data = array_merge([
+            'id_emisor' => $emisor->id,
+            'feedback' => $feedback,
+            'calificacion' => $calificacion,
+        ]);
+        $feed = Feedback::create($data);
+        if ($primera) $eda->id_feedback_1 = $feed->id;
+        else $eda->id_feedback_2 = $feed->id;
+        $eda->save();
+        return response()->json(['success' => true], 202);
     }
 
     public function receivedFeedback($id_feed)

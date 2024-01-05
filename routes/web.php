@@ -24,7 +24,7 @@ Route::get('/login/azure/callback', 'App\Http\Controllers\Auth\LoginController@h
 
 Route::get('/', function () {
     return redirect('/meta');
-})->middleware('authMiddleware');
+})->middleware('authMiddleware')->name('index');
 
 Auth::routes();
 Route::resource('/sedes', App\Http\Controllers\SedeController::class)->middleware('authMiddleware');
@@ -103,7 +103,7 @@ Route::post('/eda/cerrar/{id}', 'App\Http\Controllers\EdaColabController@cerrar'
 
 
 // FEEDBACKS
-Route::post('/meta/feedback/{id_eva}', 'App\Http\Controllers\FeedbackController@createFeddback')->middleware('authMiddleware');
+Route::post('/meta/feedback', 'App\Http\Controllers\FeedbackController@store')->middleware('authMiddleware');
 Route::post('/meta/feedback/received/{id_feed}', 'App\Http\Controllers\FeedbackController@receivedFeedback')->middleware('authMiddleware');
 
 
@@ -156,7 +156,7 @@ Route::post('/change-password', 'App\Http\Controllers\ProfileController@changePa
 //// REPORTES
 
 Route::get('/reportes', 'App\Http\Controllers\ReporteController@index')->middleware('authMiddleware')->name('reportes.index');
-Route::get('/reportes/objetivos', 'App\Http\Controllers\ReporteController@objetivos')->middleware('authMiddleware')->name('reportes.objetivos');
+Route::get('/reportes/cuestionarios', 'App\Http\Controllers\ReporteController@cuestionarios')->middleware('authMiddleware')->name('reportes.cuestionarios');
 Route::get('/reportes/edas', 'App\Http\Controllers\ReporteController@edas')->middleware('authMiddleware')->name('reportes.edas');
 Route::get('/reportes/colaboradores', 'App\Http\Controllers\ReporteController@colaboradores')->middleware('authMiddleware')->name('reportes.colaboradores');
 
@@ -169,6 +169,8 @@ Route::post('/eda_colab/cerrar/{id}', 'App\Http\Controllers\EdaColabController@c
 
 /// COLABORADORES 
 Route::post('/colaborador/{id}', 'App\Http\Controllers\ColaboradoreController@update')->middleware('authMiddleware')->name('colaborador.update');
+Route::get('/colaborador/privilegios/{id}', 'App\Http\Controllers\ColaboradoreController@privilegios')->middleware('authMiddleware');
+Route::post('/colaborador/privilegios/update', 'App\Http\Controllers\ColaboradoreController@actualizarPrivilegios')->middleware('authMiddleware');
 
 //// 404 NOT FOUND
 Route::fallback(function () {

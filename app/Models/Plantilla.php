@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 class Plantilla extends Model
 {
 
+  use HasUuids;
   static $rules = [
     'nombre' => 'required',
     'para' => 'required',
@@ -33,7 +35,8 @@ class Plantilla extends Model
    * @var array
    */
   protected $fillable = ['nombre', 'para', 'usando'];
-
+  protected $keyType = 'string';
+  public $incrementing = false;
 
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany

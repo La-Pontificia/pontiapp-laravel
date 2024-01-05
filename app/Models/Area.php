@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
 class Area extends Model
 {
 
+  use HasUuids;
+
   static $rules = [
     // 'codigo_area' => 'required',
     'nombre' => 'required',
@@ -33,6 +36,8 @@ class Area extends Model
    * @var array
    */
   protected $fillable = ['codigo', 'nombre'];
+  protected $keyType = 'string';
+  public $incrementing = false;
 
 
   /**

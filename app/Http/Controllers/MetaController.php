@@ -181,7 +181,14 @@ class MetaController extends GlobalController
         $edaSeleccionado = EdaColab::where('id_eda', $eda->id)->where('id_colaborador', $colaborador->id)->first();
 
         $objetivos = Objetivo::where('id_eda_colab', $edaSeleccionado->id)->get();
-        $feedback = Feedback::where('id_evaluacion', $n_eva == 1 ? $edaSeleccionado->id_evaluacion : $edaSeleccionado->id_evaluacion_2)->first();
+
+        $feedback = null;
+
+        // feedback
+        if ($n_eva == 1 && $edaSeleccionado->id_feedback_1) $feedback = $edaSeleccionado->feedback;
+        if ($n_eva == 2 && $edaSeleccionado->id_feedback_2) $feedback = $edaSeleccionado->feedback2;
+
+
 
         //commons
         $miPerfil = $this->getCurrentColab()->id == $id_colab ? true : false;

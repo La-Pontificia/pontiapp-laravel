@@ -20,6 +20,7 @@
         $id_colab = $colaborador->id;
         $id_eda = request()->route('id_eda');
 
+        $hasClose = in_array('cerrar_eda', $colaborador_actual->privilegios);
     @endphp
     <div class="mt-4 flex gap-4 max-md:flex-col-reverse items-start p-5">
         <div class="flex w-[550px] max-md:w-full flex-col gap-2">
@@ -137,7 +138,7 @@
                     </div>
                 </div>
             </a>
-            @if ($cerrareda && !$cerrado)
+            @if ($cerrareda && !$cerrado && $hasClose)
                 <button data-id="{{ $edaSeleccionado->id }}" id="btn-cerrar-eda" type="button"
                     class="text-white bg-green-600 w-full my-3 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center">
                     Cerrar eda - {{ $edaSeleccionado->eda->año }}</button>

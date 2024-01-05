@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cuestionario extends Model
 {
 
+    use HasUuids;
     static $rules = [
         'id_colaborador' => 'required',
     ];
@@ -34,7 +36,8 @@ class Cuestionario extends Model
      * @var array
      */
     protected $fillable = ['id_colaborador'];
-
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

@@ -31,17 +31,17 @@ class EdaController extends GlobalController
         if ($this->validarEdaExistente($año)) {
             return response()->json(['message' => 'Ya existe una eda con el mismo año ingresado'], 202);
         }
-
         request()->validate(Eda::$rules);
-
-        $eda = Eda::create($request->all());
-        // $this->createEdaByColab($eda->id);
+        Eda::create([
+            'año' => $año,
+            'cerrado' => request()->cerrado ? true : false,
+        ]);
 
         Auditoria::create([
             'id_colab' => $this->getCurrentColab()->id,
             'modulo' => 'eda',
-            'titulo' => 'Creacion de un nuevo EDA',
-            'descripcion' => 'Se creó una nueva EDA ' . $año,
+            'titulo' => 'Se creó un nuevo registro',
+            'descripcion' => 'Se creó un nuevo registro ' . $año,
         ]);
 
         return response()->json(['success' => true], 202);

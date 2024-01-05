@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cargo extends Model
 {
 
+  use HasUuids;
   static $rules = [
     'nombre' => 'required',
     'id_departamento' => 'required',
@@ -34,7 +36,8 @@ class Cargo extends Model
    * @var array
    */
   protected $fillable = ['codigo', 'nombre', 'id_departamento', 'id_puesto'];
-
+  protected $keyType = 'string';
+  public $incrementing = false;
 
 
   public function departamento()

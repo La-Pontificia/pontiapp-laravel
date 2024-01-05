@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Acceso;
+
 use App\Models\Area;
 use App\Models\Auditoria;
 use App\Models\Cargo;
 use App\Models\Colaboradore;
 use App\Models\Departamento;
-use App\Models\Eda;
-use App\Models\EdaColab;
-use App\Models\Evaluacione;
 use App\Models\Puesto;
 use App\Models\Sede;
 use App\Models\User;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 
 /**
  * Class ColaboradoreController
@@ -31,61 +25,36 @@ class ColaboradoreController extends GlobalController
 
 
         $colab = $this->getCurrentColab();
-        $acceso = $this->getAccesoColaboradores();
         $accesoModulo = true;
-        // $accesoModulo = $acceso->crear == 1 || $acceso->leer == 1 || $acceso->actualizar == 1 || $acceso->eliminar == 1;
-        $isAccess = $colab && $colab->rol == 1 || $colab && $colab->rol == 2 || $this->getAccesoColaboradores()->crear;
-        if (!$isAccess && !$accesoModulo) {
-            return view('meta.commons.errorPage', ['titulo' => 'No autorizado', 'descripcion' => 'No tienes autorizado para acceder a este modulo, si crees que fue un error comunicate con un administrador.']);
-        }
         // NULLS VARIABLES
-        $id_area = request('id_area');
-        $id_departamento = request('id_departamento');
-        $id_cargo = request('id_cargo');
-        $id_puesto = request('id_puesto');
-        $search = request('search');
+        $id_cargo = request('cargo');
+        $id_puesto = request('puesto');
+        $search = request('q');
 
 
         $cargos = Cargo::all();
         $puestos = Puesto::all();
-        $departamentos = Departamento::all();
         $colaboradores = null;
 
-
-        // areas
-        $areas = Area::all();
-        if (!$areas->isEmpty() && !$id_area) $id_area = $areas[0]->id;
-
-        $colaborador = $this->getCurrentColab();
-
-        // Departamentos
-        if ($id_area) $departamentos = Departamento::where('id_area', $id_area)->get();
-        else $departamentos = Departamento::all();
+        $allowLists = $colab->rol != 0;
 
         // Cargos
-        $cargos = Cargo::all();
-
-        // Puestos
-        if ($id_cargo) $puestos = Puesto::where('id_cargo', $id_cargo)->get();
-
+        if ($id_puesto) $cargos = Cargo::where('id_puesto', $id_puesto)->get();
         $colaboradorForm = new Colaboradore();
 
-        $search = request('search');
         $colaboradores =  null;
-        $query = Colaboradore::query();
-
-        $isAccessAll = $colab->rol == 1 ||  $colab->rol == 2;
-        if (!$isAccessAll && $colab) {
-            $query->where('id_supervisor', $colaborador->id);
-        }
+        $query = Colaboradore::orderBy('created_at', 'asc');
 
         if ($id_cargo) {
-            $colaboradores = $query->where('colaboradores.id_cargo', $id_cargo);
+            $query->where('colaboradores.id_cargo', $id_cargo);
         }
 
         if ($id_puesto) {
-            $colaboradores = $query->where('colaboradores.id_puesto', $id_puesto);
+            $query->whereHas('cargo', function ($q) use ($id_puesto) {
+                $q->where('id_puesto', $id_puesto);
+            });
         }
+
 
         if ($search) {
             $query->where(function ($innerQuery) use ($search) {
@@ -95,11 +64,15 @@ class ColaboradoreController extends GlobalController
             });
         }
 
+        if (!$allowLists) {
+            $query->where('colaboradores.id_supervisor', $colab->id);
+        }
+
         $colaboradores = $query->paginate();
 
         // SEDES
         $sedes = Sede::all();
-        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'areas', 'departamentos', 'id_area', 'id_departamento', 'sedes', 'id_cargo', 'id_puesto'))
+        return view('colaboradore.index', compact('colaboradores', 'colaboradorForm', 'puestos', 'cargos', 'sedes'))
             ->with('i', (request()->input('page', 1) - 1) * $colaboradores->perPage());
     }
 
@@ -138,6 +111,33 @@ class ColaboradoreController extends GlobalController
         $validateUser = User::where('email', $request->input('dni'))->first();
         if ($validateUser) return response()->json(['error' => 'El usuario con el DNI ingresado ya existe'], 400);
 
+        $rol = $request->input('rol');
+        $privilegios = [];
+
+        if ($rol == 0) {
+            $privilegios = [
+                "ver_colaboradores",
+                "mis_edas",
+                "mis_objetivos",
+                "enviar_objetivos",
+                "enviar_cuestionario",
+                "1ra_evaluacion",
+                "2da_evaluacion",
+            ];
+        }
+
+        if ($rol == 1) {
+            $privilegios = [
+                "ver_colaboradores",
+                "mis_edas",
+                "mis_objetivos",
+                "enviar_objetivos",
+                "enviar_cuestionario",
+                "1ra_evaluacion",
+                "2da_evaluacion",
+            ];
+        }
+
 
         $colaborador = Colaboradore::create([
             'dni' => $request->input('dni'),
@@ -146,7 +146,10 @@ class ColaboradoreController extends GlobalController
             'correo_institucional' => $request->input('correo_institucional'),
             'id_sede' => $request->input('id_sede'),
             'id_cargo' => $request->input('id_cargo'),
+            'privilegios' =>  $privilegios,
+            'rol' => $rol
         ]);
+
 
         User::create([
             'name' => $request->input('nombres'),
@@ -155,10 +158,6 @@ class ColaboradoreController extends GlobalController
             'password' => bcrypt($request->input('dni')),
         ]);
 
-
-
-
-        $this->createAccesByColaborador($colaborador->id);
 
         Auditoria::create([
             'id_colab' => $colab->id,
@@ -191,39 +190,6 @@ class ColaboradoreController extends GlobalController
         return response()->json(['success' => 'Colaborador actualizado correctamente.'], 202);
     }
 
-    public function createAccesByColaborador($id)
-    {
-        $modulos = ['colaboradores',  'accesos', 'edas', 'areas', 'departamentos', 'cargos', 'puestos', 'sedes', 'reportes', 'objetivos'];
-        foreach ($modulos as $modulo) {
-            Acceso::create([
-                'modulo' => $modulo,
-                'crear' => 1,
-                'leer' => 1,
-                'actualizar' => 1,
-                'eliminar' => 1,
-                'id_colaborador' => $id
-            ]);
-        }
-    }
-
-
-
-    public function show($id)
-    {
-        $cargos = Cargo::all();
-        $sedes = Sede::all();
-        $colaboradorForm = Colaboradore::find($id);
-        $puestos = Puesto::where('id_cargo', $colaboradorForm->puesto->cargo->id)->get();
-        return view('colaboradore.show', compact('colaboradorForm', 'cargos', 'sedes', 'puestos'));
-    }
-
-    public function edit($id)
-    {
-        $colaboradore = Colaboradore::find($id);
-        return view('colaboradore.edit', compact('colaboradore', 'puestos', 'cargos'));
-    }
-
-
     public function update(Request $request, $id)
     {
         $colaboradore = Colaboradore::find($id);
@@ -238,16 +204,6 @@ class ColaboradoreController extends GlobalController
         return redirect()->route('colaboradores.index');
     }
 
-
-
-
-    public function destroy($id)
-    {
-        $colaboradore = Colaboradore::find($id)->delete();
-        return redirect()->route('colaboradores.index')
-            ->with('success', 'Colaboradore deleted successfully');
-    }
-
     public function searchColaboradores(Request $request)
     {
         $q = $request->input('q');
@@ -258,5 +214,22 @@ class ColaboradoreController extends GlobalController
             ->get();
 
         return response()->json($colaboradores);
+    }
+
+    public function privilegios($id)
+    {
+        $colaborador = Colaboradore::find($id);
+        $privilegios = $colaborador->privilegios;
+        return response()->json($privilegios);
+    }
+
+    public function actualizarPrivilegios(Request $request)
+    {
+        $id = $request->id;
+        $privilegios = $request->list;
+        $colaborador = Colaboradore::find($id);
+        $colaborador->privilegios = $privilegios;
+        $colaborador->save();
+        return response()->json(['success' => 'Privilegios actualizados correctamente.'], 202);
     }
 }

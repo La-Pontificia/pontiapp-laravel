@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
 class PlantillaPregunta extends Model
 {
 
+    use HasUuids;
     static $rules = [
         'id_plantilla' => 'required',
         'id_pregunta' => 'required',
@@ -28,7 +30,8 @@ class PlantillaPregunta extends Model
 
     protected $table = 'plantilla_pregunta';
     protected $perPage = 20;
-
+    protected $keyType = 'string';
+    public $incrementing = false;
     /**
      * Attributes that should be mass-assignable.
      *

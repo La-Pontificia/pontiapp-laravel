@@ -1,5 +1,5 @@
     <div id="autocalificar-objs" tabindex="-1" aria-hidden="true"
-        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4">
+        class="fixed top-[50%] translate-y-[-50%] left-0 right-0 z-50 hidden w-full">
         <div class="relative max-w-screen-xl flex flex-col border rounded-xl shadow-xl bg-white w-full">
             <!-- Modal content -->
             <button type="button"
@@ -24,7 +24,7 @@
                                 <th scope="col" class="px-3 py-2 bg-gray-50 dark:bg-gray-800">
                                     Objetivo
                                 </th>
-                                <th scope="col" class="px-3 py-2">
+                                <th scope="col" class="px-3 w-[300px] py-2">
                                     Descripción
                                 </th>
                                 <th scope="col" class="px-3 py-2 bg-gray-50 dark:bg-gray-800">
@@ -55,12 +55,12 @@
                                     </th>
                                     <td class="px-4 py-2">
                                         <div class=" text-sm overflow-ellipsis overflow-hidden">
-                                            {{ $objetivo->descripcion }}
+                                            {!! nl2br(e($objetivo->descripcion)) !!}
                                         </div>
                                     </td>
                                     <td class="px-4 py-2 bg-gray-50 dark:bg-gray-800">
                                         <div class=" text-sm overflow-ellipsis overflow-hidden">
-                                            {{ $objetivo->indicadores }}
+                                            {!! nl2br(e($objetivo->indicadores)) !!}
                                         </div>
                                     </td>
                                     <td class="px-4 py-2">

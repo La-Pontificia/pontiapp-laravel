@@ -1,6 +1,9 @@
 @extends('layouts.sidebar')
 
 @section('content-sidebar')
+    @php
+        $hasEdas = in_array('ver_edas', $colaborador_actual->privilegios);
+    @endphp
     <div class="flex flex-col">
         <header class="h-full border rounded-3xl shadow-lg">
             <div class="w-full p-3">
@@ -20,9 +23,13 @@
                         <input type="file" hidden id="imageInput" accept="image/*" />
                     @endif
                 </div>
+                <button id="upload"
+                    class="bg-slate-800 hidden disabled:opacity-50 p-1 rounded-full text-white font-semibold px-3">Actualizar
+                    perfil</button>
                 <h3 class="text-lg pt-2 font-semibold capitalize text-gray-900">
                     {{ $colaborador->nombres }}
                     {{ $colaborador->apellidos }}
+                    <b>{{ $miPerfil ? 'Mi perfil' : '' }}</b>
                 </h3>
                 <div class="flex flex-col">
                     <div class="text-gray-500 capitalize flex gap-1">
@@ -32,25 +39,25 @@
                     </div>
                 </div>
             </div>
-            @include('meta.edas')
+            @if ($hasEdas)
+                @include('meta.edas')
+            @endif
         </header>
-        <div class="w-full">
-            @yield('content-meta')
-        </div>
+        @if ($hasEdas)
+            <div class="w-full">
+                @yield('content-meta')
+            </div>
+        @endif
     </div>
-@endsection
-
-
-
-@section('script')
     <script>
-        const uploadImage = document.getElementById('uploadimage');
+        const upload = document.getElementById('upload');
         const imagePreview = document.getElementById('image-preview');
         const input = document.getElementById('imageInput');
         const btnChangeImage = document.getElementById('btnchangeimage');
 
         btnChangeImage.addEventListener('click', function() {
             input.click();
+            console.log('click')
         });
 
         input.addEventListener('change', function() {
@@ -58,12 +65,12 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     imagePreview.src = e.target.result;
-                    uploadImage.style.display = 'inline-block';
+                    upload.style.display = 'inline-block';
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         });
-        uploadImage.addEventListener(('click'), async function(event) {
+        upload.addEventListener(('click'), async function(event) {
             const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dc0t90ahb/upload';
             const input = document.getElementById('imageInput');
             const file = input.files[0];
@@ -74,6 +81,9 @@
             formData.append('file', file);
             formData.append('upload_preset', 'ztmbixcz');
             try {
+                upload.classList.add('animation-pulse');
+                upload.disabled = true;
+                upload.textContent = 'Actualizando...';
                 const response = await axios.post(cloudinaryUrl, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',

@@ -6,27 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
+
         Schema::create('eda_colabs', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_eda');
-            $table->foreign('id_eda')->references('id')->on('edas')->onDelete('cascade');
-            $table->unsignedBigInteger('id_colaborador');
-            $table->foreign('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->uuid('id_eda')->references('id')->on('edas')->onDelete('cascade');
+            $table->uuid('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
 
-            $table->unsignedBigInteger('id_evaluacion');
-            $table->foreign('id_evaluacion')->references('id')->on('evaluaciones')->onDelete('cascade');
-            $table->unsignedBigInteger('id_evaluacion_2');
-            $table->foreign('id_evaluacion_2')->references('id')->on('evaluaciones')->onDelete('cascade');
+            $table->uuid('id_evaluacion')->references('id')->on('evaluaciones')->onDelete('cascade');
+            $table->uuid('id_evaluacion_2')->references('id')->on('evaluaciones')->onDelete('cascade');
 
-            $table->unsignedBigInteger('id_cuestionario_colab')->nullable()->default(null);
-            $table->foreign('id_cuestionario_colab')->references('id')->on('cuestionarios')->onDelete('cascade');
-            $table->unsignedBigInteger('id_cuestionario_super')->nullable()->default(null);
-            $table->foreign('id_cuestionario_super')->references('id')->on('cuestionarios')->onDelete('cascade');
+            $table->uuid('id_cuestionario_colab')->nullable()->default(null);
+            $table->uuid('id_cuestionario_super')->nullable()->default(null);
+
+            $table->uuid('id_feedback_1')->nullable()->default(null);
+            $table->uuid('id_feedback_2')->nullable()->default(null);
 
             $table->boolean('enviado')->default(false);
             $table->boolean('aprobado')->default(false);
@@ -39,13 +35,26 @@ return new class extends Migration
             $table->integer('promedio')->default(0);
             $table->timestamps();
         });
+
+        Schema::table('eda_colabs', function (Blueprint $table) {
+            $table->foreign('id_cuestionario_colab')->references('id')->on('cuestionarios');
+            $table->index('id_cuestionario_colab');
+
+            $table->foreign('id_cuestionario_super')->references('id')->on('cuestionarios');
+            $table->index('id_cuestionario_super');
+
+            // feddbacks
+            $table->foreign('id_feedback_1')->references('id')->on('feedbacks');
+            $table->index('id_feedback_1');
+
+            $table->foreign('id_feedback_2')->references('id')->on('feedbacks');
+            $table->index('id_feedback_2');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
-        Schema::dropIfExists('eda_colab');
+        Schema::dropIfExists('eda_colabs');
     }
 };

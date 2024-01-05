@@ -12,11 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('departamentos', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('codigo', 50)->require();
             $table->string('nombre', 50)->require();
-            $table->unsignedBigInteger('id_area');
-            $table->foreign('id_area')->references('id')->on('areas')->onDelete('cascade');
+            $table->uuid('id_area')->references('id')->on('areas')->onDelete('cascade');
             $table->timestamps();
         });
     }

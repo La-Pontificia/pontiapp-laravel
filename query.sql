@@ -34,133 +34,6 @@
 ;
 
 --
--- Dumping data for table `accesos`
---
-LOCK TABLES `accesos` WRITE;
-
-/*!40000 ALTER TABLE `accesos` DISABLE KEYS */
-;
-
-INSERT INTO
-    `accesos`
-VALUES
-    (
-        11,
-        'colaboradores',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        12,
-        'accesos',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        13,
-        'edas',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        14,
-        'areas',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        15,
-        'departamentos',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        16,
-        'cargos',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        17,
-        'puestos',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        18,
-        'sedes',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        19,
-        'reportes',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    ),
-    (
-        20,
-        'objetivos',
-        1,
-        1,
-        1,
-        1,
-        3,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
-    );
-
-/*!40000 ALTER TABLE `accesos` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
 -- Dumping data for table `areas`
 --
 LOCK TABLES `areas` WRITE;
@@ -171,7 +44,13 @@ LOCK TABLES `areas` WRITE;
 INSERT INTO
     `areas`
 VALUES
-    (1, 'A001', 'Administrativo', NULL, NULL);
+    (
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        'A001',
+        'Dev',
+        NULL,
+        NULL
+    );
 
 /*!40000 ALTER TABLE `areas` ENABLE KEYS */
 ;
@@ -203,11 +82,11 @@ INSERT INTO
     `cargos`
 VALUES
     (
-        1,
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
         'C001',
-        'Director Administrativo',
-        1,
-        1,
+        'Dev',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
         NULL,
         NULL
     );
@@ -229,19 +108,20 @@ INSERT INTO
     `colaboradores`
 VALUES
     (
-        3,
-        '00000000',
-        'DEV',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        'ADMIN',
+        '[\"eliminar_eda\", \"mantenimiento\", \"reportes\", \"auditoria\"]',
+        'User',
         'Developer',
-        NULL,
+        '72377685@elp.edu.pe',
         NULL,
         2,
         1,
-        1,
-        1,
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
         NULL,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
+        NULL,
+        '2024-01-04 22:56:45'
     );
 
 /*!40000 ALTER TABLE `colaboradores` ENABLE KEYS */
@@ -257,6 +137,26 @@ LOCK TABLES `cuestionario_pregunta` WRITE;
 /*!40000 ALTER TABLE `cuestionario_pregunta` DISABLE KEYS */
 ;
 
+INSERT INTO
+    `cuestionario_pregunta`
+VALUES
+    (
+        '9b03ac08-9d46-4c9a-95d2-1460fa3bc011',
+        '9b03ac08-9410-4377-b275-f2cc5bbcef45',
+        '9b03a8f2-d2f4-411a-a19e-4945af177b18',
+        'wgwrgwg',
+        '2024-01-05 01:38:54',
+        '2024-01-05 01:38:54'
+    ),
+    (
+        '9b03ac12-63bd-4e07-aec4-389e3a69f8d3',
+        '9b03ac12-6142-4399-a7cb-6967d0097cd6',
+        '9b03a8ff-e6f2-40bc-afff-c9877012a4d6',
+        'nyjrjryj',
+        '2024-01-05 01:39:00',
+        '2024-01-05 01:39:00'
+    );
+
 /*!40000 ALTER TABLE `cuestionario_pregunta` ENABLE KEYS */
 ;
 
@@ -269,6 +169,22 @@ LOCK TABLES `cuestionarios` WRITE;
 
 /*!40000 ALTER TABLE `cuestionarios` DISABLE KEYS */
 ;
+
+INSERT INTO
+    `cuestionarios`
+VALUES
+    (
+        '9b03ac08-9410-4377-b275-f2cc5bbcef45',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        '2024-01-05 01:38:54',
+        '2024-01-05 01:38:54'
+    ),
+    (
+        '9b03ac12-6142-4399-a7cb-6967d0097cd6',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        '2024-01-05 01:39:00',
+        '2024-01-05 01:39:00'
+    );
 
 /*!40000 ALTER TABLE `cuestionarios` ENABLE KEYS */
 ;
@@ -286,7 +202,14 @@ LOCK TABLES `departamentos` WRITE;
 INSERT INTO
     `departamentos`
 VALUES
-    (1, 'D001', 'Administrativo', 1, NULL, NULL);
+    (
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        'D001',
+        'Dev',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        NULL,
+        NULL
+    );
 
 /*!40000 ALTER TABLE `departamentos` ENABLE KEYS */
 ;
@@ -318,11 +241,11 @@ INSERT INTO
     `edas`
 VALUES
     (
-        1,
-        2023,
-        1,
-        '2024-01-03 04:03:43',
-        '2024-01-03 04:03:43'
+        '9b03ae8c-d0f8-4c26-9b2d-197fe7afbbf9',
+        2024,
+        0,
+        '2024-01-05 01:45:56',
+        '2024-01-05 01:45:56'
     );
 
 /*!40000 ALTER TABLE `edas` ENABLE KEYS */
@@ -344,19 +267,6 @@ LOCK TABLES `evaluaciones` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping data for table `failed_jobs`
---
-LOCK TABLES `failed_jobs` WRITE;
-
-/*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */
-;
-
-/*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
 -- Dumping data for table `feedbacks`
 --
 LOCK TABLES `feedbacks` WRITE;
@@ -365,104 +275,6 @@ LOCK TABLES `feedbacks` WRITE;
 ;
 
 /*!40000 ALTER TABLE `feedbacks` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
--- Dumping data for table `media`
---
-LOCK TABLES `media` WRITE;
-
-/*!40000 ALTER TABLE `media` DISABLE KEYS */
-;
-
-/*!40000 ALTER TABLE `media` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
--- Dumping data for table `migrations`
---
-LOCK TABLES `migrations` WRITE;
-
-/*!40000 ALTER TABLE `migrations` DISABLE KEYS */
-;
-
-INSERT INTO
-    `migrations`
-VALUES
-    (
-        1,
-        '2014_10_12_100000_create_password_reset_tokens_table',
-        1
-    ),
-    (
-        2,
-        '2014_10_12_100000_create_password_resets_table',
-        1
-    ),
-    (
-        3,
-        '2019_08_19_000000_create_failed_jobs_table',
-        1
-    ),
-    (
-        4,
-        '2019_12_14_000001_create_personal_access_tokens_table',
-        1
-    ),
-    (5, '2020_06_14_000001_create_media_table', 1),
-    (6, '2023_08_09_031813_create_edas_table', 1),
-    (7, '2023_08_09_193109_create_evaluaciones', 1),
-    (8, '2023_08_10_031629_create_sedes', 1),
-    (9, '2023_08_23_152448_create_areas_table', 1),
-    (
-        10,
-        '2023_08_24_152503_create_departamentos_table',
-        1
-    ),
-    (11, '2023_08_24_152509_create_puestos_table', 1),
-    (12, '2023_08_25_152456_create_cargos_table', 1),
-    (
-        13,
-        '2023_08_25_152523_create_colaboradores_table',
-        1
-    ),
-    (14, '2023_08_25_163913_create_accesos_table', 1),
-    (15, '2023_10_02_171137_create_cuestionarios', 1),
-    (
-        16,
-        '2023_10_03_031829_create_eda_colabs_table',
-        1
-    ),
-    (
-        17,
-        '2023_10_03_031936_create_feedbacks_table',
-        1
-    ),
-    (
-        18,
-        '2023_10_04_221122_create_objetivos_table',
-        1
-    ),
-    (19, '2023_11_14_170503_create_preguntas', 1),
-    (20, '2023_11_14_170650_create_plantillas', 1),
-    (
-        21,
-        '2023_11_14_171033_create_plantilla_pregunta',
-        1
-    ),
-    (
-        22,
-        '2023_11_14_171653_create_cuestionario_pregunta',
-        1
-    ),
-    (23, '2023_11_26_223605_create_auditoria', 1),
-    (24, '2023_12_29_000000_create_users_table', 1);
-
-/*!40000 ALTER TABLE `migrations` ENABLE KEYS */
 ;
 
 UNLOCK TABLES;
@@ -481,51 +293,30 @@ LOCK TABLES `objetivos` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping data for table `password_reset_tokens`
---
-LOCK TABLES `password_reset_tokens` WRITE;
-
-/*!40000 ALTER TABLE `password_reset_tokens` DISABLE KEYS */
-;
-
-/*!40000 ALTER TABLE `password_reset_tokens` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
--- Dumping data for table `password_resets`
---
-LOCK TABLES `password_resets` WRITE;
-
-/*!40000 ALTER TABLE `password_resets` DISABLE KEYS */
-;
-
-/*!40000 ALTER TABLE `password_resets` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
--- Dumping data for table `personal_access_tokens`
---
-LOCK TABLES `personal_access_tokens` WRITE;
-
-/*!40000 ALTER TABLE `personal_access_tokens` DISABLE KEYS */
-;
-
-/*!40000 ALTER TABLE `personal_access_tokens` ENABLE KEYS */
-;
-
-UNLOCK TABLES;
-
---
 -- Dumping data for table `plantilla_pregunta`
 --
 LOCK TABLES `plantilla_pregunta` WRITE;
 
 /*!40000 ALTER TABLE `plantilla_pregunta` DISABLE KEYS */
 ;
+
+INSERT INTO
+    `plantilla_pregunta`
+VALUES
+    (
+        '9b03a90f-6324-4f7c-a3f0-046574cbb602',
+        '9b03a90f-5c24-4c55-a6ab-fa8da69efac8',
+        '9b03a8ff-e6f2-40bc-afff-c9877012a4d6',
+        '2024-01-05 01:30:35',
+        '2024-01-05 01:30:35'
+    ),
+    (
+        '9b03a922-75b2-4977-bd48-3a1da2d74f4e',
+        '9b03a922-7320-4d70-9ecf-9748d5e13173',
+        '9b03a8f2-d2f4-411a-a19e-4945af177b18',
+        '2024-01-05 01:30:48',
+        '2024-01-05 01:30:48'
+    );
 
 /*!40000 ALTER TABLE `plantilla_pregunta` ENABLE KEYS */
 ;
@@ -540,6 +331,26 @@ LOCK TABLES `plantillas` WRITE;
 /*!40000 ALTER TABLE `plantillas` DISABLE KEYS */
 ;
 
+INSERT INTO
+    `plantillas`
+VALUES
+    (
+        '9b03a90f-5c24-4c55-a6ab-fa8da69efac8',
+        'Plantilla 1',
+        1,
+        'supervisores',
+        '2024-01-05 01:30:35',
+        '2024-01-05 01:34:17'
+    ),
+    (
+        '9b03a922-7320-4d70-9ecf-9748d5e13173',
+        'Plantilla',
+        1,
+        'colaboradores',
+        '2024-01-05 01:30:48',
+        '2024-01-05 01:35:35'
+    );
+
 /*!40000 ALTER TABLE `plantillas` ENABLE KEYS */
 ;
 
@@ -552,6 +363,22 @@ LOCK TABLES `preguntas` WRITE;
 
 /*!40000 ALTER TABLE `preguntas` DISABLE KEYS */
 ;
+
+INSERT INTO
+    `preguntas`
+VALUES
+    (
+        '9b03a8f2-d2f4-411a-a19e-4945af177b18',
+        'Pregunta para un colaborador',
+        '2024-01-05 01:30:16',
+        '2024-01-05 01:30:16'
+    ),
+    (
+        '9b03a8ff-e6f2-40bc-afff-c9877012a4d6',
+        'Pregunta para un supervisor',
+        '2024-01-05 01:30:25',
+        '2024-01-05 01:30:25'
+    );
 
 /*!40000 ALTER TABLE `preguntas` ENABLE KEYS */
 ;
@@ -569,8 +396,14 @@ LOCK TABLES `puestos` WRITE;
 INSERT INTO
     `puestos`
 VALUES
-    (1, 'P001', 'Director', NULL, NULL),
-    (2, 'P002', 'Asesor', NULL, NULL);
+    (
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        0,
+        'P001',
+        'Dev',
+        NULL,
+        NULL
+    );
 
 /*!40000 ALTER TABLE `puestos` ENABLE KEYS */
 ;
@@ -588,7 +421,13 @@ LOCK TABLES `sedes` WRITE;
 INSERT INTO
     `sedes`
 VALUES
-    (1, 'Alameda', '', NULL, NULL);
+    (
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        'Alameda',
+        NULL,
+        NULL,
+        NULL
+    );
 
 /*!40000 ALTER TABLE `sedes` ENABLE KEYS */
 ;
@@ -607,15 +446,15 @@ INSERT INTO
     `users`
 VALUES
     (
-        3,
-        'Developer',
-        '00000000',
-        3,
+        1,
+        'Dev',
+        'ADMIN',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
         NULL,
-        '$2y$10$84jG7KS6Qm75ZqfojudaU.G.r8DrL8jOoHQzVXNkkKlyt54q2njsG',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
+        '7565141d-67b0-45f9-be3d-f4ebc9347bd4',
         NULL,
-        '2024-01-03 04:47:06',
-        '2024-01-03 04:47:06'
+        NULL
     );
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */
@@ -647,4 +486,4 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */
 ;
 
--- Dump completed on 2024-01-02 18:50:19
+-- Dump completed on 2024-01-04 15:48:06

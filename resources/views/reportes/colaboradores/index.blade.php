@@ -59,20 +59,6 @@
                         </thead>
                         <tbody>
                             @forelse ($colaboradores as $index => $colaborador)
-                                @php
-                                    $rol = null;
-                                    if ($colaborador->rol === 0) {
-                                        $rol = 'Colaborador';
-                                    }
-                                    if ($colaborador->rol === 1) {
-                                        $rol = 'Admin';
-                                    }
-                                    if ($colaborador->rol === 2) {
-                                        $rol = 'Dev';
-                                    }
-
-                                @endphp
-
                                 <tr class="bg-white border-b [&>td]:px-3 text-neutral-950">
                                     <th scope="row" class=" text-center py-4 font-semibold text-gray-900">
                                         <span>
@@ -163,7 +149,15 @@
                                     <td>
                                         <div
                                             class="p-1 max-w-max mx-auto rounded-full bg-slate-900 text-white px-3 font-semibold text-center">
-                                            {{ $rol }}
+                                            @if ($colaborador->rol === '0')
+                                                Colaborador
+                                            @endif
+                                            @if ($colaborador->rol === '1')
+                                                Admin
+                                            @endif
+                                            @if ($colaborador->rol === '2')
+                                                Dev
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

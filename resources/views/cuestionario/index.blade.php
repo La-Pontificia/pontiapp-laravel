@@ -430,7 +430,6 @@
         })
 
         // usar 
-
         btnUsar.forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.getAttribute("data-id")

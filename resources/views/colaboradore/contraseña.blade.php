@@ -28,7 +28,7 @@
                             <input type="text" id="password" required name="password"
                                 placeholder="Ingrese la nueva contraseña" pattern=".{5,}"
                                 title="La contraseña debe tener al menos 5 caracteres"
-                                class="outline-none border-transparent px-4 w-full text-left py-3 hover:bg-gray-300 bg-gray-200 rounded-xl">
+                                class="p-3 w-full rounded-full px-4">
                         </div>
                         <button type="submit"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Guardar</button>

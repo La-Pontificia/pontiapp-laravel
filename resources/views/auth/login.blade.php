@@ -2,17 +2,17 @@
 
 @section('content')
     <section class="">
-        <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-            <div class="flex flex-col gap-4 relative sm:rounded-lg justify-center items-center">
-                <div class="p-6 relative z-10 w-[450px] max-w-full bg-white shadow-md">
+        <div
+            class="min-h-screen bg-gray-100 max-sm:bg-white max-sm:w-full text-gray-900 flex justify-center max-sm:justify-start">
+            <div
+                class="flex flex-col max-sm:w-full gap-4 relative sm:rounded-lg justify-center items-center max-sm:justify-start max-sm:items-start">
+                <div
+                    class="p-6 relative z-10 w-[450px] max-sm:w-full max-w-full bg-white max-sm:shadow-none shadow-md rounded-2xl">
                     <img src="/elp.gif" class="w-24 mx-auto sm:mx-0" />
                     <div class="w-full">
                         <h1 class=" text-center inline-block text-2xl text-gray-900 font-semibold bg-white ">
-                            Iniciar sesión
+                            EDA - La Pontificia
                         </h1>
-                        <p class="text-sm opacity-75 py-1">Para poder iniciar
-                            sesión en una cuenta debe ser creado previamente por un administrador.
-                        </p>
                         <form id="form-credentials" class="hidden" method="POST" action="{{ route('login') }}">
                             @csrf
                             <div class="mx-auto max-w-sm py-5">
@@ -47,9 +47,12 @@
                             </div>
                         </form>
                         <div class="w-full" id="form-azure">
+                            <p class="text-sm opacity-75 py-1">Iniciar sesión con una cuenta institucional
+                                <b>@elp.edu.pe</b> o <b>@ilp.edu.pe</b>.
+                            </p>
                             <a href="/login/azure"
-                                class="w-full mt-2 gap-2 justify-center text-gray-900 bg-white hover:bg-gray-100 shadow-sm border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 text-sm px-5 h-12 text-center inline-flex items-center">
-                                <img src="/RE1Mu3b.png" class="w-20" alt="">
+                                class="w-full mt-2 gap-2 justify-center rounded-xl text-gray-900 bg-white hover:bg-gray-100 shadow-sm border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 text-sm px-5 h-12 text-center inline-flex items-center">
+                                <img src="/RE1Mu3b.png" class="w-24" alt="">
                             </a>
 
                             @if (session('error'))
@@ -59,20 +62,20 @@
                             @endif
                         </div>
                         <p class="mt-6 text-xs text-gray-600 text-center">
-                            @2024 <a href="https.//elp.edu.pe" target="_blank"
+                            @2024 <a href="https://elp.edu.pe" target="_blank"
                                 class="border-b border-gray-500 border-dotted">
                                 Escuela Superior La Pontificia.
                             </a> All rights reserved.
                         </p>
-                        <p class="opacity-60 text-center text-sm mt-2">Developed by <a href="https://daustinn.com"
+                        <p class="opacity-60 text-center text-xs mt-2">Developed by <a href="https://daustinn.com"
                                 class="hover:underline" target="_blank">Daustinn</a>
                             & <a href="https://daustinn.com" class="hover:underline" target="_blank">Diana</a>
                         </p>
                     </div>
                 </div>
-                <div class="relative z-10 w-full">
+                <div class="relative z-10 max-sm:p-6 w-full">
                     <button id="button-credentials"
-                        class="p-1 py-2 font-semibold bg-white hover:opacity-90 flex justify-start px-5 gap-2 items-center w-full shadow-md">
+                        class="p-1 py-2 rounded-xl font-semibold bg-white hover:opacity-90 flex justify-start px-5 gap-2 items-center w-full shadow-md">
                         <svg class="w-10" fill="currentColor" viewBox="0 0 32 32" id="icon"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M16,22a4,4,0,1,0-4-4A4,4,0,0,0,16,22Zm0-6a2,2,0,1,1-2,2A2,2,0,0,1,16,16Z"></path>
@@ -89,7 +92,7 @@
                         </div>
                     </button>
                     <button id="button-azure"
-                        class="p-1 py-2 font-semibold bg-white hover:opacity-90 hidden justify-start px-5 gap-2 items-center w-full shadow-md">
+                        class="p-1 rounded-xl py-2 font-semibold bg-white hover:opacity-90 hidden justify-start px-5 gap-2 items-center w-full shadow-md">
                         <svg class="w-8" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none">
                             <g id="SVGRepo_iconCarrier">
                                 <path fill="#F35325" d="M1 1h6.5v6.5H1V1z"></path>
@@ -105,7 +108,7 @@
                     </button>
                 </div>
             </div>
-            <div class="fixed inset-0">
+            <div class="fixed max-sm:hidden inset-0">
                 <img src="/2_11d9e3bcdfede9ce5ce5ace2d129f1c4.svg" class="object-cover w-full h-full" alt="">
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,20 +19,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Sede extends Model
 {
-    
-    static $rules = [
-		'nombre' => 'required',
-    ];
 
-    protected $perPage = 20;
+  use HasUuids;
+  static $rules = [
+    'nombre' => 'required',
+  ];
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['nombre','direccion'];
-
-
-
+  protected $perPage = 20;
+  protected $keyType = 'string';
+  public $incrementing = false;
+  protected $fillable = ['nombre', 'direccion'];
 }

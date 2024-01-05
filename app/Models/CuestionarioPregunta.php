@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 class CuestionarioPregunta extends Model
 {
 
+    use HasUuids;
     static $rules = [
         'id_cuestionario' => 'required',
         'id_pregunta' => 'required',
@@ -30,7 +32,8 @@ class CuestionarioPregunta extends Model
 
     protected $table = 'cuestionario_pregunta';
     protected $perPage = 20;
-
+    protected $keyType = 'string';
+    public $incrementing = false;
     /**
      * Attributes that should be mass-assignable.
      *

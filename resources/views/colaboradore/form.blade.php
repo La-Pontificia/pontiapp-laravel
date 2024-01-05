@@ -1,73 +1,76 @@
-<div class="grid gap-3 mb-6 md:grid-cols-2">
-    <div>
-        <label>Nombres</label>
-        <input value="{{ $colaboradorForm->nombres }}" type="text" required name="nombres"
-            placeholder="Ingrese los nombres"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
-    </div>
-    <div>
-        <label>Apellidos</label>
-        <input value="{{ $colaboradorForm->apellidos }}" type="text" required name="apellidos"
-            placeholder="Ingrese los apellidos"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
-    </div>
+<div class="grid gap-3 md:grid-cols-2">
+    <label>
+        Nombres
+        <input value="{{ $colaborador->nombres }}" type="text" required name="nombres" placeholder="Ingrese los nombres"
+            class="p-3 w-full rounded-full px-4">
+    </label>
+    <label>
+        Apellidos
+        <input value="{{ $colaborador->apellidos }}" type="text" required name="apellidos"
+            placeholder="Ingrese los apellidos" class="p-3 w-full rounded-full px-4">
+    </label>
 
-    <div>
-        <label>DNI</label>
-        <input value="{{ $colaboradorForm->dni }}" type="text" required name="dni" placeholder="Ingrese el DNI"
-            pattern="[0-9]{8}" title="Ingresa un DNI válido de 8 dígitos"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
-    </div>
-    <div class="col-span-2 relative">
-        <label>Correo Institucional</label>
-        <input value="{{ $colaboradorForm->correo_institucional }}" type="email"
+    <label>
+        DNI
+        <input value="{{ $colaborador->dni }}" type="text" required name="dni" placeholder="Ingrese el DNI"
+            pattern="[0-9]{8}" title="Ingresa un DNI válido de 8 dígitos" class="p-3 w-full rounded-full px-4">
+    </label>
+    <label class="col-span-2 relative">
+        Correo Institucional
+        <input value="{{ $colaborador->correo_institucional }}" type="email"
             title="Ingrese una dirección de correo electrónico válida" name="correo_institucional"
-            placeholder="Ingrese el correo institucional"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
-    </div>
-    <div class="relative">
-        <label for="id_puesto">Puesto</label>
-        <select name="id_puesto" id="selectPuesto"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+            placeholder="Ingrese el correo institucional" class="p-3 w-full rounded-full px-4">
+    </label>
+    <label class="relative">
+        Puesto
+        <select name="id_puesto" id="selectPuesto" class="p-3 w-full rounded-full px-4">
             <option value="" selected>Selecciona un puesto</option>
             @foreach ($puestos as $puesto)
-                <option {{ $colaboradorForm->id_puesto == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
+                <option {{ $isEdit && $colaborador->cargo->id_puesto == $puesto->id ? 'selected' : '' }}
+                    value="{{ $puesto->id }}">
                     {{ $puesto->nombre }}
                 </option>
             @endforeach
         </select>
-    </div>
-    <div class="">
-        <label>Cargo</label>
-        <select required name="id_cargo" id="selectCargo"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+    </label>
+    <label class="">
+        Cargo
+        <select required name="id_cargo" id="selectCargo" class="p-3 w-full rounded-full px-4">
             <option selected value="">Selecciona un cargo</option>
             @foreach ($cargos as $cargo)
-                @if ($colaboradorForm->puesto && $colaboradorForm->puesto->cargo)
-                    <option {{ $colaboradorForm->puesto->cargo->id == $cargo->id ? 'selected' : '' }}
-                        value="{{ $cargo->id }}">
-                        {{ $cargo->nombre }}
-                    </option>
-                @else
-                    <option value="{{ $cargo->id }}">
-                        {{ $cargo->nombre }}
-                    </option>
-                @endif
+                <option {{ $isEdit && $colaborador->cargo->id == $cargo->id ? 'selected' : '' }}
+                    value="{{ $cargo->id }}">
+                    {{ $cargo->nombre }}
+                </option>
             @endforeach
         </select>
-    </div>
-    <div class="col-span-2">
-        <label for="id_sede">Sede</label>
-        <select required name="id_sede"
-            class="outline-none border-transparent px-4 w-full text-left py-2 hover:bg-gray-300 bg-gray-200 rounded-xl">
+    </label>
+    <label class="col-span-2">
+        Sede
+        <select required name="id_sede" class="p-3 w-full rounded-full px-4">
             <option selected value="">Selecciona un sede</option>
             @foreach ($sedes as $sede)
-                <option {{ $colaboradorForm->id_sede == $sede->id ? 'selected' : '' }} value="{{ $sede->id }}">
+                <option {{ $colaborador->id_sede == $sede->id ? 'selected' : '' }} value="{{ $sede->id }}">
                     {{ $sede->nombre }}
                 </option>
             @endforeach
         </select>
-    </div>
+    </label>
+    <label class="col-span-2">
+        Rol
+        <select required name="rol" class="p-3 w-full rounded-full px-4">
+            <option selected value="0">
+                Colaborador
+            </option>
+            <option {{ $colaborador->rol == 1 ? 'selected' : '' }} value="1">
+                Administrador
+            </option>
+            <option {{ $colaborador->rol == 2 ? 'selected' : '' }} value="2">
+                Developer
+            </option>
+        </select>
+    </label>
+
 </div>
 
 {{-- ETIQUETA LOADING --}}
