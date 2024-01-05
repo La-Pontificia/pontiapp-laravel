@@ -2,6 +2,7 @@ import "./bootstrap";
 import "./commons"
 import "./reportes/colaboradores"
 import "./reportes/edas"
+import "./filters-combobox"
 
 
 import $ from "jquery";
