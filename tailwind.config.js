@@ -2,9 +2,11 @@
 
 export default {
     content: [
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+        './resources/js/**/*.js',
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
-        "./resources/**/*.vue",
         "./node_modules/flowbite/**/*.js",
     ],
     theme: {
