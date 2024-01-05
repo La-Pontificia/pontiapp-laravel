@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-
 // --------------------------------AZURE AD AUTH ---------------------------
 
 Route::get('/login/azure', 'App\Http\Controllers\Auth\LoginController@redirectToAzure');
