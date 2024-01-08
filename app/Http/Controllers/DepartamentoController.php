@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
-use App\Models\Auditoria;
 use App\Models\Departamento;
 use Illuminate\Http\Request;
 
-class DepartamentoController extends GlobalController
+class DepartamentoController extends Controller
 {
 
     public function index()
@@ -29,14 +28,7 @@ class DepartamentoController extends GlobalController
         $data = array_merge($validatedData, [
             'codigo' => $newCode,
         ]);
-
         Departamento::create($data);
-        Auditoria::create([
-            'id_colab' => $this->getCurrentColab()->id,
-            'modulo' => 'departamento',
-            'titulo' => 'Se creo un nuevo registro',
-            'descripcion' => 'Se creó un departamento ' . $data['nombre'],
-        ]);
         return redirect()->route('departamentos.index')
             ->with('success', 'Departamento created successfully.');
     }
@@ -50,12 +42,6 @@ class DepartamentoController extends GlobalController
         }
 
         $departamento->update($request->all());
-        Auditoria::create([
-            'id_colab' => $this->getCurrentColab()->id,
-            'modulo' => 'departamento',
-            'titulo' => 'Se actualizo un registro',
-            'descripcion' => 'Se actualizo en departamento ' . $departamento->nombre,
-        ]);
         return redirect()->route('departamentos.index')
             ->with('success', 'Departamento updated successfully');
     }
