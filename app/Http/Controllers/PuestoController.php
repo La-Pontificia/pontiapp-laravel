@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acceso;
+use App\Models\Auditoria;
 use App\Models\Cargo;
 use App\Models\Colaboradore;
 use App\Models\Departamento;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
  * Class PuestoController
  * @package App\Http\Controllers
  */
-class PuestoController extends Controller
+class PuestoController extends GlobalController
 {
     /**
      * Display a listing of the resource.
@@ -48,7 +49,14 @@ class PuestoController extends Controller
             'codigo' => $newCode,
         ]);
         Puesto::create($data);
+        Auditoria::create([
+            'id_colab' => $this->getCurrentColab()->id,
+            'modulo' => 'puesto',
+            'titulo' => 'Se creo un nuevo registro',
+            'descripcion' => 'Se creó un puesto' . $data['nombre'],
+        ]);
         return redirect()->route('puestos.index')
+       
             ->with('success', 'Puesto created successfully.');
     }
 
@@ -60,7 +68,14 @@ class PuestoController extends Controller
             return response()->json(['error' => 'Ya hay un registro con en mismo codigo'], 404);
         }
         $puesto->update($request->all());
+        Auditoria::create([
+            'id_colab' => $this->getCurrentColab()->id,
+            'modulo' => 'departamento',
+            'titulo' => 'Se actualizo un nuevo registro',
+            'descripcion' => 'Se actualizo un nuevo departamento' . $puesto->nombre,
+        ]);
         return redirect()->route('puestos.index')
+       
             ->with('success', 'Puesto updated successfully');
     }
 }
