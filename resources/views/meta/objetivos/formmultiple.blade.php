@@ -99,7 +99,7 @@
 
         addButton.addEventListener('click', () => {
             objetivos.push({
-                uid: crypto.randomUUID(),
+                uid: objetivos.length + 1 ,
                 objetivo: '',
                 descripcion: '',
                 indicadores: '',
