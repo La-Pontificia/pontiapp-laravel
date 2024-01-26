@@ -29,7 +29,7 @@
                 <div>
                     @if ($isMyprofile)
                         <button type="button"
-                            class="text-blue-700 gap-2 max-w-max mt-2 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
+                            class="text-blue-700 gap-2 max-w-max mt-2 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center :border-blue-500 :text-blue-500 :hover:text-white :focus:ring-blue-800 :hover:bg-blue-500">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 21 21">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -40,7 +40,7 @@
                     @endif
                     @if ($youSupervise)
                         <button type="button"
-                            class="text-green-700 ml-2 gap-1 max-w-max mt-2 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
+                            class="text-green-700 ml-2 gap-1 max-w-max mt-2 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm text-center inline-flex items-center :border-blue-500 :text-blue-500 :hover:text-white :focus:ring-blue-800 :hover:bg-blue-500">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                 viewBox="0 0 20 19">
                                 <path

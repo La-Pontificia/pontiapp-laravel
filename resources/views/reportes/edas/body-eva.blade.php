@@ -41,5 +41,5 @@
             </td>
         </tr>
     </table>
-    {{-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> --}}
+    {{-- <a href="#" class="font-medium text-blue-600 :text-blue-500 hover:underline">Edit</a> --}}
 </td>

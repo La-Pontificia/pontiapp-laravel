@@ -3,8 +3,8 @@
 @section('content-sidebar')
     @include('colaboradore.header')
     <div class="relative pt-3 min-h-[calc(100vh-300px)] shadow-md overflow-x-auto sm:rounded-lg">
-        <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-base text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table class="w-full text-base text-left text-gray-500 :text-gray-400">
+            <thead class="text-base text-gray-700 bg-gray-50 :bg-gray-700 :text-gray-400">
                 <tr>
                     <th scope="col" class="px-2 py-3 min-w-[300px] w-full">
                         Colaborador

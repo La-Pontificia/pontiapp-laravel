@@ -3,7 +3,7 @@
     <div class="relative max-w-screen-xl flex flex-col border rounded-xl shadow-xl bg-white w-full">
         <!-- Modal content -->
         <button type="button"
-            class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center :hover:bg-gray-600 :hover:text-white"
             data-modal-hide="calificar-objs">
             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -18,15 +18,15 @@
             </header>
             <div class="overflow-y-auto max-h-[60vh]">
                 <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
-                        <tr class="border-y text-sm divide-x border-gray-200 dark:border-gray-700">
-                            <th scope="col" class="px-3 py-2 bg-gray-50 dark:bg-gray-800">
+                    <thead class="text-xs text-gray-700 uppercase :text-gray-400">
+                        <tr class="border-y text-sm divide-x border-gray-200 :border-gray-700">
+                            <th scope="col" class="px-3 py-2 bg-gray-50 :bg-gray-800">
                                 Objetivo
                             </th>
                             <th scope="col" class="px-3 py-2 w-[300px]">
                                 Descripción
                             </th>
-                            <th scope="col" class="px-3 py-2 bg-gray-50 dark:bg-gray-800">
+                            <th scope="col" class="px-3 py-2 bg-gray-50 :bg-gray-800">
                                 Indicadores
                             </th>
                             <th scope="col" class="px-3 w-[70px] text-center text-sm py-2">
@@ -59,7 +59,7 @@
                                         {!! nl2br(e($objetivo->descripcion)) !!}
                                     </div>
                                 </td>
-                                <td class="px-4 py-2 bg-gray-50 dark:bg-gray-800">
+                                <td class="px-4 py-2 bg-gray-50 :bg-gray-800">
                                     <div class=" text-sm overflow-ellipsis overflow-hidden">
                                         {!! nl2br(e($objetivo->indicadores)) !!}
 
@@ -76,7 +76,7 @@
                                         {{ $autocalificacion }}
                                     </div>
                                 </td>
-                                <td class="px-3 py-2 bg-gray-50 dark:bg-gray-800">
+                                <td class="px-3 py-2 bg-gray-50 :bg-gray-800">
                                     <select name="nota" data-id="{{ $objetivo->id }}" required id="nota"
                                         class=" bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option selected value="">

@@ -30,16 +30,16 @@
 
 
     <div class="relative overflow-x-auto sm:rounded-lg">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
-                <tr class="border-y text-sm divide-x border-gray-200 dark:border-gray-700">
-                    <th scope="col" class="px-6 py-3 min-w-[200px] bg-gray-50 dark:bg-gray-800">
+        <table class="w-full text-sm text-left text-gray-500 :text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase :text-gray-400">
+                <tr class="border-y text-sm divide-x border-gray-200 :border-gray-700">
+                    <th scope="col" class="px-6 py-3 min-w-[200px] bg-gray-50 :bg-gray-800">
                         Objetivo
                     </th>
                     <th scope="col" class="px-6 min-w-[350px] w-[350px] py-3">
                         Descripción
                     </th>
-                    <th scope="col" class="px-6 min-w-[350px] py-3 bg-gray-50 dark:bg-gray-800">
+                    <th scope="col" class="px-6 min-w-[350px] py-3 bg-gray-50 :bg-gray-800">
                         Indicadores
                     </th>
                     <th scope="col" class="px-4 text-center py-3">
@@ -76,7 +76,7 @@
         <div class="relative max-w-[400px] border rounded-xl shadow-xl bg-white w-full max-h-full">
             <!-- Modal content -->
             <button type="button"
-                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center :hover:bg-gray-600 :hover:text-white"
                 data-modal-hide="feedback-modal">
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 14 14">
@@ -101,7 +101,7 @@
         <div class="relative max-w-[400px] border rounded-xl shadow-xl bg-white w-full max-h-full">
             <!-- Modal content -->
             <button type="button"
-                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center :hover:bg-gray-600 :hover:text-white"
                 data-modal-hide="feedback-preview">
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 14 14">

@@ -37,12 +37,12 @@
                         <tbody>
                             @foreach ($puestos as $puesto)
                                 <tr
-                                    class="border-b even:bg-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <td class="px-6 py-4 font-medium  whitespace-nowrap dark:text-white">
+                                    class="border-b even:bg-gray-100 bg-white :bg-gray-800 hover:bg-gray-50 :hover:bg-gray-600">
+                                    <td class="px-6 py-4 font-medium  whitespace-nowrap :text-white">
                                         {{ $puesto->codigo }}</td>
-                                    <td class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
+                                    <td class="px-6 py-4 font-medium whitespace-nowrap :text-white">
                                         {{ $puesto->nivel }}</td>
-                                    <td class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
+                                    <td class="px-6 py-4 font-medium whitespace-nowrap :text-white">
                                         {{ $puesto->nombre }}</td>
                                     <td class="px6 -py-4">
                                         <button data-modal-target="{{ $puesto->id }}-editar"

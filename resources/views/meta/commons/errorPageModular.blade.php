@@ -1,6 +1,6 @@
 <section class="p-4 grid place-content-center">
     <div id="alert-additional-content-2"
-        class="p-4 mb-4 max-w-max mx-auto text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+        class="p-4 mb-4 max-w-max mx-auto text-red-800 border border-red-300 rounded-lg bg-red-50 :bg-gray-800 :text-red-400 :border-red-800"
         role="alert">
         <div class="flex items-center">
             <svg class="flex-shrink-0 w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"

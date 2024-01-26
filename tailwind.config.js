@@ -7,11 +7,9 @@ export default {
         './resources/js/**/*.js',
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
+        "./public/**/*.blade.php",
         "./node_modules/flowbite/**/*.js",
     ],
-    theme: {
-        extend: {},
-    },
+    darkMode: 'media',
     plugins: [require("flowbite/plugin")],
-    darkMode: "class",
 };

@@ -3,8 +3,8 @@
             $cerrado = $objetivo->edaColab->cerrado;
             $aprobado = $objetivo->edaColab->aprobado;
         @endphp
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <th scope="row" class="px-6 py-3 font-medium text-gray-900 dark:text-white">
+        <tr class="bg-white border-b :bg-gray-800 :border-gray-700">
+            <th scope="row" class="px-6 py-3 font-medium text-gray-900 :text-white">
                 <div class="line-clamp-2">
                     {{ $objetivo->objetivo }}
                 </div>
@@ -45,7 +45,7 @@
                 </div>
             </td>
             <td class="px-6 py-3 text-right">
-                {{-- <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> --}}
+                {{-- <a href="#" class="font-medium text-blue-600 :text-blue-500 hover:underline">Edit</a> --}}
             </td>
         </tr>
     @empty

@@ -35,7 +35,7 @@
                     </thead>
                     <tbody>
                         @foreach ($departamentos as $departamento)
-                            <tr class="border-b even:bg-gray-100 bg-white hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <tr class="border-b even:bg-gray-100 bg-white hover:bg-gray-50 :hover:bg-gray-600">
                                 <td class="px-6 py-4">
                                     {{ $departamento->codigo }}</td>
                                 <td class="px-6 py-4">

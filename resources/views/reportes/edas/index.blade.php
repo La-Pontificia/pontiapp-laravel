@@ -15,7 +15,7 @@
 
                 <div class="relative  overflow-x-auto sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <thead class="text-sm text-gray-700 uppercase bg-gray-50 :bg-gray-700 :text-gray-400">
                             <tr class="[&>th]:text-left">
                                 <th scope="col" class="px-6 w-[50px] max-w-[50px] min-w-[50px] py-3">
                                     Eda

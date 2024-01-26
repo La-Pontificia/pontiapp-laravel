@@ -8,7 +8,7 @@
     $hasAssignSuper = in_array('asignar_supervisor', $colaborador_actual->privilegios);
 @endphp
 <tr class="bg-white [&>td]:px-2 [&>td]:py-2 [&>th]:px-2 [&>th]:py-2 border-b hover:bg-gray-50">
-    <th scope="row" class="flex items-center  text-gray-900 whitespace-nowrap dark:text-white">
+    <th scope="row" class="flex items-center  text-gray-900 whitespace-nowrap :text-white">
         <span class="w-10 h-10 block overflow-hidden rounded-full">
             <img class="w-full h-full object-cover"
                 src={{ $colaborador->perfil ? $colaborador->perfil : '/profile-user.png' }} alt="">
@@ -79,10 +79,10 @@
     <td class="">
         @if ($colaborador->estado == 0)
             <span
-                class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full :bg-red-900 :text-red-300">Inactivo</span>
         @else
             <span
-                class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full :bg-green-900 :text-green-300">Activo</span>
         @endif
     </td>
     <td>
@@ -106,7 +106,7 @@
             @if ($colaborador->rol != '2')
                 <button id="dropdownMenuIconButton-{{ $colaborador->id }}"
                     data-dropdown-toggle="dropdownDots-{{ $colaborador->id }}"
-                    class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none :text-white focus:ring-gray-50 :bg-gray-800 :hover:bg-gray-700 :focus:ring-gray-600"
                     type="button">
                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                         viewBox="0 0 4 15">
@@ -132,12 +132,6 @@
                                 </button>
                             </li>
                         @endif
-                        @if ($hasAccessColab)
-                            <li>
-                                <a href="/colaboradores/accesos/{{ $colaborador->id }}"
-                                    class="block px-4 py-2 hover:bg-gray-100">Accesos</a>
-                            </li>
-                        @endif
                     </ul>
                     @if ($hasToggleStatus)
                         <button data-id="{{ $colaborador->id }}"
@@ -157,9 +151,9 @@
     <div id="modal-add-supervisor-{{ $colaborador->id }}" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-lg max-h-full">
-            <div class="relative bg-white rounded-2xl shadow dark:bg-gray-700">
+            <div class="relative bg-white rounded-2xl shadow :bg-gray-700">
                 <button type="button"
-                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center :hover:bg-gray-600 :hover:text-white"
                     data-modal-hide="modal-add-supervisor-{{ $colaborador->id }}">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 14 14">
@@ -167,8 +161,8 @@
                             d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                     </svg>
                 </button>
-                <div class="px-6 py-4 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
+                <div class="px-6 py-4 border-b rounded-t :border-gray-600">
+                    <h3 class="text-base font-semibold text-gray-900 lg:text-xl :text-white">
                         Asignar supervisor
                     </h3>
                 </div>
@@ -184,12 +178,12 @@
                             </div>
                             <div class="ml-auto">
                                 <span
-                                    class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Supervisor
+                                    class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded :bg-green-900 :text-green-300">Supervisor
                                     actual</span>
                             </div>
                         </div>
                     @endif
-                    <p class="text-sm mb-4 font-normal text-gray-500 dark:text-gray-400">
+                    <p class="text-sm mb-4 font-normal text-gray-500 :text-gray-400">
                         Asigna o actualiza el supervisor de este colaborador
                     </p>
 
@@ -304,7 +298,7 @@
                             <h4>${colaborador.apellidos},${colaborador.nombres}</h4>
                             <span class="font-semibold">${colaborador.dni}</span>
                             <button id_colab='${id_colab}' id_super='${colaborador.id}' type="button"
-                                class="btn-super-colab text-gray-900 ml-auto bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                                class="btn-super-colab text-gray-900 ml-auto bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center :focus:ring-gray-600 :bg-gray-800 :border-gray-700 :text-white :hover:bg-gray-700">
                                 <svg aria-hidden="true" class="w-4 h-4 mr-2" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

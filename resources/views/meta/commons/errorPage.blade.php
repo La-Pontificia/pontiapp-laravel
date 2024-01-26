@@ -3,7 +3,7 @@
 @section('content-sidebar')
     <section style="height: calc(100vh - 100px) ;" class="p-4 grid place-content-center">
         <div id="alert-additional-content-2"
-            class="p-4 mb-4 max-w-max mx-auto text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+            class="p-4 mb-4 max-w-max mx-auto text-red-800 border border-red-300 rounded-lg bg-red-50 :bg-gray-800 :text-red-400 :border-red-800"
             role="alert">
             <div class="flex items-center">
                 <svg class="flex-shrink-0 w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +18,7 @@
             </div>
             <div class="flex">
                 <button type="button"
-                    class="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 mr-2 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                    class="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 mr-2 text-center inline-flex items-center :bg-red-600 :hover:bg-red-700 :focus:ring-red-800">
                     <svg class="-ml-0.5 mr-2 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor" viewBox="0 0 20 14">
                         <path

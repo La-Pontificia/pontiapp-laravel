@@ -25,7 +25,7 @@ $animate_id = request()->query('animate');
 <tbody>
     @foreach ($objetivos as $objetivo)
         <tr
-            class="{{ $animate_id == $objetivo->id ? 'animate-bounce-bg' : '' }} border-b border-gray-200 text-sm dark:border-gray-700">
+            class="{{ $animate_id == $objetivo->id ? 'animate-bounce-bg' : '' }} border-b border-gray-200 text-sm :border-gray-700">
             <th scope="row" class="px-3 py-2 text-sm font-semibold text-blue-900 ">
                 <h3 class="">{{ $objetivo->objetivo }}</h3>
             </th>
@@ -42,14 +42,14 @@ $animate_id = request()->query('animate');
             <td class="px-2 py-2">
                 <div class="justify-center w-full flex">
                     <span
-                        class="bg-purple-100 text-purple-800 p-1 px-3 text-sm font-medium mr-2 rounded-full dark:bg-purple-900 dark:text-purple-300">{{ $objetivo->porcentaje }}%</span>
+                        class="bg-purple-100 text-purple-800 p-1 px-3 text-sm font-medium mr-2 rounded-full :bg-purple-900 :text-purple-300">{{ $objetivo->porcentaje }}%</span>
                 </div>
             </td>
             <td class="px-3 py-2 ">
                 <div class="flex items-center">
                     @if ($objetivo->editado === 1)
                         <span
-                            class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Editado</span>
+                            class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full :bg-green-900 :text-green-300">Editado</span>
                     @else
                         -
                     @endif
@@ -73,9 +73,9 @@ $animate_id = request()->query('animate');
                         <div id="editObjModal{{ $objetivo->id }}" tabindex="-1" aria-hidden="true"
                             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
                             <div class="relative max-w-3xl w-full max-h-full">
-                                <div class="relative bg-white rounded-2xl shadow dark:bg-gray-700">
+                                <div class="relative bg-white rounded-2xl shadow :bg-gray-700">
                                     <button type="button"
-                                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center :hover:bg-gray-600 :hover:text-white"
                                         data-modal-hide="editObjModal{{ $objetivo->id }}">
                                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 14 14">
@@ -85,7 +85,7 @@ $animate_id = request()->query('animate');
                                     </button>
                                     @includeif('partials.errors')
                                     <div class="px-4 py-2">
-                                        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+                                        <h3 class="mb-4 text-xl font-medium text-gray-900 :text-white">
                                             Editar objetivo</h3>
                                         @includeif('partials.errors')
                                         <form class="form-update-obj" method="POST"

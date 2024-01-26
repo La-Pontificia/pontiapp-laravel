@@ -31,7 +31,7 @@
         <!-- Modal content -->
         <div class="relative bg-white rounded-2xl shadow">
             <button type="button"
-                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center :hover:bg-gray-600 :hover:text-white"
                 data-modal-hide="cuestionario-modal">
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 14 14">
@@ -56,7 +56,7 @@
                         @endforEach
                     </div>
                 @elseif (!$cuestionarioColab && $miPerfil)
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 :text-white">
                         Completa el cuestionario</h3>
                     <div id="list-question-colab" class="flex flex-col divide-y ">
                         @foreach ($plantillaColab->plantillaPreguntas as $item)

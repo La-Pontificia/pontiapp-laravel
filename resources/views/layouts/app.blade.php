@@ -19,7 +19,7 @@
             @endphp
             <div style="" id="app" class="h-screen">
                 <nav
-                    class="fixed pl-[250px] max-sm:pl-0 border-b dark:border-gray-700 w-full border-gray-200 backdrop-blur-md z-30">
+                    class="fixed pl-[250px] max-sm:pl-0 border-b :border-gray-700 w-full border-gray-200 backdrop-blur-md z-30">
                     <div class=" flex w-full gap-3 px-4 items-center h-16">
                         <button data-drawer-target="cta-button-sidebar" data-drawer-toggle="cta-button-sidebar"
                             aria-controls="cta-button-sidebar" type="button"
@@ -51,7 +51,7 @@
                                     </span>
                                 @endif
                             </button>
-                            <div class="z-50 hidden font-medium my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-2xl shadow dark:bg-gray-700 dark:divide-gray-600"
+                            <div class="z-50 hidden font-medium my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-2xl shadow :bg-gray-700 :divide-gray-600"
                                 id="user-dropdown">
                                 <ul class="py-2" aria-labelledby="user-menu-button">
                                     <li>

@@ -12,7 +12,7 @@
         <div class="max-w-xl mx-auto p-3">
             <header class="pb-3">
                 <button type="button" data-modal-target="crypto-modal" data-modal-toggle="crypto-modal"
-                    class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700">
+                    class="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center :focus:ring-gray-600 :bg-gray-800 :border-gray-700 :text-white :hover:bg-gray-700">
                     <svg aria-hidden="true" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -27,9 +27,9 @@
                     class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
                     <div class="relative w-full max-w-md max-h-full">
                         <!-- Modal content -->
-                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <div class="relative bg-white rounded-lg shadow :bg-gray-700">
                             <button type="button"
-                                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center :hover:bg-gray-600 :hover:text-white"
                                 data-modal-hide="crypto-modal">
                                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 14 14">
@@ -38,8 +38,8 @@
                                 </svg>
                             </button>
                             <!-- Modal header -->
-                            <div class="px-6 py-4 border-b rounded-t dark:border-gray-600">
-                                <h3 class="text-base font-semibold text-gray-900 lg:text-xl dark:text-white">
+                            <div class="px-6 py-4 border-b rounded-t :border-gray-600">
+                                <h3 class="text-base font-semibold text-gray-900 lg:text-xl :text-white">
                                     Crear nueva EDA
                                 </h3>
                             </div>
@@ -51,7 +51,7 @@
                                     @include('eda.form')
                                     <div class="pt-2 w-full flex">
                                         <button type="submit"
-                                            class="text-white ml-auto bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Guardar</button>
+                                            class="text-white ml-auto bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 :bg-green-600 :hover:bg-green-700 :focus:ring-green-800">Guardar</button>
                                     </div>
                                 </form>
                             </div>
@@ -61,8 +61,8 @@
 
             </header>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-base text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table class="w-full text-base text-left text-gray-500 :text-gray-400">
+                    <thead class="text-base text-gray-700 uppercase bg-gray-50 :bg-gray-700 :text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3 w-[50px]">
                                 Año
@@ -80,9 +80,9 @@
                     </thead>
                     <tbody>
                         @foreach ($edas as $eda)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr class="bg-white border-b :bg-gray-800 :border-gray-700">
                                 <td scope="row"
-                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap :text-white">
                                     {{ $eda->año }}</td>
                                 <td class="px-6 py-4">{{ \Carbon\Carbon::parse($eda->created_at)->format('d F Y') }}</td>
                                 <td class="px-6 py-4">
