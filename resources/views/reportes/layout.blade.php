@@ -16,7 +16,6 @@
                     href="{{ route('reportes.edas') }}">Edas</a>
                 <a class=" hover:opacity-70 {{ request()->is('reportes*/colaboradores*') ? 'text-white bg-slate-900' : '' }}"
                     href="{{ route('reportes.colaboradores') }}">Colaboradores</a>
-
             </nav>
         </header>
         @yield('content-reportes')

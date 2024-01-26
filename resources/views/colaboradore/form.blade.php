@@ -23,7 +23,7 @@
     </label>
     <label class="relative">
         Puesto
-        <select name="id_puesto" id="selectPuesto" class="p-3 w-full rounded-full px-4">
+        <select name="id_puesto" class="p-3 puesto-fetch w-full rounded-full px-4">
             <option value="" selected>Selecciona un puesto</option>
             @foreach ($puestos as $puesto)
                 <option {{ $isEdit && $colaborador->cargo->id_puesto == $puesto->id ? 'selected' : '' }}
@@ -35,7 +35,7 @@
     </label>
     <label class="">
         Cargo
-        <select required name="id_cargo" id="selectCargo" class="p-3 w-full rounded-full px-4">
+        <select required name="id_cargo" class="p-3 cargo-fetch w-full rounded-full px-4">
             <option selected value="">Selecciona un cargo</option>
             @foreach ($cargos as $cargo)
                 <option {{ $isEdit && $colaborador->cargo->id == $cargo->id ? 'selected' : '' }}
@@ -74,7 +74,7 @@
 </div>
 
 {{-- ETIQUETA LOADING --}}
-<div id="loading" class="absolute hidden inset-0  place-content-center bg-white/70">
+<div class="absolute loading-form-colab hidden inset-0  place-content-center bg-white/70">
     <div role="status">
         <svg aria-hidden="true" class="w-14 h-14 mr-2 text-gray-200 animate-spin :text-gray-600 fill-blue-600"
             viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,44 +87,3 @@
         </svg>
     </div>
 </div>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const loading = document.getElementById("loading")
-        const selectCargo = document.getElementById('selectCargo')
-
-
-        function loadingActive() {
-            loading.classList.add('grid');
-            loading.classList.remove('hidden');
-        }
-
-        function loadingRemove() {
-            loading.classList.add('hidden');
-            loading.classList.remove('grid');
-        }
-
-
-        selectPuesto.addEventListener('change', async function() {
-            const id_puesto = this.value;
-            try {
-                loadingActive()
-                const response = await axios.get(`/cargos/json/${id_puesto}`)
-                selectCargo.innerHTML = '<option value="" selected >Selecciona un cargo</option>';
-                const cargos = response.data;
-                cargos.forEach(function(cargo) {
-                    const option = document.createElement('option');
-                    option.value = cargo.id;
-                    option.textContent = cargo.nombre;
-                    selectCargo.appendChild(option);
-                });
-
-            } catch (error) {
-                console.log(error)
-            } finally {
-                loadingRemove()
-            }
-        });
-    })
-</script>

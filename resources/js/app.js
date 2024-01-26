@@ -3,6 +3,10 @@ import "./commons"
 import "./reportes/colaboradores"
 import "./reportes/edas"
 import "./filters-combobox"
+import "./profile"
+import "./colaboradores"
+
+
 
 
 import $ from "jquery";
@@ -27,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const botoneliminar = document.querySelectorAll('.delete-objetivo')
     const formautocalificar = document.querySelectorAll(".form-autocalificacion");
     const formacalificacion = document.querySelectorAll(".form-calificacion");
-    const formfeedback = document.getElementById("form-feedback");
     const btnfeedbackpreview = document.getElementById("btn-feedback-preview");
     const btncerrareva = document.getElementById("btn-cerrar-eva");
     const btncerrareda = document.getElementById("btn-cerrar-eda");

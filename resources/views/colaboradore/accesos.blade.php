@@ -64,19 +64,18 @@
     const btnSubmit = document.getElementById('btn-submit')
 
     const paintList = () => {
-        initialAccessSytem.forEach((item) => {
+        initialAccessSytem.forEach((item, index) => {
             const label = document.createElement('label');
-            const uuid = crypto.randomUUID()
             const isCheck = accessColaborador.includes(item)
             label.classList = 'relative w-full inline-flex items-center cursor-pointer';
             label.innerHTML = `
-                    <input type="checkbox" ${isCheck ? 'checked' : ''} id="${uuid}" data-name="${item}" class="sr-only privilege peer">
+                    <input type="checkbox" ${isCheck ? 'checked' : ''} id="${index}" data-name="${item}" class="sr-only privilege peer">
                     <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 :peer-focus:ring-blue-800 rounded-full peer :bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all :border-gray-600 peer-checked:bg-blue-600"></div>
                     <span class="ms-3 text-sm font-medium capitalize text-gray-900 :text-gray-300">${item.replace("_", ' ')}</span>
                 `
             accessList.appendChild(label);
 
-            const privilegeInput = document.getElementById(uuid)
+            const privilegeInput = document.getElementById(index)
             privilegeInput.addEventListener('change', (e) => {
                 const name = privilegeInput.dataset.name
                 if (accessColaborador.includes(name))

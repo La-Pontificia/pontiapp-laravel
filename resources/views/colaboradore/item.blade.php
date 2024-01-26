@@ -132,6 +132,12 @@
                                 </button>
                             </li>
                         @endif
+                        @if ($hasAccessColab)
+                            <li>
+                                <a href="/colaboradores/accesos/{{ $colaborador->id }}"
+                                    class="block px-4 py-2 hover:bg-gray-100">Accesos</a>
+                            </li>
+                        @endif
                     </ul>
                     @if ($hasToggleStatus)
                         <button data-id="{{ $colaborador->id }}"
@@ -214,7 +220,6 @@
     </div>
 @endif
 
-@section('script')
     <script>
         const btnToggleEstado = document.querySelectorAll('.toggle-estado')
         const changePasswordForm = document.querySelectorAll('.change-password')
@@ -340,4 +345,3 @@
             });
         });
     </script>
-@endsection

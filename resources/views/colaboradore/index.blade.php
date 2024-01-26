@@ -65,7 +65,7 @@
                         </svg>
                     </button>
                 </div>
-                <form class="create-form" method="POST" action="{{ route('colaboradores.store') }}" role="form"
+                <form id="form" method="POST" action="{{ route('colaboradores.store') }}" role="form"
                     enctype="multipart/form-data">
                     @csrf
                     <div class="p-4 md:p-5 space-y-4">
@@ -74,7 +74,6 @@
                             'isEdit' => false,
                         ])
                     </div>
-
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
                         <button data-modal-hide="static-modal" type="submit"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center ">
@@ -88,9 +87,11 @@
         </div>
     </div>
     @include('colaboradore.accesos')
+@endsection
 
+
+@section('script')
     <script>
-        const selectPuesto = document.getElementById('selectPuesto');
         const form = document.getElementById("form")
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -111,35 +112,6 @@
                 });
             }
 
-        });
-
-        function handleSelectChange(selectId, paramName) {
-            var selectedValue = document.getElementById(selectId).value;
-            var currentURL = window.location.href;
-            var regex = new RegExp("[?&]" + paramName + "(=([^&#]*)|&|#|$)");
-            if (regex.test(currentURL)) {
-                currentURL = currentURL.replace(new RegExp("([?&])" + paramName + "=.*?(&|#|$)"), '$1' + paramName + '=' +
-                    selectedValue + '$2');
-            } else {
-                currentURL += (currentURL.indexOf('?') === -1 ? '?' : '&') + paramName + '=' + selectedValue;
-            }
-            window.location.href = currentURL;
-        }
-
-        document.getElementById('area').addEventListener('change', function() {
-            handleSelectChange('area', 'id_area');
-        });
-
-        document.getElementById('departamento').addEventListener('change', function() {
-            handleSelectChange('departamento', 'id_departamento');
-        });
-
-        document.getElementById('cargo').addEventListener('change', function() {
-            handleSelectChange('cargo', 'id_cargo');
-        });
-
-        document.getElementById('puesto').addEventListener('change', function() {
-            handleSelectChange('puesto', 'id_puesto');
         });
     </script>
 @endsection
