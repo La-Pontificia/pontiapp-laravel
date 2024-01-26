@@ -15,7 +15,7 @@
                 <h3 class="mb-4 text-xl font-medium text-gray-900 :text-white">Cambiar foto de perfil</h3>
                 <div class="flex relative group min-w-[20rem] h-[20rem] w-[20rem] border overflow-hidden rounded-full"">
                     <img id="image-preview" alt="{{ $colaborador_actual->nombres }}"
-                        src="{{ $colaborador_actual->perfil }}" class="w-full h-full object-cover">
+                        src="{{ $colaborador_actual->perfil }}" class="w-full h-full object-cover"/>
                     <span id="btnchangeimage"
                         class="absolute group-hover:opacity-100 opacity-0 cursor-pointer inset-0 bg-white/80 grid place-content-center">
                         <svg class="w-10 opacity-60" viewBox="0 0 24 24" fill="none">

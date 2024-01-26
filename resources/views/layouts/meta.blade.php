@@ -9,8 +9,8 @@
             <div class="w-full p-3">
                 <div class="flex relative group min-w-[6rem] h-[6rem] w-[6rem] border overflow-hidden rounded-full"">
                     <img id="image-preview" alt="{{ $colaborador->nombres }}"
-                        src={{ $colaborador->perfil ? $colaborador->perfil : '/profile-user.png' }}
-                        class="w-full h-full object-cover">
+                        src="{{ $colaborador->perfil ? $colaborador->perfil : '/profile-user.png' }}"
+                        class="w-full h-full object-cover"/>
                     @if ($miPerfil && !$suSupervisor)
                         <span id="btnchangeimage"
                             class="absolute group-hover:opacity-100 opacity-0 cursor-pointer inset-0 bg-white/80 grid place-content-center">
