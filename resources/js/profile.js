@@ -59,3 +59,60 @@ changePasswordForm.addEventListener('submit', async (event) => {
 
     }
 })
+
+
+
+const upload = document.getElementById('upload');
+const imagePreview = document.getElementById('image-preview');
+const input = document.getElementById('imageInput');
+const btnChangeImage = document.getElementById('btnchangeimage');
+
+btnChangeImage.addEventListener('click', function () {
+    input.click();
+    console.log('click')
+});
+
+input.addEventListener('change', function () {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            upload.style.display = 'inline-block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+});
+
+upload.addEventListener(('click'), async function (event) {
+    const cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dc0t90ahb/upload';
+    const input = document.getElementById('imageInput');
+    const file = input.files[0];
+
+    if (!file) return
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'ztmbixcz');
+    try {
+        upload.classList.add('animation-pulse');
+        upload.disabled = true;
+        upload.textContent = 'Actualizando...';
+        const response = await axios.post(cloudinaryUrl, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        const responseChange = await axios.post('/colaboradores/cambiar-perfil', {
+            url: response.data.secure_url
+        })
+
+        location.reload()
+
+    } catch (error) {
+
+        console.error('Error al subir la imagen a Cloudinary:', error.message);
+        throw error;
+
+    }
+})
