@@ -35,7 +35,7 @@
     </label>
     <label class="">
         Cargo
-        <select required name="id_cargo" class="p-3 cargo-fetch w-full rounded-full px-4">
+        <select required name="id_cargo" class="p-3 w-full rounded-full px-4">
             <option selected value="">Selecciona un cargo</option>
             @foreach ($cargos as $cargo)
                 <option {{ $isEdit && $colaborador->cargo->id == $cargo->id ? 'selected' : '' }}
