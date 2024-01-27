@@ -69,7 +69,7 @@
                         </p>
                         <p class="opacity-60 text-center text-xs mt-2">Developed by <a href="https://daustinn.com"
                                 class="hover:underline" target="_blank">Daustinn</a>
-                            & <a href="https://daustinn.com" class="hover:underline" target="_blank">Diana</a>
+                            & <a href="https://www.instagram.com/diana_margoth000" class="hover:underline" target="_blank">Diana</a>
                         </p>
                     </div>
                 </div>
