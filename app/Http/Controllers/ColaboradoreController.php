@@ -189,7 +189,8 @@ class ColaboradoreController extends GlobalController
             'nombres' => $request->input('nombres'),
             'correo_institucional' => $request->input('correo_institucional'),
             'id_sede' => $request->input('id_sede'),
-            'id_puesto' => $request->input('id_puesto'),
+            // 'id_puesto' => $request->input('id_puesto'),
+            'id_cargo' => $request->input('id_cargo'),
             'rol' => $request->input('rol'),
         ]);
 
