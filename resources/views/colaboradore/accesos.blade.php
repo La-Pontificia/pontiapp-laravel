@@ -51,9 +51,8 @@
 <script>
     const initialAccessSytem = ["mantenimiento", "reportes", "contraseña_colaborador", "crear_colaborador",
         "editar_colaborador", "accesos_colaborador", "estado_colaborador", "asignar_supervisor", "enviar_objetivos",
-        "autocalificar", "calificar", "cerrar_eva", "cerrar_eda", "enviar_cuestionario", "ver_colaboradores",
-        "ver_edas",
-        "auditoria", "crear_eda"
+        "autocalificar", "calificar", "cerrar_eva", "enviar_cuestionario", "ver_colaboradores",
+        "crear_eda", "mis_edas", "ver_edas", "cerrar_eda", "auditoria"
     ]
 
     let accessColaborador = []

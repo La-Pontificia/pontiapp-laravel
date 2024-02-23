@@ -5,7 +5,7 @@
     @php
 
         // variables globales
-        $edicion = $edaSeleccionado->enviado == true && $edaSeleccionado->aprobado == false && $edaSeleccionado->cerrado == false;
+        $edicion = ($edaSeleccionado->enviado == true && $edaSeleccionado->aprobado == false) || $edaSeleccionado->cerrado == false;
         $aprobado = $edaSeleccionado->aprobado;
         $totalporcentaje = $objetivos->sum('porcentaje');
 
@@ -67,7 +67,7 @@
         </table>
     </div>
 
-    <footer class="p-10 grid place-content-center gap-4">
+    <footer class="py-10">
         @include('meta.evaluaciones.footer')
     </footer>
     {{-- modals --}}
@@ -306,11 +306,11 @@
         </div>
     </div>
 
-    @if (!$autocalificacionterminada && $miPerfil)
+    @if (!$evaluacion->cerrado && $miPerfil)
         @include('meta.evaluaciones.modalAutocalificacion')
     @endif
 
-    @if ($autocalificacionterminada && $suSupervisor)
+    @if (!$evaluacion->cerrado && $suSupervisor)
         @include('meta.evaluaciones.modalCalificacion')
     @endif
 

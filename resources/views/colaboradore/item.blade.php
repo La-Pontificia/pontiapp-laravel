@@ -3,7 +3,7 @@
     $is_dev = $colaborador->rol == 2;
     $hasToggleStatus = in_array('estado_colaborador', $colaborador_actual->privilegios);
     $hasAccessColab = in_array('accesos_colaborador', $colaborador_actual->privilegios);
-    $hasChangePass = in_array('password_colaborador', $colaborador_actual->privilegios);
+    $hasChangePass = in_array('contraseña_colaborador', $colaborador_actual->privilegios);
     $hasEditColab = in_array('editar_colaborador', $colaborador_actual->privilegios);
     $hasAssignSuper = in_array('asignar_supervisor', $colaborador_actual->privilegios);
 @endphp
@@ -90,6 +90,7 @@
             @if ($hasEditColab && $colaborador->rol != '2')
                 @include('colaboradore.edit')
             @endif
+
             @if ($hasAccessColab && $colaborador->rol != '2')
                 <button title="Accesos" data-id={{ $colaborador->id }} data-modal-target="accesos"
                     data-modal-toggle="accesos"
@@ -114,6 +115,7 @@
                             d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
                     </svg>
                 </button>
+
                 <div id="dropdownDots-{{ $colaborador->id }}"
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
                     <ul class="py-2 text-sm font-medium text-gray-700"
@@ -132,10 +134,13 @@
                                 </button>
                             </li>
                         @endif
-                        @if ($hasAccessColab)
+                        @if ($colaborador->rol != '1')
                             <li>
-                                <a href="/colaboradores/accesos/{{ $colaborador->id }}"
-                                    class="block px-4 py-2 hover:bg-gray-100">Accesos</a>
+                                <button type="button" data-modal-target="perfil-modal-{{ $colaborador->id }}"
+                                    data-modal-toggle="perfil-modal-{{ $colaborador->id }}"
+                                    class="block px-4 py-2 hover:bg-gray-100">
+                                    Cambiar foto de perfil
+                                </button>
                             </li>
                         @endif
                     </ul>
@@ -149,8 +154,10 @@
             @endif
 
             @include('colaboradore.contraseña', ['colaborador' => $colaborador])
+            @include('colaboradore.perfil', ['colaborador' => $colaborador])
+
         </div>
-        
+
         @if ($hasAssignSuper)
             <div id="modal-add-supervisor-{{ $colaborador->id }}" tabindex="-1" aria-hidden="true"
                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -161,8 +168,8 @@
                             data-modal-hide="modal-add-supervisor-{{ $colaborador->id }}">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                             </svg>
                         </button>
                         <div class="px-6 py-4 border-b rounded-t :border-gray-600">
@@ -190,7 +197,7 @@
                             <p class="text-sm mb-4 font-normal text-gray-500 :text-gray-400">
                                 Asigna o actualiza el supervisor de este colaborador
                             </p>
-        
+
                             <div class="relative w-full block">
                                 <span class="absolute top-[50%] left-2 translate-y-[-50%]">
                                     <svg class="w-6 h-6 text-gray-500" aria-hidden="true" fill="none"
@@ -203,7 +210,7 @@
                                     class="w-full block query-colab rounded-xl outline-none border-neutral-200 bg-gray-100 border p-2 px-4 pl-10"
                                     placeholder="Buscar colaborador por nombres o DNI">
                             </div>
-        
+
                             <ul data-id='{{ $colaborador->id }}' class="flex colabs-q flex-col gap-1 pt-2">
                                 <div class="h-[100px] grid place-content-center">
                                     <h2 class="text-center text-neutral-500 text-lg">Busca un colaborador y
@@ -217,6 +224,6 @@
                 </div>
             </div>
         @endif
+
     </td>
 </tr>
-

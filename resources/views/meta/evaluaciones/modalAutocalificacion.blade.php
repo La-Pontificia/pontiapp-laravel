@@ -42,7 +42,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="table-body-list" class="divide-y">
+                        <tbody id="table-body-list-autocalificacion" class="divide-y">
                             @foreach ($objetivos as $objetivo)
                                 <tr class="border-b border-gray-200 divide-x text-sm ">
                                     @php
@@ -93,7 +93,8 @@
                     </table>
                 </div>
                 <footer class="p-3 flex justify-end">
-                    <button id="guardar-autocalificacion" data-id="{{ $id_eda }}" data-eva="{{ $n_eva }}"
+                    <button id="guardar-autocalificacion_eva" data-id="{{ $id_eda }}"
+                        data-eva="{{ $n_eva }}"
                         class="bg-red-700 flex items-center gap-2 p-2 px-6 rounded-md text-white">
                         <svg class="w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_iconCarrier">
@@ -108,67 +109,3 @@
             </div>
         </div>
     </div>
-
-    @section('script')
-        <script>
-            const guardarAutocalificacion = document.getElementById('guardar-autocalificacion')
-            const tableListBody = document.getElementById('table-body-list')
-
-            guardarAutocalificacion.addEventListener('click', () => {
-                const tableRows = document.querySelectorAll('#table-body-list tr');
-                let allSelectsSelected = true;
-
-                tableRows.forEach(row => {
-                    const selectElement = row.querySelector('select[name="nota"]');
-                    const autocalificacion = selectElement.value;
-                    if (autocalificacion === "") allSelectsSelected = false
-                });
-
-                if (allSelectsSelected) {
-                    const autocalificacionArray = [];
-                    tableRows.forEach(row => {
-                        const selectElement = row.querySelector('select[name="nota"]');
-                        const objetivoId = selectElement.dataset.id;
-                        const autocalificacion = selectElement.value;
-                        autocalificacionArray.push({
-                            id: objetivoId,
-                            autocalificacion: autocalificacion
-                        });
-                    });
-
-                    const idEda = guardarAutocalificacion.dataset.id;
-                    const n_eva = guardarAutocalificacion.dataset.eva;
-
-                    Swal.fire({
-                        title: '¿Estás seguro de guardar las notas autocalificadas?',
-                        text: 'No podrás deshacer esta acción.',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Sí, guardar',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            axios.post('/objetivos/autocalificar', {
-                                autocalificacionArray,
-                                n_eva
-                            }).then((res) => {
-                                window.location.reload()
-                            }).catch((error) => {
-                                console.log(error)
-                            })
-                        }
-                    });
-
-
-                } else {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Autocalificación incompleta',
-                        text: 'Todos los objetivos tienen que estar autocalificados, por favor vuelve a intentarlo.',
-                    })
-                }
-            })
-        </script>
-    @endsection

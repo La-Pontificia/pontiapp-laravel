@@ -39,10 +39,11 @@ class ColaboradoreController extends GlobalController
         $allowLists = $colab->rol != 0;
 
         // Cargos
-        if ($id_puesto) $cargos = Cargo::where('id_puesto', $id_puesto)->get();
+        if ($id_puesto)
+            $cargos = Cargo::where('id_puesto', $id_puesto)->get();
         $colaboradorForm = new Colaboradore();
 
-        $colaboradores =  null;
+        $colaboradores = null;
         $query = Colaboradore::orderBy('created_at', 'asc');
 
         if ($id_cargo) {
@@ -78,8 +79,8 @@ class ColaboradoreController extends GlobalController
 
     public function cambiarPerfil(Request $request)
     {
-        $colaborador = $this->getCurrentColab();
-        if ($request->id) $colaborador = Colaboradore::find($request->id);
+        $id = $request->id;
+        $colaborador = Colaboradore::find($id);
         $colaborador->perfil = $request->url;
         $colaborador->save();
         return response()->json(['success' => 'Perfil catualizado correctamente.'], 202);
@@ -109,33 +110,22 @@ class ColaboradoreController extends GlobalController
         request()->validate(Colaboradore::$rules);
         $colab = $this->getCurrentColab();
         $validateUser = User::where('email', $request->input('dni'))->first();
-        if ($validateUser) return response()->json(['error' => 'El usuario con el DNI ingresado ya existe'], 400);
+        if ($validateUser)
+            return response()->json(['error' => 'El usuario con el DNI ingresado ya existe'], 400);
 
         $rol = $request->input('rol');
         $privilegios = [];
 
         if ($rol == 0) {
-            $privilegios = [
-                "ver_colaboradores",
-                "mis_edas",
-                "mis_objetivos",
-                "enviar_objetivos",
-                "enviar_cuestionario",
-                "1ra_evaluacion",
-                "2da_evaluacion",
-            ];
+            $privilegios = ["ver_colaboradores", "mis_edas", "mis_objetivos", "enviar_objetivos", "enviar_cuestionario", "1ra_evaluacion", "2da_evaluacion", "ver_edas", "crear_eda", "cerrar_eda", "autocalificar", "calificar", "cerrar_eva"];
         }
 
         if ($rol == 1) {
-            $privilegios = [
-                "ver_colaboradores",
-                "mis_edas",
-                "mis_objetivos",
-                "enviar_objetivos",
-                "enviar_cuestionario",
-                "1ra_evaluacion",
-                "2da_evaluacion",
-            ];
+            $privilegios = ["mantenimiento", "reportes", "contraseña_colaborador", "crear_colaborador", "editar_colaborador", "asignar_supervisor", "enviar_objetivos", "autocalificar", "calificar", "cerrar_eva", "cerrar_eda", "enviar_cuestionario", "ver_colaboradores", "ver_edas", "crear_eda"];
+        }
+
+        if ($rol == 2) {
+            $privilegios = ["mantenimiento", "reportes", "contraseña_colaborador", "crear_colaborador", "editar_colaborador", "accesos_colaborador", "estado_colaborador", "asignar_supervisor", "enviar_objetivos", "autocalificar", "calificar", "cerrar_eva", "cerrar_eda", "enviar_cuestionario", "ver_colaboradores", "ver_edas", "auditoria", "crear_eda"];
         }
 
 
@@ -146,7 +136,7 @@ class ColaboradoreController extends GlobalController
             'correo_institucional' => $request->input('correo_institucional'),
             'id_sede' => $request->input('id_sede'),
             'id_cargo' => $request->input('id_cargo'),
-            'privilegios' =>  $privilegios,
+            'privilegios' => $privilegios,
             'rol' => $rol
         ]);
 
@@ -200,7 +190,9 @@ class ColaboradoreController extends GlobalController
             'correo_institucional' => $request->input('correo_institucional'),
             'id_sede' => $request->input('id_sede'),
             'id_puesto' => $request->input('id_puesto'),
+            'rol' => $request->input('rol'),
         ]);
+
         return redirect()->route('colaboradores.index');
     }
 

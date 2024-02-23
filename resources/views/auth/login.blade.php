@@ -8,7 +8,9 @@
                 class="flex flex-col max-sm:w-full gap-4 relative sm:rounded-lg justify-center items-center max-sm:justify-start max-sm:items-start">
                 <div
                     class="p-6 relative z-10 w-[450px] max-sm:w-full max-w-full bg-white max-sm:shadow-none shadow-md rounded-2xl">
-                    <img src="/elp.gif" class="w-24 mx-auto sm:mx-0" />
+                    <div class="flex justify-center pb-3">
+                        <img src="/la-pontificia.svg" class="w-32 mx-auto sm:mx-0" />
+                    </div>
                     <div class="w-full">
                         <h1 class=" text-center inline-block text-2xl text-gray-900 font-semibold bg-white ">
                             EDA - La Pontificia
@@ -64,12 +66,13 @@
                         <p class="mt-6 text-xs text-gray-600 text-center">
                             @2024 <a href="https://elp.edu.pe" target="_blank"
                                 class="border-b border-gray-500 border-dotted">
-                                Escuela Superior La Pontificia.
+                                Grupo La Pontificia.
                             </a> All rights reserved.
                         </p>
                         <p class="opacity-60 text-center text-xs mt-2">Developed by <a href="https://daustinn.com"
                                 class="hover:underline" target="_blank">Daustinn</a>
-                            & <a href="https://www.instagram.com/diana_margoth000" class="hover:underline" target="_blank">Diana</a>
+                            & <a href="https://www.instagram.com/diana_margoth000" class="hover:underline"
+                                target="_blank">Diana</a>
                         </p>
                     </div>
                 </div>

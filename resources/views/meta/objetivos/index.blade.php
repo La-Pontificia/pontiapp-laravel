@@ -6,8 +6,8 @@
         $enviado = $edaSeleccionado->enviado;
         $edicion = !$edaSeleccionado->enviado && !$edaSeleccionado->aprobado && !$edaSeleccionado->cerrado;
         $aprobado = $edaSeleccionado->aprobado;
-        $btneditar = (!$edaSeleccionado->enviado && $miPerfil) || ($edaSeleccionado->enviado && $suSupervisor && !$aprobado);
-        $btneliminar = !$edaSeleccionado->enviado && $miPerfil;
+        $btneditar = (!$edaSeleccionado->aprobado && $miPerfil) || ($edaSeleccionado->enviado && $suSupervisor && !$aprobado);
+        $btneliminar = !$edaSeleccionado->aprobado && $miPerfil;
         $totalporcentaje = $objetivos->sum('porcentaje');
         $enviarobjetivosbtn = $objetivos->sum('porcentaje') == 100 && !$edaSeleccionado->enviado && $miPerfil;
         $aprobarobjetivos = $objetivos->sum('porcentaje') == 100 && $edaSeleccionado->enviado && !$aprobado && $suSupervisor;

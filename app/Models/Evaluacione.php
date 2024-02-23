@@ -39,7 +39,7 @@ class Evaluacione extends Model
      *
      * @var array
      */
-    protected $fillable = ['promedio', 'autocalificacion', 'cerrado', 'fecha_promedio', 'fecha_autocalificacion', 'fecha_cerrado'];
+    protected $fillable = ['promedio', 'autocalificacion', 'autocalificar', 'calificar', 'cerrado', 'fecha_promedio', 'fecha_autocalificacion', 'fecha_cerrado'];
 
     protected $keyType = 'string';
     public $incrementing = false;

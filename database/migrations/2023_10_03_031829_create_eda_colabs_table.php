@@ -15,8 +15,8 @@ return new class extends Migration
             $table->uuid('id_eda')->references('id')->on('edas')->onDelete('cascade');
             $table->uuid('id_colaborador')->references('id')->on('colaboradores')->onDelete('cascade');
 
-            $table->uuid('id_evaluacion')->references('id')->on('evaluaciones')->onDelete('cascade');
-            $table->uuid('id_evaluacion_2')->references('id')->on('evaluaciones')->onDelete('cascade');
+            $table->uuid('id_evaluacion')->onDelete('cascade');
+            $table->uuid('id_evaluacion_2')->onDelete('cascade');
 
             $table->uuid('id_cuestionario_colab')->nullable()->default(null);
             $table->uuid('id_cuestionario_super')->nullable()->default(null);
@@ -37,6 +37,13 @@ return new class extends Migration
         });
 
         Schema::table('eda_colabs', function (Blueprint $table) {
+
+            $table->foreign('id_evaluacion')->references('id')->on('evaluaciones');
+            $table->index('id_evaluacion');
+
+            $table->foreign('id_evaluacion_2')->references('id')->on('evaluaciones');
+            $table->index('id_evaluacion_2');
+
             $table->foreign('id_cuestionario_colab')->references('id')->on('cuestionarios');
             $table->index('id_cuestionario_colab');
 

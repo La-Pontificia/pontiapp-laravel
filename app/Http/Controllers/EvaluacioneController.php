@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EdaColab;
 use App\Models\Evaluacione;
 use App\Models\Objetivo;
 
@@ -26,15 +27,32 @@ class EvaluacioneController extends Controller
             }
 
             $promedioRedondeado = round($promedio);
-
             $evaluacion = Evaluacione::find($id);
             $evaluacion->autocalificacion = $autocalificacion;
             $evaluacion->promedio = $promedioRedondeado;
             $evaluacion->cerrado = true;
             $evaluacion->fecha_cerrado = date('Y-m-d H:i:s');
             $evaluacion->save();
+
             return response()->json([
                 'message' => 'Evaluacione cerrada con exito',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function abrir($id)
+    {
+        try {
+
+            $eva = Evaluacione::find($id);
+            $eva->cerrado = false;
+            $eva->save();
+            return response()->json([
+                'message' => 'Evaluación abierta con exito',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

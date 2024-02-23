@@ -97,6 +97,7 @@ Route::post('/meta/feedback/received/{id_feed}', 'App\Http\Controllers\FeedbackC
 
 // EVALUACIONES 
 Route::post('/meta/evaluaciones/cerrar/{id}/{id_eda}/{n_eva}', 'App\Http\Controllers\EvaluacioneController@cerrar')->middleware('authMiddleware');
+Route::post('/meta/evaluaciones/abrir/{id}', 'App\Http\Controllers\EvaluacioneController@abrir')->middleware('authMiddleware');
 
 
 //ACCESOS
@@ -153,7 +154,7 @@ Route::get('/reportes/colaboradores', 'App\Http\Controllers\ReporteController@co
 Route::post('/eda_colab', 'App\Http\Controllers\EdaColabController@crear')->middleware('authMiddleware');
 Route::post('/eda_colab/aprobar/{id}', 'App\Http\Controllers\EdaColabController@aprobar')->middleware('authMiddleware');
 Route::post('/eda_colab/cerrar/{id}', 'App\Http\Controllers\EdaColabController@cerrar')->middleware('authMiddleware');
-
+Route::post('/eda_colab/eliminar/{id}', 'App\Http\Controllers\EdaColabController@eliminar')->middleware('authMiddleware');
 
 /// COLABORADORES 
 Route::post('/colaborador/{id}', 'App\Http\Controllers\ColaboradoreController@update')->middleware('authMiddleware')->name('colaborador.update');

@@ -15,7 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->integer('promedio')->default(0);
             $table->integer('autocalificacion')->default(0);
+
+            $table->boolean('autocalificar')->default(false);
+            $table->boolean('calificar')->default(false);
             $table->boolean('cerrado')->default(false);
+
             $table->timestamp('fecha_promedio')->nullable()->default(null);
             $table->timestamp('fecha_autocalificacion')->nullable()->default(null);
             $table->timestamp('fecha_cerrado')->nullable()->default(null);

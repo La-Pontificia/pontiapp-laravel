@@ -1,6 +1,6 @@
-import { createChart } from 'lightweight-charts';
+import { createChart } from "lightweight-charts";
 
-var element = document.getElementById('chart-edas');
+var element = document.getElementById("chart-edas");
 
 if (element) {
     var chart = createChart(element, {
@@ -17,45 +17,44 @@ if (element) {
         },
         grid: {
             horzLines: {
-                color: '#eee',
+                color: "#eee",
                 visible: false,
             },
             vertLines: {
-                color: '#ffffff',
+                color: "#ffffff",
             },
         },
     });
-
 
     var darkTheme = {
         chart: {
             layout: {
                 background: {
-                    type: 'solid',
-                    color: '#020613',
+                    type: "solid",
+                    color: "#020613",
                 },
-                lineColor: '#FFFFFF',
-                textColor: '#FFFFFF',
+                lineColor: "#FFFFFF",
+                textColor: "#FFFFFF",
             },
             watermark: {
-                color: 'rgba(0, 0, 0, 0)',
+                color: "rgba(0, 0, 0, 0)",
             },
             crosshair: {
-                color: '#758696',
+                color: "#758696",
             },
             grid: {
                 vertLines: {
-                    color: '#2B2B43',
+                    color: "#2B2B43",
                 },
                 horzLines: {
-                    color: '#363C4E',
+                    color: "#363C4E",
                 },
             },
         },
         series: {
-            topColor: 'rgba(33, 150, 243, 0.56)',
-            bottomColor: 'rgba(33, 150, 243, 0.04)',
-            lineColor: 'rgba(33, 150, 243, 1)',
+            topColor: "rgba(33, 150, 243, 0.56)",
+            bottomColor: "rgba(33, 150, 243, 0.04)",
+            lineColor: "rgba(33, 150, 243, 1)",
         },
     };
 
@@ -63,28 +62,28 @@ if (element) {
         chart: {
             layout: {
                 background: {
-                    type: 'solid',
-                    color: '#0000',
+                    type: "solid",
+                    color: "#0000",
                 },
-                lineColor: '#0000',
-                textColor: '#191919',
+                lineColor: "#0000",
+                textColor: "#191919",
             },
             watermark: {
-                color: 'rgba(0, 0, 0, 0)',
+                color: "rgba(0, 0, 0, 0)",
             },
             grid: {
                 vertLines: {
                     visible: false,
                 },
                 horzLines: {
-                    color: '#f0f3fa',
+                    color: "#f0f3fa",
                 },
             },
         },
         series: {
-            topColor: 'rgba(33, 150, 243, 0.56)',
-            bottomColor: 'rgba(33, 150, 243, 0.04)',
-            lineColor: 'rgba(33, 150, 243, 1)',
+            topColor: "rgba(33, 150, 243, 0.56)",
+            bottomColor: "rgba(33, 150, 243, 0.04)",
+            lineColor: "rgba(33, 150, 243, 1)",
         },
     };
 
@@ -99,31 +98,37 @@ if (element) {
     }
 
     function fetchDataAndDrawChart() {
-        fetch('/reportes/edas?report=timeline') // Reemplaza '/ruta-de-tu-api' con la ruta real de tu API
-            .then(response => response.json())
-            .then(data => {
-                chart.addAreaSeries({
-                    topColor: 'rgba(33, 150, 243, 0.56)',
-                    bottomColor: 'rgba(33, 150, 243, 0.04)',
-                    lineColor: 'rgba(33, 150, 243, 1)',
-                    lineWidth: 2,
-                }).setData(data.enviados.reverse())
+        fetch("/reportes/edas?report=timeline") // Reemplaza '/ruta-de-tu-api' con la ruta real de tu API
+            .then((response) => response.json())
+            .then((data) => {
+                chart
+                    .addAreaSeries({
+                        topColor: "rgba(33, 150, 243, 0.56)",
+                        bottomColor: "rgba(33, 150, 243, 0.04)",
+                        lineColor: "rgba(33, 150, 243, 1)",
+                        lineWidth: 2,
+                    })
+                    .setData(data.enviados.reverse());
 
-                chart.addAreaSeries({
-                    color: 'rgba(4, 111, 232, 1)',
-                    lineWidth: 2,
-                }).setData(data.aprobados.reverse())
+                chart
+                    .addAreaSeries({
+                        color: "rgba(4, 111, 232, 1)",
+                        lineWidth: 2,
+                    })
+                    .setData(data.aprobados.reverse());
 
-                chart.addAreaSeries({
-                    topColor: 'rgba(255,31,178, 0.56)',
-                    bottomColor: 'rgba(255,207,94, 0.04)',
-                    lineColor: 'rgba(255,31,178, 1)',
-                    lineWidth: 2,
-                }).setData(data.cerrados.reverse())
+                chart
+                    .addAreaSeries({
+                        topColor: "rgba(255,31,178, 0.56)",
+                        bottomColor: "rgba(255,207,94, 0.04)",
+                        lineColor: "rgba(255,31,178, 1)",
+                        lineWidth: 2,
+                    })
+                    .setData(data.cerrados.reverse());
             })
-            .catch(error => console.error('Error al obtener datos:', error));
+            .catch((error) => console.error("Error al obtener datos:", error));
     }
 
     fetchDataAndDrawChart();
-    syncToTheme('Ligth');
+    syncToTheme("Ligth");
 }
