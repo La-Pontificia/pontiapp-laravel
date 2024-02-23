@@ -134,7 +134,7 @@
                                 </button>
                             </li>
                         @endif
-                        @if ($colaborador->rol != '1')
+                        @if ($colaborador_actual->rol != '1')
                             <li>
                                 <button type="button" data-modal-target="perfil-modal-{{ $colaborador->id }}"
                                     data-modal-toggle="perfil-modal-{{ $colaborador->id }}"
