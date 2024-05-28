@@ -30,7 +30,7 @@
                                 <th>Codigo</th>
                                 <th>Nombre</th>
                                 <th>Puesto</th>
-                                <th>Cargo</th>
+                                <th>Departamento</th>
                                 <th></th>
                             </tr>
                         </thead>
