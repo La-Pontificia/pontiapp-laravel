@@ -165,3 +165,8 @@ Route::post('/colaborador/privilegios/update', 'App\Http\Controllers\Colaborador
 Route::fallback(function () {
     return view('errors.404');
 });
+
+
+// RUTAS DE HORARIO
+// Route::resource('/horarios', App\Http\Controllers\HorarioController::class)->middleware('authMiddleware');
+Route::get('/horarios', 'App\Http\Controllers\HorarioController@index')->middleware('authMiddleware');
