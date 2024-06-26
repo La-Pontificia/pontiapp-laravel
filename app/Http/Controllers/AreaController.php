@@ -2,67 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Acceso;
 use App\Models\Area;
-use App\Models\Auditoria;
-use App\Models\Colaboradore;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-
-class AreaController extends GlobalController
+class AreaController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $match = Area::orderBy('created_at', 'asc');
+        $q = $request->get('q');
 
-        $areas = Area::orderBy('codigo', 'asc')->paginate();
-        $area = new Area();
-        return view('area.index', compact('areas', 'area'))
+        if ($q) {
+            $match->where('name', 'like', '%' . $q . '%')
+                ->orWhere('code', 'like', '%' . $q . '%')
+                ->get();
+        }
+
+        $areas = [];
+        $areas = $match->paginate();
+        $lastArea = Area::orderBy('created_at', 'desc')->first();
+
+        $newCode = 'A-001';
+        if ($lastArea) {
+            $newCode = 'A-' . str_pad((int)explode('-', $lastArea->code)[1] + 1, 3, '0', STR_PAD_LEFT);
+        }
+        return view('pages.areas.index', compact('areas', 'newCode'))
             ->with('i', (request()->input('page', 1) - 1) * $areas->perPage());
     }
 
     public function store(Request $request)
     {
-        $codeUltimate = Area::max('codigo');
-        $numero = (int)substr($codeUltimate, 1) + 1;
-        $newCode = 'A' . str_pad($numero, 3, '0', STR_PAD_LEFT);
-        $validatedData = $request->validate(Area::$rules);
-
-        // creamos el area
-        $data = array_merge($validatedData, [
-            'codigo' => $newCode,
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
         ]);
 
-        Auditoria::create([
-            'id_colab' => $this->getCurrentColab()->id,
-            'modulo' => 'area',
-            'titulo' => 'Se creo un nuevo registro',
-            'descripcion' => 'Se creó una area ' . $data['nombre'],
-        ]);
+        $alreadyExistCode = Area::where('code', $request->code)->first();
+        if ($alreadyExistCode) {
+            return response()->json('Ya existe un registro con el mismo código.', 500);
+        }
 
-        Area::create($data);
-        return redirect()->route('areas.index')
-            ->with('success', 'Area created successfully.');
+        $lastArea = Area::orderBy('created_at', 'desc')->first();
+        $code = 'A-001';
+        if ($lastArea) {
+            $code = 'A-' . str_pad((int)explode('-', $lastArea->code)[1] + 1, 3, '0', STR_PAD_LEFT);
+        }
+
+        $area = new Area();
+        $area->name = $request->name;
+        $area->code = $code;
+        $area->created_by = auth()->user()->id;
+        $area->save();
+
+        return response()->json($area, 200);
     }
 
-    public function update(Request $request, Area $area)
+    public function update(Request $request, $id)
     {
-        request()->validate(Area::$rules);
-        $exiteCodigo = Area::where('codigo', $request->codigo)->first();
-        if ($exiteCodigo && $exiteCodigo->id != $area->id) {
-            return response()->json(['error' => 'Ya hay un registro con en mismo codigo'], 404);
-        }
-        $area->update($request->all());
-
-        Auditoria::create([
-            'id_colab' => $this->getCurrentColab()->id,
-            'modulo' => 'area',
-            'titulo' => 'Se actualizó un registro',
-            'descripcion' => 'Se actualizó un registro con el id ' . $area->id,
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
         ]);
 
-        return redirect()->route('areas.index')
-            ->with('success', 'Area updated successfully');
+        $alreadyExistCode = Area::where('code', $request->code)->first();
+        if ($alreadyExistCode && $alreadyExistCode->id != $id) {
+            return response()->json('Ya existe un registro con el mismo código.', 500);
+        }
+
+        $area = Area::find($id);
+        $area->name = $request->name;
+        $area->code = $request->code;
+        $area->updated_by = auth()->user()->id;
+        $area->save();
+
+        return response()->json($area, 200);
     }
 }

@@ -2,194 +2,128 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Auditoria;
-use App\Models\Colaboradore;
 use App\Models\Eda;
-use App\Models\EdaColab;
-use App\Models\Evaluacione;
+use App\Models\Evaluation;
+use App\Models\Goal;
+use App\Models\JobPosition;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Year;
 use Illuminate\Http\Request;
 
-/**
- * Class EdaController
- * @package App\Http\Controllers
- */
-class EdaController extends GlobalController
+class EdaController  extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $edas = Eda::paginate();
-        $newEda = new Eda();
-        return view('eda.index', compact('edas', 'newEda'))
-            ->with('i', (request()->input('page', 1) - 1) * $edas->perPage());
-    }
+        $currentUser = auth()->user();
+        $match = User::orderBy('created_at', 'asc');
+        $query = $request->get('query');
+        $job_position = $request->get('job_position');
+        $job_positions = JobPosition::all();
+        $role = $request->get('role');
+        $users = [];
 
-    public function store(Request $request)
-    {
+        $seeAllUsers = $currentUser->role === 'admin' || $currentUser->role === 'dev';
 
-        $año = $request->input('año');
-        if ($this->validarEdaExistente($año)) {
-            return response()->json(['message' => 'Ya existe una eda con el mismo año ingresado'], 202);
+        if (!$seeAllUsers) {
+            $match->where('id_supervisor', $currentUser->id);
         }
-        request()->validate(Eda::$rules);
-        Eda::create([
-            'año' => $año,
-            'cerrado' => request()->cerrado ? true : false,
-        ]);
 
-        Auditoria::create([
-            'id_colab' => $this->getCurrentColab()->id,
-            'modulo' => 'eda',
-            'titulo' => 'Se creó un nuevo registro',
-            'descripcion' => 'Se creó un nuevo registro ' . $año,
-        ]);
-
-        return response()->json(['success' => true], 202);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private function validarEdaExistente($año)
-    {
-        $edaExistente = Eda::where('año', $año)
-            ->first();
-
-        return $edaExistente !== null;
-    }
-
-
-    public function cambiarEstadoEda($id)
-    {
-        $eda = Eda::findOrFail($id);
-        $eda->cerrado = !$eda->cerrado;
-        $eda->save();
-
-        return response()->json(['success' => true], 200);
-    }
-
-
-
-
-
-    public function createEdaByColab($id_eda)
-    {
-        $eva1 = Evaluacione::create();
-        $eva2 = Evaluacione::create();
-
-        $colaboradores = Colaboradore::get();
-        foreach ($colaboradores as $colaborador) {
-            EdaColab::create([
-                'id_eda' => $id_eda,
-                'id_colaborador' => $colaborador->id,
-                'id_evaluacion' => $eva1->id,
-                'id_evaluacion_2' => $eva2->id,
-            ]);
+        // filters
+        if ($job_position) {
+            $match->whereHas('role_position', function ($q) use ($job_position) {
+                $q->where('id_job_position', $job_position);
+            });
         }
-    }
 
-
-
-
-    public function changeEdaWearingByColab($id_eda)
-    {
-        EdaColab::where('id_eda', '<>', $id_eda)->update(['wearing' => 0]);
-        EdaColab::where('id_eda', $id_eda)->update(['wearing' => 1]);
-    }
-
-    // public function createEdaByColab($id_eda)
-    // {
-    //     $colaboradores = Colaboradore::get();
-    //     foreach ($colaboradores as $colaborador) {
-    //         EdaColab::create([
-    //             'id_eda' => $id_eda,
-    //             'id_colaborador' => $colaborador->id,
-    //             // 'wearing' => 1,
-    //             'estado' => 0, // 0 PENDIENTE | 1 ENVIADO | 2 APROBADO | 3 CERRADO
-    //             'cant_obj' => 0,
-    //             'nota_final' => 0,
-    //         ]);
-    //     }
-    // }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $eda = Eda::find($id);
-
-        return view('eda.show', compact('eda'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $eda = Eda::find($id);
-
-        return view('eda.edit', compact('eda'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  Eda $eda
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Eda $eda)
-    {
-        request()->validate(Eda::$rules);
-        $eda->update($request->all());
-        return redirect()->route('edas.index')
-            ->with('success', 'Eda updated successfully');
-    }
-
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function destroy($id)
-    {
-        $colab = $this->getCurrentColab();
-        $eda = Eda::find($id);
-        if ($eda && $eda->wearing === 1) {
-            $ultimoEda = Eda::where('id', '<>', $eda->id)->orderBy('created_at', 'desc')->first();
-            if ($ultimoEda) {
-                $ultimoEda->update(['cerrado' => 1]);
-            }
+        if ($role) {
+            $match->where('id_role', $role);
         }
+
+        if ($query) {
+            $match->where('first_name', 'like', '%' . $query . '%')
+                ->orWhere('last_name', 'like', '%' . $query . '%')
+                ->orWhere('dni', 'like', '%' . $query . '%')
+                ->orWhere('email', 'like', '%' . $query . '%')
+                ->get();
+        }
+
+        $jobPostions = JobPosition::all();
+        $roles = Role::all();
+
+        $users = $match->paginate();
+
+        return view('pages.edas.index', compact('users', 'job_positions', 'roles'))
+            ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
+    }
+
+    public function me()
+    {
+        $user = auth()->user();
+        $year = Year::orderBy('name', 'desc')->first();
+        return redirect()->route('edas.user.eda', ['id_user' => $user->id, 'year' => $year->id]);
+    }
+
+    public function user($id_user)
+    {
+        $user = User::find($id_user);
+        $year = Year::orderBy('name', 'desc')->first();
+        return redirect()->route('edas.user.eda', ['id_user' => $user->id, 'year' => $year->id]);
+    }
+
+    public function year($id_user, $year)
+    {
+        $user = User::find($id_user);
+        $years = Year::orderBy('name', 'desc')->get();
+        $year = Year::find($year);
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+
+        $evaluations = [];
 
         if ($eda) {
-            $eda->delete();
+            $evaluations = Evaluation::where('id_eda', $eda->id)->get();
         }
 
-        Auditoria::create([
-            'id_colab' => $colab->id,
-            'modulo' => 'Eda',
-            'titulo' => 'Eda eliminado',
-            'descripcion' => 'se eliminio el eda: ' . $eda->año,
-        ]);
+        return view(
+            'pages.edas.user.eda.index',
+            compact('user', 'years', 'year', 'eda', 'evaluations')
+        );
+    }
 
-        return redirect()->route('edas.index')
-            ->with('success', 'Eda deleted successfully');
+    public function goals($id_user, $year)
+    {
+        $user = User::find($id_user);
+        $years = Year::orderBy('name', 'desc')->get();
+        $year = Year::find($year);
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+        $goals = [];
+        if ($eda) {
+            $goals = Goal::where('id_eda', $eda->id)->get();
+        }
+
+        return view(
+            'pages.edas.user.eda.goals.index',
+            compact('user', 'years', 'year', 'eda', 'goals')
+        );
+    }
+
+    public function evaluation($id_user, $year, $id_evaluation)
+    {
+        $user = User::find($id_user);
+        $evaluation = Evaluation::find($id_evaluation);
+        $years = Year::orderBy('name', 'desc')->get();
+        $year = Year::find($year);
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+        $goals = [];
+
+        if ($eda) {
+            $goals = Goal::where('id_eda', $eda->id)->get();
+        }
+
+        return view(
+            'pages.edas.user.eda.evaluation',
+            compact('user', 'years', 'year', 'eda', 'goals', 'evaluation')
+        );
     }
 }

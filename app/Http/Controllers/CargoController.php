@@ -24,15 +24,7 @@ class CargoController extends Controller
     public function byPuesto($id_puesto)
     {
         $cargos = Cargo::where('id_puesto', $id_puesto)->get();
-        $data = $cargos->map(function ($cargo, $index) {
-            $item = [
-                'index' => $index,
-                'id' => $cargo->id,
-                'nombre' => $cargo->nombre,
-            ];
-            return $item;
-        });
-        return response()->json($data);
+        return response()->json($cargos);
     }
 
     public function store(Request $request)

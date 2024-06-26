@@ -5,46 +5,40 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Area
- *
- * @property $id
- * @property $codigo_area
- * @property $nombre_area
- * @property $created_at
- * @property $updated_at
- *
- * @property Departamento[] $departamentos
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Builder
- */
+
 class Area extends Model
 {
+
 
   use HasUuids;
 
   static $rules = [
-    // 'codigo_area' => 'required',
-    'nombre' => 'required',
+    'name' => 'required',
   ];
+
+  protected $table = 'areas';
+
 
   protected $perPage = 20;
 
-  /**
-   * Attributes that should be mass-assignable.
-   *
-   * @var array
-   */
-  protected $fillable = ['codigo', 'nombre'];
+
+  protected $fillable = ['code', 'name', 'updated_by', 'created_by'];
   protected $keyType = 'string';
   public $incrementing = false;
 
 
-  /**
-   * @return \Illuminate\Database\Eloquent\Relations\HasMany
-   */
-  public function departamentos()
+  public function departments()
   {
-    return $this->hasMany('App\Models\Departamento', 'id_area', 'id');
+    return $this->hasMany('App\Models\Department', 'id_area', 'id');
+  }
+
+  public function createdBy()
+  {
+    return $this->belongsTo('App\Models\User', 'created_by', 'id');
+  }
+
+  public function updatedBy()
+  {
+    return $this->belongsTo('App\Models\User', 'updated_by', 'id');
   }
 }

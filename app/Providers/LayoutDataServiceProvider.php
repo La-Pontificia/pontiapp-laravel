@@ -24,10 +24,10 @@ class LayoutDataServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('layouts.app', function ($view) {
-            $edas = Eda::orderBy('created_at', 'desc')->get();
-            $currentEda = Eda::where('cerrado', 0)->first();
-            $view->with('edas', $edas);
-            $view->with('currentEda', $currentEda);
+            // $edas = Eda::orderBy('created_at', 'desc')->get();
+            // $currentEda = Eda::where('cerrado', 0)->first();
+            // $view->with('edas', $edas);
+            // $view->with('currentEda', $currentEda);
         });
 
         // View::composer('layouts.profile', function ($view) {

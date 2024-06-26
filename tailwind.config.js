@@ -2,14 +2,14 @@
 
 export default {
     content: [
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
-        './resources/js/**/*.js',
+        "./storage/framework/views/*.php",
+        "./resources/views/**/*.blade.php",
+        "./resources/js/**/*.js",
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
         "./public/**/*.blade.php",
         "./node_modules/flowbite/**/*.js",
     ],
-    darkMode: 'media',
+    darkMode: "media",
     plugins: [require("flowbite/plugin")],
 };
