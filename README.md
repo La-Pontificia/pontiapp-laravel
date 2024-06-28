@@ -37,36 +37,36 @@
 > INICIO: 01-05-2024
 
 
-| Semana | Tarea                                    | Estado |
-|--------|------------------------------------------|--------|
-| 1-1    | **Planificación**                        | ✅      |
-|        | - Revisión de requisitos                 | ✅      |
-|        | - Establecer cronograma                  | ✅      |
-| 2-3    | **Diseño del Sistema**                   | ✅      |
-|        | - Actualización de diagramas de arquitectura  | ✅      |
-|        | - Diseño de base de datos                | ✅      |
-| 4-10   | **Desarrollo**                           | 🔄      |
-|        | - Gestión de Usuarios                    | ✅      |
-|        | - Gestión de EDAS                        | ✅      |
-|        | - Gestión de Asistencias                 | 🔄      |
-|        | - Integración con SQL Server             | 🔄      |
-|        | - Gestión de Reportes                    | ✅      |
-|        | - Gestión de Auditoría                   | 🔄      |
-|        | - Gestión de Mantenimiento               | ✅      |
-| 11-12  | **Pruebas**                              |        |
-|        | - Pruebas unitarias                      |        |
-|        | - Pruebas de integración                 |        |
-|        | - Pruebas de usuario                     |        |
-| 12-13  | **Despliegue**                           |        |
-|        | - Configuración del entorno de producción|      |
-|        | - Migración de datos                     |        |
-|        | - Despliegue en servidor                 |     |
-| 14-15  | **Capacitación y Documentación**         |        |
-|        | - Capacitación a usuarios finales        |        |
-|        | - Documentación técnica y de usuario     |        |
-| 16     | **Mantenimiento**                        |        |
-|        | - Corrección de errores                  |        |
-|        | - Mejoras y actualizaciones              |        |
+| Fecha           | Tarea                                    | Estado |
+|-----------------|------------------------------------------|--------|
+| 01-07 de mayo   | **Planificación**                        | ✅      |
+|                 | - Revisión de requisitos                 | ✅      |
+|                 | - Establecer cronograma                  | ✅      |
+| 08-15 de mayo   | **Diseño del Sistema**                   | ✅      |
+|                 | - Actualización de diagramas de arquitectura | ✅   |
+|                 | - Diseño de base de datos                | ✅      |
+| 16 de mayo - 10 de julio | **Desarrollo**                  | 🔄      |
+|                 | - Gestión de Usuarios                    | ✅      |
+|                 | - Gestión de EDAS                        | ✅      |
+|                 | - Gestión de Asistencias                 | 🔄      |
+|                 | - Integración con SQL Server             | 🔄      |
+|                 | - Gestión de Reportes                    | ✅      |
+|                 | - Gestión de Auditoría                   | 🔄      |
+|                 | - Gestión de Mantenimiento               | ✅      |
+| 11-16 de julio  | **Pruebas**                              |        |
+|                 | - Pruebas unitarias                      |        |
+|                 | - Pruebas de integración                 |        |
+|                 | - Pruebas de usuario                     |        |
+| 17-23 de julio  | **Despliegue**                           |        |
+|                 | - Configuración del entorno de producción|        |
+|                 | - Migración de datos                     |        |
+|                 | - Despliegue en servidor                 |        |
+| 24-30 de julio  | **Capacitación y Documentación**         |        |
+|                 | - Capacitación a usuarios finales        |        |
+|                 | - Documentación técnica y de usuario     |        |
+| 31 de julio     | **Mantenimiento**                        |        |
+|                 | - Corrección de errores                  |        |
+|                 | - Mejoras y actualizaciones              |        |
 
 ### Detalles de las Tareas:
 
