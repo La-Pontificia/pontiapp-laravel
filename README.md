@@ -1,33 +1,70 @@
 ## Gantt
 
+## VERSION 1
+
 | Semana | Tarea                                    | Estado |
 |--------|------------------------------------------|--------|
-| 1-2    | **Planificación**                        | ✅      |
+| 1-4   | **Planificación**                        | ✅      |
 |        | - Revisión de requisitos                 | ✅      |
 |        | - Establecer cronograma                  | ✅      |
-| 3-4    | **Diseño del Sistema**                   | ✅      |
+| 5-10    | **Diseño del Sistema**                   | ✅      |
 |        | - Actualización de diagramas de arquitectura  | ✅      |
 |        | - Diseño de base de datos                | ✅      |
-| 5-10   | **Desarrollo**                           | 🔄      |
+| 11-27   | **Desarrollo**                           | ✅      |
+|        | - Gestión de Usuarios                    | ✅      |
+|        | - Gestión de EDAS                        | ✅      |
+|        | - Gestión de Reportes                    | ✅      |
+|        | - Gestión de Auditoría                   | ✅      |
+|        | - Gestión de Mantenimiento               | ✅      |
+| 28-29  | **Pruebas**                              |        |
+|        | - Pruebas unitarias                      |  ✅      |
+|        | - Pruebas de integración                 |  ✅      |
+|        | - Pruebas de usuario                     |  ✅      |
+| 30-36  | **Despliegue**                           |        |
+|        | - Configuración del entorno de producción|  ✅    |
+|        | - Migración de datos                     |   ✅     |
+|        | - Despliegue en servidor                 |  ✅   |
+| 37-38  | **Capacitación y Documentación**         |        |
+|        | - Capacitación a usuarios finales        |        |
+|        | - Documentación técnica y de usuario     |   ✅     |
+| 39     | **Mantenimiento**                        |        |
+|        | - Corrección de errores                  |   ✅     |
+|        | - Mejoras y actualizaciones              |   🔄     |
+
+## VERSION 2
+
+
+> INICIO: 01-05-2024
+
+
+| Semana | Tarea                                    | Estado |
+|--------|------------------------------------------|--------|
+| 1-1    | **Planificación**                        | ✅      |
+|        | - Revisión de requisitos                 | ✅      |
+|        | - Establecer cronograma                  | ✅      |
+| 2-3    | **Diseño del Sistema**                   | ✅      |
+|        | - Actualización de diagramas de arquitectura  | ✅      |
+|        | - Diseño de base de datos                | ✅      |
+| 4-10   | **Desarrollo**                           | 🔄      |
 |        | - Gestión de Usuarios                    | ✅      |
 |        | - Gestión de EDAS                        | ✅      |
 |        | - Gestión de Asistencias                 | 🔄      |
 |        | - Integración con SQL Server             | 🔄      |
-|        | - Gestión de Reportes                    | 🔄      |
+|        | - Gestión de Reportes                    | ✅      |
 |        | - Gestión de Auditoría                   | 🔄      |
 |        | - Gestión de Mantenimiento               | ✅      |
-| 11-13  | **Pruebas**                              |        |
+| 11-12  | **Pruebas**                              |        |
 |        | - Pruebas unitarias                      |        |
 |        | - Pruebas de integración                 |        |
 |        | - Pruebas de usuario                     |        |
-| 14-15  | **Despliegue**                           |        |
-|        | - Configuración del entorno de producción|  ✅    |
+| 12-13  | **Despliegue**                           |        |
+|        | - Configuración del entorno de producción|      |
 |        | - Migración de datos                     |        |
-|        | - Despliegue en servidor                 |  ✅   |
-| 16-17  | **Capacitación y Documentación**         |        |
+|        | - Despliegue en servidor                 |     |
+| 14-15  | **Capacitación y Documentación**         |        |
 |        | - Capacitación a usuarios finales        |        |
 |        | - Documentación técnica y de usuario     |        |
-| 18     | **Mantenimiento**                        |        |
+| 16     | **Mantenimiento**                        |        |
 |        | - Corrección de errores                  |        |
 |        | - Mejoras y actualizaciones              |        |
 
