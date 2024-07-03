@@ -30,10 +30,12 @@
                                         class="[&>td]:p-2 relative hover:bg-neutral-200 even:bg-white [&>td>p]:text-nowrap group [&>th>p]:text-nowrap [&>td]:px-2 [&>th]:px-2 [&>th]:font-medium">
                                         <th>
                                             <div class="flex p-2 items-center gap-3">
-                                                <div class="w-9 rounded-xl overflow-hidden aspect-square">
-                                                    <img src={{ $user->profile }} class="w-full h-full object-cover"
-                                                        alt="">
-                                                </div>
+                                                @include('commons.avatar', [
+                                                    'src' => $user->profile,
+                                                    'className' => 'w-9',
+                                                    'alt' => $user->first_name . ' ' . $user->last_name,
+                                                    'altClass' => 'text-sm',
+                                                ])
                                                 <div>
                                                     <p class="text-sm">
                                                         {{ $user->last_name }}, {{ $user->first_name }}
@@ -50,10 +52,16 @@
                                         <th>
                                             @if ($user->id_supervisor)
                                                 <div class="flex p-2 items-center gap-3">
-                                                    <div class="w-9 rounded-xl overflow-hidden aspect-square">
-                                                        <img src={{ $user->supervisor->profile }}
-                                                            class="w-full h-full object-cover" alt="">
-                                                    </div>
+
+                                                    @include('commons.avatar', [
+                                                        'src' => $user->supervisor->profile,
+                                                        'className' => 'w-9',
+                                                        'alt' =>
+                                                            $user->supervisor->first_name .
+                                                            ' ' .
+                                                            $user->supervisor->last_name,
+                                                        'altClass' => 'text-sm',
+                                                    ])
                                                     <div>
                                                         <p class="text-sm">
                                                             {{ $user->supervisor->last_name }},
