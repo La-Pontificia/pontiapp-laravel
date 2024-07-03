@@ -23,7 +23,7 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y">
                             @if ($users->count() === 0)
                                 <tr class="">
                                     <td colspan="11" class="text-center py-4">
@@ -35,25 +35,31 @@
                             @else
                                 @foreach ($users as $user)
                                     <tr
-                                        class="[&>td]:p-2 even:bg-white [&>td>p]:text-nowrap group [&>th>p]:text-nowrap [&>td]:px-2 [&>th]:px-2 [&>th]:font-medium">
+                                        class="[&>td]:p-2 [&>td>p]:text-nowrap group [&>th>p]:text-nowrap [&>td]:px-2 [&>th]:px-2 [&>th]:font-medium">
                                         <th>
                                             <input id="default-checkbox" data-id="{{ $user->id }}" type="checkbox"
                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
                                         </th>
                                         <th>
-                                            <div class="w-8 rounded-xl overflow-hidden aspect-square">
-                                                <img src={{ $user->profile }} class="w-full h-full object-cover"
-                                                    alt="">
-                                            </div>
+                                            @include('commons.avatar', [
+                                                'src' => $user->profile,
+                                                'className' => 'w-8',
+                                                'alt' => $user->first_name . ' ' . $user->last_name,
+                                                'altClass' => 'text-sm',
+                                            ])
                                         </th>
                                         <th>
                                             <p class="text-sm">
-                                                {{ $user->last_name }}
+                                                <a class="hover:underline" href="/profile/{{ $user->id }}">
+                                                    {{ $user->last_name }}
+                                                </a>
                                             </p>
                                         </th>
                                         <th>
                                             <p class="text-sm">
-                                                {{ $user->first_name }}
+                                                <a class="hover:underline" href="/profile/{{ $user->id }}">
+                                                    {{ $user->first_name }}
+                                                </a>
                                             </p>
                                         </th>
                                         <td>
