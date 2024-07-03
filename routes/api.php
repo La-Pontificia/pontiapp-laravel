@@ -56,4 +56,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // Branches routes
     Route::post('branches', 'App\Http\Controllers\BranchController@store');
     Route::post('branches/{id}', 'App\Http\Controllers\BranchController@update');
+
+    // Template routes
+    Route::post('templates', 'App\Http\Controllers\Api\TemplateController@create');
+    Route::post('templates/{id}', 'App\Http\Controllers\Api\TemplateController@update');
+    Route::post('templates/{id}/change-in-use', 'App\Http\Controllers\Api\TemplateController@changeInUse');
+
+    // Questions routes
+    Route::get('questions/by-template/{id}', 'App\Http\Controllers\Api\QuestionController@by_template');
+
+    // years routes
+    Route::post('years', 'App\Http\Controllers\YearController@store');
+    Route::post('years/{id}', 'App\Http\Controllers\YearController@update');
 });

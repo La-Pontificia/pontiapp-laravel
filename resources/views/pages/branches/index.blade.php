@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Mantenimiento: sedes')
+
 @section('content')
     <div class="w-full flex flex-col overflow-y-auto">
         <nav class="border-b mb-2 p-2 flex items-center gap-3">

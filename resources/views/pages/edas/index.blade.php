@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.eda')
 
-@section('content')
+@section('content-eda')
     <div class="text-black h-full w-full flex-grow flex flex-col overflow-y-auto">
-        @include('components.edas.nav')
+        @include('components.edas.filters')
         <div class="overflow-y-auto">
             @if ($current_user->hasPrivilege('view_collaborators'))
                 <div class="overflow-auto">

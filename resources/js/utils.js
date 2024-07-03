@@ -1,4 +1,4 @@
-const Toast = Swal.mixin({
+window.Toast = Swal.mixin({
     toast: true,
     position: "bottom-left",
     showConfirmButton: false,
@@ -45,22 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    const disabledComponents = (components) => {
-        components.forEach((c) => {
-            c.disabled = true;
-            c.classList.add("cursor-not-allowed");
-            c.classList.add("animate-pulse");
-        });
-    };
-
-    const enabledComponents = (components) => {
-        components.forEach((c) => {
-            c.disabled = false;
-            c.classList.remove("cursor-not-allowed");
-            c.classList.remove("animate-pulse");
-        });
-    };
-
     // FORMS
     dinamicForms?.forEach((f) => {
         f.addEventListener("submit", async (e) => {
@@ -74,10 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 `button[form="${formId}"]`
             );
 
-            disabledComponents(f.querySelectorAll("input"));
-            disabledComponents(f.querySelectorAll("select"));
-            disabledComponents(f.querySelectorAll("textarea"));
-            disabledComponents([buttonSubmitByFormId]);
+            window.disabledFormChildren(f);
+            window.disabledComponents([buttonSubmitByFormId]);
 
             try {
                 await axios({
@@ -97,10 +79,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         error.response.data ?? "Error al enviar el formulario",
                 });
             } finally {
-                enabledComponents(f.querySelectorAll("input"));
-                enabledComponents(f.querySelectorAll("select"));
-                enabledComponents(f.querySelectorAll("textarea"));
-                enabledComponents([buttonSubmitByFormId]);
+                window.enableFormChildren(f);
+                window.enabledComponents([buttonSubmitByFormId]);
             }
         });
     });

@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let goals_to_delete = [];
 
     // hassles
-
     const hasEdit = $("#has-edit-goals");
     const hasDelete = $("#has-delete-goals");
 
@@ -72,12 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const onPaste = (e) => {
-        e.preventDefault();
-        const text = e.clipboardData.getData("text/plain");
-        document.execCommand("insertText", false, text);
-    };
-
     const renderGoals = () => {
         if (!tableGoals) return;
 
@@ -98,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 goals[index].goal = e.target.innerHTML;
                 verifyGoals();
             };
-            divGoal.onpaste = onPaste;
+            divGoal.onpaste = window.onPaste;
 
             // Description
             const divDescription = document.createElement("div");
@@ -110,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 goals[index].description = e.target.innerHTML;
                 verifyGoals();
             };
-            divDescription.onpaste = onPaste;
+            divDescription.onpaste = window.onPaste;
 
             // Indicators
             const divIndicators = document.createElement("div");
@@ -122,7 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 goals[index].indicators = e.target.innerHTML;
                 verifyGoals();
             };
-            divIndicators.onpaste = onPaste;
+            divIndicators.onpaste = window.onPaste;
 
             // Select Percentage
             const sPercentage = document.createElement("select");

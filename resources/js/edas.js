@@ -24,10 +24,11 @@ document.addEventListener("DOMContentLoaded", function () {
             // reload the page
             location.reload();
         } catch (error) {
-            Toast.fire({
+            window.toast.fire({
                 icon: "error",
-                title: "An error occurred",
-                description: "Please try again",
+                title:
+                    error.response.data ??
+                    "Error al cambiar el estado de la plantilla",
             });
         }
     });

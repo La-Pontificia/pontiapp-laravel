@@ -1,12 +1,9 @@
-@extends('layouts.eda')
+@extends('layouts.eda-user')
 
 @section('title', 'Objetivos: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
 @php
-    // create an array with the percentages 0 to 100
-
     $userIsDev = $current_user->role === 'dev';
-
     $percentages = range(0, 100);
     $sent = $eda->sent;
     $hasAddGoals = ($current_user->hasPrivilege('add_goals') && !$eda->approved) || $userIsDev;
@@ -18,7 +15,7 @@
 
 @endphp
 
-@section('content-eda')
+@section('content-eda-user')
     <div class="h-full flex flex-col pt-0 overflow-x-auto">
         @if ($sent)
             <input type="hidden" id="input-hidden-id-eda" value="{{ $eda->id }}">
@@ -42,7 +39,7 @@
                         <path d="m12 19-7-7 7-7" />
                         <path d="M19 12H5" />
                     </svg>
-                    <span class="max-lg:hidden">Objetivos</span>
+                    <span class="max-lg:hidden">Agregar objetivo</span>
                 </button>
             </div>
             <button {{ $hasAddGoals ? '' : 'data-hidden' }} id="add-goal-button"

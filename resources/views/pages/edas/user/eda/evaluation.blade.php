@@ -1,8 +1,8 @@
-@extends('layouts.eda')
+@extends('layouts.eda-user')
 
 @section('title', 'Eda: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
-@section('content-eda')
+@section('content-eda-user')
 
     @php
 

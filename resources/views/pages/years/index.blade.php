@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Mantenimiento: areas')
+@section('title', 'Mantenimiento: Edas (años)')
 
 @section('content')
     <div class="w-full flex flex-col overflow-y-auto">
         <nav class="border-b mb-2 p-2 flex items-center gap-3">
-            <button data-modal-target="create-area-modal" data-modal-toggle="create-area-modal"
-                class="bg-sky-600 px-4 hover:bg-sky-700 transition-colors text-white font-semibold p-2 rounded-md">
-                Crear Area
+            <button data-modal-target="create-year-modal" data-modal-toggle="create-year-modal"
+                class="bg-sky-600 px-4 hover:bg-sky-700 text-nowrap transition-colors text-white font-semibold p-2 rounded-md">
+                Registar nuevo año
             </button>
 
             <!-- Create modal -->
-            <div id="create-area-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+            <div id="create-year-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
                 class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                 <div class="relative p-4 w-full max-w-md max-h-full">
                     <div class="relative bg-white rounded-lg shadow">
@@ -21,7 +21,7 @@
                             </h3>
                             <button type="button"
                                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                data-modal-hide="create-area-modal">
+                                data-modal-hide="create-year-modal">
                                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 14 14">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -44,20 +44,20 @@
                             </div>
                         </div>
 
-                        <form method="POST" action="/api/areas" role="form" id="create-area-form"
+                        <form method="POST" action="/api/years" role="form" id="create-year-form"
                             class="p-3 dinamic-form grid gap-3" enctype="multipart/form-data">
                             @csrf
-                            @include('components.areas.form', [
-                                'code' => $newCode,
+                            @include('components.year.form', [
                                 'name' => '',
+                                'status' => true,
                             ])
                         </form>
 
                         <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                            <button form="create-area-form" data-modal-hide="static-modal" type="submit"
+                            <button form="create-year-form" data-modal-hide="static-modal" type="submit"
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                                 Guardar</button>
-                            <button data-modal-hide="create-area-modal" type="button"
+                            <button data-modal-hide="create-year-modal" type="button"
                                 class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
                         </div>
                     </div>
@@ -73,14 +73,14 @@
                 <thead class="border-b text-left">
                     <tr class="text-sm [&>th]:p-2 [&>th]:font-semibold uppercase">
                         <th class="text-center">N°</th>
-                        <th class="text-center">Codigo</th>
-                        <th>Area</th>
+                        <th class="text-center">Año</th>
+                        <th>Estado</th>
                         <th>Creado</th>
                         <th>Actualizado</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
-                    @if ($areas->isEmpty())
+                    @if ($years->isEmpty())
                         <tr>
                             <td class="text-center" colspan="5">
                                 <div class="p-20">
@@ -105,62 +105,63 @@
                             </td>
                         </tr>
                     @else
-                        @foreach ($areas as $index => $area)
+                        @foreach ($years as $index => $year)
                             <tr class="even:bg-neutral-200">
                                 <td class="text-center">
                                     {{ $index + 1 }}
                                 </td>
-                                <td class="font-medium text-center">{{ $area->code }}</td>
-                                <td>{{ $area->name }}</td>
+                                <td class="font-medium text-center">{{ $year->name }}</td>
+                                <td class="font-semibold {{ $year->status ? 'text-green-500' : 'text-red-500' }}">
+                                    {{ $year->status ? 'Abierto' : 'Cerrado' }}</td>
                                 <td>
                                     <div class="flex items-center gap-3">
                                         <div class="w-8 rounded-xl overflow-hidden aspect-square">
-                                            <img src={{ $area->createdBy->profile }} class="w-full h-full object-cover"
+                                            <img src={{ $year->createdBy->profile }} class="w-full h-full object-cover"
                                                 alt="">
                                         </div>
                                         <div>
-                                            <a href="/profile/{{ $area->createdBy->id }}"
-                                                title="Ver perfil de {{ $area->createdBy->last_name }}, {{ $area->createdBy->first_name }}"
+                                            <a href="/profile/{{ $year->createdBy->id }}"
+                                                title="Ver perfil de {{ $year->createdBy->last_name }}, {{ $year->createdBy->first_name }}"
                                                 class="hover:underline hover:text-indigo-600 text-sm text-nowrap">
-                                                {{ $area->createdBy->last_name }},
-                                                {{ $area->createdBy->first_name }}
+                                                {{ $year->createdBy->last_name }},
+                                                {{ $year->createdBy->first_name }}
                                             </a>
                                             <p class="text-sm">
-                                                {{ \Carbon\Carbon::parse($area->created_at)->isoFormat('LL') }}
+                                                {{ \Carbon\Carbon::parse($year->created_at)->isoFormat('LL') }}
                                             </p>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="flex p-1 items-center gap-3">
-                                        @if ($area->updatedBy)
+                                        @if ($year->updatedBy)
                                             <div class="w-8 rounded-xl overflow-hidden aspect-square">
-                                                <img src={{ $area->updatedBy->profile }} class="w-full h-full object-cover"
+                                                <img src={{ $year->updatedBy->profile }} class="w-full h-full object-cover"
                                                     alt="">
                                             </div>
                                         @endif
                                         <div>
-                                            @if ($area->updatedBy)
-                                                <a href="/profile/{{ $area->updatedBy->id }}"
-                                                    title="Ver perfil de {{ $area->updatedBy->last_name }}, {{ $area->updatedBy->first_name }}"
+                                            @if ($year->updatedBy)
+                                                <a href="/profile/{{ $year->updatedBy->id }}"
+                                                    title="Ver perfil de {{ $year->updatedBy->last_name }}, {{ $year->updatedBy->first_name }}"
                                                     class="hover:underline hover:text-indigo-600 text-sm text-nowrap">
-                                                    {{ $area->updatedBy->last_name }},
-                                                    {{ $area->updatedBy->first_name }}
+                                                    {{ $year->updatedBy->last_name }},
+                                                    {{ $year->updatedBy->first_name }}
                                                 </a>
                                             @endif
                                             <p class="text-sm">
-                                                {{ \Carbon\Carbon::parse($area->updated_at)->isoFormat('LL') }}
+                                                {{ \Carbon\Carbon::parse($year->updated_at)->isoFormat('LL') }}
                                             </p>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <button data-modal-target="edit-area-modal-{{ $area->id }}"
-                                        data-modal-toggle="edit-area-modal-{{ $area->id }}"
+                                    <button data-modal-target="edit-year-modal-{{ $year->id }}"
+                                        data-modal-toggle="edit-year-modal-{{ $year->id }}"
                                         class="font-semibold text-sm hover:underline text-blue-600">
                                         Editar
                                     </button>
-                                    <div id="edit-area-modal-{{ $area->id }}" tabindex="-1" aria-hidden="true"
+                                    <div id="edit-year-modal-{{ $year->id }}" tabindex="-1" aria-hidden="true"
                                         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                         <div class="relative p-4 w-full max-w-md max-h-full">
                                             <div class="relative bg-white rounded-lg shadow">
@@ -170,7 +171,7 @@
                                                     </h3>
                                                     <button type="button"
                                                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                                        data-modal-hide="edit-area-modal-{{ $area->id }}">
+                                                        data-modal-hide="edit-year-modal-{{ $year->id }}">
                                                         <svg class="w-3 h-3" aria-hidden="true"
                                                             xmlns="http://www.w3.org/2000/svg" fill="none"
                                                             viewBox="0 0 14 14">
@@ -196,22 +197,22 @@
                                                     </div>
                                                 </div>
 
-                                                <form method="POST" action="/api/areas/{{ $area->id }}"
-                                                    role="form" id="create-area-form-{{ $area->id }}"
+                                                <form method="POST" action="/api/years/{{ $year->id }}"
+                                                    role="form" id="edit-year-form-{{ $year->id }}"
                                                     class="p-3 dinamic-form grid gap-3" enctype="multipart/form-data">
                                                     @csrf
-                                                    @include('components.areas.form', [
-                                                        'code' => $area->code,
-                                                        'name' => $area->name,
+                                                    @include('components.year.form', [
+                                                        'name' => $year->name,
+                                                        'status' => $year->status,
                                                     ])
                                                 </form>
 
                                                 <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                                                    <button form="create-area-form-{{ $area->id }}"
+                                                    <button form="edit-year-form-{{ $year->id }}"
                                                         data-modal-hide="static-modal" type="submit"
                                                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                                                         Actualizar cambios</button>
-                                                    <button data-modal-hide="edit-area-modal-{{ $area->id }}"
+                                                    <button data-modal-hide="edit-year-modal-{{ $year->id }}"
                                                         type="button"
                                                         class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
                                                 </div>
@@ -226,7 +227,7 @@
             </table>
         </div>
         <footer class="px-5 pt-4">
-            {!! $areas->links() !!}
+            {!! $years->links() !!}
         </footer>
     </div>
 @endsection

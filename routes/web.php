@@ -25,6 +25,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Edas routes
     Route::get('edas', 'App\Http\Controllers\EdaController@index')->name('edas');
+    Route::get('edas/surveys', 'App\Http\Controllers\SurveyController@index')->name('edas.surveys');
     Route::get('edas/me', 'App\Http\Controllers\EdaController@me')->name('edas.me');
     Route::get('edas/{id_user}/eda', 'App\Http\Controllers\EdaController@user')->name('edas.user');
     Route::get('edas/{id_user}/eda/{year}', 'App\Http\Controllers\EdaController@year')->name('edas.user.eda');
@@ -37,6 +38,11 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     // Reports routes
     Route::get('reports', 'App\Http\Controllers\ReportController@index')->name('reports');
 
+    // Reports routes
+    Route::get('audit', 'App\Http\Controllers\AuditController@index')->name('audit');
+
+
+    // -------- MAINTAINANCE ROUTES ---------------------------
     // Areas routes
     Route::get('areas', 'App\Http\Controllers\AreaController@index')->name('areas');
 
@@ -52,6 +58,14 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     // Branches routes
     Route::get('branches', 'App\Http\Controllers\BranchController@index')->name('branches');
 
-    // Questionnaires routes
-    Route::get('questionnaires', 'App\Http\Controllers\QuestionnaireController@index')->name('questionnaires');
+    // Surveys routes
+    Route::get('surveys', 'App\Http\Controllers\SurveyController@index')->name('surveys');
+
+    // Templates routes
+    Route::get('templates', 'App\Http\Controllers\TemplateController@index')->name('templates');
+    Route::get('templates/create', 'App\Http\Controllers\TemplateController@create')->name('templates.create');
+    Route::get('templates/edit/{id}', 'App\Http\Controllers\TemplateController@edit')->name('templates.edit');
+
+    // Years routes
+    Route::get('years', 'App\Http\Controllers\YearController@index')->name('years');
 });

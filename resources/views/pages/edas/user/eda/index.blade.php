@@ -1,8 +1,12 @@
-@extends('layouts.eda')
+@extends('layouts.eda-user')
 
 @section('title', 'Eda: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
-@section('content-eda')
+@php
+    $isPosibleCreateEda = $current_user->hasPrivilege('create_edas') && $year->status;
+@endphp
+
+@section('content-eda-user')
     <div class="h-full p-2 pt-0">
         @if ($eda)
             <div>
@@ -106,10 +110,16 @@
                 <h2 class="text-xl">EDA NO REGISTRADO</h2>
                 <p class="text-neutral-400">Aun no se registró el eda del año {{ $year->name }}</p>
                 @if ($current_user->hasPrivilege('create_edas'))
-                    <button data-id-year="{{ $year->id }}" data-id-user="{{ $user->id }}" id="create-eda"
+                    <button {{ !$isPosibleCreateEda ? 'disabled' : '' }} data-id-year="{{ $year->id }}"
+                        data-id-user="{{ $user->id }}" id="create-eda"
                         class="p-2 disabled:opacity-50 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base">
                         Registrar ahora
                     </button>
+                @endif
+                @if (!$isPosibleCreateEda)
+                    <p>
+                        <span class="text-red-500">No puedes registrar un EDA en este momento.</span>
+                    </p>
                 @endif
             </div>
         @endif
