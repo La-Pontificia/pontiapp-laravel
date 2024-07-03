@@ -64,7 +64,7 @@
         <input type="file" name="profile" id="input-profile"
             class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" accept="image/*">
         <img id="preview-profile" class="w-full h-full object-cover"
-            src={{ $user ? $user->profile : 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg' }}
+            src={{ $user && $user->profile === ' ' ? $user->profile : 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg' }}
             alt="">
     </div>
 </div>
