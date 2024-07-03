@@ -15,7 +15,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/users.js', 'resources/js/edas.js', 'resources/js/goals.js', 'resources/js/utils.js', 'resources/js/evaluation.js', 'resources/js/templates.js'])
 </head>
 
-<body class="bg-[#f5f5f5]">
+<body class="bg-[#f1f0f4]">
     @yield('app')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
