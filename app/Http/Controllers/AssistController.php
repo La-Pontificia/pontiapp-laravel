@@ -8,7 +8,8 @@ class AssistController extends Controller
 {
     public function index()
     {
-        $assists = Attendance::where('emp_code', "80614134")->get();
-        return view('pages.assists.index', compact('assists'));
+        $assists = Attendance::orderBy('punch_time', 'desc')->paginate();
+        return view('pages.assists.index', compact('assists'))
+            ->with('i', (request()->input('page', 1) - 1) * $assists->perPage());
     }
 }
