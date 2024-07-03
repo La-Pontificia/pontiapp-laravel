@@ -14,15 +14,22 @@ class Attendance extends Model
 
     protected $table = 'assists';
 
-    protected $perPage = 20;
+    protected $perPage = 40;
 
     protected $fillable = [
         'id',
         'iclock_transaction_id',
         'punch_time',
+        'first_name',
+        'last_name',
         'upload_time',
         'emp_code',
         'dept_name',
         'created_at',
     ];
+
+    public function getUserFromMysql()
+    {
+        return User::on('mysql')->where('dni', $this->emp_code)->first();
+    }
 }
