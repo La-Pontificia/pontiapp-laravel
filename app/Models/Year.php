@@ -22,5 +22,15 @@ class Year extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['name', 'status'];
+    protected $fillable = ['name', 'status', 'created_by', 'updated_by'];
+
+    public function createdBy()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'updated_by');
+    }
 }
