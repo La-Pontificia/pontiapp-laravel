@@ -21,7 +21,9 @@ class EdaController extends Controller
 
         $foundYear = Year::find($request->id_year);
         if (!$foundYear) return response()->json('La eda selecionado no existe', 404);
-        if (!$foundYear->status) return response()->json('El año seleccionado no esta activo', 404);
+        // if ($foundYear->status === 0) return response()->json('El año seleccionado no esta activo', 404);
+
+        if (!auth()->user()->id) return response()->json('No tienes permisos para realizar esta acción', 403);
 
         $eda = Eda::create([
             'id_user' => $foundedUser->id,

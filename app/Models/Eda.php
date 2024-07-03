@@ -23,6 +23,7 @@ class Eda extends Model
     'overage',
     'approved',
     'created_at',
+    'created_by',
     'updated_at',
     'approved_by',
     'closed_by',
