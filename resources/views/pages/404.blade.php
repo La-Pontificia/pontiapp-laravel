@@ -1,16 +1,22 @@
 @extends('layouts.headers')
 
 @section('app')
-    <div class="h-[calc(100svh-100px)] w-full grid place-content-center">
-        <div class="text-center">
-            <div>
-                <img width="300" src="/sad.png" alt="">
+    <div class="flex flex-col h-svh">
+        <div class="w-full grid h-full place-content-center">
+            <div class="text-center space-y-3">
+                <h1 class="text-7xl font-semibold tracking-tight">404</h1>
+                <p class="text-sm">
+                    La página que buscas no existe o ha sido eliminada.
+                </p>
+                <a href="/"
+                    class="w-fit mx-auto block rounded-full font-semibold border-2 text-blue-700 hover:bg-blue-200 border-blue-700 py-1.5 px-4">
+                    Ir a inicio
+                </a>
             </div>
-            <h1 class="text-7xl font-mono">404</h1>
-            <p class="text-xl mb-2 text-neutral-400">OPPS.. Recurso no encontrado</p>
-            <a href="/" class="p-3 block rounded-full text-white font-semibold bg-black px-4">
-                Ir a inicio
-            </a>
         </div>
+        <footer class="p-4 text-center text-xs">
+            Desarrollado por <a href="https://daustinn.com" target="_blank" rel="noopener noreferrer"
+                class=" font-semibold hover:underline">Daustinn</a> &copy; 2024
+        </footer>
     </div>
 @endsection
