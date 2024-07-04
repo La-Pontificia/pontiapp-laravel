@@ -8,12 +8,11 @@
 
 @section('content')
     <div class="text-black h-full py-2 max-sm:py-1 w-full flex-grow flex flex-col overflow-y-auto">
-        <header class="space-y-4 mb-3">
+        <header class="space-y-3 pb-2">
             <div>
-                <h2 class="text-xl text-neutral-700 tracking-tight font-semibold pb-3">Colaborador</h2>
-                <div class="bg-white w-fit max-sm:w-full rounded-xl border border-neutral-100">
+                <div class="bg-white shadow-md w-fit max-sm:w-full rounded-2xl border border-neutral-200">
                     <div class="border-b p-2 px-3">
-                        <p class="text-xl">
+                        <p class="text-base font-semibold">
                             <a title="Ir al perfil de {{ $user->first_name }} {{ $user->last_name }}"
                                 href="/profile/{{ $user->id }}" class="hover:underline">
                                 <span>{{ ucfirst(strtolower(explode(' ', $user->first_name)[0])) }}</span>
@@ -24,9 +23,9 @@
                     <div class="flex w-fit items-center gap-6 p-3">
                         @include('commons.avatar', [
                             'src' => $user->profile,
-                            'className' => 'w-28 max-sm:w-14',
+                            'className' => 'w-24 max-sm:w-14',
                             'alt' => $user->first_name . ' ' . $user->last_name,
-                            'altClass' => 'text-2xl',
+                            'altClass' => 'text-3xl',
                         ])
                         <div class="flex flex-col gap-1">
 
@@ -70,7 +69,18 @@
             </nav>
         </header>
         @if ($eda)
-            <div class="h-full overflow-y-auto bg-white border rounded-xl">
+            <div class="h-full overflow-y-auto px-2 flex flex-col">
+                <div class="py-2 pt-0 border-b border-neutral-300">
+                    <h1 class="text-lg font-semibold">Completa todas las tareas asignadas.</h1>
+                    <p class=" font-normal text-sm">Eda registrado el
+                        {{ \Carbon\Carbon::parse($eda->created_at)->isoFormat('LL') }} por
+                        <a title="Ir al perfil de {{ $eda->createdBy->first_name }} {{ $eda->createdBy->last_name }}"
+                            href="/profile/{{ $eda->createdBy->id }}" class="hover:underline text-blue-600">
+                            {{ $eda->createdBy->first_name }}
+                            {{ $eda->createdBy->last_name }}.
+                        </a>
+                    </p>
+                </div>
                 @yield('content-eda-user')
             </div>
         @else
@@ -79,7 +89,7 @@
                 <img src="/empty_filter.webp" width="200" class="mx-auto" alt="">
                 <p class="text-neutral-400">Aun no se registró el eda del año {{ $year->name }}</p>
                 @if ($current_user->hasPrivilege('create_edas'))
-                    <button {{ !$isPosibleCreateEda ? 'disabled' : '' }} data-id-year="{{ $id_year }}"
+                    <button {{ !$hasPosibleCreate ? 'disabled' : '' }} data-id-year="{{ $id_year }}"
                         data-id-user="{{ $user->id }}" id="create-eda"
                         class="p-2 disabled:opacity-50 rounded-full w-fit mx-auto px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base">
                         Registrar ahora
