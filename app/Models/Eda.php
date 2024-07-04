@@ -20,13 +20,13 @@ class Eda extends Model
     'open',
     'closed',
     'send',
-    'overage',
     'approved',
     'created_at',
-    'created_by',
     'updated_at',
+    'created_by',
     'approved_by',
     'closed_by',
+    'sent_by',
   ];
 
   static $rules = [
@@ -53,9 +53,15 @@ class Eda extends Model
   {
     return $this->hasOne('App\Models\User', 'id', 'approved_by');
   }
+
   public function closedBy()
   {
     return $this->hasOne('App\Models\User', 'id', 'closed_by');
+  }
+
+  public function sentBy()
+  {
+    return $this->hasOne('App\Models\User', 'id', 'sent_by');
   }
 
   public function year()
