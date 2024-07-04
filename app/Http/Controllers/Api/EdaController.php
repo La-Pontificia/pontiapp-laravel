@@ -21,7 +21,7 @@ class EdaController extends Controller
 
         $foundYear = Year::find($request->id_year);
         if (!$foundYear) return response()->json('La eda selecionado no existe', 404);
-        // if ($foundYear->status === 0) return response()->json('El año seleccionado no esta activo', 404);
+        if (!$foundYear->status) return response()->json('El año seleccionado no esta activo', 404);
 
         if (!auth()->user()->id) return response()->json('No tienes permisos para realizar esta acción', 403);
 
@@ -38,6 +38,25 @@ class EdaController extends Controller
                 'id_eda' => $eda->id,
             ]);
         }
+
+        return response()->json(['eda' => $eda], 200);
+    }
+
+    public function close(Request $request)
+    {
+        $eda = Eda::find($request->id);
+
+        if (!$eda) return response()->json('La eda no existe', 404);
+
+        if ($eda->closed) return response()->json('La eda ya esta cerrada', 404);
+
+        if (!auth()->user()->id) return response()->json('No tienes permisos para realizar esta acción', 403);
+
+        $eda->closed = now();
+
+        $eda->closed_by = auth()->user()->id;
+
+        $eda->save();
 
         return response()->json(['eda' => $eda], 200);
     }
