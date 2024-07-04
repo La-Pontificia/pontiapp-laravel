@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const verifyGoals = () => {
+        if (!SpanTotalAverage) return;
         SpanTotalAverage.innerHTML = getTotalAverage().toFixed(2);
         SpanTotalSelfQualification.innerHTML =
             getTotalSelfQualification().toFixed(2);
@@ -66,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Goal
             const divGoal = document.createElement("div");
-            divGoal.className = "w-full text-indigo-600 font-semibold";
+            divGoal.className = "w-full text-blue-600 font-semibold";
             divGoal.innerHTML = item.goal.goal;
 
             // Description
@@ -126,7 +127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // C Index
             const cIndex = document.createElement("td");
-            cIndex.className = "font-semibold p-2";
+            cIndex.className = "font-semibold text-center p-2";
             cIndex.innerHTML = `${index + 1}`;
 
             const cGoal = document.createElement("td");
