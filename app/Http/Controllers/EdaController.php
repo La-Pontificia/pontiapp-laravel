@@ -62,6 +62,7 @@ class EdaController  extends Controller
     {
         $user = auth()->user();
         $year = Year::orderBy('name', 'desc')->first();
+        if (!$year) return view('pages.404');
         return redirect()->route('edas.user.eda', ['id_user' => $user->id, 'year' => $year->id]);
     }
 
@@ -97,6 +98,13 @@ class EdaController  extends Controller
         $years = Year::orderBy('name', 'desc')->get();
         $year = Year::find($year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+
+
+        // validate 
+        if (!$eda) return view('pages.500', ['error' => 'Eda not found']);
+        if (!$year) return view('pages.500', ['error' => 'Year not found']);
+        if (!$user) return view('pages.500', ['error' => 'User not found']);
+
         $goals = [];
         if ($eda) {
             $goals = Goal::where('id_eda', $eda->id)->get();
@@ -116,6 +124,13 @@ class EdaController  extends Controller
         $year = Year::find($year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
         $goals = [];
+
+        // validate
+        if (!$eda) return view('pages.500', ['error' => 'Eda not found']);
+        if (!$year) return view('pages.500', ['error' => 'Year not found']);
+        if (!$user) return view('pages.500', ['error' => 'User not found']);
+        if (!$evaluation) return view('pages.500', ['error' => 'Evaluation not found']);
+
 
         if ($eda) {
             $goals = Goal::where('id_eda', $eda->id)->get();
