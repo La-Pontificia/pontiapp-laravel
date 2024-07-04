@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const getTotalPercentage = () =>
         goals.reduce((acc, goal) => acc + parseInt(goal.percentage), 0);
 
-    // fetch goals if inputHiddenId exists
     if (inputHiddenId) {
         AddButton.disabled = true;
         const res = await axios.get(`/api/goals/by-eda/${inputHiddenId.value}`);
@@ -79,12 +78,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Row
             const row = document.createElement("tr");
             row.className =
-                "[&>td]:align-top [&>td>div]:p-2 [&>td>div]:min-h-20 [&>td>div]:bg-transparent [&>td>div]:rounded-md";
+                "[&>td]:align-top [&>td>div]:p-2 [&>td>div]:min-h-20 [&>td>div]:min-w-[200px] [&>td>div]:bg-transparent [&>td>div]:rounded-md";
 
             // Goal
             const divGoal = document.createElement("div");
             divGoal.contentEditable = !!hasEdit;
-            divGoal.className = "w-full text-indigo-600 font-semibold";
+            divGoal.className = "w-full text-blue-600 font-semibold";
             divGoal.ariaPlaceholder = "Ingrese el nombre del objetivo";
             divGoal.innerHTML = goal.goal;
             divGoal.oninput = (e) => {
@@ -138,7 +137,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const cCreatedBy = document.createElement("td");
             if (goal.created_by) {
                 const createdByImg = document.createElement("img");
-                createdByImg.src = goal.created_by?.profile;
+                createdByImg.src =
+                    goal.created_by?.profile ?? window.defaultProfile;
                 createdByImg.className = "w-full h-full object-cover";
                 const createdFigureDivImg = document.createElement("figure");
                 createdFigureDivImg.className =
@@ -155,7 +155,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const cUpdatedBy = document.createElement("td");
             if (goal.updated_by) {
                 const updatedByImg = document.createElement("img");
-                updatedByImg.src = goal.updated_by?.profile;
+                updatedByImg.src =
+                    goal.updated_by?.profile ?? window.defaultProfile;
                 updatedByImg.className = "w-full h-full object-cover";
                 const updatedByFigureDivImg = document.createElement("figure");
                 updatedByFigureDivImg.className =
@@ -184,7 +185,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // C Index
             const cIndex = document.createElement("td");
-            cIndex.className = "font-semibold p-2";
+            cIndex.className = "font-semibold p-2 text-center";
             cIndex.innerHTML = `${index + 1}`;
 
             const cGoal = document.createElement("td");
@@ -221,6 +222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const addGoal = () => {
+        PanelGoals.scrollTop = PanelGoals.scrollHeight;
         goals.push({
             id: goals.length + 1,
             goal: "",
@@ -288,7 +290,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
     });
+
     renderGoals();
+
     if (inputHiddenId) {
         submitGoalsButton.disabled = true;
     }
