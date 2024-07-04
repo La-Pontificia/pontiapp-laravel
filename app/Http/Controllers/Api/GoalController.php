@@ -74,6 +74,7 @@ class GoalController extends Controller
         $this->createGoals($goals, $eda);
 
         $eda->sent = new \DateTime();
+        $eda->sent_by = auth()->user()->id;
         $eda->save();
 
         return response()->json(['message' => 'Goals created successfully'], 201);
@@ -225,8 +226,6 @@ class GoalController extends Controller
         $items = $goalsEvaluations->map(function ($item) {
             $item->goal = $item->goal()->select('id', 'goal', 'description', 'indicators', 'percentage')->first();
             $item->evaluation = $item->evaluation;
-            $item->self_rated_by = $item->selfRatedBy()->select('id', 'first_name', 'last_name', 'profile')->first();
-            $item->average_by = $item->averagedBy()->select('id', 'first_name', 'last_name', 'profile')->first();
             return $item;
         });
 
