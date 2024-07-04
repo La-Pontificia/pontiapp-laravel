@@ -45,6 +45,9 @@ window.disabledFormChildren = (form) => {
     });
 };
 
+window.defaultProfile =
+    "https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg";
+
 window.enableFormChildren = (form) => {
     form.querySelectorAll("input").forEach((c) => {
         c.disabled = false;
