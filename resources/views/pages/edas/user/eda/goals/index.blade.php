@@ -16,7 +16,7 @@
 @endphp
 
 @section('content-eda-user')
-    <div class="h-full flex flex-col pt-0 overflow-x-auto">
+    <div class="h-full flex mt-3 bg-white overflow-hidden rounded-xl flex-col pt-0 overflow-x-auto">
         @if ($sent)
             <input type="hidden" id="input-hidden-id-eda" value="{{ $eda->id }}">
         @endif
@@ -29,10 +29,10 @@
             <span id="has-delete-goals"></span>
         @endif
 
-        <div class="flex gap-2 pb-2 border-b">
+        <div class="flex gap-2 border-b p-1 tracking-tight">
             <div class="flex-grow">
                 <button onclick="window.history.back()"
-                    class="text-[#5b5fc7] hover:bg-indigo-100 font-semibold justify-center min-w-max flex items-center rounded-md p-2 gap-1 text-sm px-2">
+                    class="text-blue-700 hover:bg-indigo-100 font-semibold justify-center min-w-max flex items-center rounded-full p-2 gap-1 px-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="lucide lucide-arrow-left">
@@ -42,56 +42,37 @@
                     <span class="max-lg:hidden">Agregar objetivo</span>
                 </button>
             </div>
-            <button {{ $hasAddGoals ? '' : 'data-hidden' }} id="add-goal-button"
-                class="bg-indigo-100 data-[hidden]:hidden hover:bg-indigo-200 hover:text-indigo-700 text-indigo-600 font-semibold justify-center min-w-max flex items-center rounded-md p-2 gap-1 text-sm px-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-plus">
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                </svg>
-                <span class="max-lg:hidden">Agregar</span>
-            </button>
             <button data-id-eda="{{ $eda->id }}" {{ $hasApproveGoals ? '' : 'data-hidden' }} id="approve-goals-button"
-                class="bg-indigo-600 hover:bg-indigo-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-md p-2 gap-1 text-sm px-3">
+                class="bg-indigo-600 hover:bg-indigo-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-2 gap-1 text-sm px-3">
                 Aprobar
             </button>
             <button {{ $hasSentGoals ? '' : 'data-hidden' }} disabled data-id-eda="{{ $eda->id }}"
                 id="submit-goals-button"
-                class="bg-[#5b5fc7] data-[hidden]:hidden font-semibold justify-center hover:bg-[#5053b5] min-w-max flex items-center rounded-md p-2 gap-1 text-white text-sm px-3">
+                class="bg-blue-700 data-[hidden]:hidden font-semibold justify-center hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                 {{ $sent ? 'Reenviar' : 'Enviar' }} objetivos
             </button>
         </div>
         <div id="presentation-not-goals" class="p-1 h-full grid place-content-center text-center">
-            <div class="max-w-sm mx-auto">
-                <svg class="text-indigo-500 mx-auto" xmlns="http://www.w3.org/2000/svg" width="40" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-layout-list">
-                    <rect width="7" height="7" x="3" y="3" rx="1" />
-                    <rect width="7" height="7" x="3" y="14" rx="1" />
-                    <path d="M14 4h7" />
-                    <path d="M14 9h7" />
-                    <path d="M14 15h7" />
-                    <path d="M14 20h7" />
-                </svg>
-                <h1 class="text-indigo-500 text-xl pt-2">
+            <div class="max-w-sm mx-auto space-y-2">
+                <h1 class="text-black tracking-tight font-semibold text-2xl pt-2">
                     Agrega los objetivos necesarios.
                 </h1>
                 <p class="pt-2 text-sm">
-                    Una vez llegue al 100% de total de porcentaje, podrá enviar los objetivos, <button
-                        class="text-indigo-500 hover:underline" id="add-goal-button-2">agrega tu primer
-                        objetivo.</button>
+                    Una vez llegue al 100% de total de porcentaje, podrá enviar los objetivos.
                 </p>
+                <button class="bg-blue-700 px-3 p-2 rounded-full text-white font-semibold" id="add-goal-button-2">
+                    Agregar objetivo
+                </button>
             </div>
         </div>
-        <div id="panel-goals" class="py-3 w-full hidden flex-grow overflow-x-auto">
+        <div id="panel-goals" class="py-3 w-full hidden flex-grow relative overflow-auto">
             <table class="w-full">
                 <thead class="border-b">
                     <tr class="[&>th]:p-2 [&>th]:text-nowrap text-left [&>th]:font-semibold text-sm">
-                        <th>N°</th>
-                        <th>Objetivo</th>
-                        <th>Descripción</th>
-                        <th>Indicadores</th>
+                        <th class="max-w-[50px] w-[50px] text-center">N°</th>
+                        <th class="min-w-[200px]">Objetivo</th>
+                        <th class="min-w-[300px]">Descripción</th>
+                        <th class="min-w-[400px]">Indicadores</th>
                         <th>Porcentaje</th>
                         @if ($sent)
                             <th>Creado por</th>
@@ -101,24 +82,47 @@
                     </tr>
                 </thead>
                 <tbody id="table-goals" class="divide-y text-[15px]">
-
+                </tbody>
+                <tbody class="bottom-0 bg-white">
+                    <tr class="text-sm">
+                        <td colspan="20">
+                            <div class="flex justify-center">
+                                <button
+                                    class="border-blue-700 {{ $hasAddGoals ? '' : 'hidden' }} border-2 flex items-center gap-2 hover:bg-blue-100 px-3 p-2 rounded-full text-blue-700 font-semibold"
+                                    id="add-goal-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
+                                        <path d="M5 12h14" />
+                                        <path d="M12 5v14" />
+                                    </svg>
+                                    Agregar objetivo
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-center">
+                            <div class="p-2 rounded-full w-fit mx-auto font-semibold text-blue-600">
+                                <span id="total-percentage">0</span>%
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        <div class="border-t pt-3 px-3 flex gap-3 items-center">
-            <div class="flex-grow">
-                @if ($eda->approved)
-                    <div class=" text-sm max-w-[40ch]">
-                        Objetivos aprobados el
-                        {{ \Carbon\Carbon::parse($eda->approved)->isoFormat('LL') }}
-                        por <span class="text-indigo-500">{{ $eda->approvedBy->first_name }}
-                            {{ $eda->approvedBy->last_name }}</span>
-                    </div>
-                @endif
-            </div>
-            <div class="p-2 rounded-lg border border-green-500 px-3 bg-green-100 font-medium">
-                Total de porcentaje: <span id="total-percentage">0</span>%
-            </div>
-        </div>
+        @if ($eda->sent)
+            <p class="p-3 text-neutral-400 text-sm">Enviados
+                el {{ \Carbon\Carbon::parse($eda->sent)->isoFormat('LL') }} por
+                <a title="Ir al perfil de {{ $eda->createdBy->first_name }} {{ $eda->createdBy->last_name }}"
+                    href="/profile/{{ $eda->createdBy->id }}" class="hover:underline text-blue-600">
+                    {{ $eda->createdBy->first_name }}
+                    {{ $eda->createdBy->last_name }}.
+                </a>
+                para su revisión y aprobación.
+            </p>
+        @endif
     </div>
 @endsection
