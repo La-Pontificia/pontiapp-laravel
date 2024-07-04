@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 // -------------------------------- AUTH ROUTES ---------------------------
 
-Route::post('login', 'App\Http\Controllers\Api\LoginController@close');
+Route::post('login', 'App\Http\Controllers\Api\LoginController@login');
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Edas routes
     Route::post('edas', 'App\Http\Controllers\Api\EdaController@create');
+    Route::post('edas/close/{id}', 'App\Http\Controllers\Api\EdaController@close');
 
     // Goals routes
     Route::post('goals/sent', 'App\Http\Controllers\Api\GoalController@sent');
