@@ -24,7 +24,7 @@
                 <div class="space-y-2">
                     <button class="text-lg font-semibold tracking-tight">Objetivos</button>
                     <a href="{{ route('edas.user.eda.goals', ['year' => $year->id, 'id_user' => $user->id]) }}"
-                        class="p-2 gap-2 w-fit items-center shadow-lg shadow-blue-500/30 rounded-2xl hover:shadow-lg bg-white flex bg-gradient-to-br from-blue-700 to-indigo-700 text-white">
+                        class="p-2 gap-2 w-fit items-center shadow-lg shadow-blue-500/30 rounded-2xl bg-white flex bg-gradient-to-br from-blue-700 to-indigo-700 text-white">
                         <div class="p-4 rounded-xl bg-white text-blue-700">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -115,7 +115,7 @@
 
                 {{-- Finalization page --}}
                 <div class="space-y-2">
-                    <button class="text-lg font-semibold tracking-tight">Finalizacion del Eda.</button>
+                    <button class="text-lg font-semibold tracking-tight">Finalización del Eda.</button>
                     @if ($evaluationUltimate->average)
                         <div class="bg-white rounded-xl w-fit p-3 shadow-md">
                             <span class="text-sm opacity-60">Detalles:</span>
@@ -153,6 +153,34 @@
                 <div class="space-y-2">
                     <button class="text-lg font-semibold tracking-tight">Cuestionarios</button>
                     @if ($eda->closed)
+                        <a href="{{ route('edas.user.eda.goals', ['year' => $year->id, 'id_user' => $user->id]) }}"
+                            class="p-2 gap-2 w-fit items-center shadow-lg shadow-amber-500/30 rounded-2xl bg-white flex bg-gradient-to-br from-amber-700 to-yellow-700 text-white">
+                            <div class="p-4 rounded-xl bg-white text-amber-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-book-open">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                </svg>
+                            </div>
+                            <div class="flex-grow">
+                                <h2 class="font-semibold">Cuestionarios</h2>
+                                <p class="opacity-70 text-sm max-w-[40ch]">
+                                    Responde a los cuestionario asignados por cada Eda. y visualizar los resultados de su
+                                    Supervisor.
+                                </p>
+                            </div>
+                            <div class="space-y-1 text-xs flex flex-col items-end">
+                                {{-- @if ($eda->sent)
+                                    <span
+                                        class="block p-1 px-2 rounded-md bg-green-200 text-green-800 font-semibold">Enviado</span>
+                                @endif
+                                @if ($eda->approved)
+                                    <span
+                                        class="block p-1 px-2 rounded-md bg-blue-200 text-blue-800 font-semibold">Aprovado</span>
+                                @endif --}}
+                            </div>
+                        </a>
                     @else
                         <div class="w-full block opacity-60">
                             Por favor espera a que el eda sea Cerrado y calificado
