@@ -66,6 +66,11 @@ class User extends Authenticatable
         return in_array($key, $userPrivileges);
     }
 
+    public function hasDevelperPrivilege()
+    {
+        return $this->role === 'dev';
+    }
+
     public function supervisor()
     {
         return $this->hasOne('App\Models\User', 'id', 'id_supervisor');
