@@ -25,7 +25,6 @@ class EvaluationController extends Controller
         }
 
         $items = $request->items;
-
         $evaluation = Evaluation::find($request->id_evaluation);
 
         if (!$evaluation) {
@@ -49,8 +48,6 @@ class EvaluationController extends Controller
         foreach ($items as $item) {
             $goalEvaluation = GoalEvaluation::find($item['id']);
             $goalEvaluation->self_qualification = $item['self_qualification'];
-            $goalEvaluation->self_rated_at = now();
-            $goalEvaluation->self_rated_by = auth()->user()->id;
             $goalEvaluation->save();
         }
 
@@ -64,6 +61,8 @@ class EvaluationController extends Controller
         }
 
         $evaluation->self_qualification = $totalSelfQualification;
+        $evaluation->self_rated_at = now();
+        $evaluation->self_rated_by = auth()->user()->id;
         $evaluation->save();
 
         return response()->json(['message' => 'Self qualification saved'], 200);
@@ -107,8 +106,6 @@ class EvaluationController extends Controller
         foreach ($items as $item) {
             $goalEvaluation = GoalEvaluation::find($item['id']);
             $goalEvaluation->average = $item['average'];
-            $goalEvaluation->averaged_at = now();
-            $goalEvaluation->averaged_by = auth()->user()->id;
             $goalEvaluation->save();
         }
 
@@ -121,6 +118,8 @@ class EvaluationController extends Controller
         }
 
         $evaluation->average = $totalAverage;
+        $evaluation->averaged_at = now();
+        $evaluation->averaged_by = auth()->user()->id;
         $evaluation->save();
 
         return response()->json(['message' => 'Average saved'], 200);
