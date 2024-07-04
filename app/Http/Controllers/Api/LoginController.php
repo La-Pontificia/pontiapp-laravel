@@ -17,4 +17,11 @@ class LoginController extends Controller
         }
         return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
     }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->status) return redirect()->intended($this->redirectPath());
+        Auth::logout();
+        return redirect('/login')->with('error', 'Tu cuenta no está activa. Comunícate con el administrador.');
+    }
 }
