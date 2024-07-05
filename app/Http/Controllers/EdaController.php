@@ -63,21 +63,21 @@ class EdaController  extends Controller
         $user = auth()->user();
         $year = Year::orderBy('name', 'desc')->first();
         if (!$year) return view('pages.404');
-        return redirect()->route('edas.user.eda', ['id_user' => $user->id, 'year' => $year->id]);
+        return redirect()->route('edas.user', ['id_user' => $user->id, 'year' => $year->id]);
     }
 
     public function user($id_user)
     {
         $user = User::find($id_user);
         $year = Year::orderBy('name', 'desc')->first();
-        return redirect()->route('edas.user.eda', ['id_user' => $user->id, 'year' => $year->id]);
+        return redirect()->route('edas.user.year', ['id_user' => $user->id, 'id_year' => $year->id]);
     }
 
-    public function year($id_user, $year)
+    public function year($id_user, $id_year)
     {
         $user = User::find($id_user);
         $years = Year::orderBy('name', 'desc')->get();
-        $year = Year::find($year);
+        $year = Year::find($id_year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
 
         $evaluations = [];
@@ -87,16 +87,16 @@ class EdaController  extends Controller
         }
 
         return view(
-            'pages.edas.user.eda.index',
+            'pages.edas.user.index',
             compact('user', 'years', 'year', 'eda', 'evaluations')
         );
     }
 
-    public function goals($id_user, $year)
+    public function goals($id_user, $id_year)
     {
         $user = User::find($id_user);
         $years = Year::orderBy('name', 'desc')->get();
-        $year = Year::find($year);
+        $year = Year::find($id_year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
 
 
@@ -111,17 +111,17 @@ class EdaController  extends Controller
         }
 
         return view(
-            'pages.edas.user.eda.goals.index',
+            'pages.edas.user.goals.index',
             compact('user', 'years', 'year', 'eda', 'goals')
         );
     }
 
-    public function evaluation($id_user, $year, $id_evaluation)
+    public function evaluation($id_user, $id_year, $id_evaluation)
     {
         $user = User::find($id_user);
         $evaluation = Evaluation::find($id_evaluation);
         $years = Year::orderBy('name', 'desc')->get();
-        $year = Year::find($year);
+        $year = Year::find($id_year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
         $goals = [];
 
@@ -137,8 +137,26 @@ class EdaController  extends Controller
         }
 
         return view(
-            'pages.edas.user.eda.evaluation',
+            'pages.edas.user.evaluation',
             compact('user', 'years', 'year', 'eda', 'goals', 'evaluation')
+        );
+    }
+
+    public function questionnaires($id_user, $id_year)
+    {
+        $user = User::find($id_user);
+        $years = Year::orderBy('name', 'desc')->get();
+        $year = Year::find($id_year);
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+
+        // validate
+        if (!$eda) return view('pages.500', ['error' => 'Eda not found']);
+        if (!$year) return view('pages.500', ['error' => 'Year not found']);
+        if (!$user) return view('pages.500', ['error' => 'User not found']);
+
+        return view(
+            'pages.edas.user.questionnaires',
+            compact('user', 'years', 'year', 'eda')
         );
     }
 }
