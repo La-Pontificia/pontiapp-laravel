@@ -7,7 +7,7 @@ button[disabled] {
     opacity: 0.8;
     filter: grayscale(100%);
 }
-[multiple]:focus,
+/* [multiple]:focus,
 [type="date"]:focus,
 [type="datetime-local"]:focus,
 [type="email"]:focus,
@@ -35,7 +35,7 @@ textarea:focus {
         var(--tw-shadow);
     outline: 2px solid;
     outline-offset: 1px;
-}
+} */
 
 [contenteditable] {
     position: relative;
@@ -51,4 +51,53 @@ textarea:focus {
 *:disabled {
     cursor: not-allowed;
     opacity: 0.5;
+}
+
+input:not([data-notstyles]):not([type="checkbox"]):not([type="radio"]),
+select:not([data-notstyles]),
+textarea:not([data-notstyles]) {
+    width: 100%;
+    border-radius: 14px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    &:hover {
+        border-color: #c3c8cd;
+    }
+}
+
+input:not([data-notstyles]),
+select:not([data-notstyles]),
+textarea:not([data-notstyles]) {
+    &:focus {
+        border-color: #1473e9;
+        outline: 4px solid #1474e9c3;
+        outline-offset: 0px;
+        transition: all 0.1s;
+        position: relative;
+    }
+}
+
+button,
+input[type="submit"],
+input[type="reset"],
+a,
+[role="button"] {
+    &:focus-visible {
+        border-color: #1473e9;
+        outline: 4px solid #1474e9c3;
+        outline-offset: 0px;
+        transition: all 0.1s;
+        position: relative;
+    }
+}
+
+input[data-notstyles] {
+    outline: none !important;
+    &:focus {
+        outline: none !important;
+    }
+}
+select:not([size]) {
+    background-image: none;
 }
