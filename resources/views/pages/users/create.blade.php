@@ -17,13 +17,11 @@
                 </button>
             </div>
             <div class="p-5 flex-grow w-full overflow-y-auto ">
-                <div class="max-w-2xl mx-auto">
-                    <form id="user-form" class="grid gap-4 w-full" role="form">
-                        @include('components.users.form', [
-                            'user' => null,
-                        ])
-                    </form>
-                </div>
+                <form id="user-form" class="grid gap-4 w-full" role="form">
+                    @include('components.users.form', [
+                        'user' => null,
+                    ])
+                </form>
             </div>
             <div class="p-5 border-t border-neutral-300">
                 <div class="max-w-2xl mx-auto flex gap-2">
