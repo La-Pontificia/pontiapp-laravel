@@ -10,10 +10,34 @@
             'name' => 'Usuarios',
             'privileges' => [
                 'view_users' => 'Ver usuarios',
-                'create_users' => 'Crear usuarios',
-                'edit_users' => 'Editar usuarios',
-                'delete_users' => 'Eliminar usuarios',
+                'create_users' => 'Agregar usuarios',
+                'assign_email' => 'Asignar correo',
+                'edit_users' => 'Actualizar usuarios',
+                'disable_users' => 'Deshabilitar usuarios',
+            ],
+        ],
+        [
+            'name' => 'Asistencias',
+            'privileges' => [
+                'view_attendance' => 'Ver asistencias',
+                'create_schedule' => 'Crear horarios',
+                'edit_schedule' => 'Actualizar horarios',
+                'delete_schedule' => 'Remover horarios',
+            ],
+        ],
+        [
+            'name' => 'EDAS',
+            'privileges' => [
+                'create_edas' => 'Registrar EDAS',
+                'closed_edas' => 'Cerrar EDAS',
                 'assign_supervisor' => 'Asignar supervisor',
+            ],
+        ],
+        [
+            'name' => 'Reportes',
+            'privileges' => [
+                'view_reports' => 'Ver reportes',
+                'generate_reports' => 'Generar reportes',
             ],
         ],
         [
@@ -25,188 +49,270 @@
                 'delete_schedule' => 'Eliminar horario',
             ],
         ],
-        [
-            'name' => 'EDAS',
-            'privileges' => [
-                'view_edas' => 'Ver EDAS',
-                'create_edas' => 'Crear EDAS',
-                'edit_edas' => 'Editar EDAS',
-                'restart_edas' => 'Reiniciar EDAS',
-            ],
-        ],
-        [
-            'name' => 'Objetivos',
-            'privileges' => [
-                'view_objetivos' => 'Ver Objetivos',
-                'create_objetivos' => 'Crear Objetivos',
-                'edit_objetivos' => 'Editar Objetivos',
-                'send_objetivos' => 'Editar Objetivos',
-                'delete_objetivos' => 'Eliminar Objetivos',
-            ],
-        ],
-        [
-            'name' => 'Reportes',
-            'privileges' => [
-                'view_reports' => 'Ver reportes',
-                'generate_reports' => 'Generar reportes',
-            ],
-        ],
     ];
+
+    $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
+    $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
 @endphp
 
-<div>
-    @if ($user)
-        <input type="hidden" name="id" value="{{ $user->id }}">
-    @endif
-</div>
-<div>
-    <div class="relative rounded-full overflow-hidden w-28 border aspect-square">
-        <input type="file" name="profile" id="input-profile"
-            class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" accept="image/*">
-        <img id="preview-profile" class="w-full h-full object-cover"
-            src={{ $user && $user->profile ?? 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg' }}
-            alt="">
-    </div>
-</div>
+@if ($user)
+    <input type="hidden" name="id" value="{{ $user->id }}">
+@endif
 
-<div class="grid grid-cols-12 gap-4">
-    <label class="flex flex-col col-span-5 font-normal text-sm">
-        <span class="block pb-1">DNI</span>
-        <input name="dni" id="dni-input" value="{{ $user ? $user->dni : '' }}" required type="number"
-            class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-    </label>
-</div>
-<div class="grid grid-cols-12 gap-4">
-    <label class="flex flex-col col-span-6 font-normal text-sm">
-        <span class="block pb-1">Nombres</span>
-        <input value="{{ $user ? $user->first_name : '' }}" name="first_name" id="first_name-input" required
-            type="text" class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-    </label>
-    <label class="flex flex-col col-span-6 font-normal text-sm">
-        <span class="block pb-1">Apellidos</span>
-        <input value="{{ $user ? $user->last_name : '' }}" name="last_name" id="last_name-input" required type="text"
-            class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-    </label>
-</div>
-<label class="flex flex-col font-normal text-sm relative">
-    <span class="block pb-1">Correo Institucional</span>
-    <div class="relative">
-        <div class="absolute inset-y-0 flex items-center pl-2 pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-at-sign">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8" />
-            </svg>
+<div class="p-4 space-y-2">
+    {{-- User Profile Image --}}
+    <div class="flex items-center gap-4">
+        <div class="relative rounded-full overflow-hidden w-40 border aspect-square">
+            <input type="file" name="profile" id="input-profile"
+                class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" accept="image/*">
+            <img id="preview-profile" class="w-full h-full object-cover" src={{ $profile }} alt="">
         </div>
-        <input required value="{{ $user ? $username : '' }}" name="username" type="text"
-            class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 pl-8 rounded-lg">
-        <div class="absolute inset-y-0 right-0 pr-2">
-            <select required name="domain" type="text"
-                class="bg-transparent text-center border-0 h-full w-[150px] px-6">
-                @foreach ($domains as $domain)
-                    <option {{ $user && $domain === 'elp.edu.pe' ? 'selected' : '' }} value="{{ $domain }}">
-                        {{ '@' . $domain }}</option>
-                @endforeach
-            </select>
-        </div>
+        <button onclick="document.getElementById('input-profile').click()"
+            class="bg-white font-semibold tracking-tight p-2 rounded-full px-3 shadow-md hover:shadow-lg">
+            Subir foto
+        </button>
     </div>
-</label>
-<div class="grid grid-cols-12 gap-4">
-    <label class="flex flex-col col-span-6 font-normal text-sm">
-        <span class="block pb-1">Puesto</span>
-        <select name="id_job_position" id="job-position-select" required type="text"
-            class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-            @foreach ($job_positions as $item)
-                <option {{ $user && $user->role_position->job_position->id === $item->id ? 'selected' : '' }}
-                    value="{{ $item->id }}">
-                    {{ $item->name }}</option>
-            @endforeach
-        </select>
-    </label>
-    <label class="flex flex-col col-span-6 font-normal text-sm">
-        <span class="block pb-1">Cargo</span>
-        <select name="id_role" id="role-select" required type="text"
-            class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-            @foreach ($roles as $role)
-                <option {{ $user && $user->role_position->id === $role->id ? 'selected' : '' }}
-                    value="{{ $role->id }}">
-                    {{ $role->name }}</option>
-            @endforeach
-        </select>
-    </label>
 
-</div>
-<div class="grid grid-cols-12 gap-4">
-    <label class="flex col-span-8 flex-col font-normal text-sm relative">
-        <span class="block pb-1">Sede</span>
-        <select name="id_branch" required class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-            @foreach ($branches as $branch)
-                <option {{ $user && $user->id_branch === $branch->id ? 'selected' : '' }} value="{{ $branch->id }}">
-                    {{ $branch->name }}</option>
-            @endforeach
-        </select>
-    </label>
-</div>
-
-<div class="border-t">
-    <h1 class="font-semibold text-lg py-2">Jefe Inmediato (Supervisor)</h1>
-    <div class="gap-5">
-        <label class="flex col-span-12 flex-col font-normal text-sm relative">
-            <input autocomplete="off"
-                value="{{ $user && $user->id_supervisor ? $user->supervisor->first_name . ' ' . $user->supervisor->last_name : '' }}"
-                id="search-supervisor" type="search"
-                data-id="{{ $user && $user->supervisor ? $user->id_supervisor : '' }}" placeholder="Buscar colaborador"
-                class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-
-            @if ($user && $user->supervisor)
-                <p class="py-1">
-                    <span class=" text-[#0b67bb]">Actualmente supervisado por: </span>
-                    {{ $user->supervisor->first_name . ' ' . $user->supervisor->last_name }}
-                </p>
-            @endif
-            <div id="list-users" class="py-2">
-
+    {{-- User Profile Details --}}
+    <h2 class="tracking-tight pt-5 text-xl font-semibold">
+        Detalles del usuario
+    </h2>
+    <div>
+        <p class="text-sm text-yellow-500 pb-3 max-w-[50ch]">
+            Ingresa el documento de identidad para hacer una busqueda rapida a la Reniec.
+        </p>
+        <div class="rounded-2xl [&>div]:divide-x divide-y max-w-[500px] border bg-white shadow-md">
+            <div class="gap-4">
+                <input style="border-radius: 1rem 1rem 0px 0px;border:0px;" name="dni" id="dni-input"
+                    value="{{ $user ? $user->dni : '' }}" required type="number" class="w-full"
+                    placeholder="Documento de Identidad">
             </div>
-        </label>
+            <div class="grid grid-cols-2">
+                <div>
+                    <input style="border-radius: 0px;border:0px;" placeholder="Apellidos"
+                        value="{{ $user ? $user->last_name : '' }}" name="last_name" id="last_name-input" required
+                        type="text">
+                </div>
+                <div>
+                    <input style="border-radius: 0px;border:0px;" placeholder="Nombres"
+                        value="{{ $user ? $user->first_name : '' }}" name="first_name" id="first_name-input" required
+                        type="text">
+                </div>
+            </div>
+            <div class="grid grid-cols-2">
+                <div>
+                    <select style="border-radius: 0px;border:0px;" name="id_job_position" id="job-position-select"
+                        required>
+                        @foreach ($job_positions as $item)
+                            <option
+                                {{ $user && $user->role_position->job_position->id === $item->id ? 'selected' : '' }}
+                                value="{{ $item->id }}">
+                                {{ $item->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <select style="border-radius: 0px;border:0px;" name="id_role" id="role-select" required>
+                        @foreach ($roles as $role)
+                            <option {{ $user && $user->role_position->id === $role->id ? 'selected' : '' }}
+                                value="{{ $role->id }}">
+                                {{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div>
+                <select style="border-radius: 0px 0px 1rem 1rem;border:0px;" name="id_branch" required>
+                    @foreach ($branches as $branch)
+                        <option {{ $user && $user->id_branch === $branch->id ? 'selected' : '' }}
+                            value="{{ $branch->id }}">
+                            {{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
     </div>
-</div>
 
+    {{-- Emails --}}
+    <h2 class="tracking-tight pt-5 text-xl font-semibold">
+        Emails
+    </h2>
 
+    <div class="rounded-2xl space-y-4 max-w-[500px] border bg-white shadow-md">
+        <table class="w-full">
+            <thead class="text-left">
+                <tr>
+                    <th class="w-full"></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="email-table" class="divide-y">
+                <tr class="[&>td]:p-3 group">
+                    <td>
+                        <a href="mailto:help@daustinn.com" class="hover:underline flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" class="group-hover:text-blue-600"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg> help@daustinn.com</a>
+                    </td>
+                    <td>
+                        <p class="text-sm">
+                            Activo
+                        </p>
+                    </td>
+                    <td>
+                        <button type="button" data-dropdown-toggle="dropdown-email-2"
+                            class="group-hover:opacity-100 opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-ellipsis">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg>
+                        </button>
+                        <div id="dropdown-email-2"
+                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-80">
+                            <p class="text-sm text-neutral-500 p-2">
+                                Este correo se asignó Asignado el 10 de octubre de 2021 por <a href=""
+                                    class="text-blue-500 hover:underline">David Bendezu</a> porque el usuario no tiene
+                                un
+                                correo institucional.
+                            </p>
+                            <button type="button" class="p-2 hover:bg-neutral-100 text-left rounded-md w-full">
+                                Dar de baja
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="[&>td]:p-3 group">
+                    <td>
+                        <a href="mailto:help@daustinn.com" class="hover:underline flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" class="group-hover:text-blue-600"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg> help@daustinn.com</a>
+                        {{-- <p class="text-sm text-neutral-500">
+                            Este correo se asignó Asignado el 10 de octubre de 2021 por que el usuario no tiene un
+                            correo institucional.
+                        </p> --}}
+                    </td>
+                    <td>
+                        <p class="text-sm">
+                            Activo
+                        </p>
+                    </td>
+                    <td>
+                        <button type="button" data-dropdown-toggle="dropdown-email-3"
+                            class="group-hover:opacity-100 opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg>
+                        </button>
+                        <div id="dropdown-email-3"
+                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-44">
+                            <button type="button" class="p-2 hover:bg-neutral-100 text-left rounded-md w-full">
+                                Dar de baja
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-<div class="border-t">
-    <h1 class="font-semibold text-lg py-2"> Privilegios y Rol del usuario</h1>
-    <label class="flex flex-col col-span-4 font-normal text-sm">
-        <span class="block pb-1">Rol</span>
-        <select name="role" required type="text"
-            class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
+    {{-- Roles and Permissions --}}
+    <h2 class="tracking-tight pt-5 text-xl font-semibold">
+        Permisos y Roles
+    </h2>
+    {{-- <label class="flex flex-col font-normal text-sm relative">
+        <span class="block pb-1">Correo Institucional</span>
+        <div class="relative">
+            <input required value="{{ $user ? $username : '' }}" name="username" type="text">
+            <div class="absolute inset-y-0 right-0 pr-2">
+                <select data-notstyles required name="domain" type="text"
+                    class="bg-transparent text-center border-0 h-full w-[150px] px-6">
+                    @foreach ($domains as $domain)
+                        <option {{ $user && $domain === 'elp.edu.pe' ? 'selected' : '' }} value="{{ $domain }}">
+                            {{ '@' . $domain }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </label> --}}
+
+    {{-- <div class="border-t">
+        <h1 class="font-semibold text-lg py-2">Jefe Inmediato (Supervisor)</h1>
+        <div class="gap-5">
+            <label class="flex col-span-12 flex-col font-normal text-sm relative">
+                <input autocomplete="off"
+                    value="{{ $user && $user->id_supervisor ? $user->supervisor->first_name . ' ' . $user->supervisor->last_name : '' }}"
+                    id="search-supervisor" type="search"
+                    data-id="{{ $user && $user->supervisor ? $user->id_supervisor : '' }}" placeholder="Buscar colaborador"
+                    >
+    
+                @if ($user && $user->supervisor)
+                    <p class="py-1">
+                        <span class=" text-[#0b67bb]">Actualmente supervisado por: </span>
+                        {{ $user->supervisor->first_name . ' ' . $user->supervisor->last_name }}
+                    </p>
+                @endif
+                <div id="list-users" class="py-2">
+    
+                </div>
+            </label>
+        </div>
+    </div> --}}
+
+    <div class="rounded-2xl mb-2 max-w-[700px]">
+        <select name="role" required type="text" style="width: fit-content"
+            class="bg-neutral-100 border-2 border-neutral-400 p-1 px-2 rounded-lg">
             @foreach ($rolesUsers as $key => $value)
                 <option {{ $user && $user->role === $key ? 'selected' : '' }} value="{{ $key }}">
-                    {{ $value }}
+                    Rol: {{ $value }}
                 </option>
             @endforeach
         </select>
-    </label>
-    <div>
-    </div>
-    @if ($user)
-        <div class="grid grid-cols-3 gap-5">
-            @foreach ($system_privileges as $system_privilege)
-                <div>
-                    <h2 class="font-semibold text-base py-2">{{ $system_privilege['name'] }}</h2>
-                    <div class="flex flex-col gap-4">
-                        @foreach ($system_privilege['privileges'] as $key => $value)
-                            <label class="flex items-center col-span-4">
-                                <input value="{{ $key }}" {{ $user->hasPrivilege($key) ? 'checked' : '' }}
-                                    type="checkbox" name="privileges[]"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2">
-                                <span class="ms-2 text-black">{{ $value }}</span>
-                            </label>
-                        @endforeach
+        @if (!$user)
+            <p class="py-2 px-1 text-sm max-w-[40ch]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="inline-flex" width="15" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="lucide lucide-triangle-alert">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+                Los permisos se realizará una vez que el usuario haya sido registrado.
+            </p>
+        @endif
+        @if ($user)
+            <div class="grid grid-cols-3 gap-5 px-2">
+                @foreach ($system_privileges as $system_privilege)
+                    <div>
+                        <h2 class="font-semibold text-base py-2">{{ $system_privilege['name'] }}</h2>
+                        <div class="flex flex-col gap-4">
+                            @foreach ($system_privilege['privileges'] as $key => $value)
+                                <label class="flex items-center col-span-4">
+                                    <input value="{{ $key }}"
+                                        {{ $user && $user->hasPrivilege($key) ? 'checked' : '' }} type="checkbox"
+                                        name="privileges[]"
+                                        class="w-6 h-6 rounded-lg text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2">
+                                    <span class="ms-2 text-black text-nowrap">{{ $value }}</span>
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
-
+                @endforeach
+            </div>
+        @endif
+    </div>
 </div>
