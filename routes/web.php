@@ -28,9 +28,10 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('edas/surveys', 'App\Http\Controllers\SurveyController@index')->name('edas.surveys');
     Route::get('edas/me', 'App\Http\Controllers\EdaController@me')->name('edas.me');
     Route::get('edas/{id_user}/eda', 'App\Http\Controllers\EdaController@user')->name('edas.user');
-    Route::get('edas/{id_user}/eda/{year}', 'App\Http\Controllers\EdaController@year')->name('edas.user.eda');
-    Route::get('edas/{id_user}/eda/{year}/goals', 'App\Http\Controllers\EdaController@goals')->name('edas.user.eda.goals');
-    Route::get('edas/{id_user}/eda/{year}/evaluation/{id_evaluation}', 'App\Http\Controllers\EdaController@evaluation')->name('edas.user.eda.evaluation');
+    Route::get('edas/{id_user}/eda/{id_year}', 'App\Http\Controllers\EdaController@year')->name('edas.user.year');
+    Route::get('edas/{id_user}/eda/{id_year}/goals', 'App\Http\Controllers\EdaController@goals')->name('edas.user.goals');
+    Route::get('edas/{id_user}/eda/{id_year}/evaluation/{id_evaluation}', 'App\Http\Controllers\EdaController@evaluation')->name('edas.user.evaluation');
+    Route::get('edas/{id_user}/eda/{id_year}/questionnaires', 'App\Http\Controllers\EdaController@questionnaires')->name('edas.user.questionnaires');
 
     // Assists routes
     Route::get('assists', 'App\Http\Controllers\AssistController@index')->name('assists');
