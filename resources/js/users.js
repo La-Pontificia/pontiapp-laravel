@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dni = form.get("dni");
         const username = form.get("username");
         const domain = form.get("domain");
-        const email = `${username.trim()}@${domain.trim()}`;
+        const email = `${username?.trim()}@${domain?.trim()}`;
         form.set("email", email);
 
         const privileges = Array.from(
