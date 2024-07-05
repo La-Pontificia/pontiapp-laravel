@@ -60,7 +60,7 @@
                 <h1>Edas</h1>
                 @foreach ($years as $year)
                     <a {{ request()->is('edas/' . $user->id . '/eda/' . $year->id . '*') ? 'data-state=open' : '' }}
-                        href="{{ route('edas.user.eda', ['id_user' => $user->id, 'year' => $year->id]) }}"
+                        href="{{ route('edas.user', ['id_user' => $user->id, 'year' => $year->id]) }}"
                         class="p-1.5 px-5 border-neutral-300 data-[state=open]:border-2 data-[state=open]:border-blue-600 text-black data-[state=open]:bg-blue-100 hover:bg-blue-50 border data-[state=open]:font-medium rounded-full relative">
                         {{ $year->name }}
 
