@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Email;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -29,12 +30,24 @@ class LoginController extends Controller
 
     public function handleAzureCallback()
     {
-        $user = Socialite::driver('azure')->user();
-        $found = User::where('email', $user->email)->first();
+        $azureUser = Socialite::driver('azure')->user();
+        $email = Email::where('email', $azureUser->email)->first();
 
-        if (!$found) return redirect('/login')->with('error', 'La cuenta no esta asociada a un usuario. Comunicate con un administrador.');
-        if (!$found->status) return redirect('/login')->with('error', 'Tu cuenta no se encuentra habilitado, Comunicate con un administrador.');
-        Auth::login($found);
+        if (!$email) {
+            return redirect('/login')->with('error', 'La cuenta no está asociada a un usuario. Comunícate con un administrador.');
+        }
+
+        $user = $email->user;
+
+        if (!$user) {
+            return redirect('/login')->with('error', 'No se encontró un usuario asociado a este email. Comunícate con un administrador.');
+        }
+
+        if (!$user->status) {
+            return redirect('/login')->with('error', 'Tu cuenta no se encuentra habilitada. Comunícate con un administrador.');
+        }
+
+        Auth::login($user);
         return redirect('/');
     }
 
