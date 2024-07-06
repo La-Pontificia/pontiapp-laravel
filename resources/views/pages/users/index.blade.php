@@ -94,21 +94,15 @@
                                             </div>
                                         </td>
                                         <td class="relative">
-                                            <a href="mailto:{{ $user->email }}"
-                                                title="Enviar correo a {{ $user->email }}"
-                                                class="bg-white flex items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 w-fit">
-                                                <img src="/elp.webp" class="w-8" />
-                                                {{ $user->email }}
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    class="opacity-0 group-hover:opacity-100 text-blue-700" width="15"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="lucide lucide-square-arrow-out-up-right group-hover:opacity-100">
-                                                    <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
-                                                    <path d="m21 3-9 9" />
-                                                    <path d="M15 3h6v6" />
-                                                </svg>
-                                            </a>
+                                            <div class="flex items-center gap-2">
+                                                @forelse ($user->emails as $email)
+                                                    <a href="mailto:{{ $email->email }}"
+                                                        title="Enviar correo a {{ $email->email }}"
+                                                        class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-2 w-fit">
+                                                        {{ $email->email }}
+                                                    </a>
+                                                @endforeach
+                                            </div>
                                         </td>
                                         <td>
                                             <p class="opacity-70">
