@@ -23,7 +23,6 @@ class User extends Authenticatable
         'dni',
         'first_name',
         'last_name',
-        'email',
         'password',
         'role',
         'privileges',
@@ -57,7 +56,6 @@ class User extends Authenticatable
         'id_role' => ['required', 'string', 'max:36'],
         'role' => 'required',
         'id_branch' => ['required', 'string', 'max:36'],
-        'email' => 'required|email',
     ];
 
     public function hasPrivilege($key)
@@ -94,5 +92,16 @@ class User extends Authenticatable
     public function updatedBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'updated_by');
+    }
+
+    public function emails()
+    {
+        return $this->hasMany('App\Models\Email', 'id_user', 'id');
+    }
+
+
+    public function email()
+    {
+        return $this->emails()->first()->email;
     }
 }
