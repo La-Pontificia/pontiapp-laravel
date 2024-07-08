@@ -29,14 +29,6 @@
                                 @foreach ($users as $user)
                                     <tr
                                         class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
-                                        {{-- <td>
-                                            @include('commons.avatar', [
-                                                'src' => $user->profile,
-                                                'className' => 'w-12',
-                                                'alt' => $user->first_name . ' ' . $user->last_name,
-                                                'altClass' => 'text-lg',
-                                            ])
-                                        </td> --}}
                                         <td>
                                             <div class="flex items-center gap-4">
                                                 <a class="absolute inset-0" href="/profile/{{ $user->id }}">
@@ -95,10 +87,12 @@
                                         </td>
                                         <td class="relative">
                                             <div class="flex items-center gap-2">
-                                                @forelse ($user->emails as $email)
+                                                @forelse ($user->emails->filter(function ($email) {
+                                                                return $email->discharged === null;
+                                                            }) as $email)
                                                     <a href="mailto:{{ $email->email }}"
                                                         title="Enviar correo a {{ $email->email }}"
-                                                        class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-2 w-fit">
+                                                        class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">
                                                         {{ $email->email }}
                                                     </a>
                                                 @endforeach
