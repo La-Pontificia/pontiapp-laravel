@@ -69,4 +69,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // years routes
     Route::post('years', 'App\Http\Controllers\YearController@store');
     Route::post('years/{id}', 'App\Http\Controllers\YearController@update');
+
+    // Emails routes
+    Route::post('emails/assign', 'App\Http\Controllers\Api\EmailController@assign');
+    Route::post('emails/discharge/{id}', 'App\Http\Controllers\Api\EmailController@discharge');
 });
