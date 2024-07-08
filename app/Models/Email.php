@@ -14,11 +14,11 @@ class Email extends Model
 
     protected $fillable = [
         'id',
-        'id_uer',
+        'id_user',
         'assigned_by',
         'reason',
         'email',
-        'discharged_at',
+        'discharged',
         'discharged_by',
         'created_at',
         'updated_at',
