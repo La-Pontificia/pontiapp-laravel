@@ -19,6 +19,7 @@ class User extends Authenticatable
     protected $perPage = 20;
 
     protected $fillable = [
+        'id',
         'profile',
         'dni',
         'first_name',
