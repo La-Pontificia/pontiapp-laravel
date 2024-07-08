@@ -53,6 +53,9 @@
 
     $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
     $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
+
+    $has_assign_email = $current_user->hasPrivilege('assign_email');
+
 @endphp
 
 @if ($user)
@@ -107,7 +110,8 @@
                             <option
                                 {{ $user && $user->role_position->job_position->id === $item->id ? 'selected' : '' }}
                                 value="{{ $item->id }}">
-                                {{ $item->name }}</option>
+                                Puesto: {{ $item->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -116,7 +120,8 @@
                         @foreach ($roles as $role)
                             <option {{ $user && $user->role_position->id === $role->id ? 'selected' : '' }}
                                 value="{{ $role->id }}">
-                                {{ $role->name }}</option>
+                                Cargo: {{ $role->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -126,121 +131,20 @@
                     @foreach ($branches as $branch)
                         <option {{ $user && $user->id_branch === $branch->id ? 'selected' : '' }}
                             value="{{ $branch->id }}">
-                            {{ $branch->name }}</option>
+                            Sede: {{ $branch->name }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
     </div>
-
-    {{-- Emails --}}
-    <h2 class="tracking-tight pt-5 text-xl font-semibold">
-        Emails
-    </h2>
-
-    <div class="rounded-2xl space-y-4 max-w-[500px] border bg-white shadow-md">
-        <table class="w-full">
-            <thead class="text-left">
-                <tr>
-                    <th class="w-full"></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="email-table" class="divide-y">
-                <tr class="[&>td]:p-3 group">
-                    <td>
-                        <a href="mailto:help@daustinn.com" class="hover:underline flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="15" class="group-hover:text-blue-600"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-                                <rect width="20" height="16" x="2" y="4" rx="2" />
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                            </svg> help@daustinn.com</a>
-                    </td>
-                    <td>
-                        <p class="text-sm">
-                            Activo
-                        </p>
-                    </td>
-                    <td>
-                        <button type="button" data-dropdown-toggle="dropdown-email-2"
-                            class="group-hover:opacity-100 opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="lucide lucide-ellipsis">
-                                <circle cx="12" cy="12" r="1" />
-                                <circle cx="19" cy="12" r="1" />
-                                <circle cx="5" cy="12" r="1" />
-                            </svg>
-                        </button>
-                        <div id="dropdown-email-2"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-80">
-                            <p class="text-sm text-neutral-500 p-2">
-                                Este correo se asignó Asignado el 10 de octubre de 2021 por <a href=""
-                                    class="text-blue-500 hover:underline">David Bendezu</a> porque el usuario no tiene
-                                un
-                                correo institucional.
-                            </p>
-                            <button type="button" class="p-2 hover:bg-neutral-100 text-left rounded-md w-full">
-                                Dar de baja
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="[&>td]:p-3 group">
-                    <td>
-                        <a href="mailto:help@daustinn.com" class="hover:underline flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="15" class="group-hover:text-blue-600"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail">
-                                <rect width="20" height="16" x="2" y="4" rx="2" />
-                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                            </svg> help@daustinn.com</a>
-                        {{-- <p class="text-sm text-neutral-500">
-                            Este correo se asignó Asignado el 10 de octubre de 2021 por que el usuario no tiene un
-                            correo institucional.
-                        </p> --}}
-                    </td>
-                    <td>
-                        <p class="text-sm">
-                            Activo
-                        </p>
-                    </td>
-                    <td>
-                        <button type="button" data-dropdown-toggle="dropdown-email-3"
-                            class="group-hover:opacity-100 opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis">
-                                <circle cx="12" cy="12" r="1" />
-                                <circle cx="19" cy="12" r="1" />
-                                <circle cx="5" cy="12" r="1" />
-                            </svg>
-                        </button>
-                        <div id="dropdown-email-3"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-44">
-                            <button type="button" class="p-2 hover:bg-neutral-100 text-left rounded-md w-full">
-                                Dar de baja
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    {{-- Roles and Permissions --}}
-    <h2 class="tracking-tight pt-5 text-xl font-semibold">
-        Permisos y Roles
-    </h2>
-    {{-- <label class="flex flex-col font-normal text-sm relative">
-        <span class="block pb-1">Correo Institucional</span>
-        <div class="relative">
-            <input required value="{{ $user ? $username : '' }}" name="username" type="text">
-            <div class="absolute inset-y-0 right-0 pr-2">
-                <select data-notstyles required name="domain" type="text"
-                    class="bg-transparent text-center border-0 h-full w-[150px] px-6">
+    @if (!$user)
+        <h2 class="tracking-tight pt-5 text-xl font-semibold">
+            Email
+        </h2>
+        <div class="max-w-[500px]">
+            <div class="flex items-center gap-1">
+                <input type="text" name="username" placeholder="Email" class="w-full">
+                <select style="width: 170px" required name="domain">
                     @foreach ($domains as $domain)
                         <option {{ $user && $domain === 'elp.edu.pe' ? 'selected' : '' }} value="{{ $domain }}">
                             {{ '@' . $domain }}</option>
@@ -248,30 +152,104 @@
                 </select>
             </div>
         </div>
-    </label> --}}
+    @endif
 
-    {{-- <div class="border-t">
-        <h1 class="font-semibold text-lg py-2">Jefe Inmediato (Supervisor)</h1>
-        <div class="gap-5">
-            <label class="flex col-span-12 flex-col font-normal text-sm relative">
-                <input autocomplete="off"
-                    value="{{ $user && $user->id_supervisor ? $user->supervisor->first_name . ' ' . $user->supervisor->last_name : '' }}"
-                    id="search-supervisor" type="search"
-                    data-id="{{ $user && $user->supervisor ? $user->id_supervisor : '' }}" placeholder="Buscar colaborador"
-                    >
-    
-                @if ($user && $user->supervisor)
-                    <p class="py-1">
-                        <span class=" text-[#0b67bb]">Actualmente supervisado por: </span>
-                        {{ $user->supervisor->first_name . ' ' . $user->supervisor->last_name }}
-                    </p>
-                @endif
-                <div id="list-users" class="py-2">
-    
-                </div>
-            </label>
+    {{-- Emails --}}
+    @if ($user)
+        <h2 class="tracking-tight pt-5 text-xl font-semibold">
+            Emails
+        </h2>
+
+        <div class="rounded-2xl space-y-4 max-w-[500px] border bg-white shadow-sm">
+            <table class="w-full">
+                <thead class="text-left">
+                    <tr>
+                        <th class="w-full"></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="email-table" class="divide-y">
+                    @foreach ($user->emails as $email)
+                        <tr data-id="{{ $email->id }}"
+                            class="[&>td]:p-3 {{ $email->discharged ? 'text-red-500 line-through' : '' }} group">
+                            <td>
+                                <a href="mailto:{{ $email->email }}" class="hover:underline flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15"
+                                        class="group-hover:text-blue-600" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-mail">
+                                        <rect width="20" height="16" x="2" y="4" rx="2" />
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                    </svg>
+                                    {{ $email->email }}</a>
+                            </td>
+                            <td>
+                                <p class="text-nowrap">
+                                    @if ($email->discharged)
+                                        Dada de baja el
+                                        {{ \Carbon\Carbon::parse($email->discharged)->translatedFormat('d \d\e F') }}
+                                    @else
+                                        Desde {{ $email->created_at->translatedFormat('d \d\e F') }}
+                                    @endif
+                                </p>
+                            </td>
+                            <td>
+                                <button type="button" data-dropdown-toggle="dropdown-email-{{ $email->id }}"
+                                    class="group-hover:opacity-100 opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis">
+                                        <circle cx="12" cy="12" r="1" />
+                                        <circle cx="19" cy="12" r="1" />
+                                        <circle cx="5" cy="12" r="1" />
+                                    </svg>
+                                </button>
+                                <div id="dropdown-email-{{ $email->id }}"
+                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-80">
+                                    <p class="text-sm text-neutral-500 p-2">
+                                        Este correo se asignó el
+                                        {{ $email->created_at->translatedFormat('d \d\e F') }}
+                                        por <a href="/profile/{{ $email->assignedBy->id }}"
+                                            class="text-blue-500 hover:underline">{{ $email->assignedBy->first_name . ' ' . $email->assignedBy->last_name }}</a>
+                                        <br>
+                                        <br>
+                                        <b>Motivo:</b> {{ $email->reason }}.
+                                    </p>
+                                    @if ($email->discharged)
+                                        <p class="text-sm text-neutral-500 p-2">
+                                            Este correo se dio de baja el
+                                            {{ \Carbon\Carbon::parse($email->discharged)->translatedFormat('d \d\e F') }}
+                                            por <a href="/profile/{{ $email->dischargedBy->id }}"
+                                                class="text-blue-500 hover:underline">{{ $email->dischargedBy->first_name . ' ' . $email->dischargedBy->last_name }}</a>.
+                                        </p>
+                                    @else
+                                        <button type="button" data-id="{{ $email->id }}"
+                                            class="p-2 discharge-email hover:bg-neutral-100 text-red-600 text-left rounded-md w-full">
+                                            Dar de baja
+                                        </button>
+                                    @endif
+
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-    </div> --}}
+        @if ($has_assign_email)
+            <button type="button" data-modal-target="assign-email-modal" data-modal-toggle="assign-email-modal"
+                class="bg-white hover:shadow-md transition-all shadow-sm px-4 text-black border font-semibold p-2 rounded-xl">
+                Asignar correo
+            </button>
+        @endif
+    @endif
+
+
+    {{-- Roles and Permissions --}}
+    <h2 class="tracking-tight pt-5 text-xl font-semibold">
+        Permisos y Roles
+    </h2>
 
     <div class="rounded-2xl mb-2 max-w-[700px]">
         <select name="role" required type="text" style="width: fit-content"
@@ -304,8 +282,7 @@
                                 <label class="flex items-center col-span-4">
                                     <input value="{{ $key }}"
                                         {{ $user && $user->hasPrivilege($key) ? 'checked' : '' }} type="checkbox"
-                                        name="privileges[]"
-                                        class="w-6 h-6 rounded-lg text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2">
+                                        name="privileges[]" class="w-5 h-5 rounded-md">
                                     <span class="ms-2 text-black text-nowrap">{{ $value }}</span>
                                 </label>
                             @endforeach
