@@ -29,6 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputProfile = $("#input-profile");
     const previewProfile = $("#preview-profile");
 
+    const dischargeEmailButtons = document.querySelectorAll(".discharge-email");
+
     // SET PROFILE
     inputProfile?.addEventListener("change", (e) => {
         const file = e.target.files[0];
@@ -97,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
             roles.forEach((role) => {
                 const option = document.createElement("option");
                 option.value = role.id;
-                option.textContent = role.name;
+                option.textContent = `Cargo: ${role.name}`;
                 RoleSelect.appendChild(option);
             });
         } catch (error) {
@@ -105,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // GET CARGOS
+    // SEARCH USER BY SUNAT
     InputDni?.addEventListener("input", async (e) => {
         const dni = e.target.value;
         if (!regexDni.test(dni)) return;
@@ -131,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // CREATE USER
+    // CREATE/UPDATE USER
     UserForm?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const form = new FormData(e.target);
@@ -149,24 +151,22 @@ document.addEventListener("DOMContentLoaded", function () {
         form.set("privileges", JSON.stringify(privileges));
 
         // get data-id from search-supervisor
-        const supervisorId = searchSupervisor.getAttribute("data-id");
+        const supervisorId = searchSupervisor?.getAttribute("data-id");
         if (supervisorId) form.set("supervisor", supervisorId);
 
         // validate dni
         if (!regexDni.test(dni)) {
-            return Swal.fire({
+            return window.toast.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "El DNI debe tener 8 caracteres",
+                title: "El DNI debe tener 8 caracteres",
             });
         }
 
         // validate username
-        if (!regexEmail.test(email)) {
-            return Swal.fire({
+        if (!regexEmail.test(email) && !form.get("id")) {
+            return window.toast.fire({
                 icon: "error",
-                title: "Oops...",
-                text: "El correo electrónico no es válido",
+                title: "El correo electrónico no es válido",
             });
         }
 
@@ -208,16 +208,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // fetch api
         try {
+            console.log(Object.fromEntries(form));
             await axios.post(fetchurl, Object.fromEntries(form));
             window.location.href = "/users";
         } catch (error) {
-            Swal.fire({
+            window.toast.fire({
                 icon: "error",
-                title: "Oops...",
-                text: error.response.data,
+                title: error.response.data ?? "Error al Actualizar el usuario",
             });
         } finally {
             ButtonSubmit.disabled = false;
         }
+    });
+
+    // DISCHARGE EMAIL
+    dischargeEmailButtons?.forEach((button) => {
+        button.addEventListener("click", async (e) => {
+            const id = e.target.getAttribute("data-id");
+
+            Swal.fire({
+                title: "¿Estás seguro dar de baja a este correo?",
+                text: "No podrás deshacer esta acción.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, confirmar",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        await axios.post(`/api/emails/discharge/${id}`);
+                        location.reload();
+                    } catch (error) {
+                        window.toast.fire({
+                            icon: "error",
+                            title:
+                                error.response.data ??
+                                "Error al enviar el formulario",
+                        });
+                    }
+                }
+            });
+        });
     });
 });
