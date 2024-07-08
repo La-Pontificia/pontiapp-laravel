@@ -19,6 +19,10 @@ class LoginController extends Controller
             return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
         }
 
+        if ($find->discharged) {
+            return redirect('/login')->with('error', 'La cuenta ha sido dada de baja. Prueba con otro correo o Comunícate con un administrador.');
+        }
+
         $user = $find->user;
 
         if (!$user->status) {
