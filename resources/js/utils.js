@@ -1,11 +1,3 @@
-window.Toast = Swal.mixin({
-    toast: true,
-    position: "bottom-left",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-});
-
 document.addEventListener("DOMContentLoaded", function () {
     $ = document.querySelector.bind(document);
 
@@ -73,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.reload();
             } catch (error) {
                 console.log(error);
-                Toast.fire({
+                window.toast.fire({
                     icon: "error",
                     title:
                         error.response.data ?? "Error al enviar el formulario",
