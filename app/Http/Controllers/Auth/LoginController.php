@@ -31,13 +31,17 @@ class LoginController extends Controller
     public function handleAzureCallback()
     {
         $azureUser = Socialite::driver('azure')->user();
-        $email = Email::where('email', $azureUser->email)->first();
+        $find = Email::where('email', $azureUser->getEmail())->first();
 
-        if (!$email) {
+        if (!$find) {
             return redirect('/login')->with('error', 'La cuenta no está asociada a un usuario. Comunícate con un administrador.');
         }
 
-        $user = $email->user;
+        if ($find->discharged) {
+            return redirect('/login')->with('error', 'La cuenta ha sido dada de baja. Prueba con otro correo o Comunícate con un administrador.');
+        }
+
+        $user = $find->user;
 
         if (!$user) {
             return redirect('/login')->with('error', 'No se encontró un usuario asociado a este email. Comunícate con un administrador.');
@@ -48,6 +52,7 @@ class LoginController extends Controller
         }
 
         Auth::login($user);
+
         return redirect('/');
     }
 
