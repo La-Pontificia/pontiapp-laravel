@@ -45,6 +45,14 @@ window.disabledFormChildren = (form) => {
     });
 };
 
+window.toast = Swal.mixin({
+    toast: true,
+    position: "bottom-left",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+});
+
 window.defaultProfile =
     "https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg";
 
@@ -97,12 +105,4 @@ document.addEventListener("DOMContentLoaded", function () {
             sidebarState === "open" ? "close" : "open"
         );
     });
-});
-
-window.toast = Swal.mixin({
-    toast: true,
-    position: "bottom-left",
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
 });
