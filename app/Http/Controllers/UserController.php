@@ -36,7 +36,6 @@ class UserController extends Controller
             $match->where('first_name', 'like', '%' . $query . '%')
                 ->orWhere('last_name', 'like', '%' . $query . '%')
                 ->orWhere('dni', 'like', '%' . $query . '%')
-                ->orWhere('email', 'like', '%' . $query . '%')
                 ->get();
         }
 
