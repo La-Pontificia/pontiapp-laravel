@@ -101,3 +101,123 @@ input[data-notstyles] {
 select:not([size]) {
     background-image: none;
 }
+
+/* FULL CALENDAR CUSTOM */
+
+.fc-toolbar-title {
+    font-size: 1.2rem !important;
+    font-weight: 500;
+}
+
+table.fc-scrollgrid {
+    background-color: white;
+}
+
+table,
+thead,
+tbody,
+tfoot,
+tr,
+th,
+td {
+    padding: 0;
+    border-spacing: 0 !important;
+    border-color: #eaeef0 !important;
+}
+
+th.fc-col-header-cell {
+    padding: 10px;
+    color: #718096;
+    font-weight: 500;
+}
+
+.fc-timegrid-slot-label {
+    font-weight: 500;
+    padding: 6px !important;
+}
+
+.fc-timegrid-slots table tr {
+    transition: all 0.15s ease;
+}
+
+.fc-timegrid-slot-label[data-time*=":15"],
+.fc-timegrid-slot-label[data-time*=":30"],
+.fc-timegrid-slot-label[data-time*=":45"] {
+    font-size: 16px;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+.fc-day-today {
+    background-color: #fdfcfb;
+}
+
+.fc-day-past {
+    background-color: #f3f5f7;
+}
+
+th.fc-day-today:before {
+    content: "Hoy";
+    font-size: 80%;
+    line-height: 1;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+th.fc-day-past:before {
+    content: "";
+    font-size: 80%;
+    line-height: 1;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+th.fc-day-future:before {
+    content: "\00a0";
+    font-size: 80%;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.fc-timegrid-event {
+    border-radius: 10px !important;
+    padding: 5px;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+    border-top: 1px solid #f3f5f7;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-radius: 20px !important;
+}
+
+.fc-header-toolbar {
+    padding: 5px;
+    margin-bottom: 0 !important;
+}
+
+th.fc-col-header-cell {
+    border-right: 1px solid #ffffff !important;
+}
+
+.fc .fc-timegrid-col.fc-day-today {
+    background-color: #fbf5ed;
+}
+
+.fc-button-group {
+    background-color: #ffffff;
+    border-radius: 10px !important;
+    padding: 2px;
+    & button {
+        background-color: transparent !important;
+        color: black !important;
+        border: 0 !important;
+        outline: none !important;
+        border-radius: 8px !important;
+        &.fc-button-active {
+            font-weight: 500 !important;
+            background-color: #eaeaea !important;
+        }
+    }
+}
