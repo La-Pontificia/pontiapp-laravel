@@ -35,6 +35,9 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Assists routes
     Route::get('assists', 'App\Http\Controllers\AssistController@index')->name('assists');
+    Route::get('assists/{id_user}', 'App\Http\Controllers\AssistController@user')->name('assists.user');
+    Route::get('assists/{id_user}/schedules', 'App\Http\Controllers\AssistController@user')->name('assists.user.schedules');
+    Route::get('assists/schedules', 'App\Http\Controllers\AssistController@schedules')->name('assists.schedules');
 
     // Reports routes
     Route::get('reports', 'App\Http\Controllers\ReportController@index')->name('reports');
