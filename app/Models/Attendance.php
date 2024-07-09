@@ -14,7 +14,7 @@ class Attendance extends Model
 
     protected $table = 'assists';
 
-    protected $perPage = 40;
+    protected $perPage = 20;
 
     protected $fillable = [
         'id',
