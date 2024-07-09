@@ -77,8 +77,8 @@ class EdaController  extends Controller
     {
         $user = User::find($id_user);
         $years = Year::orderBy('name', 'desc')->get();
-        $year = Year::find($id_year);
-        $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+        $current_year = Year::find($id_year);
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $current_year->id)->first();
 
         $evaluations = [];
 
@@ -88,7 +88,7 @@ class EdaController  extends Controller
 
         return view(
             'pages.edas.user.index',
-            compact('user', 'years', 'year', 'eda', 'evaluations')
+            compact('user', 'years', 'current_year', 'eda', 'evaluations')
         );
     }
 
