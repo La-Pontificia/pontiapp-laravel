@@ -1,9 +1,9 @@
 @extends('layouts.eda-user')
 
-@section('title', 'Eda: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
+@section('title', 'Eda: ' . $current_year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
 @php
-    $hasPosibleCreate = $current_user->hasPrivilege('create_edas') && $year->status;
+    $hasPosibleCreate = $current_user->hasPrivilege('create_edas') && $current_year->status;
 @endphp
 
 @section('content-eda-user')
@@ -23,7 +23,7 @@
                 {{-- Goals page --}}
                 <div class="space-y-2">
                     <button class="text-lg font-semibold tracking-tight">Objetivos</button>
-                    <a href="{{ route('edas.user.goals', ['id_year' => $year->id, 'id_user' => $user->id]) }}"
+                    <a href="{{ route('edas.user.goals', ['id_year' => $current_year->id, 'id_user' => $user->id]) }}"
                         class="p-2 gap-2 w-fit items-center shadow-lg shadow-blue-500/30 rounded-2xl bg-white flex bg-gradient-to-br from-blue-700 to-indigo-700 text-white">
                         <div class="p-4 rounded-xl bg-white text-blue-700">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
