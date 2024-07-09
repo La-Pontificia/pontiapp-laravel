@@ -5,9 +5,9 @@
 @section('content')
     <div class="text-black h-full w-full flex-grow flex flex-col overflow-y-auto">
         @include('components.users.nav')
-        <div class="overflow-y-auto">
+        <div class="overflow-y-auto flex-grow">
             @if ($current_user->hasPrivilege('view_users'))
-                <div class="overflow-auto p-2 pt-0">
+                <div class="overflow-auto h-full p-2 pt-0">
                     <table class="w-full text-left" id="table-users">
                         <thead class="border-b">
                             <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">
@@ -61,24 +61,24 @@
                                                         </svg>
                                                     </button>
                                                     <div id="dropdown-user-{{ $user->id }}"
-                                                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl shadow w-44">
-                                                        <ul class="py-1 text-sm text-black"
-                                                            aria-labelledby="dropdownDividerButton">
-                                                            @if ($current_user->hasPrivilege('edit_users'))
-                                                                <li>
-                                                                    <a href="{{ route('users.edit', $user->id) }}"
-                                                                        class="block px-2 py-2 hover:bg-gray-100">Editar</a>
-                                                                </li>
-                                                            @endif
-                                                            <li>
-                                                                <a href="#"
-                                                                    class="block px-2 py-2 hover:bg-gray-100">Asistencias</a>
-                                                            </li>
+                                                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
+                                                        <a href="#"
+                                                            class="p-2 hover:bg-neutral-100 w-full block rounded-md">Ver
+                                                            perfil</a>
+                                                        @if ($current_user->hasPrivilege('edit_users'))
+                                                            <a href="{{ route('users.edit', $user->id) }}"
+                                                                class="p-2 hover:bg-neutral-100 w-full block rounded-md">Editar</a>
+                                                        @endif
+                                                        <a href="#"
+                                                            class="p-2 hover:bg-neutral-100 w-full block rounded-md">Reiniciar
+                                                            contraseña</a>
+                                                        <a href="#"
+                                                            class="p-2 hover:bg-neutral-100 w-full block rounded-md">Horario
+                                                            de trabajo</a>
 
-                                                        </ul>
                                                         @if ($user->role !== 'dev')
                                                             <a href="#"
-                                                                class="block px-2 py-2 text-sm text-red-500 hover:bg-gray-10">Desactivar</a>
+                                                                class="p-2 hover:bg-neutral-100 w-full block rounded-md text-red-500 hover:bg-gray-10">Desactivar</a>
                                                         @endif
 
                                                     </div>
@@ -88,8 +88,8 @@
                                         <td class="relative">
                                             <div class="flex items-center gap-2">
                                                 @forelse ($user->emails->filter(function ($email) {
-                                                                return $email->discharged === null;
-                                                            }) as $email)
+                                                                                                                                                                    return $email->discharged === null;
+                                                                                                                                                                }) as $email)
                                                     <a href="mailto:{{ $email->email }}"
                                                         title="Enviar correo a {{ $email->email }}"
                                                         class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">
