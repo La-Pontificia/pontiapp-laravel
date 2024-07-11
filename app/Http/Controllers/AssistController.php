@@ -20,9 +20,10 @@ class AssistController extends Controller
 
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
-        $assists = Attendance::where('emp_code', $user->dni)->orderBy('punch_time', 'desc')->paginate();
+        $assists = [];
+        // Attendance::where('emp_code', $user->dni)->orderBy('punch_time', 'desc')->paginate();
 
-        return view('pages.assists.user.schedules', compact('user', 'assists'))
-            ->with('i', (request()->input('page', 1) - 1) * $assists->perPage());
+        return view('pages.assists.user.schedules', compact('user', 'assists'));
+        // ->with('i', (request()->input('page', 1) - 1) * $assists->perPage());
     }
 }
