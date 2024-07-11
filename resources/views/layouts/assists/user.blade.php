@@ -20,7 +20,7 @@
 
 @section('content')
     <div class="flex flex-col h-full overflow-y-auto">
-        @include('components.users.card', ['user' => $user])
+        {{-- @include('components.users.card', ['user' => $user]) --}}
         <div class="flex gap-2 pb-2 mt-3">
             @foreach ($items as $item)
                 <a {{ $item['active'] ? 'data-open' : '' }} href="{{ $item['link'] }}"

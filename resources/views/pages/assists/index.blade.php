@@ -46,7 +46,7 @@
                                         </p>
                                     </div>
                                     <a href="{{ route('assists.user', ['id_user' => $user->id]) }}"
-                                        class="group-hover:opacity-100 opacity-0 gap-2 flex items-center border p-1.5 rounded-xl hover:border-stone-400 px-2"
+                                        class="group-hover:opacity-100 text-nowrap opacity-0 gap-2 flex items-center border p-1.5 rounded-xl hover:border-stone-400 px-2"
                                         title="Ver asistencias y horarios de {{ $user->last_name }}, {{ $user->first_name }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="15" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -59,9 +59,9 @@
                                     </a>
                                 </div>
                             @else
-                                <div class="font-semibold text-sm opacity-60">
+                                <p class="font-semibold text-nowrap text-sm opacity-60">
                                     {{ $assist->first_name }}, {{ $assist->last_name }} | {{ $assist->emp_code }}
-                                </div>
+                                </p>
                             @endif
                         </td>
                         <td>

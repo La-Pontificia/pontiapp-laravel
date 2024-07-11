@@ -97,7 +97,11 @@ input[data-notstyles] {
     &:focus {
         outline: none !important;
     }
+    &:focus-visible {
+        outline: none !important;
+    }
 }
+
 select:not([size]) {
     background-image: none;
 }
@@ -126,13 +130,13 @@ td {
 }
 
 th.fc-col-header-cell {
-    padding: 10px;
-    color: #718096;
+    padding: 5px;
+    color: #131415;
     font-weight: 500;
 }
 
 .fc-timegrid-slot-label {
-    font-weight: 500;
+    font-weight: 400;
     padding: 6px !important;
 }
 
@@ -153,30 +157,7 @@ th.fc-col-header-cell {
 }
 
 .fc-day-past {
-    background-color: #f3f5f7;
-}
-
-th.fc-day-today:before {
-    content: "Hoy";
-    font-size: 80%;
-    line-height: 1;
-    text-transform: uppercase;
-    opacity: 0.6;
-}
-
-th.fc-day-past:before {
-    content: "";
-    font-size: 80%;
-    line-height: 1;
-    text-transform: uppercase;
-    opacity: 0.6;
-}
-
-th.fc-day-future:before {
-    content: "\00a0";
-    font-size: 80%;
-    line-height: 1;
-    text-transform: uppercase;
+    background-color: #fdfcfb;
 }
 
 .fc-timegrid-event {
@@ -189,7 +170,7 @@ th.fc-day-future:before {
     border-bottom: none !important;
     border-left: none !important;
     border-right: none !important;
-    border-radius: 20px !important;
+    border-radius: 14px !important;
 }
 
 .fc-header-toolbar {
@@ -206,18 +187,22 @@ th.fc-col-header-cell {
 }
 
 .fc-button-group {
-    background-color: #ffffff;
-    border-radius: 10px !important;
-    padding: 2px;
     & button {
-        background-color: transparent !important;
-        color: black !important;
         border: 0 !important;
         outline: none !important;
-        border-radius: 8px !important;
-        &.fc-button-active {
-            font-weight: 500 !important;
-            background-color: #eaeaea !important;
+        &:first-child {
+            border-radius: 9px 0 0 9px !important;
+        }
+        &:last-child {
+            border-radius: 0 9px 9px 0 !important;
+        }
+        & .fc-icon {
+            font-size: 1.1rem !important;
         }
     }
+}
+
+.fc-button-primary {
+    border-radius: 9px !important;
+    padding: 6px 10px !important;
 }

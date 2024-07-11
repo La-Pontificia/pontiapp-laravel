@@ -72,7 +72,7 @@
                                                         <a href="#"
                                                             class="p-2 hover:bg-neutral-100 w-full block rounded-md">Reiniciar
                                                             contraseña</a>
-                                                        <a href="#"
+                                                        <a href="{{ route('assists.user', ['id_user' => $user->id]) }}"
                                                             class="p-2 hover:bg-neutral-100 w-full block rounded-md">Horario
                                                             de trabajo</a>
 
@@ -88,8 +88,8 @@
                                         <td class="relative">
                                             <div class="flex items-center gap-2">
                                                 @forelse ($user->emails->filter(function ($email) {
-                                                                                                                                                                    return $email->discharged === null;
-                                                                                                                                                                }) as $email)
+                                                                                                                                                                        return $email->discharged === null;
+                                                                                                                                                                    }) as $email)
                                                     <a href="mailto:{{ $email->email }}"
                                                         title="Enviar correo a {{ $email->email }}"
                                                         class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">

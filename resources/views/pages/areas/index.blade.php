@@ -115,16 +115,16 @@
                                 <td>
                                     <div class="flex items-center gap-3">
                                         <div class="w-8 rounded-xl overflow-hidden aspect-square">
-                                            <img src={{ $area->createdBy->profile }} class="w-full h-full object-cover"
-                                                alt="">
+                                            {{-- <img src={{ $area->createdBy->profile }} class="w-full h-full object-cover"
+                                                alt=""> --}}
                                         </div>
                                         <div>
-                                            <a href="/profile/{{ $area->createdBy->id }}"
+                                            {{-- <a href="/profile/{{ $area->createdBy->id }}"
                                                 title="Ver perfil de {{ $area->createdBy->last_name }}, {{ $area->createdBy->first_name }}"
                                                 class="hover:underline hover:text-indigo-600 text-sm text-nowrap">
                                                 {{ $area->createdBy->last_name }},
                                                 {{ $area->createdBy->first_name }}
-                                            </a>
+                                            </a> --}}
                                             <p class="text-sm">
                                                 {{ \Carbon\Carbon::parse($area->created_at)->isoFormat('LL') }}
                                             </p>

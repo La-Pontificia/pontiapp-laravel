@@ -30,23 +30,7 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="flex p-3 items-center gap-3">
-                        @include('commons.avatar', [
-                            'src' => $current_user->profile,
-                            'className' => 'w-12',
-                            'alt' => $current_user->first_name . ' ' . $current_user->last_name,
-                            'altClass' => 'text-lg',
-                        ])
-                        <div>
-                            <p class="text-sm">
-                                {{ $current_user->last_name }},
-                                {{ $current_user->first_name }}
-                            </p>
-                            <p class="text-xs text-neutral-500">
-                                Seguimiento y control con auditoria.
-                            </p>
-                        </div>
-                    </div>
+                    @include('components.users.auditory-card')
                     <form method="POST" action="/api/emails/assign" role="form" id="assign-email-form"
                         class="dinamic-form" enctype="multipart/form-data">
                         <div class="p-3 grid gap-3">
