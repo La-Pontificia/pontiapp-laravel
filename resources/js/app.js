@@ -1,4 +1,5 @@
-import "./bootstrap";
+import "./bootstrap.js";
+import "./user_roles.js";
 
 window.onPaste = (e) => {
     e.preventDefault();
