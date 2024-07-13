@@ -6,7 +6,9 @@ use App\Models\Role;
 use App\Models\JobPosition;
 use App\Models\Branch;
 use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -44,16 +46,31 @@ class UserController extends Controller
 
         $users = $match->paginate();
 
-        return view('pages.users.index', compact('users', 'job_positions', 'roles'))
+        return view('modules.users.+page', compact('users', 'job_positions', 'roles'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
+    // ROLES
+
+    public function roles()
+    {
+        return view('modules.users.roles.+page');
+    }
+
+    public function createRole()
+    {
+        return view('modules.users.roles.create.+page');
+    }
+
+
     public function create()
     {
+
         $job_positions = JobPosition::all();
         $roles = Role::all();
+        $user_roles = UserRole::all();
         $branches = Branch::all();
-        return view('pages.users.create', compact('job_positions', 'roles', 'branches'));
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles'));
     }
 
     public function edit($id)
@@ -65,5 +82,16 @@ class UserController extends Controller
         $user = User::find($id);
 
         return view('pages.users.edit', compact('job_positions', 'roles', 'branches', 'user'));
+    }
+
+    // slugs
+    public function slug($id)
+    {
+        $user = User::find($id);
+        $job_positions = JobPosition::all();
+        $roles = Role::all();
+        $user_roles = UserRole::all();
+        $branches = Branch::all();
+        return view('modules.users.slug.+page', compact('user', 'job_positions', 'roles', 'user_roles', 'branches'));
     }
 }
