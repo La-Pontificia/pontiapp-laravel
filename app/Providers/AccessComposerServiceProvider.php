@@ -15,10 +15,178 @@ class AccessComposerServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+
+
         View::composer('*', function ($view) {
+            $system_privileges = [
+                [
+                    'name' => 'Gestión de Usuarios',
+                    'items' => [
+                        [
+                            'name' => 'Usuarios',
+                            'privileges' => [
+                                'users:view' => 'Ver usuarios',
+                                'users:create' => 'Agregar usuarios',
+                                'users:asing_email' => 'Asignar correos',
+                                'users:discharge' => 'Dar de baja correos',
+                                'users:edit' => 'Actualizar usuarios',
+                                'users:disable' => 'Deshabilitar usuarios',
+                                'users:enable' => 'Habilitar usuarios',
+                            ],
+                        ],
+                        [
+                            'name' => 'Roles',
+                            'privileges' => [
+                                'users:roles:view' => 'Ver roles',
+                                'users:roles:create' => 'Agregar roles',
+                                'users:roles:edit' => 'Actualizar roles',
+                                'users:roles:delete' => 'Eliminar roles',
+                            ],
+                        ],
+                        [
+                            'name' => 'Sesiones',
+                            'privileges' => [
+                                'users:sessions:view' => 'Ver sesiones',
+                                'users:sessions:delete' => 'Eliminar sesiones',
+                            ],
+                        ],
+                        [
+                            'name' => 'Reportes',
+                            'privileges' => [
+                                'users:reports:view' => 'Ver reportes',
+                                'users:reports:generate' => 'Generar reportes',
+                            ],
+                        ],
+                        [
+                            'name' => 'Importar',
+                            'privileges' => [
+                                'users:import' => 'Importar usuarios',
+                            ],
+                        ],
+                        [
+                            'name' => 'Exportar',
+                            'privileges' => [
+                                'users:export' => 'Exportar usuarios',
+                            ],
+                        ],
+
+                    ],
+                ],
+                [
+                    'name' => 'Gestion de Edas',
+                    'items' => [
+                        [
+                            'name' => 'Edas',
+                            'privileges' => [
+                                'edas:create_all' => 'Registrar todas las edas',
+                                'edas:create' => 'Registrar edas que supervisa',
+                                'edas:delete' => 'Resetear edas',
+                                'edas:close_all' => 'Cerrar todas las edas',
+                                'edas:close' => 'Cerrar las edas que supervisa',
+                            ],
+                        ],
+                        [
+                            'name' => 'Colaboradores',
+                            'privileges' => [
+                                'edas:collaborators:view_all' => 'Ver todos colaboradores',
+                                'edas:collaborators:view' => 'Ver los colaboradores que supervisa',
+                                'edas:collaborators:create' => 'Crear colaboradores',
+                                'edas:collaborators:assign_supervisors' => 'Asignar supervisores',
+                            ],
+                        ],
+                        [
+                            'name' => 'Objetivos',
+                            'privileges' => [
+                                'edas:goals:view' => 'Ver objetivos',
+                                'edas:goals:send' => 'Enviar objetivos',
+                                'edas:goals:edit' => 'Editar objetivos',
+                                'edas:goals:delete' => 'Eliminar objetivos',
+
+                                'edas:goals:self-qualify' => 'Autocalificar objetivos',
+                                'edas:goals:qualify' => 'Calificar objetivos',
+                                'edas:goals:approve' => 'Aprobar objetivos',
+                            ],
+                        ],
+                        [
+                            'name' => 'Evaluaciones',
+                            'privileges' => [
+                                'edas:evaluations:view' => 'Ver evaluaciones',
+                                'edas:evaluations:close' => 'Cerrar evaluaciones',
+                            ],
+                        ],
+                        [
+                            'name' => 'Cuestionarios',
+                            'privileges' => [
+                                'edas:questionnaires:respond' => 'Responder cuestionarios',
+                                'edas:questionnaires:view' => 'Ver cuestionarios',
+                                'edas:questionnaires:generate_report' => 'Generar reportes de cuestionarios',
+                            ],
+                        ],
+                        [
+                            'name' => 'Reportes',
+                            'privileges' => [
+                                'edas:reports:view' => 'Ver reportes',
+                                'edas:reports:generate' => 'Generar reportes',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Mantenimiento',
+                    'items' => [
+                        [
+                            'name' => 'Areas',
+                            'privileges' => [
+                                'maintenance:areas:view' => 'Ver areas',
+                                'maintenance:areas:create' => 'Agregar areas',
+                                'maintenance:areas:edit' => 'Actualizar areas',
+                                'maintenance:areas:delete' => 'Eliminar areas',
+                            ],
+                        ],
+                        [
+                            'name' => 'Departamentos',
+                            'privileges' => [
+                                'maintenance:department:view' => 'Ver departamentos',
+                                'maintenance:department:create' => 'Agregar departamentos',
+                                'maintenance:department:edit' => 'Actualizar departamentos',
+                                'maintenance:department:delete' => 'Eliminar departamentos',
+                            ],
+                        ],
+                        [
+                            'name' => 'Cargos',
+                            'privileges' => [
+                                'maintenance:role:view' => 'Ver cargos',
+                                'maintenance:role:create' => 'Agregar cargos',
+                                'maintenance:role:edit' => 'Actualizar cargos',
+                                'maintenance:role:delete' => 'Eliminar cargos',
+                            ],
+                        ],
+                        [
+                            'name' => 'Puestos',
+                            'privileges' => [
+                                'maintenance:job_position:view' => 'Ver puestos',
+                                'maintenance:job_position:create' => 'Agregar puestos',
+                                'maintenance:job_position:edit' => 'Actualizar puestos',
+                                'maintenance:job_position:delete' => 'Eliminar puestos',
+                            ],
+                        ],
+                        [
+                            'name' => 'Sedes',
+                            'privileges' => [
+                                'maintenance:branches:view' => 'Ver sedes',
+                                'maintenance:branches:create' => 'Agregar sedes',
+                                'maintenance:branches:edit' => 'Actualizar sedes',
+                                'maintenance:branches:delete' => 'Eliminar sedes',
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+
             $user = auth()->user();
             if ($user) {
                 $view->with('current_user', $user);
+                $view->with('system_privileges', $system_privileges);
             }
         });
     }
