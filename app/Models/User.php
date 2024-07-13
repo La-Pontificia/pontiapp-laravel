@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -25,14 +26,13 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'password',
-        'role',
+        'id_role_user',
         'privileges',
         'status',
         'id_role',
         'id_branch',
         'created_by',
         'updated_by',
-        'id_supervisor',
     ];
 
     protected $keyType = 'string';
@@ -54,26 +54,12 @@ class User extends Authenticatable
         'dni' => 'required|numeric|digits:8',
         'first_name' => 'required',
         'last_name' => 'required',
-        'id_role' => ['required', 'string', 'max:36'],
-        'role' => 'required',
-        'id_branch' => ['required', 'string', 'max:36'],
+        'id_role' => ['required', 'max:36'],
+        'id_role_user' => ['required', 'uuid'],
+        'id_branch' => ['required', 'uuid'],
     ];
 
-    public function hasPrivilege($key)
-    {
-        $userPrivileges = json_decode($this->privileges, true);
-        return in_array($key, $userPrivileges);
-    }
 
-    public function hasDevelperPrivilege()
-    {
-        return $this->role === 'dev';
-    }
-
-    public function supervisor()
-    {
-        return $this->hasOne('App\Models\User', 'id', 'id_supervisor');
-    }
 
     public function role_position()
     {
@@ -100,9 +86,18 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Email', 'id_user', 'id');
     }
 
-
     public function email()
     {
         return $this->emails()->first()->email;
+    }
+
+    public function role()
+    {
+        return $this->hasOne('App\Models\UserRole', 'id', 'id_role_user');
+    }
+
+    public function hasPrivilege($key)
+    {
+        return in_array($key, $this->role->privileges);
     }
 }
