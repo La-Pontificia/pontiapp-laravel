@@ -32,13 +32,54 @@ document.addEventListener("DOMContentLoaded", function () {
     const dischargeEmailButtons = document.querySelectorAll(".discharge-email");
 
     // SET PROFILE
-    inputProfile?.addEventListener("change", (e) => {
+    inputProfile?.addEventListener("change", async (e) => {
         const file = e.target.files[0];
+        const isUpdated = inputProfile.getAttribute("data-userid");
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
             previewProfile.src = reader.result;
         };
+
+        if (isUpdated) {
+            try {
+                const form = new FormData();
+
+                const f = new File([file], "profile.jpg", {
+                    type: "image/jpeg",
+                });
+
+                form.append("file", f);
+                form.append("upload_preset", "ztmbixcz");
+                form.append("folder", "eda");
+
+                const res = await axios.post(
+                    "https://api.cloudinary.com/v1_1/dc0t90ahb/upload",
+                    form,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+                const uri = res.data.secure_url;
+                const id = inputProfile.getAttribute("data-userid");
+
+                await axios.post(`/api/users/${id}/profile`, { profile: uri });
+
+                window.toast.fire({
+                    icon: "info",
+                    title: "Imagen de perfil actualizada",
+                });
+            } catch (error) {
+                console.error(error);
+                window.toast.fire({
+                    icon: "error",
+                    title:
+                        error.response.data ?? "Error al enviar el formulario",
+                });
+            }
+        }
     });
 
     // SEARCH SUPERVISOR
@@ -144,16 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = `${username?.trim()}@${domain?.trim()}`;
         form.set("email", email);
 
-        const privileges = Array.from(
-            UserForm.querySelectorAll('input[name="privileges[]"]:checked')
-        ).map((input) => input.value);
-
-        form.set("privileges", JSON.stringify(privileges));
-
-        // get data-id from search-supervisor
-        const supervisorId = searchSupervisor?.getAttribute("data-id");
-        if (supervisorId) form.set("supervisor", supervisorId);
-
         // validate dni
         if (!regexDni.test(dni)) {
             return window.toast.fire({
@@ -202,19 +233,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        const fetchurl = form.get("id")
-            ? `/api/users/${form.get("id")}`
-            : "/api/users";
-
-        // fetch api
         try {
-            console.log(Object.fromEntries(form));
-            await axios.post(fetchurl, Object.fromEntries(form));
-            window.location.href = "/users";
+            const { data } = await axios.post(
+                "/api/users",
+                Object.fromEntries(form)
+            );
+            window.location.href = `/users/${data.id}`;
         } catch (error) {
             window.toast.fire({
                 icon: "error",
-                title: error.response.data ?? "Error al Actualizar el usuario",
+                title: error.response.data ?? "Error al registrar el usuario",
             });
         } finally {
             ButtonSubmit.disabled = false;
