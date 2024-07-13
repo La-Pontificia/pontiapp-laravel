@@ -5,7 +5,7 @@
 <nav
     class="flex-grow text-black flex flex-col p-3 pr-2 font-semibold tracking-tight [&>a]:flex [&>a]:items-center [&>a]:gap-2 [&>a]:p-2 [&>a]:rounded-lg hover:[&>a]:text-[#1679cf] [&>a]:transition-colors [&>a>svg]:w-[15px] aria-selected:[&>a]:font-semibold aria-selected:[&>a]:text-[#115ea3] [&>a>svg]:transition-transform 
     [&>button]:flex [&>button]:items-center [&>button]:text-left [&>button]:gap-2 [&>button]:p-2 [&>button]:rounded-lg hover:[&>button]:text-[#1679cf] [&>button]:transition-colors [&>button>svg]:w-[15px] aria-selected:[&>button]:text-[#115ea3] aria-selected:[&>button]:bg-white">
-    <a class="group" href="{{ route('home') }}" {{ request()->is('/') ? 'aria-selected=true' : '' }}>
+    <a class="group" href="{{ route('modules') }}" {{ request()->is('/') ? 'aria-selected=true' : '' }}>
         {{-- <svg class="group-hover:scale-105" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
             class="lucide lucide-home">
