@@ -49,16 +49,16 @@
 |                 | - Gestión de Usuarios                    | ✅      |
 |                 | - Gestión de EDAS                        | ✅      |
 |                 | - Gestión de Asistencias                 | 🔄      |
-|                 | - Integración con SQL Server             | 🔄      |
+|                 | - Integración con SQL Server             | ✅      |
 |                 | - Gestión de Reportes                    | ✅      |
 |                 | - Gestión de Auditoría                   | 🔄      |
 |                 | - Gestión de Mantenimiento               | ✅      |
-| 11-16 de julio  | **Pruebas**                              |        |
-|                 | - Pruebas unitarias                      |        |
-|                 | - Pruebas de integración                 |        |
+| 11-16 de julio  | **Pruebas**                              |   🔄     |
+|                 | - Pruebas unitarias                      |  ✅      |
+|                 | - Pruebas de integración                 |  ✅      |
 |                 | - Pruebas de usuario                     |        |
 | 17-23 de julio  | **Despliegue**                           |        |
-|                 | - Configuración del entorno de producción|        |
+|                 | - Configuración del entorno de producción|   ✅     |
 |                 | - Migración de datos                     |        |
 |                 | - Despliegue en servidor                 |        |
 | 24-30 de julio  | **Capacitación y Documentación**         |        |
