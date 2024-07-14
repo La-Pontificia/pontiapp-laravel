@@ -16,7 +16,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     // Users routes
     Route::post('users', 'App\Http\Controllers\Api\UserController@create');
+    Route::post('users/roles', 'App\Http\Controllers\Api\UserController@createRole');
     Route::post('users/{id}', 'App\Http\Controllers\Api\UserController@edit');
+    Route::post('users/{id}/profile', 'App\Http\Controllers\Api\UserController@profile');
     Route::get('users/search', 'App\Http\Controllers\Api\UserController@search');
 
     // Cargo routes
