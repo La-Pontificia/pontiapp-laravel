@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\JobPosition;
 use App\Models\Branch;
+use App\Models\Domain;
+use App\Models\GroupSchedule;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -50,19 +51,6 @@ class UserController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
-    // ROLES
-
-    public function roles()
-    {
-        return view('modules.users.roles.+page');
-    }
-
-    public function createRole()
-    {
-        return view('modules.users.roles.create.+page');
-    }
-
-
     public function create()
     {
 
@@ -70,18 +58,10 @@ class UserController extends Controller
         $roles = Role::all();
         $user_roles = UserRole::all();
         $branches = Branch::all();
-        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles'));
-    }
+        $domains = Domain::all();
+        $group_schedules = GroupSchedule::all();
 
-    public function edit($id)
-    {
-
-        $job_positions = JobPosition::all();
-        $roles = Role::all();
-        $branches = Branch::all();
-        $user = User::find($id);
-
-        return view('pages.users.edit', compact('job_positions', 'roles', 'branches', 'user'));
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'domains', 'group_schedules'));
     }
 
     // slugs
@@ -92,6 +72,53 @@ class UserController extends Controller
         $roles = Role::all();
         $user_roles = UserRole::all();
         $branches = Branch::all();
-        return view('modules.users.slug.+page', compact('user', 'job_positions', 'roles', 'user_roles', 'branches'));
+        $domains = Domain::all();
+        $group_schedules = GroupSchedule::all();
+
+
+        if (!$user) return view('pages.500', ['error' => 'User not found']);
+
+        return view('modules.users.slug.+page', compact('user', 'job_positions', 'roles', 'user_roles', 'branches', 'domains', 'group_schedules'));
+    }
+
+    public function slug_organization($id)
+    {
+        $user = User::find($id);
+        if (!$user) return view('pages.500', ['error' => 'User not found']);
+
+        return view('modules.users.slug.organization.+page', compact('user'));
+    }
+
+    public function slug_schedules($id)
+    {
+        $user = User::find($id);
+
+        $user = User::find($id);
+        if (!$user) return view('pages.500', ['error' => 'User not found']);
+
+        $group_schedules = GroupSchedule::all();
+
+        $schedules = $user->groupSchedule->schedules;
+        return view('modules.users.slug.schedules.+page', compact('user', 'group_schedules', 'schedules'));
+    }
+
+    public function slug_attendance($id)
+    {
+        $user = User::find($id);
+
+        $user = User::find($id);
+        if (!$user) return view('pages.500', ['error' => 'User not found']);
+
+        $group_schedules = GroupSchedule::all();
+
+        $schedules = $user->groupSchedule->schedules;
+        return view('modules.users.slug.attendance.+page', compact('user', 'group_schedules', 'schedules'));
+    }
+
+
+    // schedules
+    public function schedules()
+    {
+        return view('modules.users.schedules.+page');
     }
 }
