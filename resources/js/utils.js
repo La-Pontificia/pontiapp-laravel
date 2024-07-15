@@ -44,14 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const formData = new FormData(f);
             const url = f.action;
             const method = f.method;
-            const formId = f.id;
-
-            const buttonSubmitByFormId = document.querySelector(
-                `button[form="${formId}"]`
-            );
 
             window.disabledFormChildren(f);
-            window.disabledComponents([buttonSubmitByFormId]);
 
             try {
                 await axios({
@@ -71,8 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         error.response.data ?? "Error al enviar el formulario",
                 });
             } finally {
-                window.enableFormChildren(f);
-                window.enabledComponents([buttonSubmitByFormId]);
+                window.enabledFormChildren(f);
             }
         });
     });
