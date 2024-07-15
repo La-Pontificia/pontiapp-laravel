@@ -19,6 +19,7 @@ class Email extends Model
         'reason',
         'email',
         'discharged',
+        'accessed',
         'discharged_by',
         'created_at',
         'updated_at',
@@ -27,6 +28,7 @@ class Email extends Model
     static $rules = [
         'id_uer' => ['required', 'uuid'],
         'reason' => ['required', 'string', 'max:255'],
+        'accessed' => ['required', 'array', 'min:1'],
         'email' => ['required', 'email', 'max:255'],
     ];
 
