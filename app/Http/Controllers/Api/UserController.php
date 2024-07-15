@@ -18,15 +18,15 @@ class UserController extends Controller
         request()->validate(User::$rules);
         $alreadyByDni = User::where('dni', $request->dni)->first();
 
+
         if ($alreadyByDni)
             return response()->json('El usuario con el dni ingresado ya existe', 400);
 
-        $alreadyByEmail = Email::where('email', $request->email)->get();
+        $constructEmail = $request->username . '@' . $request->domain;
+        $alreadyByEmail = User::where('email', $constructEmail)->get();
 
         if ($alreadyByEmail->count() > 0)
             return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
-
-        $cuser = auth()->user();
 
         $user = User::create([
             'profile' => $request->profile ?? null,
@@ -35,32 +35,26 @@ class UserController extends Controller
             'last_name' => $request->last_name,
             'password' => bcrypt($request->password ?? $request->dni),
             'role' => $request->role,
+            'email' => $constructEmail,
             'status' => true,
             'id_role' => $request->id_role,
             'id_role_user' => $request->id_role_user,
+            'group_schedule_id' => $request->group_schedule_id,
             'id_branch' => $request->id_branch,
-            'created_by' => $cuser->id,
-        ]);
-
-
-        Email::create([
-            'email' => $request->email,
-            'id_user' => $user->id,
-            'reason' => 'Email asignado al momento de crear el usuario',
-            'assigned_by' => $cuser->id,
+            'created_by' => auth()->user()->id,
         ]);
 
         if ($request->create_profile_collaborator) {
             Collaborator::create([
                 'id_user' => $user->id,
-                'created_by' => $cuser->id,
+                'created_by' => auth()->user()->id,
             ]);
         }
 
         return response()->json($user, 200);
     }
 
-    public function edit(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $user = User::find($id);
 
@@ -76,19 +70,23 @@ class UserController extends Controller
 
         $cuser = auth()->user();
 
-        $privileges = json_decode($request->input('privileges'), true);
+        $constructEmail = $request->username . '@' . $request->domain;
+        $alreadyByEmail = User::where('email', $constructEmail)->get();
 
-        $user->update([
-            'profile' => $request->profile ? $request->profile : $user->profile,
-            'dni' => $request->dni,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'privileges' => $privileges,
-            'role' => $request->role,
-            'id_role' => $request->id_role,
-            'id_branch' => $request->id_branch,
-            'updated_by' => $cuser->id,
-        ]);
+        if ($alreadyByEmail->count() > 0 && $alreadyByEmail->first()->id !== $id)
+            return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
+
+        $user->dni = $request->dni;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $constructEmail;
+        $user->id_role = $request->id_role;
+        $user->id_role_user = $request->id_role_user;
+        $user->id_branch = $request->id_branch;
+        $user->group_schedule_id = $request->group_schedule_id;
+        $user->updated_by = $cuser->id;
+
+        $user->save();
 
         return response()->json(['success' => $user], 200);
     }
@@ -120,21 +118,5 @@ class UserController extends Controller
             ->get();
 
         return response()->json(['users' => $users], 200);
-    }
-
-    // USER ROLES
-
-    public function createRole(Request $request)
-    {
-        request()->validate(UserRole::$rules);
-
-        UserRole::create([
-            'title' => $request->title,
-            'privileges' => $request->privileges,
-            'status' => true,
-            'created_by' => auth()->user()->id,
-        ]);
-
-        return response()->json(['success' => 'Rol creado con exito'], 200);
     }
 }
