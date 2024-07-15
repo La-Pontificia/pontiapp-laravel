@@ -6,18 +6,23 @@
     $items = [
         [
             'title' => 'Información general',
-            'link' => '/users' . $user->id,
+            'link' => '/users/' . $user->id,
             'active' => request()->is('users/' . $user->id),
         ],
         [
             'title' => 'Organización',
-            'link' => '/users' . $user->id . '/organization',
+            'link' => '/users/' . $user->id . '/organization',
             'active' => request()->is('users/' . $user->id . '/organization'),
         ],
         [
             'title' => 'Horario',
-            'link' => '/users' . $user->id . '/schedule',
-            'active' => request()->is('users/' . $user->id . '/schedule'),
+            'link' => '/users/' . $user->id . '/schedules',
+            'active' => request()->is('users/' . $user->id . '/schedules'),
+        ],
+        [
+            'title' => 'Asistencia',
+            'link' => '/users/' . $user->id . '/attendance',
+            'active' => request()->is('users/' . $user->id . '/attendance'),
         ],
     ];
 
@@ -30,8 +35,8 @@
 
 @section('layout.users')
     <div class="text-black w-full flex-col flex-grow flex overflow-y-auto">
-        <header class="border-b">
-            <div class="p-4 flex gap-4 items-center overflow-hidden">
+        <header class="border-b border-gray-300">
+            <div class="p-3 pb-2 flex gap-4 items-center overflow-hidden">
                 <div class="relative w-fit">
                     <div class="flex items-center gap-4">
                         <div class="relative rounded-full overflow-hidden w-40 border aspect-square">
@@ -63,10 +68,10 @@
                     </div>
                 </div>
             </div>
-            <nav class="flex text-[15px] overflow-x-auto">
+            <nav class="flex text-[15px] font-medium overflow-x-auto">
                 @foreach ($items as $item)
                     <a href="{{ $item['link'] }}" {{ $item['active'] ? 'data-active' : '' }}
-                        class="hover:bg-neutral-200/70 text-nowrap data-[active]:font-medium data-[active]:text-blue-600 relative group rounded-t-md p-3 block">
+                        class="hover:bg-neutral-200/70 text-nowrap data-[active]:font-medium data-[active]:text-blue-700 relative group rounded-t-md p-3 block">
                         {{ $item['title'] }}
                         <div class="absolute bottom-0 left-0 w-full">
                             <div
@@ -77,7 +82,7 @@
                 @endforeach
             </nav>
         </header>
-        <div class="w-full flex flex-col">
+        <div class="w-full flex h-full flex-col overflow-y-auto">
             @yield('layout.users.slug')
         </div>
     </div>
