@@ -74,7 +74,7 @@
                     <p class="line-clamp-1 font-semibold text-xl tracking-tight">
                         {{ $current_user->first_name }}
                         {{ $current_user->last_name }}</p>
-                    <p class="line-clamp-1 opacity-70 text-sm">{{ $current_user->email() }}</p>
+                    <p class="line-clamp-1 opacity-70 text-sm">{{ $current_user->email }}</p>
                     <p>
                         <a class="text-blue-600 hover:underline" href="/account">Mi cuenta</a>
                     </p>
