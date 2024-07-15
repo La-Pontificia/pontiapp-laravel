@@ -1,5 +1,6 @@
 import "./bootstrap.js";
 import "./user_roles.js";
+import "./schedules.js";
 
 window.onPaste = (e) => {
     e.preventDefault();
@@ -9,40 +10,52 @@ window.onPaste = (e) => {
 
 window.disabledComponents = (components) => {
     components.forEach((c) => {
-        c.disabled = true;
-        c.classList.add("cursor-not-allowed");
-        c.classList.add("animate-pulse");
+        if (c) {
+            c.disabled = true;
+            c.classList.add("cursor-not-allowed");
+            c.classList.add("animate-pulse");
+        }
     });
 };
 
 window.enabledComponents = (components) => {
     components.forEach((c) => {
-        c.disabled = false;
-        c.classList.remove("cursor-not-allowed");
-        c.classList.remove("animate-pulse");
+        if (c) {
+            c.disabled = false;
+            c.classList.remove("cursor-not-allowed");
+            c.classList.remove("animate-pulse");
+        }
     });
 };
 
 window.disabledFormChildren = (form) => {
-    form.querySelectorAll("input").forEach((c) => {
-        c.disabled = true;
-        c.classList.add("cursor-not-allowed");
-        c.classList.add("animate-pulse");
+    const id = form.id;
+    const button = document.querySelector(`button[form="${id}"]`);
+    if (button) {
+        button.disabled = true;
+    }
+    const elements = form.querySelectorAll("input, select, textarea, button");
+    elements.forEach((c) => {
+        if (c) {
+            c.disabled = true;
+            c.classList.add("cursor-not-allowed");
+            c.classList.add("animate-pulse");
+        }
     });
-    form.querySelectorAll("select").forEach((c) => {
-        c.disabled = true;
-        c.classList.add("cursor-not-allowed");
-        c.classList.add("animate-pulse");
-    });
-    form.querySelectorAll("textarea").forEach((c) => {
-        c.disabled = true;
-        c.classList.add("cursor-not-allowed");
-        c.classList.add("animate-pulse");
-    });
-    form.querySelectorAll("button").forEach((c) => {
-        c.disabled = true;
-        c.classList.add("cursor-not-allowed");
-        c.classList.add("animate-pulse");
+};
+
+window.enabledFormChildren = (form) => {
+    const id = form.id;
+    const button = document.querySelector(`button[form="${id}"]`);
+    if (button) button.disabled = false;
+
+    const elements = form.querySelectorAll("input, select, textarea, button");
+    elements.forEach((c) => {
+        if (c) {
+            c.disabled = false;
+            c.classList.remove("cursor-not-allowed");
+            c.classList.remove("animate-pulse");
+        }
     });
 };
 
@@ -56,32 +69,6 @@ window.toast = Swal.mixin({
 
 window.defaultProfile =
     "https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg";
-
-window.enableFormChildren = (form) => {
-    form.querySelectorAll("input").forEach((c) => {
-        c.disabled = false;
-        c.classList.remove("cursor-not-allowed");
-        c.classList.remove("animate-pulse");
-    });
-
-    form.querySelectorAll("select").forEach((c) => {
-        c.disabled = false;
-        c.classList.remove("cursor-not-allowed");
-        c.classList.remove("animate-pulse");
-    });
-
-    form.querySelectorAll("textarea").forEach((c) => {
-        c.disabled = false;
-        c.classList.remove("cursor-not-allowed");
-        c.classList.remove("animate-pulse");
-    });
-
-    form.querySelectorAll("button").forEach((c) => {
-        c.disabled = false;
-        c.classList.remove("cursor-not-allowed");
-        c.classList.remove("animate-pulse");
-    });
-};
 
 document.addEventListener("DOMContentLoaded", function () {
     $ = document.querySelector.bind(document);
