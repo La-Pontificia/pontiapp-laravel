@@ -31,8 +31,7 @@
                                         class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
                                         <td>
                                             <div class="flex items-center gap-4">
-                                                <a class="absolute inset-0"
-                                                    href="{{ route('users.slug', ['id' => $user->id]) }}">
+                                                <a class="absolute inset-0" href="/users/{{ $user->id }}">
                                                 </a>
                                                 @include('commons.avatar', [
                                                     'src' => $user->profile,
@@ -63,15 +62,12 @@
                                                     </button>
                                                     <div id="dropdown-user-{{ $user->id }}"
                                                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
-                                                        <a href="#"
-                                                            class="p-2 hover:bg-neutral-100 w-full block rounded-md">Ver</a>
-                                                        <a href="#"
-                                                            class="p-2 hover:bg-neutral-100 w-full block rounded-md">Restablecer
-                                                            contraseña</a>
-                                                        <a href="{{ route('assists.user', ['id_user' => $user->id]) }}"
+                                                        <button
+                                                            class="p-2 text-left hover:bg-neutral-100 w-full block rounded-md">Restablecer
+                                                            contraseña</button>
+                                                        <a href="/users/{{ $user->id }}/schedules"
                                                             class="p-2 hover:bg-neutral-100 w-full block rounded-md">Horario
                                                             de trabajo</a>
-
                                                         @if (
                                                             ($user->status && $current_user->hasPrivilege('users:disable')) ||
                                                                 (!$user->status && $current_user->hasPrivilege('users:enable')))
@@ -87,15 +83,11 @@
                                         </td>
                                         <td class="relative">
                                             <div class="flex items-center gap-2">
-                                                @forelse ($user->emails->filter(function ($email) {
-                                                                                                                                                                                                                                                                                return $email->discharged === null;
-                                                                                                                                                                                                                                                                            }) as $email)
-                                                    <a href="mailto:{{ $email->email }}"
-                                                        title="Enviar correo a {{ $email->email }}"
-                                                        class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">
-                                                        {{ $email->email }}
-                                                    </a>
-                                                @endforeach
+                                                <a href="mailto:{{ $user->email }}"
+                                                    title="Enviar correo a {{ $user->email }}"
+                                                    class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">
+                                                    {{ $user->email }}
+                                                </a>
                                             </div>
                                         </td>
                                         <td>
