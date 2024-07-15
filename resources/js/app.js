@@ -1,6 +1,12 @@
 import "./bootstrap.js";
 import "./user_roles.js";
 import "./schedules.js";
+import "./users.js";
+import "./edas.js";
+import "./goals.js";
+import "./utils.js";
+import "./evaluation.js";
+import "./templates.js";
 
 window.onPaste = (e) => {
     e.preventDefault();
