@@ -21,19 +21,31 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     // Module routes
     Route::get('/', 'App\Http\Controllers\ModuleController@index')->name('modules');
 
+    // User roles routes
+    Route::get('users/roles', 'App\Http\Controllers\UserRoleController@index')->name('users.roles');
+    Route::get('users/roles/create', 'App\Http\Controllers\UserRoleController@create')->name('users.roles.create');
+    Route::get('users/roles/{id}', 'App\Http\Controllers\UserRoleController@slug')->name('users.roles.slug');
 
     // Users routes
     Route::get('users', 'App\Http\Controllers\UserController@index')->name('users');
-    Route::get('users/roles', 'App\Http\Controllers\UserController@roles')->name('users.roles');
-    Route::get('users/roles/create', 'App\Http\Controllers\UserController@createRole')->name('users.roles.create');
+
+    Route::get('users/schedules', 'App\Http\Controllers\ScheduleController@index')->name('users.schedules');
+    Route::get('users/schedules/create', 'App\Http\Controllers\ScheduleController@create')->name('users.schedules.create');
+    Route::get('users/schedules/{id}', 'App\Http\Controllers\ScheduleController@schedule')->name('users.schedules.schedule');
+
+    Route::get('users/emails', 'App\Http\Controllers\UserController@emails')->name('users.emails');
+
+    Route::get('users/domains', 'App\Http\Controllers\UserController@domains')->name('users.domains');
+
+    Route::get('users/sessions', 'App\Http\Controllers\UserController@sessions')->name('users.sessions');
 
     Route::get('users/create', 'App\Http\Controllers\UserController@create')->name('users.create');
     Route::get('users/edit/{id}', 'App\Http\Controllers\UserController@edit')->name('users.edit');
 
     Route::get('users/{id}', 'App\Http\Controllers\UserController@slug')->name('users.slug');
-    Route::get('users/{id}/organization', 'App\Http\Controllers\UserController@slug.organization')->name('users.slug.organization');
-    Route::get('users/{id}/schedule', 'App\Http\Controllers\UserController@slug.schedule')->name('users.slug.schedule');
-    Route::get('users/{id}/emails', 'App\Http\Controllers\UserController@slug.emails')->name('users.slug.emails');
+    Route::get('users/{id}/organization', 'App\Http\Controllers\UserController@slug_organization')->name('users.slug.organization');
+    Route::get('users/{id}/schedules', 'App\Http\Controllers\UserController@slug_schedules')->name('users.slug.schedules');
+    Route::get('users/{id}/attendance', 'App\Http\Controllers\UserController@slug_attendance')->name('users.slug.attendance');
 
 
     // Edas routes
