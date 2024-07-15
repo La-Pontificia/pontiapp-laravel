@@ -39,7 +39,38 @@
             </svg>
             <p>Roles</p>
         </a>
-        <a href="">
+        <a href="{{ route('users.schedules') }}" {{ request()->is('users/schedules*') ? 'data-active' : '' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-range">
+                <rect width="18" height="18" x="3" y="4" rx="2" />
+                <path d="M16 2v4" />
+                <path d="M3 10h18" />
+                <path d="M8 2v4" />
+                <path d="M17 14h-6" />
+                <path d="M13 18H7" />
+                <path d="M7 14h.01" />
+                <path d="M17 18h.01" />
+            </svg>
+            <p>Horarios</p>
+        </a>
+        <a href="{{ route('users.emails') }}" {{ request()->is('users/emails*') ? 'data-active' : '' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-at-sign">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8" />
+            </svg>
+            <p>Emails</p>
+        </a>
+        <a href="{{ route('users.domains') }}" {{ request()->is('users/domains*') ? 'data-active' : '' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                <path d="M2 12h20" />
+            </svg>
+            <p>Dominios</p>
+        </a>
+        {{-- <a href="">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-plus">
                 <path
@@ -48,8 +79,8 @@
                 <path d="M12 9v6" />
             </svg>
             <p>Sesiones</p>
-        </a>
-        <a href="">
+        </a> --}}
+        {{-- <a href="">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-bar-chart">
                 <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
@@ -79,7 +110,7 @@
                 <path d="m15 15-3-3-3 3" />
             </svg>
             <p>Exportar</p>
-        </a>
+        </a> --}}
         <p class="p-2 pb-0 font-semibold text-sm tracking-tight opacity-60">Configuraciones</p>
         <a href="">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
