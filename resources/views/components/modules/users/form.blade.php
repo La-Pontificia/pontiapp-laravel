@@ -1,11 +1,11 @@
 @php
 
-    $domains = ['elp.edu.pe', 'ilp.edu.pe', 'gmail.com'];
-
     $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
     $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
 
     $has_assign_email = $current_user->hasPrivilege('assign_email');
+
+    $userDomain = $email ? explode('@', $email->email)[1] : 'elp.edu.pe';
 
 @endphp
 
@@ -101,9 +101,6 @@
         <h2 class="tracking-tight pt-5 text-xl font-semibold">
             Email
         </h2>
-        <p class="text-xs">
-            Se enviará un correo al usuario con las instrucciones para activar su cuenta.
-        </p>
     </div>
 
     <div class="max-w-[500px]">
@@ -111,8 +108,8 @@
             <input required type="text" name="username" placeholder="Nombre de usuario" class="w-full">
             <select style="width: 170px" required name="domain">
                 @foreach ($domains as $domain)
-                    <option {{ $user && $domain === 'elp.edu.pe' ? 'selected' : '' }} value="{{ $domain }}">
-                        {{ '@' . $domain }}</option>
+                    <option value="{{ $domain }}">
+                        {{ '@' . $domain->domain }}</option>
                 @endforeach
             </select>
         </div>
