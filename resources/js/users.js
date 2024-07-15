@@ -1,6 +1,11 @@
+import moment from "moment";
+
+import { Calendar } from "@fullcalendar/core";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import dayGridPlugin from "@fullcalendar/daygrid";
+
 const regexDni = /^[0-9]{8}$/;
-const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-const usernameRegex = /^[a-zA-Z0-9._-]{4,20}$/;
 
 const capitalize = (str) =>
     str
@@ -10,18 +15,17 @@ const capitalize = (str) =>
         )
         .join(" ");
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async () => {
     const URL_SUNAT = "https://apisunat.daustinn.com";
 
     $ = document.querySelector.bind(document);
 
-    const UserForm = $("#user-form");
+    const UserForm = $("#reate-user-form");
     const InputDni = $("#dni-input");
     const InputFirstName = $("#first_name-input");
     const InputLastName = $("#last_name-input");
     const JobPositionSelect = $("#job-position-select");
     const RoleSelect = $("#role-select");
-    const ButtonSubmit = $("#create-user-button-submit");
 
     const searchSupervisor = $("#search-supervisor");
     const listUsers = $("#list-users");
@@ -180,10 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const form = new FormData(e.target);
 
         const dni = form.get("dni");
-        const username = form.get("username");
-        const domain = form.get("domain");
-        const email = `${username?.trim()}@${domain?.trim()}`;
-        form.set("email", email);
 
         // validate dni
         if (!regexDni.test(dni)) {
@@ -193,17 +193,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        // validate username
-        if (!regexEmail.test(email) && !form.get("id")) {
-            return window.toast.fire({
-                icon: "error",
-                title: "El correo electrónico no es válido",
-            });
-        }
+        window.disabledFormChildren(UserForm);
 
-        ButtonSubmit.disabled = true;
-
-        // image
         const image = form.get("profile");
 
         if (image instanceof File && image.size > 0) {
@@ -230,8 +221,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 form.set("profile", res.data.secure_url);
             } catch (error) {
                 console.error(error);
+            } finally {
+                window.enabledFormChildren(UserForm);
             }
         }
+        form.delete("profile");
 
         try {
             const { data } = await axios.post(
@@ -240,12 +234,14 @@ document.addEventListener("DOMContentLoaded", function () {
             );
             window.location.href = `/users/${data.id}`;
         } catch (error) {
-            window.toast.fire({
+            Swal.fire({
                 icon: "error",
-                title: error.response.data ?? "Error al registrar el usuario",
+                title: "Oops...",
+                confirmButtonColor: "#d33",
+                text: error.response.data ?? "Error al registrar el usuario",
             });
         } finally {
-            ButtonSubmit.disabled = false;
+            window.enabledFormChildren(UserForm);
         }
     });
 
@@ -280,4 +276,147 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
+
+    // SLUG USER
+
+    let schedules = [];
+    const group_schedule_id = $("#group_schedule_id");
+
+    const calendarEl = $("#calendar-user-slug");
+
+    const calendar = new Calendar(calendarEl, {
+        plugins: [timeGridPlugin, interactionPlugin, dayGridPlugin],
+        locale: "es",
+        headerToolbar: {
+            left: "prev,next",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,timeGridDay",
+        },
+        buttonText: {
+            today: "Hoy",
+            month: "Mes",
+            week: "Semana",
+            day: "Dia",
+        },
+        navLinks: true,
+        hiddenDays: [0],
+        eventOverlap: false,
+        allDaySlot: false,
+        slotDuration: "00:30",
+        eventStartEditable: false,
+        eventDurationEditable: false,
+        slotLabelInterval: "00:30",
+        longPressDelay: 0,
+        slotMinTime: "05:00",
+        slotMaxTime: "23:00",
+        nowIndicator: "true",
+        hiddenDays: [0],
+        slotLabelFormat: {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+            meridiem: "short",
+        },
+        initialView: "timeGridWeek",
+        selectMirror: true,
+        dayHeaderContent: (args) => {
+            const day = args.date.getDate();
+            const dayName = args.date.toLocaleDateString("es-ES", {
+                weekday: "short",
+            });
+            const displayDay =
+                dayName.charAt(0).toUpperCase() + dayName.slice(1);
+            return `${displayDay}, ${day}`;
+        },
+    });
+
+    const updateEventSource = (events) => {
+        calendar.addEventSource({
+            events,
+        });
+    };
+
+    if (group_schedule_id) {
+        const { data } = await axios.get(
+            `/api/schedules/group/${group_schedule_id.value}`
+        );
+        const groupEvents = data.map((schedule) => {
+            const startDate = new Date(moment(schedule.start_date));
+            const endDate = new Date(moment(schedule.end_date));
+            const from = schedule.from;
+            const to = schedule.to;
+            return generateEvents(
+                {
+                    startDate,
+                    endDate,
+                    days: schedule.days,
+                    from,
+                    to,
+                },
+                schedule
+            ).map((item) => ({
+                ...item,
+                title: schedule.title,
+                backgroundColor: schedule.background,
+                borderColor: schedule.background,
+            }));
+        });
+
+        schedules = groupEvents.flat();
+        updateEventSource(groupEvents.flat());
+    }
+
+    const schels = document.querySelectorAll(".schedule");
+
+    schels?.forEach((schedule) => {
+        schedule.addEventListener("click", async () => {
+            const id = schedule.dataset.id;
+            const hasSelected = schedule.hasAttribute("data-active");
+
+            const hasAllSelected =
+                document.querySelectorAll(".schedule[data-active]").length ===
+                schels.length;
+
+            schels.forEach((item) => {
+                if (hasSelected && !hasAllSelected) {
+                    item.setAttribute("data-active", true);
+                } else {
+                    item.removeAttribute("data-active");
+                }
+            });
+
+            schedule.setAttribute("data-active", true);
+
+            calendar.removeAllEvents();
+
+            if (hasSelected && !hasAllSelected) updateEventSource(schedules);
+            else {
+                updateEventSource(schedules.filter((item) => item.id === id));
+            }
+        });
+    });
+
+    calendar.render();
 });
+
+const generateEvents = ({ startDate, endDate, days, from, to }, schedule) => {
+    let schedules = [];
+    let currentDate = new Date(startDate);
+    const endDateObj = new Date(endDate);
+
+    while (currentDate <= endDateObj) {
+        const dayOfWeek = currentDate.getDay() + 1;
+
+        if (days.includes(dayOfWeek.toString())) {
+            const date = moment(currentDate).format("YYYY-MM-DD");
+            schedules.push({
+                ...schedule,
+                start: `${date} ${from.split(" ")[1]}`,
+                end: `${date} ${to.split(" ")[1]}`,
+            });
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return schedules;
+};
