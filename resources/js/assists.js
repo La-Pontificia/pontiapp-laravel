@@ -64,9 +64,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             hour12: true,
             meridiem: "short",
         },
-        initialDate: "2024-07-08",
         initialView: "timeGridWeek",
         selectMirror: true,
+        dayHeaderContent: (args) => {
+            // format in example: "Vie 12, Juev 11, Sab 17, 29 etc.." in spanish
+            const day = args.date.getDate();
+            const dayName = args.date.toLocaleDateString("es-ES", {
+                weekday: "short",
+            });
+            const displayDay =
+                dayName.charAt(0).toUpperCase() + dayName.slice(1);
+            return `${displayDay}, ${day}`;
+        },
         // events: [
         //     {
         //         start: "2014-11-10T10:00:00",
@@ -126,7 +135,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (idUser) {
         const { data } = await axios.get(`/api/schedules/${idUser.value}`);
-
         updateEventSource(data);
     }
 
@@ -223,8 +231,8 @@ const generateSchedule = (startDate, endDate, days, from, to) => {
         if (days.includes(dayOfWeek)) {
             schedule.push({
                 date: moment(currentDate).format("YYYY-MM-DD"),
-                from,
-                to,
+                start: from,
+                end: to,
             });
         }
         currentDate.setDate(currentDate.getDate() + 1);
