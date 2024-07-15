@@ -44,11 +44,10 @@
 |                          | - Actualización de diagramas de arquitectura | ✅     |
 |                          | - Diseño de base de datos                    | ✅     |
 | 16 de mayo - 10 de julio | **Desarrollo**                               | 🔄     |
-|                          | - Gestión de Usuarios                        | ✅     |
+|                          | - Gestión de Usuarios                        | 🔄     |
 |                          | - Gestión de EDAS                            | ✅     |
 |                          | - Gestión de Asistencias                     | 🔄     |
 |                          | - Integración con SQL Server                 | ✅     |
-|                          | - Gestión de Reportes                        | ✅     |
 |                          | - Gestión de Auditoría                       | 🔄     |
 |                          | - Gestión de Mantenimiento                   | ✅     |
 | 11-16 de julio           | **Pruebas**                                  | 🔄     |
@@ -57,14 +56,14 @@
 |                          | - Pruebas de usuario                         |        |
 | 17-23 de julio           | **Despliegue**                               | 🔄     |
 |                          | - Configuración del entorno de producción    | ✅     |
-|                          | - Migración de datos                         | 🔄     |
-|                          | - Despliegue en servidor                     | 🔄     |
+|                          | - Migración de datos                         | ✅     |
+|                          | - Despliegue en servidor                     | ✅     |
 | 24-30 de julio           | **Capacitación y Documentación**             | 🔄     |
 |                          | - Capacitación a usuarios finales            |        |
 |                          | - Documentación técnica y de usuario         |        |
-| 31 de julio              | **Mantenimiento**                            |        |
-|                          | - Corrección de errores                      |        |
-|                          | - Mejoras y actualizaciones                  |        |
+| 31 de julio              | **Mantenimiento**                            | 🔄     |
+|                          | - Corrección de errores                      | 🔄     |
+|                          | - Mejoras y actualizaciones                  | 🔄     |
 
 ### Detalles de las Tareas:
 
