@@ -16,10 +16,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     // Users routes
     Route::post('users', 'App\Http\Controllers\Api\UserController@create');
-    Route::post('users/roles', 'App\Http\Controllers\Api\UserController@createRole');
-    Route::post('users/{id}', 'App\Http\Controllers\Api\UserController@edit');
+    Route::post('users/{id}', 'App\Http\Controllers\Api\UserController@update');
     Route::post('users/{id}/profile', 'App\Http\Controllers\Api\UserController@profile');
     Route::get('users/search', 'App\Http\Controllers\Api\UserController@search');
+
+    // User roles routes 
+    Route::post('users/roles', 'App\Http\Controllers\Api\UserRoleController@create');
+    Route::post('users/roles/{id}', 'App\Http\Controllers\Api\UserRoleController@update');
+
 
     // Cargo routes
     Route::get('roles/by_job_position/{id}', 'App\Http\Controllers\Api\RolController@by_job_position');
@@ -77,6 +81,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('emails/discharge/{id}', 'App\Http\Controllers\Api\EmailController@discharge');
 
     // Schedules routes
-    Route::post('schedules', 'App\Http\Controllers\Api\ScheduleController@add');
-    Route::get('schedules/{id_user}', 'App\Http\Controllers\Api\ScheduleController@by_user');
+    Route::post('scheldules/delete/{id}', 'App\Http\Controllers\Api\ScheduleController@remove');
+
+    Route::post('schedules/group', 'App\Http\Controllers\Api\ScheduleController@group');
+    Route::post('schedules/group/{id}', 'App\Http\Controllers\Api\ScheduleController@update');
+    Route::post('schedules/group/{id}/add', 'App\Http\Controllers\Api\ScheduleController@add');
+    Route::post('schedules/{id}', 'App\Http\Controllers\Api\ScheduleController@updateSchedule');
+
+
+    Route::get('schedules/group/{id}', 'App\Http\Controllers\Api\ScheduleController@schedules');
 });
