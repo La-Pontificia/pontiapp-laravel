@@ -20,14 +20,16 @@ class Schedule extends Model
         'id',
         'created_at',
         'updated_at',
-        'group',
+        'group_id',
         'from',
         'to',
         'title',
-        'id_user',
         'created_by',
         'updated_by',
         'title',
+        'days',
+        'start_date',
+        'end_date',
         'background',
     ];
 
@@ -41,13 +43,8 @@ class Schedule extends Model
         return $this->hasOne('App\Models\User', 'updated_by', 'id');
     }
 
-    public function user()
-    {
-        return $this->hasOne('App\Models\User', 'id_user', 'id');
-    }
-
     public function groupSchedules()
     {
-        return $this->hasMany('App\Models\Schedule', 'group', 'id');
+        return $this->hasOne('App\Models\GroupSchedule', 'id', 'group_id');
     }
 }
