@@ -17,20 +17,19 @@
                 </button>
             </div>
             <div class="p-5 flex-grow w-full overflow-y-auto ">
-                <form id="user-form" class="grid gap-4 w-full" role="form">
-                    @include('components.modules.users.form', [
+                <form class="grid gap-4 w-full" role="form" id="reate-user-form">
+                    @include('modules.users.form', [
                         'user' => null,
                     ])
                 </form>
             </div>
-
             <div class="p-3 border-t border-neutral-300">
                 <div class="max-w-2xl mx-auto flex gap-2">
-                    <button id="create-user-button-submit" type="submit" id="button-submit-user" form="user-form"
+                    <button type="submit" form="reate-user-form"
                         class="bg-blue-700 hover:bg-blue-600 disabled:opacity-40 disabled:pointer-events-none flex items-center rounded-xl p-2.5 gap-1 text-white font-semibold px-3">
                         Registrar
                     </button>
-                    <button onclick="window.history.back()" type="button" data-modal-hide="create-user-dialog"
+                    <button onclick="window.history.back()" type="button"
                         class="bg-white hover:shadow-md border text-black flex items-center rounded-xl p-2.5 gap-1 font-semibold px-3">
                         Cancelar
                     </button>
