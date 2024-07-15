@@ -44,31 +44,76 @@ class AccessComposerServiceProvider extends ServiceProvider
                             ],
                         ],
                         [
-                            'name' => 'Sesiones',
+                            'name' => 'Horarios',
                             'privileges' => [
-                                'users:sessions:view' => 'Ver sesiones',
-                                'users:sessions:delete' => 'Eliminar sesiones',
+                                'users:schedules:view' => 'Ver horarios',
+                                'users:schedules:create' => 'Agregar horarios',
+                                'users:schedules:edit' => 'Actualizar horarios',
+                                'users:schedules:delete' => 'Eliminar horarios',
                             ],
                         ],
                         [
-                            'name' => 'Reportes',
+                            'name' => 'Emails',
                             'privileges' => [
-                                'users:reports:view' => 'Ver reportes',
-                                'users:reports:generate' => 'Generar reportes',
+                                'users:emails:view' => 'Ver correos',
+                                'users:emails:add' => 'Agregar correos',
+                                'users:emails:edit' => 'Actualizar correos',
+                                'users:emails:delete' => 'Eliminar correos',
                             ],
                         ],
                         [
-                            'name' => 'Importar',
+                            'name' => 'Dominios',
                             'privileges' => [
-                                'users:import' => 'Importar usuarios',
+                                'users:domains:view' => 'Ver dominios',
+                                'users:domains:create' => 'Agregar dominios',
+                                'users:domains:edit' => 'Actualizar dominios',
+                                'users:domains:delete' => 'Eliminar dominios',
                             ],
                         ],
                         [
-                            'name' => 'Exportar',
+                            'name' => 'Cargos',
                             'privileges' => [
-                                'users:export' => 'Exportar usuarios',
+                                'maintenance:role:view' => 'Ver cargos',
+                                'maintenance:role:create' => 'Agregar cargos',
+                                'maintenance:role:edit' => 'Actualizar cargos',
+                                'maintenance:role:delete' => 'Eliminar cargos',
                             ],
                         ],
+                        [
+                            'name' => 'Puestos',
+                            'privileges' => [
+                                'maintenance:job_position:view' => 'Ver puestos',
+                                'maintenance:job_position:create' => 'Agregar puestos',
+                                'maintenance:job_position:edit' => 'Actualizar puestos',
+                                'maintenance:job_position:delete' => 'Eliminar puestos',
+                            ],
+                        ],
+                        // [
+                        //     'name' => 'Sesiones',
+                        //     'privileges' => [
+                        //         'users:sessions:view' => 'Ver sesiones',
+                        //         'users:sessions:delete' => 'Eliminar sesiones',
+                        //     ],
+                        // ],
+                        // [
+                        //     'name' => 'Reportes',
+                        //     'privileges' => [
+                        //         'users:reports:view' => 'Ver reportes',
+                        //         'users:reports:generate' => 'Generar reportes',
+                        //     ],
+                        // ],
+                        // [
+                        //     'name' => 'Importar',
+                        //     'privileges' => [
+                        //         'users:import' => 'Importar usuarios',
+                        //     ],
+                        // ],
+                        // [
+                        //     'name' => 'Exportar',
+                        //     'privileges' => [
+                        //         'users:export' => 'Exportar usuarios',
+                        //     ],
+                        // ],
 
                     ],
                 ],
@@ -152,24 +197,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'maintenance:department:delete' => 'Eliminar departamentos',
                             ],
                         ],
-                        [
-                            'name' => 'Cargos',
-                            'privileges' => [
-                                'maintenance:role:view' => 'Ver cargos',
-                                'maintenance:role:create' => 'Agregar cargos',
-                                'maintenance:role:edit' => 'Actualizar cargos',
-                                'maintenance:role:delete' => 'Eliminar cargos',
-                            ],
-                        ],
-                        [
-                            'name' => 'Puestos',
-                            'privileges' => [
-                                'maintenance:job_position:view' => 'Ver puestos',
-                                'maintenance:job_position:create' => 'Agregar puestos',
-                                'maintenance:job_position:edit' => 'Actualizar puestos',
-                                'maintenance:job_position:delete' => 'Eliminar puestos',
-                            ],
-                        ],
+
                         [
                             'name' => 'Sedes',
                             'privileges' => [
