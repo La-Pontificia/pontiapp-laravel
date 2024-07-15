@@ -14,7 +14,6 @@ class UserRole extends Model
 
     static $rules = [
         'title' => 'required|string|max:255',
-        'privileges' => 'required|array',
     ];
 
     protected $fillable = [
@@ -33,5 +32,15 @@ class UserRole extends Model
     public function users()
     {
         return $this->hasMany(User::class, 'id_role', 'id');
+    }
+
+    public function createdBy()
+    {
+        return $this->hasOne(User::class, 'id', 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'updated_by');
     }
 }
