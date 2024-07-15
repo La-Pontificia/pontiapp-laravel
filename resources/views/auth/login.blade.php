@@ -15,12 +15,10 @@
                         <div class="w-full">
                             <form method="POST" action="/api/login" class="grid gap-5">
                                 @csrf
-                                <div class="divide-y border rounded-xl">
-                                    <input data-notstyles required autofocus class="w-full border-0 p-3 rounded-t-xl"
-                                        name="email" type="email" value="{{ old('email') }}"
-                                        placeholder="Correo electrónico" />
-
-                                    <input data-notstyles required class="w-full p-3 rounded-b-xl" name="password"
+                                <div class="space-y-3 font-semibold">
+                                    <input style="padding: 17px" required autofocus name="email" type="email"
+                                        value="{{ old('email') }}" placeholder="Correo electrónico o nombre de usuario" />
+                                    <input type="password" style="padding: 17px" required name="password"
                                         value="{{ old('password') }}" placeholder="Contraseña" />
                                 </div>
                                 @error('email')
@@ -30,7 +28,7 @@
                                 @enderror
 
                                 <button type="submit"
-                                    class="p-4 rounded-xl font-semibold bg-black text-white w-full hover:text-neutral-300">
+                                    class="p-5 rounded-xl font-semibold bg-black text-white w-full hover:text-neutral-300">
                                     <span class="ml-3">
                                         Entrar
                                     </span>
@@ -42,7 +40,7 @@
                                 <span class="w-full border-b block"></span>
                             </div>
                             <a title="Aun no disponible" href="{{ route('login.azure') }}"
-                                class="w-full shadow-md hover:shadow-lg mt-4 gap-2 rounded-lg justify-center text-gray-900 bg-white hover:border-blue-600 text-sm p-4 text-center inline-flex items-center">
+                                class="w-full shadow-md hover:shadow-lg mt-4 gap-2 rounded-xl justify-center text-gray-900 bg-white hover:border-blue-600 text-sm p-5 text-center inline-flex items-center">
                                 <img src="/RE1Mu3b.png" class="w-24" alt="">
                             </a>
                             @if (session('error'))
