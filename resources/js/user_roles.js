@@ -126,4 +126,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     updateAllCounts();
+
+    document
+        .querySelectorAll(".privilege-checkbox")
+        .forEach((privilegeCheckbox) => {
+            updateParentCheckboxes(privilegeCheckbox);
+        });
 });
