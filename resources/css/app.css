@@ -166,6 +166,11 @@ th.fc-col-header-cell {
         &:last-child {
             border-radius: 0 9px 9px 0 !important;
         }
+        /* Center border-radius 0 */
+        &:not(:first-child):not(:last-child) {
+            border-radius: 0 !important;
+        }
+
         & .fc-icon {
             font-size: 1.1rem !important;
         }
