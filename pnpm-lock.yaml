@@ -75,6 +75,9 @@ importers:
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1
+      vanillajs-datepicker:
+        specifier: ^1.3.4
+        version: 1.3.4
       vite:
         specifier: ^4.5.1
         version: 4.5.1(@types/node@20.10.6)(sass@1.69.7)(terser@5.26.0)
@@ -3462,6 +3465,9 @@ packages:
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
+
+  vanillajs-datepicker@1.3.4:
+    resolution: {integrity: sha512-waOyp2Ay+K1VA/B5cNlFgSNzFR9efCVKaoyMyNEAhAwmKLzMB9nCJs6Vqmo6HuHWA98VEHXbgz5thZ7hH/uohA==}
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -7417,6 +7423,8 @@ snapshots:
   utils-merge@1.0.1: {}
 
   uuid@8.3.2: {}
+
+  vanillajs-datepicker@1.3.4: {}
 
   vary@1.1.2: {}
 
