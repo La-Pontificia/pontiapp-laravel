@@ -1,5 +1,4 @@
 import moment from "moment";
-
 import { Calendar } from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -277,14 +276,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // SLUG USER
-
+    // SLUG SCHEDULE USER
     let schedules = [];
     const group_schedule_id = $("#group_schedule_id");
 
     const calendarEl = $("#calendar-user-slug");
 
-    const calendar = new Calendar(calendarEl, {
+    // create element example
+    const elem = document.createElement("div");
+
+    const calendar = new Calendar(calendarEl ?? elem, {
         plugins: [timeGridPlugin, interactionPlugin, dayGridPlugin],
         locale: "es",
         headerToolbar: {
