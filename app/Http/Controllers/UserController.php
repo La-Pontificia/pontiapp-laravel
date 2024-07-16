@@ -163,8 +163,8 @@ class UserController extends Controller
             ->get();
 
         $schedulesMatched = $user->groupSchedule->schedules;
-        $customSchedule = Schedule::where('user_id', $user->id)->get();
-        $allSchedules = $schedulesMatched->merge($customSchedule);
+        // $customSchedule = Schedule::where('user_id', $user->id)->get();
+        $allSchedules = $schedulesMatched;
 
         $schedulesGenerated = [];
 
