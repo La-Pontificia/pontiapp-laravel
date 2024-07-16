@@ -17,7 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         ".delete-schelude-group"
     );
 
-    const calendar = new Calendar(calendarEl, {
+    // create element example
+    const elem = document.createElement("div");
+
+    const calendar = new Calendar(calendarEl ?? elem, {
         plugins: [timeGridPlugin, interactionPlugin, dayGridPlugin],
         locale: "es",
         headerToolbar: {
