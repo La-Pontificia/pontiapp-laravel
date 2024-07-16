@@ -72,7 +72,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                {{-- <tbody class="divide-y z-[0]">
+                <tbody class="divide-y z-[0]">
                     @if (count($schedules) === 0)
                         <tr class="">
                             <td colspan="11" class="text-center py-4">
@@ -154,7 +154,7 @@
                             </tr>
                         @endforeach
                     @endif
-                </tbody> --}}
+                </tbody>
             </table>
         </div>
     </div>
