@@ -21,6 +21,7 @@ class Schedule extends Model
         'created_at',
         'updated_at',
         'group_id',
+        'user_id',
         'from',
         'to',
         'title',
@@ -35,16 +36,21 @@ class Schedule extends Model
 
     public function createdBy()
     {
-        return $this->hasOne('App\Models\User', 'created_by', 'id');
+        return $this->hasOne(User::class, 'created_by', 'id');
     }
 
     public function updatedBy()
     {
-        return $this->hasOne('App\Models\User', 'updated_by', 'id');
+        return $this->hasOne(User::class, 'updated_by', 'id');
     }
 
     public function groupSchedules()
     {
-        return $this->hasOne('App\Models\GroupSchedule', 'id', 'group_id');
+        return $this->hasOne(GroupSchedule::class, 'id', 'group_id');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }
