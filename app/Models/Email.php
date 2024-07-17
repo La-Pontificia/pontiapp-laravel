@@ -14,22 +14,15 @@ class Email extends Model
 
     protected $fillable = [
         'id',
-        'id_user',
+        'user_id',
         'assigned_by',
-        'reason',
+        'description',
         'email',
         'discharged',
-        'accessed',
+        'access',
         'discharged_by',
         'created_at',
         'updated_at',
-    ];
-
-    static $rules = [
-        'id_uer' => ['required', 'uuid'],
-        'reason' => ['required', 'string', 'max:255'],
-        'accessed' => ['required', 'array', 'min:1'],
-        'email' => ['required', 'email', 'max:255'],
     ];
 
     protected $keyType = 'string';
@@ -38,7 +31,7 @@ class Email extends Model
 
     public function user()
     {
-        return $this->hasOne('App\Models\User', 'id', 'id_user');
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
 
     public function assignedBy()
