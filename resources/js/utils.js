@@ -7,8 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const queryInputs = document.querySelectorAll(".dinamic-search");
     const dinamicSelects = document.querySelectorAll(".dinamic-select");
     const dinamicForms = document.querySelectorAll(".dinamic-form");
-
     const autocompletes = document.querySelectorAll(".autocompletes");
+
+    const dinamicAlerts = document.querySelectorAll(".dinamic-alert");
+
     dinamicSelects?.forEach((f) => {
         f.addEventListener("change", function (e) {
             const value = e.target.value;
@@ -132,6 +134,44 @@ document.addEventListener("DOMContentLoaded", function () {
             onSubmit: (result) => {
                 input.setAttribute("data-value", result[avalue]);
             },
+        });
+    });
+
+    // Dinamic alerts
+
+    dinamicAlerts?.forEach((f) => {
+        f.addEventListener("click", function (e) {
+            const param = f.getAttribute("data-param");
+            const atitle = f.getAttribute("data-atitle");
+            const adescription = f.getAttribute("data-adescription");
+            const dataAlertvariant = f.getAttribute("data-alertvariant");
+            Swal.fire({
+                title: atitle,
+                text: adescription,
+                icon: dataAlertvariant ?? "info",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, confirmar",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        await axios.post(param);
+                        window.location.reload();
+                    } catch (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            confirmButtonColor: "#d33",
+                            cancelButtonColor: "#3085d6",
+                            text:
+                                error.response.data ??
+                                "Error al enviar el formulario",
+                        });
+                    }
+                }
+            });
         });
     });
 });
