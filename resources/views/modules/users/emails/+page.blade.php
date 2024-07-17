@@ -16,54 +16,60 @@
             'name' => 'Pontisis idiomas',
             'value' => 'pontisis_idiomas',
         ],
+        [
+            'name' => 'Pontisis La Pontificia',
+            'value' => 'pontisis_la_pontificia',
+        ],
     ];
 @endphp
 
 @section('layout.users')
     <div class="text-black w-full flex-col flex-grow flex overflow-auto">
-        <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
-            class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-plus">
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-            </svg>
-            <span class="max-lg:hidden">Asignar nuevo correo</span>
-        </button>
+        @if ($cuser->hasPrivilege('users:roles:create'))
+            <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
+                class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-plus">
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                </svg>
+                <span class="max-lg:hidden">Asignar nuevo correo</span>
+            </button>
 
-        <div id="dialog" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
-            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative w-full max-w-xl max-h-full bg-white rounded-2xl shadow">
-                <div class="flex items-center justify-between p-3 border-b rounded-t">
-                    <h3 class="text-lg font-semibold text-gray-900">
-                        Asignar correo
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="dialog">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                    </button>
-                </div>
-                @include('components.users.auditory-card')
-                <form action="/api/emails" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
-                    @include('modules.users.emails.form', [
-                        'email' => null,
-                    ])
-                </form>
-                <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                    <button form="dialog-form" type="submit"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
-                        Guardar</button>
-                    <button id="button-close-scheldule-modal" data-modal-hide="dialog" type="button"
-                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
+            <div id="dialog" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative w-full max-w-xl max-h-full bg-white rounded-2xl shadow">
+                    <div class="flex items-center justify-between p-3 border-b rounded-t">
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            Asignar correo
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            data-modal-hide="dialog">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                        </button>
+                    </div>
+                    @include('components.users.auditory-card')
+                    <form action="/api/emails" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
+                        @include('modules.users.emails.form', [
+                            'email' => null,
+                        ])
+                    </form>
+                    <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
+                        <button form="dialog-form" type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
+                            Guardar</button>
+                        <button id="button-close-scheldule-modal" data-modal-hide="dialog" type="button"
+                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         <h2 class="py-3 font-semibold tracking-tight text-lg px-1">
             Gestión de correos
@@ -134,128 +140,188 @@
             </div>
         </div>
         <div class=" overflow-auto flex-grow">
-            <table class="w-full text-left" id="table-users">
-                <thead class="border-b">
-                    <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">
-                        <th class="w-full">Usuario</th>
-                        <th>Estado</th>
-                        <th>Email</th>
-                        <th class="min-w-[300px]">Descripción</th>
-                        <th>Accesos</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
-                    @if ($emails->count() === 0)
-                        <tr class="">
-                            <td colspan="11" class="text-center py-4">
-                                <div class="p-10">
-                                    No hay horarios registrados
-                                </div>
-                            </td>
+            @if ($cuser->hasPrivilege('users:roles:view'))
+                <table class="w-full text-left" id="table-users">
+                    <thead class="border-b">
+                        <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">
+                            <th class="w-full">Usuario</th>
+                            <th>Estado</th>
+                            <th>Email</th>
+                            <th class="min-w-[300px]">Descripción</th>
+                            <th>Accesos</th>
+
                         </tr>
-                    @else
-                        @foreach ($emails as $email)
-                            <tr
-                                class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
-                                <td>
-                                    <div class="flex items-center gap-4">
-                                        <button class="absolute inset-0" data-modal-target="dialog-{{ $email->id }}"
-                                            data-modal-toggle="dialog-{{ $email->id }}">
-                                        </button>
-                                        <div id="dialog-{{ $email->id }}" data-modal-backdrop="static" tabindex="-1"
-                                            aria-hidden="true"
-                                            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                            <div class="relative w-full max-w-xl max-h-full bg-white rounded-2xl shadow">
-                                                <div class="flex items-center justify-between p-3 border-b rounded-t">
-                                                    <h3 class="text-lg font-semibold text-gray-900">
-                                                        Editar correo
-                                                    </h3>
-                                                    <button type="button"
-                                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                                        data-modal-hide="dialog-{{ $email->id }}">
-                                                        <svg class="w-3 h-3" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 14 14">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2"
-                                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                        </svg>
+                    </thead>
+                    <tbody class="divide-y">
+                        @if ($emails->count() === 0)
+                            <tr class="">
+                                <td colspan="11" class="text-center py-4">
+                                    <div class="p-10">
+                                        No hay horarios registrados
+                                    </div>
+                                </td>
+                            </tr>
+                        @else
+                            @foreach ($emails as $email)
+                                <tr
+                                    class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            @if ($cuser->hasPrivilege('users:roles:edit'))
+                                                <button class="absolute inset-0"
+                                                    data-modal-target="dialog-{{ $email->id }}"
+                                                    data-modal-toggle="dialog-{{ $email->id }}">
+                                                </button>
+                                                <div id="dialog-{{ $email->id }}" data-modal-backdrop="static"
+                                                    tabindex="-1" aria-hidden="true"
+                                                    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                                    <div
+                                                        class="relative w-full max-w-xl max-h-full bg-white rounded-2xl shadow">
+                                                        <div
+                                                            class="flex items-center justify-between p-3 border-b rounded-t">
+                                                            <h3 class="text-lg font-semibold text-gray-900">
+                                                                Editar correo
+                                                            </h3>
+                                                            <button type="button"
+                                                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                                                data-modal-hide="dialog-{{ $email->id }}">
+                                                                <svg class="w-3 h-3" aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 14 14">
+                                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="2"
+                                                                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                        @include('components.users.auditory-card')
+                                                        <form action="/api/emails/{{ $email->id }}" method="POST"
+                                                            id="dialog-{{ $email->id }}-form"
+                                                            class="p-3 dinamic-form grid gap-4">
+                                                            @include('modules.users.emails.form', [
+                                                                'email' => $email,
+                                                            ])
+                                                        </form>
+                                                        <div
+                                                            class="flex items-center p-3 border-t border-gray-200 rounded-b">
+                                                            <button form="dialog-{{ $email->id }}-form" type="submit"
+                                                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
+                                                                Guardar</button>
+                                                            <button id="button-close-scheldule-modal"
+                                                                data-modal-hide="dialog-{{ $email->id }}"
+                                                                type="button"
+                                                                class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            @include('commons.avatar', [
+                                                'src' => $email->user->profile,
+                                                'className' => 'w-12',
+                                                'alt' => $email->user->first_name . ' ' . $email->user->last_name,
+                                                'altClass' => 'text-lg',
+                                            ])
+                                            <p class="text-sm font-normal flex-grow text-nowrap">
+                                                <span class="text-base block font-semibold">
+                                                    {{ $email->user->last_name }},
+                                                    {{ $email->user->first_name }}
+                                                </span>
+                                                {{ $email->user->dni }} - {{ $email->user->email }}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td class="relative">
+                                        @php
+                                            $title = $email->discharged
+                                                ? 'Dada de baja el ' .
+                                                    $email->discharged .
+                                                    ' por ' .
+                                                    $email->dischargedBy->first_name .
+                                                    ' ' .
+                                                    $email->dischargedBy->last_name
+                                                : 'Asignado el ' .
+                                                    $email->created_at .
+                                                    ' por ' .
+                                                    $email->assignedBy->first_name .
+                                                    ' ' .
+                                                    $email->assignedBy->last_name;
+
+                                        @endphp
+                                        <div class="flex items-center gap-2 font-medium text-sm">
+                                            <div
+                                                class="aspect-square {{ $email->discharged ? 'bg-red-500' : 'bg-lime-500' }} rounded-full w-2">
+                                            </div>
+                                            <p title="{{ $title }}" class="text-nowrap">
+                                                {{ $email->discharged ? 'Dada de baja' : 'Activo' }}
+                                            </p>
+                                            @if ($cuser->hasPrivilege('users:emails:discharge') && !$email->discharged)
+                                                <button id="dropdownDividerButton"
+                                                    data-dropdown-toggle="dropdown-email-{{ $email->id }}"
+                                                    class="group-hover:opacity-100 opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="lucide lucide-ellipsis">
+                                                        <circle cx="12" cy="12" r="1" />
+                                                        <circle cx="19" cy="12" r="1" />
+                                                        <circle cx="5" cy="12" r="1" />
+                                                    </svg>
+                                                </button>
+                                                <div id="dropdown-email-{{ $email->id }}"
+                                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
+                                                    <button data-alertvariant="warning" data-atitle="Dar de baja"
+                                                        data-adescription="¿Estas seguro de dar de baja el correo electrónico?"
+                                                        data-param="/api/emails/discharge/{{ $email->id }}"
+                                                        class="p-2 text-left dinamic-alert hover:bg-neutral-100 w-full block rounded-md text-red-500 hover:bg-gray-10">
+                                                        Dar de baja
                                                     </button>
                                                 </div>
-                                                @include('components.users.auditory-card')
-                                                <form action="/api/emails" method="POST"
-                                                    id="dialog-{{ $email->id }}-form"
-                                                    class="p-3 dinamic-form grid gap-4">
-                                                    @include('modules.users.emails.form', [
-                                                        'email' => $email,
-                                                    ])
-                                                </form>
-                                                <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                                                    <button form="dialog-{{ $email->id }}-form" type="submit"
-                                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
-                                                        Guardar</button>
-                                                    <button id="button-close-scheldule-modal"
-                                                        data-modal-hide="dialog-{{ $email->id }}" type="button"
-                                                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
-                                                </div>
-                                            </div>
+                                            @endif
                                         </div>
-                                        @include('commons.avatar', [
-                                            'src' => $email->user->profile,
-                                            'className' => 'w-12',
-                                            'alt' => $email->user->first_name . ' ' . $email->user->last_name,
-                                            'altClass' => 'text-lg',
-                                        ])
-                                        <p class="text-sm font-normal flex-grow text-nowrap">
-                                            <span class="text-base block font-semibold">
-                                                {{ $email->user->last_name }},
-                                                {{ $email->user->first_name }}
-                                            </span>
-                                            {{ $email->user->dni }} - {{ $email->user->email }}
+                                    </td>
+                                    <td class="relative">
+                                        <div class="flex items-center gap-2">
+                                            <a href="mailto:{{ $email->email }}"
+                                                title="Enviar correo a {{ $email->email }}"
+                                                class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">
+                                                {{ $email->email }}
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="line-clamp-2" title="{{ $email->description }}">
+                                            {{ $email->description }}
                                         </p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap-2 font-medium text-sm">
-                                        <div class="aspect-square bg-lime-500 rounded-full w-2"></div>
-                                        {{ $email->discharged ? 'Dada de baja' : 'Activo' }}
-                                    </div>
-                                </td>
-                                <td class="relative">
-                                    <div class="flex items-center gap-2">
-                                        <a href="mailto:{{ $email->email }}" title="Enviar correo a {{ $email->email }}"
-                                            class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">
-                                            {{ $email->email }}
-                                        </a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="line-clamp-2" title="{{ $email->description }}">
-                                        {{ $email->description }}
-                                    </p>
-                                </td>
-                                <td>
-                                    @php
-                                        $emailaccess = $email->access ? json_decode($email->access, true) : [];
-                                    @endphp
-                                    <div class="flex items-center gap-2">
-                                        @foreach ($emailaccess as $accessValue)
-                                            @foreach ($access as $accessItem)
-                                                @if ($accessItem['value'] === $accessValue)
-                                                    <div
-                                                        class="bg-blue-600 text-white p-1 px-2 shadow-md rounded-full text-sm text-nowrap font-semibold">
-                                                        {{ $accessItem['name'] }}</div>
-                                                @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $emailaccess = $email->access ? json_decode($email->access, true) : [];
+                                        @endphp
+                                        <div class="flex items-center gap-2">
+                                            @foreach ($emailaccess as $accessValue)
+                                                @foreach ($access as $accessItem)
+                                                    @if ($accessItem['value'] === $accessValue)
+                                                        <div
+                                                            class="bg-blue-600 text-white p-1 px-2 shadow-md rounded-full text-sm text-nowrap font-semibold">
+                                                            {{ $accessItem['name'] }}</div>
+                                                    @endif
+                                                @endforeach
                                             @endforeach
-                                        @endforeach
-                                    </div>
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            @else
+                @include('+403', [
+                    'message' => 'No tienes permisos para visualizar los correos electrónicos.',
+                ])
+            @endif
         </div>
+        <footer class="px-5 pt-4">
+            {!! $emails->links() !!}
+        </footer>
     </div>
 @endsection
