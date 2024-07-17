@@ -2,7 +2,11 @@
 
 @section('title', 'Asistencias: ' . $user->first_name . ', ' . $user->last_name)
 
+@php
 
+    $start = request()->query('start_date') ? request()->query('start_date') : null;
+    $end = request()->query('end_date') ? request()->query('end_date') : null;
+@endphp
 
 @section('layout.users.slug')
     <div class="space-y-2 flex h-full flex-col">
@@ -12,12 +16,16 @@
                     Rango de fecha
                 </p>
                 <div id="date-range" class="flex items-center gap-1 w-[340px]">
-                    <input type="text" name="start" placeholder="-">
+                    <input readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start" placeholder="-">
                     <span>a</span>
-                    <input type="text" name="end" placeholder="-">
+                    <input readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end" placeholder="-">
+
                     <button id="filter"
                         class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
                 </div>
+                <p class="text-xs p-1 text-yellow-600">
+                    Se recomienda máximo 1 mes de rango de fecha.
+                </p>
             </div>
             <button class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
                 <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +69,7 @@
             </button>
         </div>
         <div class="bg-white h-full shadow-sm rounded-2xl overflow-auto mt-5">
-            <table class="w-full text-left relative" id="table-users">
+            <table data-value="{{ $user->id }}" class="w-full text-left relative">
                 <thead class="border-b sticky top-0 z-[1] bg-white">
                     <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-3">
                         <th class="w-full font-semibold tracking-tight">Horario</th>
@@ -85,17 +93,17 @@
                         @foreach ($schedules as $schedule)
                             <tr
                                 class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-3">
-                                <td>
+                                <td data-value="{{ $schedule['title'] }}">
                                     <p class="text-nowrap">
                                         {{ $schedule['title'] }}
                                     </p>
                                 </td>
-                                <td>
+                                <td data-value="{{ $schedule['dept_name'] }}">
                                     <p class="text-nowrap">
                                         {{ $schedule['dept_name'] }}
                                     </p>
                                 </td>
-                                <td>
+                                <td data-value="{{ $schedule['from'] }}">
                                     <p class="text-nowrap flex items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -108,7 +116,7 @@
                                         {{ \Carbon\Carbon::parse($schedule['from'])->isoFormat('LL') }}
                                     </p>
                                 </td>
-                                <td>
+                                <td data-value="{{ $schedule['from'] }},{{ $schedule['to'] }}">
                                     <p
                                         class="text-nowrap flex text-sm items-center gap-2 bg-blue-600 p-1 rounded-md text-white">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="13" viewBox="0 0 24 24"
@@ -122,13 +130,14 @@
                                     </p>
                                 </td>
 
-                                <td>
+                                <td data-value="{{ $schedule['i_enter'] }},{{ $schedule['he_left'] }}">
                                     @if ($schedule['i_enter'] || $schedule['he_left'])
                                         <p
                                             class="text-nowrap w-fit flex items-center text-sm gap-2 p-1 rounded-md px-2 bg-green-600 text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="13" viewBox="0 0 24 24"
-                                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round" class="lucide lucide-clock">
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-clock">
                                                 <circle cx="12" cy="12" r="10" />
                                                 <polyline points="12 6 12 12 16 14" />
                                             </svg>
