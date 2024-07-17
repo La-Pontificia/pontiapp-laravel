@@ -31,16 +31,16 @@ class Email extends Model
 
     public function user()
     {
-        return $this->hasOne('App\Models\User', 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function assignedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'assigned_by');
+        return $this->hasOne(User::class, 'id', 'assigned_by');
     }
 
     public function dischargedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'discharged_by');
+        return $this->hasOne(User::class, 'id', 'discharged_by');
     }
 }
