@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\JobPosition;
 use App\Models\Branch;
 use App\Models\Domain;
+use App\Models\Email;
 use App\Models\GroupSchedule;
 use App\Models\Schedule;
 use App\Models\User;
@@ -105,56 +106,16 @@ class UserController extends Controller
         return view('modules.users.slug.schedules.+page', compact('user', 'group_schedules', 'schedules'));
     }
 
-    // public function slug_attendance(Request $request, $id)
-    // {
-    //     $user = User::find($id);
-    //     if (!$user) return view('pages.500', ['error' => 'User not found']);
-
-
-    //     $startDate = '2024-07-12';
-    //     $endDate = '2024-07-12';
-
-    //     $assistances = Attendance::where('emp_code', $user->dni)
-    //         ->whereRaw("CAST(punch_time AS DATE) >= '$startDate'")
-    //         ->whereRaw("CAST(punch_time AS DATE) <= '$endDate'")
-    //         ->orderBy('punch_time', 'asc')
-    //         ->get();
-
-    //     $schedulesMatched = $user->groupSchedule->schedules;
-    //     $customSchedule = Schedule::where('user_id', $user->id)->get();
-    //     $allSchedules = $schedulesMatched->merge($customSchedule);
-
-    //     $schedulesGenerated = [];
-
-    //     foreach ($allSchedules as $schedule) {
-    //         $days = json_decode($schedule->days);
-    //         $startDate = Carbon::parse($schedule->start_date);
-    //         $endDate = Carbon::parse($schedule->end_date);
-    //         for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
-    //             $dayOfWeek = $date->dayOfWeek + 1;
-    //             if ($dayOfWeek == 8) $dayOfWeek = 1;
-    //             if (in_array((string)$dayOfWeek, $days)) {
-    //                 $schedulesGenerated[] = [
-    //                     'title' => $schedule->title,
-    //                     'from' => Carbon::parse($schedule->from)->setDateFrom($date)->format('Y-m-d H:i:s'),
-    //                     'to' => Carbon::parse($schedule->to)->setDateFrom($date)->format('Y-m-d H:i:s'),
-    //                 ];
-    //             }
-    //         }
-    //     }
-
-    //     $schedules = $schedulesGenerated;
-
-    //     return view('modules.users.slug.attendance.+page', compact('user', 'schedules', 'assistances'));
-    // }
-
     public function slug_attendance(Request $request, $id)
     {
         $user = User::find($id);
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
-        $startDate = '2024-07-01';
-        $endDate = '2024-07-31';
+        $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+
+        $startDate = $request->get('start_date', $startDate);
+        $endDate = $request->get('end_date', $endDate);
 
         $assistances = Attendance::where('emp_code', $user->dni)
             ->whereRaw("CAST(punch_time AS DATE) >= '$startDate'")
@@ -211,7 +172,7 @@ class UserController extends Controller
 
                     $schedulesGenerated[] = [
                         'title' => $schedule->title,
-                        'dept_name' => $entry ? $entry->dept_name : null,
+                        'dept_name' => $entry->dept_name ?? $exit->dept_name ?? null,
                         'from' => $scheduleFrom->format('Y-m-d H:i:s'),
                         'to' => $scheduleTo->format('Y-m-d H:i:s'),
                         'i_enter' => $i_enter ? $i_enter->format('Y-m-d H:i:s') : null,
@@ -239,15 +200,26 @@ class UserController extends Controller
     }
 
 
-
-    // $from = $request->get('from') ? Carbon::parse($request->get('from'))->startOfDay() : Carbon::now()->subMonth()->startOfDay();
-    // $to = $request->get('to') ? Carbon::parse($request->get('to'))->endOfDay() : Carbon::now()->endOfDay();
-
-
-
     // schedules
     public function schedules()
     {
         return view('modules.users.schedules.+page');
+    }
+
+    // emails
+    public function emails()
+    {
+        $domains = Domain::all();
+        $emails = Email::all();
+        return view('modules.users.emails.+page', [
+            'domains' => $domains,
+            'emails' => $emails
+        ]);
+    }
+
+    // domains 
+    public function domains()
+    {
+        return view('modules.users.domains.+page');
     }
 }
