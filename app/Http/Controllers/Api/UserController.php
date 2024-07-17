@@ -112,11 +112,18 @@ class UserController extends Controller
     public function search(Request $request)
     {
         $query = $request->query('query');
-        $users = User::where('first_name', 'like', '%' . $query . '%')
+        $list = User::where('first_name', 'like', '%' . $query . '%')
             ->orWhere('last_name', 'like', '%' . $query . '%')
             ->orWhere('dni', 'like', '%' . $query . '%')
             ->get();
 
-        return response()->json(['users' => $users], 200);
+        // create new array and add full name
+        $users = [];
+        foreach ($list as $user) {
+            $user->full_name = $user->first_name . ' ' . $user->last_name;
+            $users[] = $user;
+        }
+
+        return response()->json($users, 200);
     }
 }
