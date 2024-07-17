@@ -9,7 +9,6 @@ use App\Models\Branch;
 use App\Models\Domain;
 use App\Models\Email;
 use App\Models\GroupSchedule;
-use App\Models\Schedule;
 use App\Models\User;
 use App\Models\UserRole;
 use Carbon\Carbon;
@@ -21,7 +20,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $match = User::orderBy('created_at', 'asc');
+        $match = User::orderBy('created_at', 'desc');
         $query = $request->get('q');
         $job_position = $request->get('job_position');
         $job_positions = JobPosition::all();
@@ -207,14 +206,35 @@ class UserController extends Controller
     }
 
     // emails
-    public function emails()
+    public function emails(Request $request)
     {
+
+        $match = Email::orderBy('created_at', 'desc');
+        $query = $request->get('q');
+        $status = $request->get('status');
+
+        if ($status) {
+            $match->where('discharged', $status === 'actives' ? null : '!=', null);
+        }
+
+        if ($query) {
+            $match->whereHas('user', function ($q) use ($query) {
+                $q->where('first_name', 'like', '%' . $query . '%')
+                    ->orWhere('last_name', 'like', '%' . $query . '%')
+                    ->orWhere('dni', 'like', '%' . $query . '%');
+            })
+                ->orWhere('email', 'like', '%' . $query . '%');
+        }
+
+
         $domains = Domain::all();
-        $emails = Email::all();
+        $emails = $match->paginate();
+
         return view('modules.users.emails.+page', [
             'domains' => $domains,
             'emails' => $emails
-        ]);
+        ])
+            ->with('i', (request()->input('page', 1) - 1) * $emails->perPage());
     }
 
     // domains 
