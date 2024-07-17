@@ -1,4 +1,4 @@
-<div class="w-[250px] min-w-[250px] flex flex-col overflow-y-auto">
+<div class="flex flex-col overflow-y-auto">
     <div class="flex items-center justify-between p-2">
         <button onclick="window.history.back()" class="flex gap-2 items-center font-semibold text-gray-900 ">
             <div class="p-1 rounded-full bg-white w-8">
