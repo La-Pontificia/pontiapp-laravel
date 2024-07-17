@@ -1,3 +1,6 @@
+import Autocomplete from "@trevoreyre/autocomplete-js";
+import axios from "axios";
+
 document.addEventListener("DOMContentLoaded", function () {
     $ = document.querySelector.bind(document);
 
@@ -5,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const dinamicSelects = document.querySelectorAll(".dinamic-select");
     const dinamicForms = document.querySelectorAll(".dinamic-form");
 
+    const autocompletes = document.querySelectorAll(".autocompletes");
     dinamicSelects?.forEach((f) => {
         f.addEventListener("change", function (e) {
             const value = e.target.value;
@@ -45,6 +49,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const url = f.action;
             const method = f.method;
 
+            const formComponents = f.querySelectorAll(
+                "input, textarea, select"
+            );
+
+            formComponents.forEach((c) => {
+                const isStrategyDataset = c.getAttribute("data-strategy");
+                if (isStrategyDataset === "dataset") {
+                    const value = c.getAttribute("data-value");
+                    const name = c.name;
+                    formData.set(name, value);
+                }
+            });
+
             window.disabledFormChildren(f);
 
             try {
@@ -59,14 +76,62 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.reload();
             } catch (error) {
                 console.log(error);
-                window.toast.fire({
+                Swal.fire({
                     icon: "error",
-                    title:
+                    title: "Oops...",
+                    text:
                         error.response.data ?? "Error al enviar el formulario",
                 });
             } finally {
                 window.enabledFormChildren(f);
             }
+        });
+    });
+
+    // autocompletes
+    autocompletes?.forEach((f) => {
+        const param = f.getAttribute("data-params");
+        const atitle = f.getAttribute("data-atitle");
+        const avalue = f.getAttribute("data-value");
+        const adescription = f.getAttribute("data-adescription");
+
+        const input = f.querySelector("input");
+        new Autocomplete(f, {
+            search: async (input) => {
+                const url = `${param}?query=${encodeURI(input)}`;
+
+                return new Promise((resolve) => {
+                    if (input.length < 3) {
+                        return resolve([]);
+                    }
+                    fetch(url)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const results = data.map((result, index) => {
+                                return { ...result, index };
+                            });
+                            resolve(results);
+                        });
+                });
+            },
+
+            renderResult: (result, props) => {
+                return `
+                    <li ${props}>
+                        <div class="autocomplete-title">
+                        ${result[atitle]}
+                        </div>
+                        <div class="autocomplete-snippet">
+                        ${result[adescription]}
+                        </div>
+                    </li>
+                 `;
+            },
+            getResultValue: (result) => result[atitle],
+
+            onSubmit: (result) => {
+                input.setAttribute("data-value", result[avalue]);
+            },
         });
     });
 });
