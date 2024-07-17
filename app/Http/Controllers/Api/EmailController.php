@@ -13,16 +13,15 @@ class EmailController extends Controller
     public function assign(Request $request)
     {
         $request->validate([
-            'id_user' => ['required', 'uuid'],
             'username' => ['required'],
             'domain' => ['required'],
-            'reason' => ['required', 'string', 'max:500'],
+            'description' => ['required', 'string', 'max:500'],
         ]);
 
         $user = User::find($request->id_user);
 
         if (!$user) {
-            return response()->json('User not found', 404);
+            return response()->json('Selecciona un usuario valido', 404);
         }
 
         $email = $request->username . '@' . $request->domain;
@@ -35,17 +34,14 @@ class EmailController extends Controller
         $alreadyAssigned = Email::where('email', $email)->first();
 
         if ($alreadyAssigned && $alreadyAssigned->id_user === $request->id_user) {
-            return response()->json('El correo electronico ya se encuentra asignado a este usuario.', 400);
-        }
-
-        if ($alreadyAssigned && $alreadyAssigned->id_user !== $request->id_user) {
-            return response()->json('El correo electronico ya se encuentra en uso.', 400);
+            return response()->json('El correo electronico ya se encuentra registrado y asignado a este usuario.', 400);
         }
 
         Email::create([
-            'id_user' => $request->id_user,
+            'user_id' => $request->id_user,
             'email' => $email,
-            'reason' => $request->reason,
+            'access' => json_encode($request->input('access', [])),
+            'description' => $request->description,
             'assigned_by' => auth()->user()->id
         ]);
 
