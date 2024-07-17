@@ -1,7 +1,5 @@
 @php
 
-    $domains = ['elp.edu.pe', 'ilp.edu.pe', 'gmail.com'];
-
     $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
     $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
 
