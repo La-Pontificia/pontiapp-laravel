@@ -67,53 +67,55 @@
             <div class="max-w-sm max-lg:max-w-full w-full flex flex-col overflow-y-auto">
                 <div class="py-2 px-1 space-y-2">
                     <h3 class="font-semibold text-lg">Items</h3>
-                    <button type="button" data-modal-target="create-scheldule-modal"
-                        data-modal-toggle="create-scheldule-modal"
-                        class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="lucide lucide-plus">
-                            <path d="M5 12h14" />
-                            <path d="M12 5v14" />
-                        </svg>
-                        <span class="max-lg:hidden">Agregar horario</span>
-                    </button>
-                    <div id="create-scheldule-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
-                        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                        <div class="relative p-4 w-full max-w-xl max-h-full">
-                            <div class="relative bg-white rounded-2xl shadow">
-                                <div class="flex items-center justify-between p-3 border-b rounded-t">
-                                    <h3 class="text-lg font-semibold text-gray-900">
-                                        Nuevo horario
-                                    </h3>
-                                    <button type="button"
-                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                        data-modal-hide="create-scheldule-modal">
-                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                @include('components.users.auditory-card')
-                                <form action="/api/schedules/group/{{ $group_schedule->id }}/add" id="schedule-form-add"
-                                    method="POST" class="p-3 grid dinamic-form gap-4">
-                                    @include('modules.users.schedules.slug.form', [
-                                        'schedule' => $formSchedule,
-                                    ])
-                                </form>
-                                <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                                    <button form="schedule-form-add" type="submit"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
-                                        Guardar</button>
-                                    <button id="button-close-scheldule-modal" data-modal-hide="create-scheldule-modal"
-                                        type="button"
-                                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
+                    @if ($current_user->hasPrivilege('users:schedules:create'))
+                        <button type="button" data-modal-target="create-scheldule-modal"
+                            data-modal-toggle="create-scheldule-modal"
+                            class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-plus">
+                                <path d="M5 12h14" />
+                                <path d="M12 5v14" />
+                            </svg>
+                            <span class="max-lg:hidden">Agregar horario</span>
+                        </button>
+                        <div id="create-scheldule-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+                            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-xl max-h-full">
+                                <div class="relative bg-white rounded-2xl shadow">
+                                    <div class="flex items-center justify-between p-3 border-b rounded-t">
+                                        <h3 class="text-lg font-semibold text-gray-900">
+                                            Nuevo horario
+                                        </h3>
+                                        <button type="button"
+                                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                            data-modal-hide="create-scheldule-modal">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    @include('components.users.auditory-card')
+                                    <form action="/api/schedules/group/{{ $group_schedule->id }}/add" id="schedule-form-add"
+                                        method="POST" class="p-3 grid dinamic-form gap-4">
+                                        @include('modules.users.schedules.slug.form', [
+                                            'schedule' => $formSchedule,
+                                        ])
+                                    </form>
+                                    <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
+                                        <button form="schedule-form-add" type="submit"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
+                                            Guardar</button>
+                                        <button id="button-close-scheldule-modal" data-modal-hide="create-scheldule-modal"
+                                            type="button"
+                                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
                 <div class="flex flex-col space-y-4 pr-5 pt-2 overflow-y-auto">
                     @if ($schedules->isEmpty())
