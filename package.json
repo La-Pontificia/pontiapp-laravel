@@ -25,6 +25,7 @@
         "@fullcalendar/interaction": "^6.1.14",
         "@fullcalendar/timegrid": "^6.1.14",
         "@material-tailwind/html": "^2.2.2",
+        "@trevoreyre/autocomplete-js": "^3.0.2",
         "exceljs": "^4.4.0",
         "flowbite": "^1.8.1",
         "jquery": "^3.7.1",
