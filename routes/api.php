@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Emails routes
     Route::post('emails', 'App\Http\Controllers\Api\EmailController@assign');
+    Route::post('emails/{id}', 'App\Http\Controllers\Api\EmailController@update');
     Route::post('emails/discharge/{id}', 'App\Http\Controllers\Api\EmailController@discharge');
 
     // Schedules routes
