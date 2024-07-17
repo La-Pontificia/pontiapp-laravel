@@ -58,6 +58,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'users:emails:view' => 'Ver correos',
                                 'users:emails:add' => 'Agregar correos',
                                 'users:emails:edit' => 'Actualizar correos',
+                                'users:emails:discharge' => 'Dar de baja',
                                 'users:emails:delete' => 'Eliminar correos',
                             ],
                         ],
@@ -214,6 +215,7 @@ class AccessComposerServiceProvider extends ServiceProvider
             $user = auth()->user();
             if ($user) {
                 $view->with('current_user', $user);
+                $view->with('cuser', $user);
                 $view->with('system_privileges', $system_privileges);
             }
         });
