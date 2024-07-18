@@ -23,11 +23,11 @@ class GroupSchedule extends Model
 
     public function schedules()
     {
-        return $this->hasMany('App\Models\Schedule', 'group_id', 'id');
+        return $this->hasMany(Schedule::class, 'group_id', 'id');
     }
 
     public function createdBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
 }
