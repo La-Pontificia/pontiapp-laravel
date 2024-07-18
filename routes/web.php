@@ -22,9 +22,9 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('/', 'App\Http\Controllers\ModuleController@index')->name('modules');
 
     // User roles routes
-    Route::get('users/roles', 'App\Http\Controllers\UserRoleController@index')->name('users.roles');
-    Route::get('users/roles/create', 'App\Http\Controllers\UserRoleController@create')->name('users.roles.create');
-    Route::get('users/roles/{id}', 'App\Http\Controllers\UserRoleController@slug')->name('users.roles.slug');
+    Route::get('users/user-roles', 'App\Http\Controllers\UserRoleController@index')->name('users.user-roles');
+    Route::get('users/user-roles/create', 'App\Http\Controllers\UserRoleController@create')->name('users.user-roles.create');
+    Route::get('users/user-roles/{id}', 'App\Http\Controllers\UserRoleController@slug')->name('users.user-roles.slug');
 
     // Users routes
     Route::get('users', 'App\Http\Controllers\UserController@index')->name('users');
@@ -39,6 +39,10 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     Route::get('users/sessions', 'App\Http\Controllers\UserController@sessions')->name('users.sessions');
 
+    Route::get('users/job-positions', 'App\Http\Controllers\UserController@jobPositions')->name('users.job-positions');
+
+    Route::get('users/roles', 'App\Http\Controllers\UserController@roles')->name('users.job-positions');
+
     Route::get('users/create', 'App\Http\Controllers\UserController@create')->name('users.create');
     Route::get('users/edit/{id}', 'App\Http\Controllers\UserController@edit')->name('users.edit');
 
@@ -50,13 +54,14 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Edas routes
     Route::get('edas', 'App\Http\Controllers\EdaController@index')->name('edas');
-    Route::get('edas/surveys', 'App\Http\Controllers\SurveyController@index')->name('edas.surveys');
+    // Route::get('edas/surveys', 'App\Http\Controllers\SurveyController@index')->name('edas.surveys');
     Route::get('edas/me', 'App\Http\Controllers\EdaController@me')->name('edas.me');
-    Route::get('edas/{id_user}/eda', 'App\Http\Controllers\EdaController@user')->name('edas.user');
-    Route::get('edas/{id_user}/eda/{id_year}', 'App\Http\Controllers\EdaController@year')->name('edas.user.year');
-    Route::get('edas/{id_user}/eda/{id_year}/goals', 'App\Http\Controllers\EdaController@goals')->name('edas.user.goals');
-    Route::get('edas/{id_user}/eda/{id_year}/evaluation/{id_evaluation}', 'App\Http\Controllers\EdaController@evaluation')->name('edas.user.evaluation');
-    Route::get('edas/{id_user}/eda/{id_year}/questionnaires', 'App\Http\Controllers\EdaController@questionnaires')->name('edas.user.questionnaires');
+
+    Route::get('edas/{id_user}/eda', 'App\Http\Controllers\EdaController@user')->name('edas.slug');
+    Route::get('edas/{id_user}/eda/{id_year}', 'App\Http\Controllers\EdaController@year')->name('edas.slug.year');
+    Route::get('edas/{id_user}/eda/{id_year}/goals', 'App\Http\Controllers\EdaController@goals')->name('edas.slug.goals');
+    Route::get('edas/{id_user}/eda/{id_year}/evaluation/{id_evaluation}', 'App\Http\Controllers\EdaController@evaluation')->name('edas.slug.evaluation');
+    Route::get('edas/{id_user}/eda/{id_year}/questionnaires', 'App\Http\Controllers\EdaController@questionnaires')->name('edas.slug.questionnaires');
 
     // Assists routes
     Route::get('assists', 'App\Http\Controllers\AssistController@index')->name('assists');
