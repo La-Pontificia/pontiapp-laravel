@@ -117,7 +117,7 @@
                 </div>
             @endif
         </div>
-        @if (!$current_user->hasPrivilege('users:edit'))
+        @if ($current_user->hasPrivilege('users:edit'))
             <div class="pt-4 border-t">
                 <button type="submit" form="edit-user-form"
                     class="bg-blue-700 hover:bg-blue-600 disabled:opacity-40 disabled:pointer-events-none flex items-center rounded-xl p-2.5 gap-1 text-white font-semibold px-3">
