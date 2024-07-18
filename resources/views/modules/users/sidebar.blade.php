@@ -27,7 +27,7 @@
             </svg>
             <p>Usuarios</p>
         </a>
-        <a href="{{ route('users.roles') }}" {{ request()->is('users/roles*') ? 'data-active' : '' }}>
+        <a href="/users/user-roles" {{ request()->is('users/user-roles*') ? 'data-active' : '' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-sliders">
                 <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
@@ -80,7 +80,7 @@
             </svg>
             <p>Sesiones</p>
         </a> --}}
-        <a href="">
+        {{-- <a href="">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-bar-chart">
                 <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
@@ -90,7 +90,7 @@
                 <path d="M16 18v-6" />
             </svg>
             <p>Reporte</p>
-        </a>
+        </a> --}}
         {{-- <a href="">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-down">
@@ -112,18 +112,7 @@
             <p>Exportar</p>
         </a> --}}
         <p class="p-2 pb-0 font-semibold text-sm tracking-tight opacity-60">Configuraciones</p>
-        <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contact-round">
-                <path d="M16 18a4 4 0 0 0-8 0" />
-                <circle cx="12" cy="11" r="3" />
-                <rect width="18" height="18" x="3" y="4" rx="2" />
-                <line x1="8" x2="8" y1="2" y2="4" />
-                <line x1="16" x2="16" y1="2" y2="4" />
-            </svg>
-            <p>Cargos</p>
-        </a>
-        <a href="">
+        <a href="/users/job-positions" {{ request()->is('users/job-positions*') ? 'data-active' : '' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contact-round">
                 <path d="M16 18a4 4 0 0 0-8 0" />
@@ -133,6 +122,17 @@
                 <line x1="16" x2="16" y1="2" y2="4" />
             </svg>
             Puestos
+        </a>
+        <a href="/users/roles" {{ request()->is('users/roles*') ? 'data-active' : '' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contact-round">
+                <path d="M16 18a4 4 0 0 0-8 0" />
+                <circle cx="12" cy="11" r="3" />
+                <rect width="18" height="18" x="3" y="4" rx="2" />
+                <line x1="8" x2="8" y1="2" y2="4" />
+                <line x1="16" x2="16" y1="2" y2="4" />
+            </svg>
+            <p>Cargos</p>
         </a>
     </div>
 </div>
