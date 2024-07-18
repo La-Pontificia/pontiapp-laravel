@@ -20,10 +20,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users/{id}/profile', 'App\Http\Controllers\Api\UserController@profile');
     Route::get('users/search', 'App\Http\Controllers\Api\UserController@search');
 
-    // User roles routes 
-    Route::post('users/roles', 'App\Http\Controllers\Api\UserRoleController@create');
-    Route::post('users/roles/{id}', 'App\Http\Controllers\Api\UserRoleController@update');
-
+    // User user roles routes 
+    Route::post('user-roles', 'App\Http\Controllers\Api\UserRoleController@create');
+    Route::post('user-roles/{id}', 'App\Http\Controllers\Api\UserRoleController@update');
 
     // Cargo routes
     Route::get('roles/by_job_position/{id}', 'App\Http\Controllers\Api\RolController@by_job_position');
