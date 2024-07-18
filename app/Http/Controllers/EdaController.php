@@ -17,18 +17,16 @@ class EdaController  extends Controller
     public function index(Request $request)
     {
         $currentUser = auth()->user();
-        $match = User::orderBy('created_at', 'asc');
-        $query = $request->get('query');
+        $match = User::orderBy('created_at', 'desc');
+        $query = $request->get('q');
         $job_position = $request->get('job_position');
         $job_positions = JobPosition::all();
         $role = $request->get('role');
         $users = [];
 
-        $seeAllUsers = $currentUser->role === 'admin' || $currentUser->role === 'dev';
-
-        if (!$seeAllUsers) {
-            $match->where('id_supervisor', $currentUser->id);
-        }
+        // if (!$seeAllUsers) {
+        //     $match->where('supervisor_id', $currentUser->id);
+        // }
 
         // filters
         if ($job_position) {
@@ -54,7 +52,7 @@ class EdaController  extends Controller
 
         $users = $match->paginate();
 
-        return view('pages.edas.index', compact('users', 'job_positions', 'roles'))
+        return view('modules.edas.+page', compact('users', 'job_positions', 'roles'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
@@ -63,14 +61,14 @@ class EdaController  extends Controller
         $user = auth()->user();
         $year = Year::orderBy('name', 'desc')->first();
         if (!$year) return view('pages.404');
-        return redirect()->route('edas.user', ['id_user' => $user->id, 'year' => $year->id]);
+        return redirect()->route('edas.slug', ['id_user' => $user->id, 'year' => $year->id]);
     }
 
     public function user($id_user)
     {
         $user = User::find($id_user);
         $year = Year::orderBy('name', 'desc')->first();
-        return redirect()->route('edas.user.year', ['id_user' => $user->id, 'id_year' => $year->id]);
+        return redirect()->route('edas.slug.year', ['id_user' => $user->id, 'id_year' => $year->id]);
     }
 
     public function year($id_user, $id_year)
@@ -87,7 +85,7 @@ class EdaController  extends Controller
         }
 
         return view(
-            'pages.edas.user.index',
+            'modules.edas.slug.+page',
             compact('user', 'years', 'current_year', 'eda', 'evaluations')
         );
     }
@@ -110,9 +108,11 @@ class EdaController  extends Controller
             $goals = Goal::where('id_eda', $eda->id)->get();
         }
 
+        $current_year = Year::find($id_year);
+
         return view(
-            'pages.edas.user.goals.index',
-            compact('user', 'years', 'year', 'eda', 'goals')
+            'modules.edas.slug.goals.+page',
+            compact('user', 'years', 'year', 'eda', 'goals', 'current_year')
         );
     }
 
@@ -137,7 +137,7 @@ class EdaController  extends Controller
         }
 
         return view(
-            'pages.edas.user.evaluation',
+            'modules.edas.slug.evaluation.+page',
             compact('user', 'years', 'year', 'eda', 'goals', 'evaluation')
         );
     }
@@ -155,7 +155,7 @@ class EdaController  extends Controller
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
         return view(
-            'pages.edas.user.questionnaires',
+            'modules.edas.slug.questionnaires.+page',
             compact('user', 'years', 'year', 'eda')
         );
     }
