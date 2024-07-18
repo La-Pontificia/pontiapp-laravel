@@ -90,16 +90,18 @@ table.fc-scrollgrid {
     background-color: white;
 }
 
-table,
-thead,
-tbody,
-tfoot,
-tr,
-th,
-td {
-    padding: 0;
-    border-spacing: 0 !important;
-    border-color: #eaeef0 !important;
+.datepicker-picker {
+    table,
+    thead,
+    tbody,
+    tfoot,
+    tr,
+    th,
+    td {
+        padding: 0;
+        border-spacing: 0 !important;
+        border-color: #eaeef0 !important;
+    }
 }
 
 th.fc-col-header-cell {
