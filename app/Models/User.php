@@ -33,6 +33,7 @@ class User extends Authenticatable
         'id_role',
         'id_branch',
         'group_schedule_id',
+        'supervisor_id',
         'created_by',
         'updated_by',
     ];
@@ -103,5 +104,15 @@ class User extends Authenticatable
     public function groupSchedule()
     {
         return $this->hasOne(GroupSchedule::class, 'id', 'group_schedule_id');
+    }
+
+    public function supervisor()
+    {
+        return $this->hasOne(User::class, 'id', 'supervisor_id');
+    }
+
+    public function edas()
+    {
+        return $this->hasMany(Eda::class, 'id_user', 'id');
     }
 }
