@@ -10,7 +10,7 @@ class ModuleController extends Controller
     public function index()
     {
         // get a last 5 users
-        $users = User::orderBy('created_at', 'asc')->take(7)->get();
+        $users = User::orderBy('created_at', 'desc')->take(7)->get();
         return view('modules.+page', compact('users'));
     }
 }
