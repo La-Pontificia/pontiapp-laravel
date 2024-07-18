@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\Role;
 use App\Models\JobPosition;
 use App\Models\Branch;
+use App\Models\Department;
 use App\Models\Domain;
 use App\Models\Email;
 use App\Models\GroupSchedule;
@@ -241,5 +242,68 @@ class UserController extends Controller
     public function domains()
     {
         return view('modules.users.domains.+page');
+    }
+
+    // job positions 
+    public function jobPositions(Request $request)
+    {
+        $match = JobPosition::orderBy('level', 'asc');
+        $q = $request->get('q');
+        $level = $request->get('level');
+
+        if ($q) {
+            $match->where('name', 'like', '%' . $q . '%')
+                ->orWhere('code', 'like', '%' . $q . '%')
+                ->get();
+        }
+
+        if ($level) {
+            $match->where('level', $level);
+        }
+
+        $jobPositions = $match->paginate();
+        $lastJobPositions = JobPosition::orderBy('created_at', 'desc')->first();
+
+        $newCode = 'P-001';
+        if ($lastJobPositions) {
+            $newCode = 'P-' . str_pad((int)explode('-', $lastJobPositions->code)[1] + 1, 3, '0', STR_PAD_LEFT);
+        }
+        return view('modules.users.job-positions.+page', compact('jobPositions', 'newCode'))
+            ->with('i', (request()->input('page', 1) - 1) * $jobPositions->perPage());
+    }
+
+    // roles
+    public function roles(Request $request)
+    {
+        $match = Role::orderBy('created_at', 'asc');
+        $q = $request->get('q');
+        $id_job_position = $request->get('job-position');
+        $id_department = $request->get('department');
+
+        $departments = Department::orderBy('name', 'asc')->get();
+        $jobPositions = JobPosition::orderBy('name', 'asc')->get();
+
+        if ($q) {
+            $match->where('name', 'like', '%' . $q . '%')
+                ->orWhere('code', 'like', '%' . $q . '%');
+        }
+
+        if ($id_job_position) {
+            $match->where('id_job_position', $id_job_position);
+        }
+
+        if ($id_department) {
+            $match->where('id_department', $id_department);
+        }
+
+        $roles = $match->paginate();
+        $last = Role::orderBy('code', 'desc')->first();
+
+        $newCode = 'C-001';
+        if ($last) {
+            $newCode = 'C-' . str_pad((int)explode('-', $last->code)[1] + 1, 3, '0', STR_PAD_LEFT);
+        }
+        return view('modules.users.roles.+page', compact('roles', 'newCode', 'departments', 'jobPositions'))
+            ->with('i', (request()->input('page', 1) - 1) * $roles->perPage());
     }
 }
