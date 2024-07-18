@@ -37,10 +37,10 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Roles',
                             'privileges' => [
-                                'users:roles:view' => 'Ver roles',
-                                'users:roles:create' => 'Agregar roles',
-                                'users:roles:edit' => 'Actualizar roles',
-                                'users:roles:delete' => 'Eliminar roles',
+                                'users:user-roles:view' => 'Ver roles',
+                                'users:user-roles:create' => 'Agregar roles',
+                                'users:user-roles:edit' => 'Actualizar roles',
+                                'users:user-roles:delete' => 'Eliminar roles',
                             ],
                         ],
                         [
@@ -62,31 +62,31 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'users:emails:delete' => 'Eliminar correos',
                             ],
                         ],
-                        [
-                            'name' => 'Dominios',
-                            'privileges' => [
-                                'users:domains:view' => 'Ver dominios',
-                                'users:domains:create' => 'Agregar dominios',
-                                'users:domains:edit' => 'Actualizar dominios',
-                                'users:domains:delete' => 'Eliminar dominios',
-                            ],
-                        ],
+                        // [
+                        //     'name' => 'Dominios',
+                        //     'privileges' => [
+                        //         'users:domains:view' => 'Ver dominios',
+                        //         'users:domains:create' => 'Agregar dominios',
+                        //         'users:domains:edit' => 'Actualizar dominios',
+                        //         'users:domains:delete' => 'Eliminar dominios',
+                        //     ],
+                        // ],
                         [
                             'name' => 'Cargos',
                             'privileges' => [
-                                'maintenance:role:view' => 'Ver cargos',
-                                'maintenance:role:create' => 'Agregar cargos',
-                                'maintenance:role:edit' => 'Actualizar cargos',
-                                'maintenance:role:delete' => 'Eliminar cargos',
+                                'users:roles:view' => 'Ver cargos',
+                                'users:roles:create' => 'Agregar cargos',
+                                'users:roles:edit' => 'Actualizar cargos',
+                                'users:roles:delete' => 'Eliminar cargos',
                             ],
                         ],
                         [
                             'name' => 'Puestos',
                             'privileges' => [
-                                'maintenance:job_position:view' => 'Ver puestos',
-                                'maintenance:job_position:create' => 'Agregar puestos',
-                                'maintenance:job_position:edit' => 'Actualizar puestos',
-                                'maintenance:job_position:delete' => 'Eliminar puestos',
+                                'users:job-positions:view' => 'Ver puestos',
+                                'users:job-positions:create' => 'Agregar puestos',
+                                'users:job-positions:edit' => 'Actualizar puestos',
+                                'users:job-positions:delete' => 'Eliminar puestos',
                             ],
                         ],
                         // [
@@ -124,6 +124,8 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Edas',
                             'privileges' => [
+                                'edas:view_all' => 'Ver todas las edas',
+                                'edas:view' => 'Ver edas que supervisa',
                                 'edas:create_all' => 'Registrar todas las edas',
                                 'edas:create' => 'Registrar edas que supervisa',
                                 'edas:delete' => 'Resetear edas',
