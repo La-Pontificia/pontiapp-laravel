@@ -97,13 +97,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        $user = User::find($id);
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
-        $group_schedules = GroupSchedule::all();
-
         $schedules = $user->groupSchedule->schedules;
-        return view('modules.users.slug.schedules.+page', compact('user', 'group_schedules', 'schedules'));
+        return view('modules.users.slug.schedules.+page', compact('user',  'schedules'));
     }
 
     public function slug_attendance(Request $request, $id)
