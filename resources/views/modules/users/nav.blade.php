@@ -39,18 +39,6 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            {{-- <button
-                class="bg-[#ECECEC] text-black hover:bg-[#dfdfdf] flex items-center rounded-md gap-2 p-2 text-sm font-semibold px-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-download">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" x2="12" y1="15" y2="3" />
-                </svg>
-
-                <span class="max-lg:hidden">Importar</span>
-            </button> --}}
             <button
                 class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
                 <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
