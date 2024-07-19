@@ -57,7 +57,7 @@
 |                          | - Pruebas unitarias                          | ✅     |
 |                          | - Pruebas de integración                     | ✅     |
 |                          | - Pruebas de usuario                         |        |
-| 17-23 de julio           | **Despliegue**                               | 🔄     |
+| 17-23 de julio           | **Despliegue**                               | ✅     |
 |                          | - Configuración del entorno de producción    | ✅     |
 |                          | - Migración de datos                         | ✅     |
 |                          | - Despliegue en servidor                     | ✅     |
