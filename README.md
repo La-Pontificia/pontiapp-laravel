@@ -44,8 +44,8 @@
 |                          | - Actualización de diagramas de arquitectura | ✅     |
 |                          | - Diseño de base de datos                    | ✅     |
 | 16 de mayo - 10 de julio | **Desarrollo**                               | 🔄     |
-|                          | **Gestión de Usuarios**                      | 🔄     |
-|                          | - Gestión de Usuarios                        | 🔄     |
+|                          | **Gestión de Usuarios**                      | ✅    |
+|                          | - Gestión de Usuarios                        |✅     |
 |                          | - Roles                                      | ✅     |
 |                          | - Horarios                                   | ✅     |
 |                          | - Gestión de EDAS                            | ✅     |
