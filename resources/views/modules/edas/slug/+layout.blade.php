@@ -8,13 +8,13 @@
 
 @section('layout.edas')
     <div class="text-black h-full py-2 max-sm:py-1 w-full flex-grow flex flex-col overflow-y-auto">
-        <header class="space-y-3 pb-2">
+        <header class="space-y-3 pb-1">
             <div class="p-1">
                 <div class="rounded-2xl w-fit bg-white shadow-sm">
                     <div class="border-b p-3 font-semibold tracking-tight">
                         Colaborador
                     </div>
-                    <div class="p-5 flex items-center gap-4">
+                    <div class="p-3 px-5 flex items-center gap-4">
                         @include('commons.avatar', [
                             'src' => $user->profile,
                             'className' => 'w-28',
@@ -47,7 +47,6 @@
                 </div>
             </div>
             <nav class="flex items-center font-semibold overflow-x-auto text-neutral-700 gap-2.5">
-                <h1>Edas</h1>
                 @foreach ($years as $y)
                     <a {{ request()->is('edas/' . $user->id . '/eda/' . $y->id . '*') ? 'data-state=open' : '' }}
                         href="/edas/{{ $user->id }}/eda/{{ $y->id }}"
@@ -58,18 +57,7 @@
             </nav>
         </header>
         @if ($eda)
-            <div class="h-full px-2 flex flex-col">
-                <div class="py-2 pt-0 border-b border-neutral-300">
-                    <h1 class="text-lg font-semibold">Completa todas las tareas asignadas.</h1>
-                    <p class=" font-normal text-sm">Eda registrado el
-                        {{ \Carbon\Carbon::parse($eda->created_at)->isoFormat('LL') }} por
-                        <a title="Ir al perfil de {{ $eda->createdBy->first_name }} {{ $eda->createdBy->last_name }}"
-                            href="/profile/{{ $eda->createdBy->id }}" class="hover:underline text-blue-600">
-                            {{ $eda->createdBy->first_name }}
-                            {{ $eda->createdBy->last_name }}.
-                        </a>
-                    </p>
-                </div>
+            <div class="h-full flex flex-col">
                 @yield('layout.edas.slug')
             </div>
         @else
