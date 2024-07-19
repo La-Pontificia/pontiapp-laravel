@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             Swal.fire({
                 title: "¿Estás seguro de aprobar los objetivos?",
                 text: "No podrás deshacer esta acción.",
-                icon: "warning",
+                icon: "info",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#3085d6",
@@ -319,6 +319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         Swal.fire({
                             icon: "success",
                             title: "Objetivos aprobados",
+                            confirmButtonColor: "#d33",
                             text: "Los objetivos fueron aprobados correctamente",
                         }).then(() => {
                             window.location.reload();
@@ -327,6 +328,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
+                            confirmButtonColor: "#d33",
                             text: "Ocurrio un error al aprobar los objetivos, intentelo de nuevo",
                         });
                     }
