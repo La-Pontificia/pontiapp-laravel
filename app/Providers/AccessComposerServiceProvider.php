@@ -149,15 +149,14 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'edas:goals:send' => 'Enviar objetivos',
                                 'edas:goals:edit' => 'Editar objetivos',
                                 'edas:goals:delete' => 'Eliminar objetivos',
-
-                                'edas:goals:self-qualify' => 'Autocalificar objetivos',
-                                'edas:goals:qualify' => 'Calificar objetivos',
-                                'edas:goals:approve' => 'Aprobar objetivos',
+                                'edas:evaluations:approve' => 'Aprobar objetivos',
                             ],
                         ],
                         [
                             'name' => 'Evaluaciones',
                             'privileges' => [
+                                'edas:evaluations:self-qualify' => 'Autocalificar objetivos',
+                                'edas:evaluations:qualify' => 'Calificar objetivos',
                                 'edas:evaluations:view' => 'Ver evaluaciones',
                                 'edas:evaluations:close' => 'Cerrar evaluaciones',
                             ],
