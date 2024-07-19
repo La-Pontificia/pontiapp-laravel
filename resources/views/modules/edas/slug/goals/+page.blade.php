@@ -3,20 +3,21 @@
 @section('title', 'Objetivos: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
 @php
-    $userIsDev = $current_user->role === 'dev';
+    $userIsDev = $cuser->role === 'dev';
     $percentages = range(0, 100);
     $sent = $eda->sent;
-    $hasAddGoals = ($current_user->hasPrivilege('add_goals') && !$eda->approved) || $userIsDev;
-    $hasSentGoals = ($current_user->hasPrivilege('sent_goals') && !$eda->approved) || $userIsDev;
-    $hasEditGoals = ($current_user->hasPrivilege('edit_goals') && !$eda->approved) || $userIsDev;
-    $hasDeleteGoals = ($current_user->hasPrivilege('delete_goals') && !$eda->approved) || $userIsDev;
+    $hasAddGoals = ($cuser->hasPrivilege('edas:goals:send') && !$eda->approved) || $userIsDev;
+    $hasSentGoals = ($cuser->hasPrivilege('edas:goals:send') && !$eda->approved) || $userIsDev;
+    $hasEditGoals = ($cuser->hasPrivilege('edas:goals:edit') && !$eda->approved) || $userIsDev;
+    $hasDeleteGoals = ($cuser->hasPrivilege('edas:goals:delete') && !$eda->approved) || $userIsDev;
+
     $hasApproveGoals =
-        $current_user->hasPrivilege('approve_goals') && $user->id_supervisor === $current_user->id && !$eda->approved;
+        $cuser->hasPrivilege('edas:goals:approve') && !$eda->approved && $user->supervisor_id === $cuser->id;
 
 @endphp
 
 @section('layout.edas.slug')
-    <div class="h-full flex mt-3 bg-white overflow-hidden rounded-xl flex-col pt-0 overflow-x-auto">
+    <div class="h-full flex overflow-hidden flex-col pt-0 overflow-x-auto">
         @if ($sent)
             <input type="hidden" id="input-hidden-id-eda" value="{{ $eda->id }}">
         @endif
@@ -29,7 +30,7 @@
             <span id="has-delete-goals"></span>
         @endif
 
-        <div class="flex gap-2 border-b p-1 tracking-tight">
+        <div class="flex gap-2 p-1 tracking-tight overflow-auto">
             <div class="flex-grow">
                 <button onclick="window.history.back()"
                     class="text-blue-700 hover:bg-indigo-100 font-semibold justify-center min-w-max flex items-center rounded-full p-2 gap-1 px-2">
@@ -43,12 +44,12 @@
                 </button>
             </div>
             <button data-id-eda="{{ $eda->id }}" {{ $hasApproveGoals ? '' : 'data-hidden' }} id="approve-goals-button"
-                class="bg-indigo-600 hover:bg-indigo-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-2 gap-1 text-sm px-3">
+                class="bg-blue-600 hover:bg-blue-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
                 Aprobar
             </button>
             <button {{ $hasSentGoals ? '' : 'data-hidden' }} disabled data-id-eda="{{ $eda->id }}"
                 id="submit-goals-button"
-                class="bg-blue-700 data-[hidden]:hidden font-semibold justify-center hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
+                class="bg-blue-700 data-[hidden]:hidden font-semibold justify-center hover:bg-blue-600 min-w-max flex items-center rounded-lg p-2 gap-1 text-white text-sm px-3">
                 {{ $sent ? 'Reenviar' : 'Enviar' }} objetivos
             </button>
         </div>
@@ -65,7 +66,7 @@
                 </button>
             </div>
         </div>
-        <div id="panel-goals" class="py-3 w-full hidden flex-grow relative">
+        <div id="panel-goals" class="bg-white rounded-xl w-full hidden flex-grow overflow-auto relative">
             <table class="w-full">
                 <thead class="border-b">
                     <tr class="[&>th]:p-2 [&>th]:text-nowrap text-left [&>th]:font-semibold text-sm">
@@ -83,7 +84,7 @@
                 </thead>
                 <tbody id="table-goals" class="divide-y text-[15px]">
                 </tbody>
-                <tbody class="bottom-0 bg-white">
+                <tbody class="bottom-0">
                     <tr class="text-sm">
                         <td colspan="20">
                             <div class="flex justify-center">
