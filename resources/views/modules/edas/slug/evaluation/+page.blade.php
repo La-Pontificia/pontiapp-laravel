@@ -1,39 +1,37 @@
-@extends('layouts.eda-user')
+@extends('modules.edas.slug.+layout')
 
-@section('title', 'Eda: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
+@section('title', 'Eda: ' . $current_year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
-@section('content-eda-user')
+@section('layout.edas.slug')
 
     @php
 
         // if current user is dev
-        $cuIsDev = $current_user->role === 'dev';
 
         // if current user is supervisor
         $isSupervisor = $current_user->id === $user->id_supervisor;
 
         // if has self qualification
         $hasSelfQualification =
-            ($current_user->hasPrivilege('self_qualify') && !$evaluation->closed && !$evaluation->self_qualification) ||
-            $cuIsDev;
+            $current_user->hasPrivilege('edas:evaluations:self-qualify') &&
+            !$evaluation->closed &&
+            !$evaluation->self_qualification;
 
         // if has average evaluation
         $hasAverage =
-            ($current_user->hasPrivilege('average_evaluation') &&
-                !$evaluation->closed &&
-                $isSupervisor &&
-                $evaluation->self_qualification &&
-                !$evaluation->average) ||
-            $cuIsDev;
+            $current_user->hasPrivilege('average_evaluation') &&
+            !$evaluation->closed &&
+            $isSupervisor &&
+            $evaluation->self_qualification &&
+            !$evaluation->average;
 
         // if has close evaluation
         $hasCloseEvaluation =
-            ($current_user->hasPrivilege('close_evaluation') &&
-                !$evaluation->closed &&
-                $evaluation->average &&
-                $evaluation->self_qualification &&
-                $isSupervisor) ||
-            $cuIsDev;
+            $current_user->hasPrivilege('edas:evaluations:close') &&
+            !$evaluation->closed &&
+            $evaluation->average &&
+            $evaluation->self_qualification &&
+            $isSupervisor;
     @endphp
     <div class="h-full flex flex-col mt-3 bg-white overflow-auto rounded-xl">
         <input type="hidden" id="input-hidden-id-evaluation" value="{{ $evaluation->id }}">
