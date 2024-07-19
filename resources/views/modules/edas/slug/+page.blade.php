@@ -18,7 +18,20 @@
         @endphp
 
         <div class="h-full flex flex-col">
-            <div class="py-5 space-y-7 flex flex-col items-start text-left [&>button]:text-left">
+            <div class="py-5 pt-0 space-y-5 flex flex-col items-start text-left [&>button]:text-left">
+
+                <div class="pb-3 border-b w-full border-neutral-300">
+                    <h1 class="text-lg font-semibold">Completa todas las tareas asignadas.</h1>
+                    <p class=" font-normal text-sm">Eda registrado el
+                        {{ \Carbon\Carbon::parse($eda->created_at)->isoFormat('LL') }} por
+                        <a title="Ir al perfil de {{ $eda->createdBy->first_name }} {{ $eda->createdBy->last_name }}"
+                            href="/profile/{{ $eda->createdBy->id }}" class="hover:underline text-blue-600">
+                            {{ $eda->createdBy->first_name }}
+                            {{ $eda->createdBy->last_name }}.
+                        </a>
+                    </p>
+                </div>
+
                 {{-- Goals page --}}
                 <div class="space-y-2">
                     <button class="text-lg font-semibold tracking-tight">Objetivos</button>
@@ -61,7 +74,7 @@
                             @php
                                 $prevEvaluation = $evaluations[$index - 1] ?? (object) ['closed' => true];
                             @endphp
-                            <a href="/edas/{{ $user->id }}/eda/{{ $year->id }}/evaluation/{{ $evaluation->id }}"
+                            <a href="/edas/{{ $user->id }}/eda/{{ $current_year->id }}/evaluation/{{ $evaluation->id }}"
                                 {{ !$eda->approved || !$prevEvaluation->closed ? 'data-hidden' : '' }}
                                 class="border data-[hidden]:opacity-30 w-fit shadow-md data-[hidden]:pointer-events-none p-2 gap-2 items-center rounded-2xl bg-white hover:border-blue-500 flex">
                                 <div class="p-4 text-white rounded-xl bg-blue-600">
