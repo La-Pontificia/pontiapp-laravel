@@ -121,13 +121,13 @@ class EdaController  extends Controller
         $user = User::find($id_user);
         $evaluation = Evaluation::find($id_evaluation);
         $years = Year::orderBy('name', 'desc')->get();
-        $year = Year::find($id_year);
-        $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+        $current_year = Year::find($id_year);
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $current_year->id)->first();
         $goals = [];
 
         // validate
         if (!$eda) return view('pages.500', ['error' => 'Eda not found']);
-        if (!$year) return view('pages.500', ['error' => 'Year not found']);
+        if (!$current_year) return view('pages.500', ['error' => 'Year not found']);
         if (!$user) return view('pages.500', ['error' => 'User not found']);
         if (!$evaluation) return view('pages.500', ['error' => 'Evaluation not found']);
 
@@ -138,7 +138,7 @@ class EdaController  extends Controller
 
         return view(
             'modules.edas.slug.evaluation.+page',
-            compact('user', 'years', 'year', 'eda', 'goals', 'evaluation')
+            compact('user', 'years', 'current_year', 'eda', 'goals', 'evaluation')
         );
     }
 
