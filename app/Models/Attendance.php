@@ -10,26 +10,31 @@ class Attendance extends Model
 
     use HasFactory;
 
-    protected $connection = 'sqlsrv';
-
-    protected $table = 'assists';
+    protected $table = 'iclock_transaction';
 
     protected $perPage = 20;
 
     protected $fillable = [
         'id',
-        'iclock_transaction_id',
         'punch_time',
-        'first_name',
-        'last_name',
-        'upload_time',
         'emp_code',
-        'dept_name',
-        'created_at',
+        'area_alias',
+        'emp_id',
     ];
+
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+        return $this;
+    }
 
     public function getUserFromMysql()
     {
         return User::on('mysql')->where('dni', $this->emp_code)->first();
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(AttendanceEmp::class, 'emp_id', 'id');
     }
 }
