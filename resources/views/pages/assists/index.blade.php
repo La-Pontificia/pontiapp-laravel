@@ -1,6 +1,6 @@
-@extends('layouts.assists')
+@extends('layouts.app')
 
-@section('content.assists')
+@section('content')
     <div class="overflow-auto bg-white rounded-2xl flex flex-col">
         <table class="w-full relative overflow-x-auto">
             <thead class="border-b sticky divide-y top-0 z-10 bg-white">
@@ -59,14 +59,15 @@
                                     </a>
                                 </div>
                             @else
-                                <p class="font-semibold text-nowrap text-sm opacity-60">
-                                    {{ $assist->first_name }}, {{ $assist->last_name }} | {{ $assist->emp_code }}
-                                </p>
                             @endif
+                            {{-- <p class="font-semibold text-nowrap text-sm opacity-60">
+                                {{ $assist->employee->first_name }}, {{ $assist->employee->last_name }} |
+                                {{ $assist->emp_code }}
+                            </p> --}}
                         </td>
                         <td>
                             <p class="text-nowrap font-semibold">
-                                {{ $assist->dept_name }}
+                                {{ $assist->employee->department->dept_name }}
                             </p>
                         </td>
                         <td>
@@ -85,7 +86,7 @@
                                     <path d="M12 18h.01" />
                                     <path d="M16 18h.01" />
                                 </svg>
-                                {{ date('d/m/Y', strtotime($assist->created_at)) }}
+                                {{ date('d/m/Y', strtotime($assist->punch_time)) }}
                             </p>
                         </td>
                         <td>
@@ -103,15 +104,6 @@
                                 @endif
                             </p>
                         </td>
-                        {{-- <td>
-                            <p class="text-nowrap">
-                                @if ($assist->upload_time)
-                                    {{ date('h:i:s A', strtotime($assist->upload_time)) }}
-                                @else
-                                    -
-                                @endif
-                            </p>
-                        </td> --}}
                     </tr>
                 @endforeach
             </tbody>
