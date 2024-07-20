@@ -48,9 +48,9 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' => env('DB_DATABASE', 'eda_consorcio'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'root'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -77,12 +77,143 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
-        'sqlsrv' => [
+
+        // PL Alameda
+        'pl-alameda' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
             'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => env('ASSIST_DB_DATABASE', 'forge'),
+            'database' => env('PL_ALAMEDA_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+        // PL Andahuaylas
+        'pl-andahuaylas' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('PL_ANDAHUAYLAS_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+        // PL Casuarina
+        'pl-casuarina' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('PL_CASUARINA_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+        // PL Cybernet
+        'pl-cybernet' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('PL_CYBERNET_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+
+        // PL Jazmines
+        'pl-jazmines' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('PL_JAZMINES_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+        // RH Alameda
+        'rh-alameda' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('RH_ALAMEDA_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+        // RH Andahuaylas
+        'rh-andahuaylas' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('RH_ANDAHUAYLAS_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+        // RH Casuarina
+        'rh-casuarina' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('RH_CASUARINA_DATABASE', 'forge'),
+            'username' => env('ASSIST_DB_USERNAME', 'forge'),
+            'password' => env('ASSIST_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'trust_server_certificate' => true,
+            'encrypt' => 'no'
+        ],
+
+        // RH Jazmines
+        'rh-jazmines' => [
+            'driver' => 'sqlsrv',
+            'url' => env('ASSIST_DATABASE_URL'),
+            'host' => env('ASSIST_DB_HOST', 'localhost'),
+            'port' => env('ASSIST_DB_PORT', '1433'),
+            'database' => env('RH_JAZMINES_DATABASE', 'forge'),
             'username' => env('ASSIST_DB_USERNAME', 'forge'),
             'password' => env('ASSIST_DB_PASSWORD', ''),
             'charset' => 'utf8',
