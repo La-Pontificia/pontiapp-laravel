@@ -44,8 +44,8 @@
 |                          | - Actualización de diagramas de arquitectura | ✅     |
 |                          | - Diseño de base de datos                    | ✅     |
 | 16 de mayo - 10 de julio | **Desarrollo**                               | 🔄     |
-|                          | **Gestión de Usuarios**                      | 🔄     |
-|                          | - Gestión de Usuarios                        | 🔄     |
+|                          | **Gestión de Usuarios**                      | ✅    |
+|                          | - Gestión de Usuarios                        |✅     |
 |                          | - Roles                                      | ✅     |
 |                          | - Horarios                                   | ✅     |
 |                          | - Gestión de EDAS                            | ✅     |
@@ -57,7 +57,7 @@
 |                          | - Pruebas unitarias                          | ✅     |
 |                          | - Pruebas de integración                     | ✅     |
 |                          | - Pruebas de usuario                         |        |
-| 17-23 de julio           | **Despliegue**                               | 🔄     |
+| 17-23 de julio           | **Despliegue**                               | ✅     |
 |                          | - Configuración del entorno de producción    | ✅     |
 |                          | - Migración de datos                         | ✅     |
 |                          | - Despliegue en servidor                     | ✅     |
