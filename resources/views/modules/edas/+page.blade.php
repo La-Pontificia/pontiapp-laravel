@@ -6,9 +6,9 @@
     <div class="text-black h-full w-full flex-grow flex flex-col overflow-y-auto">
         @include('modules.edas.nav')
         <h2 class="py-3 pb-0 font-semibold tracking-tight text-lg px-2">
-            Lista de colaboradores
+            Lista de usuarios
         </h2>
-        @if ($current_user->hasPrivilege('edas:view'))
+        @if ($cuser->hasPrivilege('edas:view'))
             <div class="overflow-auto flex-grow h-full pt-0">
                 <table class="w-full text-left">
                     <thead class="border-b">
@@ -24,7 +24,7 @@
                             <tr class="">
                                 <td colspan="11" class="text-center py-4">
                                     <div class="p-10">
-                                        No hay colaboradores registrados
+                                        No hay usuarios que mostrar.
                                     </div>
                                 </td>
                             </tr>
@@ -164,7 +164,7 @@
             </footer>
         @else
             @include('+403', [
-                'message' => 'No tienes permisos para ver usuarios',
+                'message' => 'No tienes permisos para ver los usuarios de los edas.',
             ])
         @endif
     </div>
