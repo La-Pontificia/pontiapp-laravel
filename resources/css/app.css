@@ -44,7 +44,7 @@ textarea:not([data-notstyles]) {
         border-color: #1473e9;
         outline: 4px solid #1474e9c3;
         outline-offset: 0px;
-        transition: all 0.1s;
+        /* transition: all 0.1s; */
         position: relative;
     }
     appearance: auto !important;
