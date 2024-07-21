@@ -16,7 +16,7 @@ class EdaController  extends Controller
 
     public function index(Request $request)
     {
-        $currentUser = auth()->user();
+        $cuser = auth()->user();
         $match = User::orderBy('created_at', 'desc');
         $query = $request->get('q');
         $job_position = $request->get('job_position');
@@ -24,9 +24,10 @@ class EdaController  extends Controller
         $role = $request->get('role');
         $users = [];
 
-        // if (!$seeAllUsers) {
-        //     $match->where('supervisor_id', $currentUser->id);
-        // }
+        if (in_array('edas:view', $cuser->role->privileges) &&  !in_array('edas:view_all', $cuser->role->privileges)) {
+            $match->where('supervisor_id', $cuser->id);
+        }
+
 
         // filters
         if ($job_position) {
