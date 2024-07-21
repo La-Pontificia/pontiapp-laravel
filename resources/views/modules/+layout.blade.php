@@ -12,7 +12,7 @@
             @endif
         @else
             <div id="app" class="flex flex-col h-full flex-grow overflow-y-auto">
-                @include('components.header')
+                @include('modules.header')
                 <main class="flex h-full overflow-auto">
                     <aside id="cta-sidebar"
                         class="z-40 w-[270px] min-w-[270px] transition-all h-full max-md:top-12 max-md:bg-white max-md:border-r overflow-y-auto max-md:-translate-x-full max-md:fixed"
