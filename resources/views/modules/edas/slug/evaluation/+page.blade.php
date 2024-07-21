@@ -6,10 +6,8 @@
 
     @php
 
-        // if current user is dev
-
         // if current user is supervisor
-        $isSupervisor = $current_user->id === $user->id_supervisor;
+        $isSupervisor = $current_user->id === $user->supervisor_id;
 
         // if has self qualification
         $hasSelfQualification =
@@ -19,7 +17,7 @@
 
         // if has average evaluation
         $hasAverage =
-            $current_user->hasPrivilege('average_evaluation') &&
+            $current_user->hasPrivilege('edas:evaluations:qualify') &&
             !$evaluation->closed &&
             $isSupervisor &&
             $evaluation->self_qualification &&
