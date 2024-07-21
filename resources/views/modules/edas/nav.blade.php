@@ -1,7 +1,7 @@
 <nav class="flex gap-2">
     <div class="w-full items-center flex overflow-x-auto">
         <div class="flex flex-grow gap-2 items-center">
-            @if ($current_user->hasPrivilege('edas:create'))
+            @if ($current_user->hasPrivilege('edas:create_all'))
                 <button
                     class="bg-blue-700 shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
