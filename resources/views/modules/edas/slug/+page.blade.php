@@ -4,6 +4,9 @@
 
 @php
     $hasPosibleCreate = $cuser->hasPrivilege('create_edas') && $current_year->status;
+    $hasClose =
+        $cuser->hasPrivilege('edas:close_all') ||
+        ($cuser->hasPrivilege('edas:close') && $user->supervisor_id == $cuser->id);
 @endphp
 
 @section('layout.edas.slug')
@@ -138,7 +141,7 @@
                             <p>Nota autocalificada: <b>{{ $totalSelfQualification }}</b></p>
                             <p>Nota aprobada: <b>{{ $totalAverage }}</b></p>
                         </div>
-                        @if ($hasCloseEda && !$eda->closed)
+                        @if ($hasClose && !$eda->closed)
                             <p class="text-rose-500 px-1">
                                 El usuario ha terminado las tareas asignadas, por favor revisa y cierra el EDA.
                             </p>
@@ -168,7 +171,7 @@
                 <div class="space-y-2">
                     <button class="text-lg font-semibold tracking-tight">Cuestionarios</button>
                     @if ($eda->closed)
-                        <a href="{{ route('edas.user.questionnaires', ['id_year' => $year->id, 'id_user' => $user->id]) }}"
+                        <a href="{{ '/edas/' . $user->id . '/' . $current_year->id . '/questionnaires' }}"
                             class="p-2 gap-2 w-fit items-center shadow-lg shadow-amber-500/30 rounded-2xl bg-white flex bg-gradient-to-br from-amber-700 to-yellow-700 text-white">
                             <div class="p-4 rounded-xl bg-white text-amber-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -180,9 +183,9 @@
                             </div>
                             <div class="flex-grow">
                                 <h2 class="font-semibold">Cuestionarios</h2>
-                                <p class="opacity-70 text-sm max-w-[40ch]">
-                                    Responde a los cuestionario asignados por cada Eda. y visualizar los resultados de su
-                                    Supervisor.
+                                <p class="opacity-70 text-sm max-w-[50ch]">
+                                    Responde a los cuestionario asignados por cada Eda. y visualiza los resultados de su
+                                    Supervisor o colaborador.
                                 </p>
                             </div>
                             <div class="space-y-1 text-xs flex flex-col items-end">
