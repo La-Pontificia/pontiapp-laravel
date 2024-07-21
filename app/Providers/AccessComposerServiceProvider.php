@@ -128,9 +128,19 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'edas:view' => 'Ver edas que supervisa',
                                 'edas:create_all' => 'Registrar todas las edas',
                                 'edas:create' => 'Registrar edas que supervisa',
+                                'edas:create_my' => 'Registrar sus edas',
                                 'edas:delete' => 'Resetear edas',
                                 'edas:close_all' => 'Cerrar todas las edas',
                                 'edas:close' => 'Cerrar las edas que supervisa',
+                            ],
+                        ],
+                        [
+                            'name' => 'Años',
+                            'privileges' => [
+                                'edas:year:view' => 'Ver los años',
+                                'edas:year:edit' => 'Editar años',
+                                'edas:year:create' => 'Registrar años',
+                                'edas:year:delete' => 'Eliminar años',
                             ],
                         ],
                         [
@@ -149,7 +159,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'edas:goals:send' => 'Enviar objetivos',
                                 'edas:goals:edit' => 'Editar objetivos',
                                 'edas:goals:delete' => 'Eliminar objetivos',
-                                'edas:evaluations:approve' => 'Aprobar objetivos',
+                                'edas:goals:approve' => 'Aprobar objetivos',
                             ],
                         ],
                         [
@@ -166,6 +176,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'privileges' => [
                                 'edas:questionnaires:respond' => 'Responder cuestionarios',
                                 'edas:questionnaires:view' => 'Ver cuestionarios',
+                                'edas:questionnaires:create' => 'Crear cuestionarios',
                                 'edas:questionnaires:generate_report' => 'Generar reportes de cuestionarios',
                             ],
                         ],
