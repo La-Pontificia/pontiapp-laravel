@@ -120,7 +120,8 @@ class User extends Authenticatable
     public function schedules()
     {
         $schedulesMatched = $this->groupSchedule->schedules;
-        $allSchedules = $schedulesMatched;
+        $customSchedules = Schedule::where('user_id', $this->id)->where('archived', false)->get();
+        $allSchedules = $schedulesMatched->merge($customSchedules);
 
         $schedulesGenerated = [];
 
