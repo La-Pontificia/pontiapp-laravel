@@ -63,8 +63,8 @@
                     </h2>
                     <div class="pl-3 border-l ml-2 space-y-2 mt-3">
                         <div class="flex items-center gap-2">
-                            <p class="font-semibold flex items-center gap-2 tracking-tight"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="none"
+                            <p class="font-semibold flex items-center gap-2 tracking-tight">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                     class="lucide lucide-hotel">
                                     <path d="M10 22v-6.57" />
@@ -77,7 +77,8 @@
                                     <path d="M8 11h.01" />
                                     <path d="M8 7h.01" />
                                     <rect x="4" y="2" width="16" height="20" rx="2" />
-                                </svg>Area:</p>
+                                </svg>Area:
+                            </p>
                             <p>{{ $user->role_position->department->area->name }}</p>
                         </div>
                         <div class="flex items-center gap-2">
