@@ -53,9 +53,13 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
 
     // Edas routes
-    Route::get('edas', 'App\Http\Controllers\EdaController@index')->name('edas');
-    // Route::get('edas/surveys', 'App\Http\Controllers\SurveyController@index')->name('edas.surveys');
-    Route::get('edas/me', 'App\Http\Controllers\EdaController@me')->name('edas.me');
+    Route::get('edas', 'App\Http\Controllers\EdaController@index');
+    Route::get('edas/years', 'App\Http\Controllers\YearController@index');
+    Route::get('edas/questionnaires-templates', 'App\Http\Controllers\QuestionnaireTemplateController@index');
+    Route::get('edas/questionnaires-templates/create', 'App\Http\Controllers\QuestionnaireTemplateController@create');
+    Route::get('edas/questionnaires-templates/{id}/questions', 'App\Http\Controllers\QuestionnaireTemplateController@questions');
+
+    Route::get('edas/me', 'App\Http\Controllers\EdaController@me');
 
     Route::get('edas/{id_user}/eda', 'App\Http\Controllers\EdaController@user')->name('edas.slug');
     Route::get('edas/{id_user}/eda/{id_year}', 'App\Http\Controllers\EdaController@year')->name('edas.slug.year');
@@ -69,14 +73,12 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('assists/{id_user}/schedules', 'App\Http\Controllers\AssistController@user')->name('assists.user.schedules');
     Route::get('assists/schedules', 'App\Http\Controllers\AssistController@schedules')->name('assists.schedules');
 
-    // Reports routes
-    Route::get('reports', 'App\Http\Controllers\ReportController@index')->name('reports');
-
-    // Reports routes
+    // Audit routes
     Route::get('audit', 'App\Http\Controllers\AuditController@index')->name('audit');
 
-
     // -------- MAINTAINANCE ROUTES ---------------------------
+    Route::get('maintenance', 'App\Http\Controllers\MaintenanceController@index');
+
     // Areas routes
     Route::get('areas', 'App\Http\Controllers\AreaController@index')->name('areas');
 
@@ -94,12 +96,4 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Surveys routes
     Route::get('surveys', 'App\Http\Controllers\SurveyController@index')->name('surveys');
-
-    // Templates routes
-    Route::get('templates', 'App\Http\Controllers\TemplateController@index')->name('templates');
-    Route::get('templates/create', 'App\Http\Controllers\TemplateController@create')->name('templates.create');
-    Route::get('templates/edit/{id}', 'App\Http\Controllers\TemplateController@edit')->name('templates.edit');
-
-    // Years routes
-    Route::get('years', 'App\Http\Controllers\YearController@index')->name('years');
 });
