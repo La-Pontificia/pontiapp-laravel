@@ -22,9 +22,9 @@ class ScheduleController extends Controller
 
     public function schedule($id)
     {
-        $formSchedule = new Schedule();
         $group_schedule = GroupSchedule::find($id);
         $schedules = $group_schedule->schedules()->orderBy('from', 'asc')->get();
-        return view('modules.users.schedules.slug.+page', compact('group_schedule', 'schedules', 'formSchedule'));
+
+        return view('modules.users.schedules.slug.+page', compact('group_schedule', 'schedules'));
     }
 }
