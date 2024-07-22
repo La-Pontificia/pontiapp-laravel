@@ -1,7 +1,8 @@
 @php
-    $showYear = $cuser->hasPrivilege('edas:year:view') || $cuser->hasPrivilege('edas:year:create');
+    $showYear = $cuser->hasPrivilege('edas:years:view') || $cuser->hasPrivilege('edas:years:create');
     $showQuestionnaires =
-        $cuser->hasPrivilege('edas:questionnaires:view') || $cuser->hasPrivilege('edas:questionnaires:create');
+        $cuser->hasPrivilege('edas:questionnaires-templates:view') ||
+        $cuser->hasPrivilege('edas:questionnaires-templates:create');
 
 @endphp
 <div class="flex flex-col overflow-y-auto">
@@ -32,7 +33,7 @@
             <p>Mis edas</p>
         </a>
         <a href="/edas"
-            {{ request()->is('edas*') && !request()->is('edas' . '/' . $cuser->id . '*') ? 'data-active' : '' }}>
+            {{ request()->is('edas*') && !request()->is('edas/questionnaires-templates*') && !request()->is('edas/years*') && !request()->is('edas' . '/' . $cuser->id . '*') ? 'data-active' : '' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-table">
                 <path d="M12 3v18" />
@@ -43,7 +44,7 @@
             <p>Edas</p>
         </a>
         @if ($showYear)
-            <a href="/years" {{ request()->is('edas/years*') ? 'data-active' : '' }}>
+            <a href="/edas/years" {{ request()->is('edas/years*') ? 'data-active' : '' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="lucide lucide-calendar-days">
@@ -62,7 +63,8 @@
             </a>
         @endif
         @if ($showQuestionnaires)
-            <a href="/years/questionnaires" {{ request()->is('edas/questionnaires*') ? 'data-active' : '' }}>
+            <a href="/edas/questionnaires-templates"
+                {{ request()->is('edas/questionnaires-templates*') ? 'data-active' : '' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notepad-text">
                     <path d="M8 2v4" />
@@ -73,7 +75,7 @@
                     <path d="M8 14h8" />
                     <path d="M8 18h5" />
                 </svg>
-                <p>Cuestionarios</p>
+                <p>Plantilla de cuestionarios</p>
             </a>
         @endif
     </div>
