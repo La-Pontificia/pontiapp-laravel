@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -114,5 +115,33 @@ class User extends Authenticatable
     public function edas()
     {
         return $this->hasMany(Eda::class, 'id_user', 'id');
+    }
+
+    public function schedules()
+    {
+        $schedulesMatched = $this->groupSchedule->schedules;
+        $allSchedules = $schedulesMatched;
+
+        $schedulesGenerated = [];
+
+        foreach ($allSchedules as $schedule) {
+            for ($date = Carbon::parse($schedule->start_date); $date->lte(Carbon::parse($schedule->end_date)); $date->addDay()) {
+
+                $dayOfWeek = $date->dayOfWeek + 1;
+
+                if ($dayOfWeek == 8) $dayOfWeek = 1;
+
+                if (in_array((string)$dayOfWeek, json_decode($schedule->days))) {
+
+                    $schedulesGenerated[] = [
+                        'title' => $schedule->title,
+                        'from' => Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day)->format('Y-m-d H:i:s'),
+                        'to' => Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day)->format('Y-m-d H:i:s'),
+                    ];
+                }
+            }
+        }
+
+        return $schedulesGenerated;
     }
 }
