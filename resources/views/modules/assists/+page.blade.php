@@ -184,7 +184,8 @@
                                     </div>
                                 @else
                                     <p class="font-semibold text-nowrap text-sm opacity-60">
-                                        {{ $assist->first_name }}, {{ $assist->last_name }} | {{ $assist->emp_code }}
+                                        {{ $assist->employee->first_name }}, {{ $assist->employee->last_name }} |
+                                        {{ $assist->emp_code }}
                                     </p>
                                 @endif
                             </td>
