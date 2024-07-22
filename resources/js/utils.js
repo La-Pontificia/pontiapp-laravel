@@ -81,6 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
+                    confirmButtonColor: "#d33",
                     text:
                         error.response.data ?? "Error al enviar el formulario",
                 });
