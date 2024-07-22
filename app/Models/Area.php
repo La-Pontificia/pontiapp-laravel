@@ -29,16 +29,16 @@ class Area extends Model
 
   public function departments()
   {
-    return $this->hasMany('App\Models\Department', 'id_area', 'id');
+    return $this->hasMany(Department::class, 'id_area', 'id');
   }
 
   public function createdBy()
   {
-    return $this->belongsTo('App\Models\User', 'created_by', 'id');
+    return $this->hasOne(User::class, 'id', 'created_by');
   }
 
   public function updatedBy()
   {
-    return $this->belongsTo('App\Models\User', 'updated_by', 'id');
+    return $this->hasOne(User::class, 'id', 'updated_by');
   }
 }
