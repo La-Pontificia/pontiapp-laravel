@@ -137,10 +137,10 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Años',
                             'privileges' => [
-                                'edas:year:view' => 'Ver los años',
-                                'edas:year:edit' => 'Editar años',
-                                'edas:year:create' => 'Registrar años',
-                                'edas:year:delete' => 'Eliminar años',
+                                'edas:years:view' => 'Ver los años',
+                                'edas:years:edit' => 'Editar años',
+                                'edas:years:create' => 'Registrar años',
+                                'edas:years:delete' => 'Eliminar años',
                             ],
                         ],
                         [
@@ -175,9 +175,16 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'name' => 'Cuestionarios',
                             'privileges' => [
                                 'edas:questionnaires:respond' => 'Responder cuestionarios',
-                                'edas:questionnaires:view' => 'Ver cuestionarios',
-                                'edas:questionnaires:create' => 'Crear cuestionarios',
                                 'edas:questionnaires:generate_report' => 'Generar reportes de cuestionarios',
+                            ],
+                        ],
+
+                        [
+                            'name' => 'Plantilla de cuestionarios',
+                            'privileges' => [
+                                'edas:questionnaires-templates:view' => 'Ver plantillas de cuestionarios',
+                                'edas:questionnaires-templates:create' => 'Crear plantillas de cuestionarios',
+                                'edas:questionnaires-templates:edit' => 'Editar plantillas de cuestionarios',
                             ],
                         ],
                         [
@@ -193,31 +200,9 @@ class AccessComposerServiceProvider extends ServiceProvider
                     'name' => 'Mantenimiento',
                     'items' => [
                         [
-                            'name' => 'Areas',
+                            'name' => 'Mantenimiento',
                             'privileges' => [
-                                'maintenance:areas:view' => 'Ver areas',
-                                'maintenance:areas:create' => 'Agregar areas',
-                                'maintenance:areas:edit' => 'Actualizar areas',
-                                'maintenance:areas:delete' => 'Eliminar areas',
-                            ],
-                        ],
-                        [
-                            'name' => 'Departamentos',
-                            'privileges' => [
-                                'maintenance:department:view' => 'Ver departamentos',
-                                'maintenance:department:create' => 'Agregar departamentos',
-                                'maintenance:department:edit' => 'Actualizar departamentos',
-                                'maintenance:department:delete' => 'Eliminar departamentos',
-                            ],
-                        ],
-
-                        [
-                            'name' => 'Sedes',
-                            'privileges' => [
-                                'maintenance:branches:view' => 'Ver sedes',
-                                'maintenance:branches:create' => 'Agregar sedes',
-                                'maintenance:branches:edit' => 'Actualizar sedes',
-                                'maintenance:branches:delete' => 'Eliminar sedes',
+                                'maintenance' => 'Todos los privilegios',
                             ],
                         ],
                     ],
