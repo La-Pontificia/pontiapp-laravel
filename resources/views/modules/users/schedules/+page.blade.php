@@ -55,7 +55,7 @@
             Gestion de horarios
         </h2>
         @if ($current_user->hasPrivilege('users:schedules:view'))
-            <div class="bg-white shadow-sm h-full flex-grow rounded-2xl">
+            <div class="bg-white shadow-sm h-full flex-grow overflow-auto rounded-2xl">
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-2 [&>th]:px-4">
@@ -80,7 +80,7 @@
                                     class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-4">
                                     <td>
                                         <div class="flex gap-2 items-center">
-                                            <p>
+                                            <p class="text-nowrap">
                                                 {{ $group->name }}
                                             </p>
                                             @if ($cuser->hasPrivilege('users:schedules:edit'))
