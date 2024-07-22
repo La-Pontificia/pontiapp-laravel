@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Eda;
+use App\Models\Evaluation;
+use App\Models\User;
 use App\Models\Year;
 use Illuminate\Http\Request;
 
@@ -19,17 +22,18 @@ class YearController extends Controller
 
         $years = $match->paginate();
 
-        return view('pages.years.index', compact('years'))
+        return view('modules.edas.years.+page', compact('years'))
             ->with('i', (request()->input('page', 1) - 1) * $years->perPage());
     }
 
-    public function store(Request $request)
+    public function create(Request $request)
     {
         $request->validate([
             'name' => 'required',
         ]);
 
         $alreadyExistCode = Year::where('name', $request->name)->first();
+        $createAllEdas = $request->input('create-all-edas') ? true : false;
         if ($alreadyExistCode) {
             return response()->json('Ya existe un registro con el mismo nombre.', 500);
         }
@@ -40,7 +44,29 @@ class YearController extends Controller
         $year->created_by = auth()->user()->id;
         $year->save();
 
+        if ($createAllEdas) {
+            $users = User::where('status', true)->get();
+            foreach ($users as $user) {
+                $this->createEda($user, $year);
+            }
+        }
         return response()->json($year, 200);
+    }
+
+    public function createEda($user, $year)
+    {
+        $evaluationArray = [1, 2];
+        $eda = Eda::create([
+            'id_user' => $user->id,
+            'id_year' => $year->id,
+            'created_by' => auth()->user()->id,
+        ]);
+        foreach ($evaluationArray as $evaluation) {
+            Evaluation::create([
+                'number' => $evaluation,
+                'id_eda' => $eda->id,
+            ]);
+        }
     }
 
     public function update(Request $request, $id)
@@ -58,6 +84,24 @@ class YearController extends Controller
         $year->name = $request->name;
         $year->status = $request->status ? true : false;
         $year->updated_by = auth()->user()->id;
+        $year->save();
+
+        return response()->json($year, 200);
+    }
+
+    public function open($id)
+    {
+        $year = Year::find($id);
+        $year->status = true;
+        $year->save();
+
+        return response()->json($year, 200);
+    }
+
+    public function close($id)
+    {
+        $year = Year::find($id);
+        $year->status = false;
         $year->save();
 
         return response()->json($year, 200);
