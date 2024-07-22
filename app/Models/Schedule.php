@@ -32,7 +32,13 @@ class Schedule extends Model
         'start_date',
         'end_date',
         'background',
+        'archived',
+        'from_start',
+        'from_end',
+        'to_start',
+        'to_end',
     ];
+
 
     public function createdBy()
     {
