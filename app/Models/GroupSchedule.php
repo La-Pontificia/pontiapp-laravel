@@ -23,7 +23,7 @@ class GroupSchedule extends Model
 
     public function schedules()
     {
-        return $this->hasMany(Schedule::class, 'group_id', 'id');
+        return $this->hasMany(Schedule::class, 'group_id', 'id')->where('archived', false);
     }
 
     public function createdBy()
