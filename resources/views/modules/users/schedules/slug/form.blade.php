@@ -1,9 +1,15 @@
 @php
-    $daysJson = json_decode($schedule->days) ?? ['2'];
-    $startDate = $schedule->start_date ? date('Y-m-d', strtotime($schedule->start_date)) : null;
-    $endDate = $schedule->end_date ? date('Y-m-d', strtotime($schedule->end_date)) : null;
-    $from = $schedule->from ? date('H:i', strtotime($schedule->from)) : null;
-    $to = $schedule->to ? date('H:i', strtotime($schedule->to)) : null;
+
+    $daysJson = isset($schedule) ? json_decode($schedule->days) : ['2'];
+    $startDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->start_date)) : null;
+    $endDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->end_date)) : null;
+    $from = isset($schedule) ? date('H:i', strtotime($schedule->from)) : null;
+    $to = isset($schedule) ? date('H:i', strtotime($schedule->to)) : null;
+    $from_start = isset($schedule) ? date('H:i', strtotime($schedule->from_start)) : null;
+    $from_end = isset($schedule) ? date('H:i', strtotime($schedule->from_end)) : null;
+    $to_start = isset($schedule) ? date('H:i', strtotime($schedule->to_start)) : null;
+    $to_end = isset($schedule) ? date('H:i', strtotime($schedule->to_end)) : null;
+
 @endphp
 <input value="{{ $schedule->title ?? 'Horario laboral' }}" autofocus value="Horario laboral" type="text"
     placeholder="Título (Opcional)" name="title">
@@ -30,16 +36,43 @@
 </div>
 <div class="flex border-y py-3 flex-col gap-2">
     <div class="flex items-center gap-2">
-        <div class="p-1">Hora de inicio:</div>
+        <div class="p-1">Entrada:</div>
         <div class="grid grid-cols-2 gap-2">
             <input value="{{ $from }}" min="05:00" max="23:00" required type="time"
                 value="05:00"name="from">
         </div>
     </div>
     <div class="flex items-center gap-2">
-        <div class="p-1">Hora fin:</div>
+        <div class="p-1">Permite marcar entrada desde:</div>
+        <div class="grid grid-cols-2 gap-2">
+            <input value="{{ $from_start }}" min="04:00" max="24:00" required type="time" name="from_start">
+        </div>
+    </div>
+    <div class="flex items-center gap-2">
+        <div class="p-1">Permite marcar entrada hasta:</div>
+        <div class="grid grid-cols-2 gap-2">
+            <input value="{{ $from_start }}" min="04:00" max="24:00" required type="time" name="from_end">
+        </div>
+    </div>
+</div>
+<div class="flex border-y py-3 flex-col gap-2">
+
+    <div class="flex items-center gap-2">
+        <div class="p-1">Salida:</div>
         <div class="grid grid-cols-2 gap-2">
             <input value="{{ $to }}" min="05:00" max="23:00" required type="time" name="to">
+        </div>
+    </div>
+    <div class="flex items-center gap-2">
+        <div class="p-1">Permite marcar salida desde:</div>
+        <div class="grid grid-cols-2 gap-2">
+            <input value="{{ $to_start }}" min="04:00" max="24:00" required type="time" name="to_start">
+        </div>
+    </div>
+    <div class="flex items-center gap-2">
+        <div class="p-1">Permite marcar salida hasta:</div>
+        <div class="grid grid-cols-2 gap-2">
+            <input value="{{ $to_start }}" min="04:00" max="24:00" required type="time" name="to_end">
         </div>
     </div>
 </div>
