@@ -100,9 +100,7 @@
                                     @include('components.users.auditory-card')
                                     <form action="/api/schedules/group/{{ $group_schedule->id }}/add" id="schedule-form-add"
                                         method="POST" class="p-3 grid dinamic-form gap-4">
-                                        @include('modules.users.schedules.slug.form', [
-                                            'schedule' => $formSchedule,
-                                        ])
+                                        @include('modules.users.schedules.slug.form')
                                     </form>
                                     <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
                                         <button form="schedule-form-add" type="submit"
@@ -177,10 +175,19 @@
                                     data-modal-toggle="edit-scheldule-modal-{{ $schedule->id }}"
                                     class="p-2 hover:bg-neutral-100 w-full block rounded-md text-left">Editar</button>
 
-                                <button data-id="{{ $schedule->id }}"
-                                    class="p-2 delete-schelude-group hover:bg-neutral-100 text-left w-full block rounded-md text-red-600 hover:bg-gray-10">
+                                <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el horario?"
+                                    data-adescription="No podrás deshacer esta acción.?"
+                                    data-param="/api/schedules/delete/{{ $schedule->id }}"
+                                    class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600 hover:bg-gray-10">
                                     Eliminar
                                 </button>
+                                <button data-alertvariant="warning" data-atitle="¿Estás seguro de archivar el horario?"
+                                    data-adescription="Ya no se podrá visualizar el horario en ningun lado solo en los reportes de horarios."
+                                    data-param="/api/schedules/archive/{{ $schedule->id }}"
+                                    class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600 hover:bg-gray-10">
+                                    Archivar
+                                </button>
+
                             </div>
 
                             <div id="edit-scheldule-modal-{{ $schedule->id }}" data-modal-backdrop="static"
@@ -211,6 +218,7 @@
                                             @include('modules.users.schedules.slug.form', [
                                                 'schedule' => $schedule,
                                             ])
+
                                         </form>
                                         <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
                                             <button form="schedule-form-edit-{{ $schedule->id }}" type="submit"
@@ -219,6 +227,13 @@
                                             <button id="button-close-scheldule-modal"
                                                 data-modal-hide="edit-scheldule-modal-{{ $schedule->id }}" type="button"
                                                 class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
+                                            <button data-alertvariant="warning"
+                                                data-atitle="¿Estás seguro de archivar el horario?"
+                                                data-adescription="Ya no se podrá visualizar el horario en ningun lado solo en los reportes de horarios."
+                                                data-param="/api/schedules/archive/{{ $schedule->id }}" type="button"
+                                                class="text-white dinamic-alert ml-auto bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
+                                                Archivar
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
