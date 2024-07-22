@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let schedulesGroup = [];
     const group_id = $("#group-id");
-
+    const scheduleForm = $("#schedule-form");
     const calendarEl = $("#calendar-schedules");
 
     const buttonDeleteSchedule = document.querySelectorAll(
@@ -132,34 +132,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     schedulesGroup.filter((item) => item.id === id)
                 );
             }
-        });
-    });
-
-    /// delete
-
-    buttonDeleteSchedule?.forEach((button) => {
-        const id = button.dataset.id;
-        button.addEventListener("click", async () => {
-            Swal.fire({
-                title: "¿Estás seguro de eliminar el horario?",
-                text: "No podrás deshacer esta acción.",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, eliminar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        await axios.post(`/api/scheldules/delete/${id}`);
-                        window.location.reload();
-                    } catch (error) {
-                        window.toast.fire({
-                            icon: "error",
-                            title: error.response.data ?? "Error",
-                        });
-                    }
-                }
-            });
         });
     });
 
