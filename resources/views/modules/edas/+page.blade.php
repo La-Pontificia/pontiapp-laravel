@@ -24,7 +24,7 @@
                             <tr class="">
                                 <td colspan="11" class="text-center py-4">
                                     <div class="p-10">
-                                        No hay usuarios que mostrar.
+                                        No hay nada por aquí
                                     </div>
                                 </td>
                             </tr>
