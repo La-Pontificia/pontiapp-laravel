@@ -4,14 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class AssistController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
+        $dni = $request->get('q');
+        $branch = $request->get('branch');
+
+        $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+
+        $startDate = $request->get('start_date', $startDate);
+        $endDate = $request->get('end_date', $endDate);
+
         $connections = [
+            $branch ?? 'pl-alameda',
             // 'pl-alameda',
             // 'pl-andahuaylas',
             // 'pl-casuarina',
@@ -26,11 +38,20 @@ class AssistController extends Controller
         $allAssists = collect();
 
         foreach ($connections as $connection) {
-            $assists = (new Attendance())
+            $match = (new Attendance())
                 ->setConnection($connection)
                 ->orderBy('punch_time', 'desc')
-                ->where('emp_code', '48182459')
-                ->get();
+                ->whereRaw("CAST(punch_time AS DATE) >= '$startDate'")
+                ->whereRaw("CAST(punch_time AS DATE) <= '$endDate'");
+
+            if ($dni) {
+                $match = $match->where('emp_code', $dni);
+            }
+
+            $match = $match->where('punch_time', '>=', $startDate);
+
+            $assists = $match->get();
+
             $allAssists = $allAssists->merge($assists);
         }
 
