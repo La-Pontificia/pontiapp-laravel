@@ -99,7 +99,10 @@ class UserController extends Controller
 
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
-        $schedules = $user->groupSchedule->schedules;
+        $schedules = $user->groupSchedule->schedules->filter(function ($schedule) {
+            return !$schedule->hidden;
+        });
+
         return view('modules.users.slug.schedules.+page', compact('user',  'schedules'));
     }
 
@@ -114,11 +117,32 @@ class UserController extends Controller
         $startDate = $request->get('start_date', $startDate);
         $endDate = $request->get('end_date', $endDate);
 
-        $assistances = Attendance::where('emp_code', $user->dni)
-            ->whereRaw("CAST(punch_time AS DATE) >= '$startDate'")
-            ->whereRaw("CAST(punch_time AS DATE) <= '$endDate'")
-            ->orderBy('punch_time', 'asc')
-            ->get();
+        $connections = [
+            'pl-alameda',
+            // 'pl-alameda',
+            // 'pl-andahuaylas',
+            // 'pl-casuarina',
+            // 'pl-cybernet',
+            // 'pl-jazmines',
+            // 'rh-alameda',
+            // 'rh-andahuaylas',
+            // 'rh-casuarina',
+            // 'rh-jazmines',
+        ];
+
+        $assistances = [];
+
+        foreach ($connections as $connection) {
+            $match = (new Attendance())
+                ->setConnection($connection)
+                ->where('emp_code', $user->dni)
+                ->orderBy('punch_time', 'desc')
+                ->whereRaw("CAST(punch_time AS DATE) >= '$startDate'")
+                ->whereRaw("CAST(punch_time AS DATE) <= '$endDate'");
+
+            $match = $match->where('punch_time', '>=', $startDate);
+            $assistances = $match->get();
+        }
 
         $schedulesMatched = $user->groupSchedule->schedules;
         // $customSchedule = Schedule::where('user_id', $user->id)->get();
