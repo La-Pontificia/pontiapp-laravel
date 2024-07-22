@@ -7,7 +7,7 @@ import "./edas.js";
 import "./goals.js";
 import "./utils.js";
 import "./evaluation.js";
-import "./templates.js";
+import "./questionnaires-templates.js";
 
 window.onPaste = (e) => {
     e.preventDefault();
