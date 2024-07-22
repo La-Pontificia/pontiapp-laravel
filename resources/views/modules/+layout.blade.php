@@ -27,6 +27,8 @@
                                     @include('modules.edas.sidebar')
                                 @elseif(request()->is('assists*'))
                                     @include('modules.assists.sidebar')
+                                @elseif(request()->is('maintenance*'))
+                                    @include('modules.maintenance.sidebar')
                                 @endif
                             </div>
                             <footer class="p-5 hover:[&>a]:underline text-xs text-black text-center">
