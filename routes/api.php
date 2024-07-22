@@ -72,8 +72,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('questions/by-template/{id}', 'App\Http\Controllers\Api\QuestionController@by_template');
 
     // years routes
-    Route::post('years', 'App\Http\Controllers\YearController@store');
+    Route::post('years', 'App\Http\Controllers\YearController@create');
     Route::post('years/{id}', 'App\Http\Controllers\YearController@update');
+    Route::post('years/open/{id}', 'App\Http\Controllers\YearController@open');
+    Route::post('years/close/{id}', 'App\Http\Controllers\YearController@close');
+
+
 
     // Emails routes
     Route::post('emails', 'App\Http\Controllers\Api\EmailController@assign');
@@ -81,7 +85,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('emails/discharge/{id}', 'App\Http\Controllers\Api\EmailController@discharge');
 
     // Schedules routes
-    Route::post('scheldules/delete/{id}', 'App\Http\Controllers\Api\ScheduleController@remove');
+    Route::post('schedules/delete/{id}', 'App\Http\Controllers\Api\ScheduleController@remove');
+    Route::post('schedules/archive/{id}', 'App\Http\Controllers\Api\ScheduleController@archive');
 
     Route::post('schedules/group', 'App\Http\Controllers\Api\ScheduleController@group');
     Route::post('schedules/group/{id}', 'App\Http\Controllers\Api\ScheduleController@update');
