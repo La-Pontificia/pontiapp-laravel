@@ -39,7 +39,7 @@
             </svg>
             <p>Roles</p>
         </a>
-        <a href="{{ route('users.schedules') }}" {{ request()->is('users/schedules*') ? 'data-active' : '' }}>
+        <a href="/users/schedules" {{ request()->is('users/schedules*') ? 'data-active' : '' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-range">
                 <rect width="18" height="18" x="3" y="4" rx="2" />
