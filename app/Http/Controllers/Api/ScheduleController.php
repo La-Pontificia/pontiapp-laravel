@@ -256,6 +256,15 @@ class ScheduleController extends Controller
         }
 
         $schedule->delete();
-        return response()->json('Schedule removed', 200);
+        return response()->json('Schedule removed');
+    }
+
+
+    public function archive($id)
+    {
+        $schedule = Schedule::find($id);
+        $schedule->archived = true;
+        $schedule->save();
+        return response()->json('Schedule archived successfully');
     }
 }
