@@ -1,5 +1,5 @@
 <nav
-    class="flex-grow text-black flex flex-col p-3 pr-2 font-semibold tracking-tight [&>a]:flex [&>a]:items-center [&>a]:gap-2 [&>a]:p-2 [&>a]:rounded-lg hover:[&>a]:text-[#0c5ce6] [&>a]:transition-colors [&>a>svg]:w-[25px] [&>a>svg]:min-w-[25px] aria-selected:[&>a]:font-semibold aria-selected:[&>a]:text-[#0c5ce6] [&>a>svg]:transition-transform">
+    class="flex-grow gap-2 text-black flex flex-col p-3 pr-2 font-semibold tracking-tight [&>a]:flex [&>a]:items-center [&>a]:gap-2 [&>a]:p-2 [&>a]:rounded-lg hover:[&>a]:text-[#0c5ce6] [&>a]:transition-colors [&>a>svg]:w-[25px] [&>a>svg]:min-w-[25px] aria-selected:[&>a]:font-semibold aria-selected:[&>a]:text-[#0c5ce6] [&>a>svg]:transition-transform">
     <a class="group" href="{{ route('modules') }}" {{ request()->is('/') ? 'aria-selected=true' : '' }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
@@ -15,9 +15,9 @@
         </svg>
         <div class="overflow-hidden">
             <p>Gestión de Usuarios</p>
-            <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
+            {{-- <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
                 Usuarios, roles, horarios, correos y más.
-            </p>
+            </p> --}}
         </div>
     </a>
     <a class="group" href="/edas"
@@ -31,9 +31,9 @@
         </svg>
         <div class="overflow-hidden">
             <p>Gestión de Edas</p>
-            <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
+            {{-- <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
                 Objetivos, Cuestionarios, y más.
-            </p>
+            </p> --}}
         </div>
     </a>
     <a class="group" href="/assists" {{ request()->is('assists*') ? 'aria-selected=true' : '' }}>
@@ -44,9 +44,9 @@
         </svg>
         <div class="overflow-hidden">
             <p>Gestión de Asistencias</p>
-            <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
+            {{-- <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
                 Asistencias en tiempo real, y reportes.
-            </p>
+            </p> --}}
         </div>
     </a>
     <a class="group" href="/audit" {{ request()->is('audit*') ? 'aria-selected=true' : '' }}>
@@ -57,9 +57,9 @@
         </svg>
         <div class="overflow-hidden">
             <p>Gestión de Auditoria</p>
-            <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
+            {{-- <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
                 Auditoria de usuarios y actividades.
-            </p>
+            </p> --}}
         </div>
     </a>
     <a href="/maintenance">
@@ -71,9 +71,9 @@
         </svg>
         <div class="overflow-hidden">
             <p>Mantenimiento</p>
-            <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
+            {{-- <p class="text-xs text-stone-500 text-nowrap text-ellipsis overflow-hidden">
                 Configuración del sistema y datos.
-            </p>
+            </p> --}}
         </div>
     </a>
 </nav>
