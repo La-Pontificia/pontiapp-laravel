@@ -7,7 +7,7 @@
         <div class="min-h-svh max-sm:w-full text-white flex max-sm:justify-start">
             <div class="flex h-full w-full">
                 <div style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.70), rgba(0, 0, 0, 0.70)), url('/background.jpg');"
-                    class="w-full min-h-svh bg-center max-lg:hidden bg-cover grid place-content-center">
+                    class="w-full min-h-svh bg-center bg-cover grid place-content-center">
                     <div
                         class="flex flex-col flex-grow justify-center gap-4 relative sm:rounded-lg items-center max-sm:justify-start max-sm:items-start">
                         <div class="flex-grow  flex flex-col justify-center">
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                         </div>
-                        <footer class="p-4 text-center text-xs text-white drop-shadow-md">
+                        <footer class="p-4 text-center w-full text-xs text-white drop-shadow-md">
                             Developed by <a href="https://daustinn.com" target="_blank" rel="noopener noreferrer"
                                 class=" font-semibold hover:underline">Daustinn</a> &copy; 2024
                         </footer>
