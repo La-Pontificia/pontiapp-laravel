@@ -1,0 +1,26 @@
+{
+    "theme_color": "#f1f0f4",
+    "background_color": "#2e60eb",
+    "icons": [
+        {
+            "purpose": "maskable",
+            "sizes": "512x512",
+            "src": "icon512_maskable.png",
+            "type": "image/png"
+        },
+        {
+            "purpose": "any",
+            "sizes": "512x512",
+            "src": "icon512_rounded.png",
+            "type": "image/png"
+        }
+    ],
+    "orientation": "any",
+    "display": "standalone",
+    "dir": "auto",
+    "lang": "en-US",
+    "name": "La Pontificia",
+    "short_name": "LP",
+    "id": "http://ci.ilp.edu.pe:8000",
+    "start_url": "http://ci.ilp.edu.pe:8000"
+}
