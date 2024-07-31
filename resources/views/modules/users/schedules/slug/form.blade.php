@@ -1,6 +1,6 @@
 @php
 
-    $daysJson = isset($schedule) ? json_decode($schedule->days) : ['2'];
+    $daysJson = isset($schedule) ? json_decode($schedule->days) : ['1'];
     $startDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->start_date)) : null;
     $endDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->end_date)) : null;
     $from = isset($schedule) ? date('H:i', strtotime($schedule->from)) : null;
@@ -10,6 +10,7 @@
     $to_start = isset($schedule) ? date('H:i', strtotime($schedule->to_start)) : null;
     $to_end = isset($schedule) ? date('H:i', strtotime($schedule->to_end)) : null;
     $user_id = isset($user) ? $user->id : null;
+
 @endphp
 
 @if ($user_id)
