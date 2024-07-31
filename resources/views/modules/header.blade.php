@@ -1,10 +1,11 @@
-<nav class="bg-[#2e60eb] border-b text-white h-14 w-full z-30">
+<nav class="bg-neutral-950 border-b text-white h-14 w-full z-30">
     <div class="flex w-full gap-5 items-center h-full px-3">
         <div class="flex-grow flex gap-2 items-center">
-            <button id="toogle-sidebar" class="p-1 rounded-lg">
+            <button id="toogle-sidebar" class="p-1 rounded-lg text-sky-500">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="lucide lucide-grip">
+                    <circle cx="12" cy="5" r="1" />
                     <circle cx="19" cy="5" r="1" />
                     <circle cx="5" cy="5" r="1" />
                     <circle cx="12" cy="12" r="1" />
@@ -15,7 +16,7 @@
                     <circle cx="5" cy="19" r="1" />
                 </svg>
             </button>
-            <a href="/"><img src="/elp.webp" class="w-20 drop-shadow-md" /></a>
+            <a href="/"><img src="/lp.webp" class="w-24 drop-shadow-md" /></a>
         </div>
         <button>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -36,11 +37,15 @@
         </button>
         <button type="button" class="flex items-center gap-2" id="user-menu-button" aria-expanded="false"
             data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-            <p class="line-clamp-1 max-w-[15ch] max-md:hidden">{{ $cuser->first_name }}
-                {{ $cuser->last_name }}</p>
+            <div class="text-sm text-right flex flex-col">
+                <p class="line-clamp-1 leading-4 max-md:hidden">{{ $cuser->first_name }}
+                    {{ $cuser->last_name }}</p>
+                <p class="line-clamp-1 leading-4 opacity-50 max-md:hidden">
+                    {{ $cuser->email }}</p>
+            </div>
             @include('commons.avatar', [
                 'src' => $cuser->profile,
-                'className' => 'w-8',
+                'className' => 'w-8 rounded-xl',
                 'alt' => $cuser->first_name . ' ' . $cuser->last_name,
                 'altClass' => 'text-sm',
             ])
