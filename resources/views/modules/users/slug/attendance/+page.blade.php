@@ -9,12 +9,9 @@
 @endphp
 
 @section('layout.users.slug')
-    <div class="space-y-2 flex h-full flex-col">
+    <div class="space-y-2 flex flex-col h-full">
         <div class="p-1 flex items-end">
             <div class="flex-grow">
-                <p class="py-2 font-semibold text-xs opacity-70">
-                    Rango de fecha
-                </p>
                 <div id="date-range" class="flex items-center gap-1 w-[340px]">
                     <input readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start" placeholder="-">
                     <span>a</span>
@@ -39,7 +36,6 @@
                                 <stop offset="1" stop-color="#0b6631"></stop>
                             </linearGradient>
                         </defs>
-                        <title>file_type_excel</title>
                         <path
                             d="M19.581,15.35,8.512,13.4V27.809A1.192,1.192,0,0,0,9.705,29h19.1A1.192,1.192,0,0,0,30,27.809h0V22.5Z"
                             style="fill:#185c37"></path>
@@ -72,12 +68,16 @@
             <table data-value="{{ $user->id }}" class="w-full text-left relative">
                 <thead class="border-b sticky top-0 z-[1] bg-white">
                     <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-3">
-                        <th class="w-full font-semibold tracking-tight">Horario</th>
-                        <th>Sede</th>
+                        <th class="w-full font-semibold tracking-tight">Título</th>
                         <th>Fecha</th>
-                        <th>Horario</th>
+                        <th>Dia</th>
+                        <th class="text-center">Turno</th>
+                        <th class="text-center">Entrada</th>
+                        <th class="text-center">Salida</th>
                         <th>Asistencia</th>
-                        <th></th>
+                        <th>Terminal</th>
+                        <th>Diferencia</th>
+                        <th>Observaciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y z-[0]">
@@ -90,22 +90,39 @@
                             </td>
                         </tr>
                     @else
+                        @php
+                            $currentWeek = null;
+                        @endphp
                         @foreach ($schedules as $schedule)
+                            @php
+                                $from = \Carbon\Carbon::parse($schedule['from']);
+                                $date = \Carbon\Carbon::parse($schedule['date']);
+                                $weekNumber = $date->weekOfYear;
+
+                                $TTorTM = $from->hour >= 12 ? 'TT' : 'TM';
+                                $day = $date->isoFormat('dddd');
+                            @endphp
+
+                            @if ($currentWeek !== null && $currentWeek !== $weekNumber)
+                                <tr class="h-8 bg-gray-100">
+                                    <td colspan="11"></td>
+                                </tr>
+                            @endif
+
+                            @php
+                                $currentWeek = $weekNumber;
+                            @endphp
+
                             <tr
-                                class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-3">
-                                <td data-value="{{ $schedule['title'] }}">
+                                class="[&>td]:py-2 divide-x hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-3">
+                                <td data-value="{{ $schedule['title'] }}" data-name="Nombre">
                                     <p class="text-nowrap">
                                         {{ $schedule['title'] }}
                                     </p>
                                 </td>
-                                <td data-value="{{ $schedule['dept_name'] }}">
-                                    <p class="text-nowrap">
-                                        {{ $schedule['dept_name'] }}
-                                    </p>
-                                </td>
-                                <td data-value="{{ $schedule['from'] }}">
-                                    <p class="text-nowrap flex items-center gap-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" viewBox="0 0 24 24"
+                                <td data-value="{{ $schedule['date'] }}" data-name="Fecha">
+                                    <p class="text-nowrap flex font-semibold items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="17" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                             stroke-linejoin="round" class="lucide lucide-calendar opacity-70">
                                             <path d="M8 2v4" />
@@ -113,23 +130,46 @@
                                             <rect width="18" height="18" x="3" y="4" rx="2" />
                                             <path d="M3 10h18" />
                                         </svg>
-                                        {{ \Carbon\Carbon::parse($schedule['from'])->isoFormat('LL') }}
+                                        {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('LL') }}
                                     </p>
                                 </td>
-                                <td data-value="{{ $schedule['from'] }},{{ $schedule['to'] }}">
+                                <td data-value="{{ $day }}" data-name="Dia">
+                                    <p class="capitalize font-semibold">
+                                        {{ $day }}
+                                    </p>
+                                </td>
+                                <td data-value="{{ $TTorTM }}" data-name="Turno">
                                     <p
-                                        class="text-nowrap flex text-sm items-center gap-2 bg-blue-600 p-1 rounded-md text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" class="lucide lucide-clock">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <polyline points="12 6 12 12 16 14" />
-                                        </svg>
-                                        {{ date('h:i A', strtotime($schedule['from'])) }} -
+                                        class="text-center font-semibold {{ $TTorTM === 'TM' ? 'text-yellow-500' : 'text-violet-500' }}">
+                                        {{ $TTorTM }}
+                                    </p>
+                                </td>
+                                <td data-value="{{ $schedule['from'] }}" data-name="Desde">
+                                    <p class="font-medium">
+                                        {{ date('h:i A', strtotime($schedule['from'])) }}
+                                    </p>
+                                </td>
+                                <td data-value="{{ $schedule['to'] }}" data-name="Hasta">
+                                    <p class="font-medium">
                                         {{ date('h:i A', strtotime($schedule['to'])) }}
                                     </p>
                                 </td>
+                                <td>
 
+                                </td>
+                                <td>
+                                    <p class="flex items-center gap-1 font-semibold">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="lucide lucide-smartphone-charging">
+                                            <rect width="14" height="20" x="5" y="2" rx="2"
+                                                ry="2" />
+                                            <path d="M12.667 8 10 12h4l-2.667 4" />
+                                        </svg>
+                                        PL-Alameda
+                                    </p>
+                                </td>
+                                {{-- 
                                 <td data-value="{{ $schedule['i_enter'] }},{{ $schedule['he_left'] }}">
                                     @if ($schedule['i_enter'] || $schedule['he_left'])
                                         <p
@@ -159,7 +199,7 @@
                                             @endif
                                         @endif
                                     </p>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     @endif
