@@ -51,36 +51,36 @@ class EmailController extends Controller
     public function update(Request $request, $id)
     {
 
-        $found = Email::find($id);
+        // $found = Email::find($id);
 
-        if (!$found) {
-            return response()->json('Correo no encontrado', 404);
-        }
+        // if (!$found) {
+        //     return response()->json('Correo no encontrado', 404);
+        // }
 
-        $request->validate([
-            'username' => ['required'],
-            'domain' => ['required'],
-            'description' => ['required', 'string', 'max:500'],
-        ]);
+        // $request->validate([
+        //     'username' => ['required'],
+        //     'domain' => ['required'],
+        //     'description' => ['required', 'string', 'max:500'],
+        // ]);
 
-        $email = $request->username . '@' . $request->domain;
+        // $email = $request->username . '@' . $request->domain;
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return response()->json('Correo electronico invalido', 400);
-        }
+        // if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        //     return response()->json('Correo electronico invalido', 400);
+        // }
 
-        $alreadyAssigned = Email::where('email', $email)->first();
+        // $alreadyAssigned = Email::where('email', $email)->first();
 
-        if ($alreadyAssigned && $alreadyAssigned->user_id !== $request->id_user) {
-            return response()->json('El correo electronico ya se encuentra registrado y asignado a este usuario.', 400);
-        }
+        // if ($alreadyAssigned && $alreadyAssigned->user_id !== $request->id_user) {
+        //     return response()->json('El correo electronico ya se encuentra registrado y asignado a este usuario.', 400);
+        // }
 
-        $found->email = $email;
-        $found->access = json_encode($request->input('access', []));
-        $found->description = $request->description;
-        $found->save();
+        // $found->email = $email;
+        // $found->access = json_encode($request->input('access', []));
+        // $found->description = $request->description;
+        // $found->save();
 
-        return response()->json('Correo actualizado correctamente', 200);
+        // return response()->json('Correo actualizado correctamente', 200);
     }
 
     public function discharge($id)
