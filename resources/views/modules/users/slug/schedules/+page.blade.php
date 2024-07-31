@@ -59,7 +59,7 @@
 
 
 @section('layout.users.slug')
-    <div class="flex w-full overflow-y-auto">
+    <div class="flex w-full overflow-y-auto h-full">
         <div class="rounded-2xl w-[350px] h-full flex flex-col px-1 overflow-y-auto">
             <input type="hidden" value="{{ $user->id }}" id="user_id">
             <div class="py-3 pr-6">
