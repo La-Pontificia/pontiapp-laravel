@@ -9,13 +9,19 @@
     $from_end = isset($schedule) ? date('H:i', strtotime($schedule->from_end)) : null;
     $to_start = isset($schedule) ? date('H:i', strtotime($schedule->to_start)) : null;
     $to_end = isset($schedule) ? date('H:i', strtotime($schedule->to_end)) : null;
-
+    $user_id = isset($user) ? $user->id : null;
 @endphp
+
+@if ($user_id)
+    <input type="hidden" name="user_id" value="{{ $user_id }}">
+@endif
+
 <input value="{{ $schedule->title ?? 'Horario laboral' }}" autofocus value="Horario laboral" type="text"
     placeholder="Título (Opcional)" name="title">
 <div class="flex items-center gap-2">
     <div class="p-1">Inicia:</div>
-    <input value="{{ $startDate }}" required style="width: 170px" type="date" placeholder="Nombre" name="start_date">
+    <input value="{{ $startDate }}" required style="width: 170px" type="date" placeholder="Nombre"
+        name="start_date">
 </div>
 <div>
     <div class="p-1">Días de la semana:</div>
