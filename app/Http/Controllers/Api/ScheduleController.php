@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\GroupSchedule;
 use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -45,11 +46,20 @@ class ScheduleController extends Controller
 
     public function by_user($id_user)
     {
-        $schedules = Schedule::where('id_user', $id_user)->get();
+        $user = User::find($id_user);
+
+        $group = $user->groupSchedule->schedules->filter(function ($schedule) {
+            return !$schedule->archived;
+        });
+
+        $userSchedules = Schedule::where('user_id', $user->id)->where('archived', false)->get();
+
+        $schedules = $group->merge($userSchedules);
+
         return response()->json($schedules, 200);
     }
 
-    public function add(Request $request, $group_id)
+    public function add(Request $request, $id)
     {
         $request->validate([
             'start_date' => 'required',
@@ -61,6 +71,8 @@ class ScheduleController extends Controller
             'title' => 'max:255',
         ]);
 
+        $user_id =  $request->user_id;
+
 
         $days = array_map('intval', $request->input('days.*'));
 
@@ -68,23 +80,25 @@ class ScheduleController extends Controller
         $endDate =  Carbon::parse($request->end_date);
 
         $currentDate = $startDate->copy();
+
         $fromDateTime = $currentDate->copy()->setTimeFromTimeString($request->from);
         $toDateTime = $currentDate->copy()->setTimeFromTimeString($request->to);
 
+        $fromStart = $currentDate->copy()->setTimeFromTimeString($request->from_start);
+        $fromEnd = $currentDate->copy()->setTimeFromTimeString($request->from_end);
 
-        $group = GroupSchedule::find($group_id);
+        $toStart = $currentDate->copy()->setTimeFromTimeString($request->to_start);
+        $toEnd = $currentDate->copy()->setTimeFromTimeString($request->to_end);
+
+        $group = GroupSchedule::find($id);
 
         $title = $request->title;
 
-        // $from = $request->from;
-        // $to = $request->to;
-        // $dayColors = $this->generateDayColors();
+        if (!$group && !$user_id)  return response()->json('Group not found', 404);
 
-        if (!$group)  return response()->json('Group not found', 404);
-
-        // add schedule
         $schedule = Schedule::create([
-            'group_id' => $group->id,
+            'group_id' => $user_id ? null : $group->id,
+            'user_id' => $user_id ?? null,
 
             'from' => $fromDateTime,
             'to' => $toDateTime,
@@ -95,45 +109,15 @@ class ScheduleController extends Controller
             'start_date' =>  $startDate,
             'end_date' =>  $endDate,
 
+            'from_start' => $fromStart,
+            'from_end' => $fromEnd,
+
+            'to_start' => $toStart,
+            'to_end' => $toEnd,
+
             'background' => $this->generateRandomColor(),
             'created_by' => auth()->user()->id
         ]);
-
-        // $schedules = [];
-        // $currentDate = $startDate->copy();
-
-        // while ($currentDate <= $endDate) {
-        //     $dayOfWeek = $currentDate->dayOfWeek + 1;
-        //     if (in_array($dayOfWeek, $days)) {
-        //         $fromDateTime = $currentDate->copy()->setTimeFromTimeString($from);
-        //         $toDateTime = $currentDate->copy()->setTimeFromTimeString($to);
-
-        //         $schedules[] = [
-        //             'from' => $fromDateTime->format('Y-m-d H:i:s'),
-        //             'to' => $toDateTime->format('Y-m-d H:i:s'),
-        //             'color' => $dayColors[$dayOfWeek],
-        //         ];
-        //     }
-        //     $currentDate->addDay();
-        // }
-        // $groupID = uniqid();
-
-        // $schedulesCreated = [];
-
-        // foreach ($schedules as $schedule) {
-        //     $schedule = Schedule::create([
-        //         'id_user' => $id_user,
-        //         'group' => $groupID,
-        //         'from' => $schedule['from'],
-        //         'to' => $schedule['to'],
-        //         'title' => $title ?? 'Horario laboral',
-        //         'background' => $schedule['color'],
-        //         'created_by' => auth()->user()->id
-        //     ]);
-
-        //     $schedulesCreated[] = $schedule;
-        // }
-
 
         return response()->json($schedule, 200);
     }
@@ -162,8 +146,15 @@ class ScheduleController extends Controller
         $endDate =  Carbon::parse($request->end_date);
 
         $currentDate = $startDate->copy();
+
         $fromDateTime = $currentDate->copy()->setTimeFromTimeString($request->from);
         $toDateTime = $currentDate->copy()->setTimeFromTimeString($request->to);
+
+        $fromStart = $currentDate->copy()->setTimeFromTimeString($request->from_start);
+        $fromEnd = $currentDate->copy()->setTimeFromTimeString($request->from_end);
+
+        $toStart = $currentDate->copy()->setTimeFromTimeString($request->to_start);
+        $toEnd = $currentDate->copy()->setTimeFromTimeString($request->to_end);
 
 
         $schedule->from = $fromDateTime;
@@ -172,44 +163,14 @@ class ScheduleController extends Controller
         $schedule->days = json_encode($days);
         $schedule->start_date = $startDate;
         $schedule->end_date = $endDate;
+        $schedule->from_start = $fromStart;
+        $schedule->from_end = $fromEnd;
+        $schedule->to_start = $toStart;
+        $schedule->to_end = $toEnd;
         $schedule->updated_by = auth()->user()->id;
         $schedule->save();
 
         return response()->json($schedule, 200);
-    }
-
-
-    private function generateDayColors()
-    {
-        $colors = [
-            '#475569',
-            '#4b5563',
-            '#52525b',
-            '#525252',
-            '#dc2626',
-            '#ea580c',
-            '#d97706',
-            '#ca8a04',
-            '#65a30d',
-            '#16a34a',
-            '#059669',
-            '#0d9488',
-            '#0891b2',
-            '#0284c7',
-            '#2563eb',
-            '#7c3aed',
-            '#9333ea',
-            '#c026d3',
-            '#db2777',
-            '#e11d48'
-        ];
-
-        $dayColors = [];
-        for ($i = 1; $i <= 7; $i++) {
-            $dayColors[$i] = $colors[array_rand($colors)];
-        }
-
-        return $dayColors;
     }
 
     private function generateRandomColor()
@@ -237,7 +198,11 @@ class ScheduleController extends Controller
             '#e11d48'
         ];
 
-        return $colors[array_rand($colors)];
+        $hour = (int)date('G');
+
+        $index = $hour % count($colors);
+
+        return $colors[$index];
     }
 
     public function schedules($id)
@@ -264,6 +229,7 @@ class ScheduleController extends Controller
     {
         $schedule = Schedule::find($id);
         $schedule->archived = true;
+        $schedule->end_date = Carbon::now();
         $schedule->save();
         return response()->json('Schedule archived successfully');
     }
