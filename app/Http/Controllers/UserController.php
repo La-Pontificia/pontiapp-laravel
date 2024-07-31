@@ -110,119 +110,88 @@ class UserController extends Controller
         return view('modules.users.slug.schedules.+page', compact('user',  'schedules'));
     }
 
+    // 'pl-alameda',
+    // 'pl-andahuaylas',
+    // 'pl-casuarina',
+    // 'pl-cybernet',
+    // 'pl-jazmines',
+    // 'rh-alameda',
+    // 'rh-andahuaylas',
+    // 'rh-casuarina',
+    // 'rh-jazmines',
+    // $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+    // $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+    // $startDate = $request->get('start_date', $startDate);
+    // $endDate = $request->get('end_date', $endDate);
+    // $connections = [
+    //     'pl-alameda',
+    // ];
+    // $assistances = collect();
+    // foreach ($connections as $connection) {
+    //     $match = (new Attendance())
+    //         ->setConnection($connection)
+    //         ->where('emp_code', $user->dni)
+    //         ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
+    //         ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+    //         ->orderBy('punch_time', 'desc')
+    //         ->get();
+    //     $assistances = $assistances->merge($match);
+    // }
+
     public function slug_attendance(Request $request, $id)
     {
         $user = User::find($id);
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
-        $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
-        $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
-
-        $startDate = $request->get('start_date', $startDate);
-        $endDate = $request->get('end_date', $endDate);
-
-        $connections = [
-            'pl-alameda',
-            // 'pl-alameda',
-            // 'pl-andahuaylas',
-            // 'pl-casuarina',
-            // 'pl-cybernet',
-            // 'pl-jazmines',
-            // 'rh-alameda',
-            // 'rh-andahuaylas',
-            // 'rh-casuarina',
-            // 'rh-jazmines',
-        ];
-
-        $assistances = [];
-
-        foreach ($connections as $connection) {
-            $match = (new Attendance())
-                ->setConnection($connection)
-                ->where('emp_code', $user->dni)
-                ->orderBy('punch_time', 'desc')
-                ->whereRaw("CAST(punch_time AS DATE) >= '$startDate'")
-                ->whereRaw("CAST(punch_time AS DATE) <= '$endDate'");
-
-            $match = $match->where('punch_time', '>=', $startDate);
-            $assistances = $match->get();
-        }
-
-        $schedulesMatched = $user->groupSchedule->schedules;
-        // $customSchedule = Schedule::where('user_id', $user->id)->get();
-        $allSchedules = $schedulesMatched;
+        $groupSchedules = $user->groupSchedule->schedules;
+        $userSchedules = Schedule::where('user_id', $user->id)->get();
+        $allSchedules = $groupSchedules->merge($userSchedules);
 
         $schedulesGenerated = [];
 
         foreach ($allSchedules as $schedule) {
-            $days = json_decode($schedule->days);
-            $scheduleStartDate = Carbon::parse($schedule->start_date);
-            $scheduleEndDate = Carbon::parse($schedule->end_date);
-
-            for ($date = $scheduleStartDate; $date->lte($scheduleEndDate); $date->addDay()) {
-                $dayOfWeek = $date->dayOfWeek + 1;
-                if ($dayOfWeek == 8) $dayOfWeek = 1;
-
-                if (in_array((string)$dayOfWeek, $days)) {
-                    $scheduleFrom = Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day);
-                    $scheduleTo = Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day);
-
-                    $i_enter = null;
-                    $he_left = null;
-                    $time_worked = null;
-                    $time_delayed = null;
-
-                    $entry = $assistances->first(function ($assistance) use ($scheduleFrom) {
-                        $assistanceTime = Carbon::parse($assistance->punch_time);
-                        return $assistanceTime->between($scheduleFrom->copy()->subMinutes(60), $scheduleFrom->copy()->addMinutes(60));
-                    });
-
-                    if ($entry) {
-                        $i_enter = Carbon::parse($entry->punch_time);
-                    }
-
-                    $exit = $assistances->first(function ($assistance) use ($scheduleTo) {
-                        $assistanceTime = Carbon::parse($assistance->punch_time);
-                        return $assistanceTime->between($scheduleTo->copy()->subMinutes(60), $scheduleTo->copy()->addMinutes(60));
-                    });
-
-                    if ($exit) {
-                        $he_left = Carbon::parse($exit->punch_time);
-                    }
-
-                    if ($i_enter && $he_left) {
-                        $time_worked = $he_left->diffInMinutes($i_enter);
-                        //                 // $time_delayed = max(0, $i_enter->diffInMinutes($scheduleFrom)); // Tiempo que debería haber llegado tarde
-                    }
-
+            $startDate = Carbon::parse($schedule->start_date);
+            $endDate = Carbon::parse($schedule->end_date);
+            for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+                if (in_array($date->dayOfWeekIso, json_decode($schedule->days))) {
                     $schedulesGenerated[] = [
+                        'id' => $schedule->id,
+                        'group_id' => $schedule->group_id,
+                        'user_id' => $schedule->user_id,
                         'title' => $schedule->title,
-                        'dept_name' => $entry->dept_name ?? $exit->dept_name ?? null,
-                        'from' => $scheduleFrom->format('Y-m-d H:i:s'),
-                        'to' => $scheduleTo->format('Y-m-d H:i:s'),
-                        'i_enter' => $i_enter ? $i_enter->format('Y-m-d H:i:s') : null,
-                        'he_left' => $he_left ? $he_left->format('Y-m-d H:i:s') : null,
-                        'time_worked' => $time_worked,
-                        'time_delayed' => $time_delayed,
+                        'date' => $date->format('Y-m-d'),
+                        'from' => $schedule->from,
+                        'from_start' => $schedule->fromStart,
+                        'from_end' => $schedule->fromEnd,
+                        'to' => $schedule->to,
+                        'to_start' => $schedule->toStart,
+                        'to_end' => $schedule->toEnd,
+                        'created_at' => $schedule->created_at,
+                        'updated_at' => $schedule->updated_at,
                     ];
                 }
             }
         }
 
-        $schedules = collect($schedulesGenerated)
-            ->sortBy('from')
-            ->filter(function ($schedule) use ($startDate, $endDate) {
-                $from = Carbon::parse($schedule['from']);
-                $to = Carbon::parse($schedule['to']);
-                $filterStart = Carbon::parse($startDate)->startOfDay();
-                $filterEnd = Carbon::parse($endDate)->endOfDay();
-                return $from->between($filterStart, $filterEnd) || $to->between($filterStart, $filterEnd);
-            })
-            ->values()
-            ->all();
+        $schedules = $schedulesGenerated;
 
-        return view('modules.users.slug.attendance.+page', compact('user', 'schedules', 'assistances'));
+        usort($schedules, function ($a, $b) {
+            return strcmp($a['date'], $b['date']);
+        });
+
+        return view('modules.users.slug.attendance.+page', compact('user', 'schedules'));
     }
+
+
+
+    // $from = Carbon::parse($schedule->from); // <-- hora de entrada
+    // $fromStart = Carbon::parse($schedule->from_start); // <-- puede marcar la entrada desde
+    // $fromEnd = Carbon::parse($schedule->from_end);   // <-- puede marcar la entrada hasta
+
+    // $to = Carbon::parse($schedule->to);  // <-- hora de salida
+    // $toStart = Carbon::parse($schedule->to_start);  // <-- puede marcar la salida desde
+    // $toEnd = Carbon::parse($schedule->to_end);  // <-- puede marcar la salida hasta
+
 
 
     // schedules
