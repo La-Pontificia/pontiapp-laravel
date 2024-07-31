@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users/{id}', 'App\Http\Controllers\Api\UserController@update');
     Route::post('users/{id}/profile', 'App\Http\Controllers\Api\UserController@profile');
     Route::get('users/search', 'App\Http\Controllers\Api\UserController@search');
+    Route::post('users/email-access/{id}', 'App\Http\Controllers\Api\UserController@updateEmailAccess');
 
     // User user roles routes 
     Route::post('user-roles', 'App\Http\Controllers\Api\UserRoleController@create');
@@ -93,6 +94,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('schedules/group/{id}/add', 'App\Http\Controllers\Api\ScheduleController@add');
     Route::post('schedules/{id}', 'App\Http\Controllers\Api\ScheduleController@updateSchedule');
 
-
+    Route::get('schedules/user/{id}', 'App\Http\Controllers\Api\ScheduleController@by_user');
     Route::get('schedules/group/{id}', 'App\Http\Controllers\Api\ScheduleController@schedules');
 });
