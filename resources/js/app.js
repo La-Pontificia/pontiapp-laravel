@@ -8,6 +8,7 @@ import "./goals.js";
 import "./utils.js";
 import "./evaluation.js";
 import "./questionnaires-templates.js";
+import "./email-access.js";
 
 window.onPaste = (e) => {
     e.preventDefault();

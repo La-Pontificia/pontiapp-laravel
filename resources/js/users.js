@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // SLUG SCHEDULE USER
     let schedules = [];
-    const group_schedule_id = $("#group_schedule_id");
+    const userid = $("#user_id");
 
     const calendarEl = $("#calendar-user-slug");
 
@@ -337,10 +337,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    if (group_schedule_id) {
-        const { data } = await axios.get(
-            `/api/schedules/group/${group_schedule_id.value}`
-        );
+    if (userid) {
+        const { data } = await axios.get(`/api/schedules/user/${userid.value}`);
         const groupEvents = data.map((schedule) => {
             const startDate = new Date(moment(schedule.start_date));
             const endDate = new Date(moment(schedule.end_date));
