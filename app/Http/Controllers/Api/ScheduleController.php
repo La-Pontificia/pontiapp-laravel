@@ -52,7 +52,7 @@ class ScheduleController extends Controller
             return !$schedule->archived;
         });
 
-        $userSchedules = Schedule::where('user_id', $user->id)->where('archived', false)->get();
+        $userSchedules = Schedule::where('user_id', $user->id)->get();
 
         $schedules = $group->merge($userSchedules);
 
