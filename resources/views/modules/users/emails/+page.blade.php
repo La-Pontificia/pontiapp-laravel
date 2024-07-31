@@ -13,19 +13,27 @@
             'value' => 'pontisis_ilp',
         ],
         [
-            'name' => 'Pontisis idiomas',
+            'name' => 'Pontisis Idiomas',
             'value' => 'pontisis_idiomas',
         ],
         [
-            'name' => 'Pontisis La Pontificia',
-            'value' => 'pontisis_la_pontificia',
+            'name' => 'Pontisis Continua',
+            'value' => 'pontisis_continua',
+        ],
+        [
+            'name' => 'Pontisis Andahuaylas',
+            'value' => 'pontisis_andahuaylas',
+        ],
+        [
+            'name' => 'Pontisis ILP SL',
+            'value' => 'pontisis_ilpsl',
         ],
     ];
 @endphp
 
 @section('layout.users')
     <div class="text-black w-full flex-col flex-grow flex overflow-auto">
-        @if ($cuser->hasPrivilege('users:roles:create'))
+        {{-- @if ($cuser->hasPrivilege('users:roles:create'))
             <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                 class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -69,13 +77,13 @@
                     </div>
                 </div>
             </div>
-        @endif
+        @endif --}}
 
         <h2 class="py-3 font-semibold tracking-tight text-lg px-1">
-            Gestión de correos
+            Gestión de correos y accesos
         </h2>
         <div class="p-2 flex o items-center gap-2">
-            <div>
+            {{-- <div>
                 <select name="status" class="dinamic-select">
                     <option selected value="">
                         Estado del correo
@@ -86,14 +94,13 @@
                         Inactivos
                     </option>
                 </select>
-            </div>
+            </div> --}}
             <div class="flex-grow">
                 <input value="{{ request()->query('q') }}" class="dinamic-search" type="text"
                     placeholder="Buscar por correo o usuario">
             </div>
             <div>
-                <button
-                    class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
+                <button class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
                     <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
                         <g id="SVGRepo_iconCarrier">
@@ -105,7 +112,6 @@
                                     <stop offset="1" stop-color="#0b6631"></stop>
                                 </linearGradient>
                             </defs>
-                            <title>file_type_excel</title>
                             <path
                                 d="M19.581,15.35,8.512,13.4V27.809A1.192,1.192,0,0,0,9.705,29h19.1A1.192,1.192,0,0,0,30,27.809h0V22.5Z"
                                 style="fill:#185c37"></path>
@@ -140,51 +146,48 @@
             </div>
         </div>
         <div class=" overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('users:roles:view'))
+            @if ($cuser->hasPrivilege('users:emails:view'))
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">
                             <th class="w-full">Usuario</th>
-                            <th>Estado</th>
-                            <th>Email</th>
-                            <th class="min-w-[300px]">Descripción</th>
+                            <th>Nombre de usuario</th>
                             <th>Accesos</th>
-
                         </tr>
                     </thead>
                     <tbody class="divide-y">
-                        @if ($emails->count() === 0)
+                        @if ($users->count() === 0)
                             <tr class="">
                                 <td colspan="11" class="text-center py-4">
                                     <div class="p-10">
-                                        No hay horarios registrados
+                                        No hay nada por aquí
                                     </div>
                                 </td>
                             </tr>
                         @else
-                            @foreach ($emails as $email)
+                            @foreach ($users as $user)
                                 <tr
                                     class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
                                     <td>
                                         <div class="flex items-center gap-4">
-                                            @if ($cuser->hasPrivilege('users:roles:edit'))
+                                            @if ($cuser->hasPrivilege('users:emails:edit'))
                                                 <button class="absolute inset-0"
-                                                    data-modal-target="dialog-{{ $email->id }}"
-                                                    data-modal-toggle="dialog-{{ $email->id }}">
+                                                    data-modal-target="dialog-{{ $user->id }}"
+                                                    data-modal-toggle="dialog-{{ $user->id }}">
                                                 </button>
-                                                <div id="dialog-{{ $email->id }}" data-modal-backdrop="static"
+                                                <div id="dialog-{{ $user->id }}" data-modal-backdrop="static"
                                                     tabindex="-1" aria-hidden="true"
                                                     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                                     <div
-                                                        class="relative w-full max-w-xl max-h-full bg-white rounded-2xl shadow">
+                                                        class="relative w-full flex flex-col overflow-y-auto max-w-xl max-h-full bg-white rounded-2xl shadow">
                                                         <div
                                                             class="flex items-center justify-between p-3 border-b rounded-t">
                                                             <h3 class="text-lg font-semibold text-gray-900">
-                                                                Editar correo
+                                                                Accesos del correo
                                                             </h3>
                                                             <button type="button"
                                                                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                                                data-modal-hide="dialog-{{ $email->id }}">
+                                                                data-modal-hide="dialog-{{ $user->id }}">
                                                                 <svg class="w-3 h-3" aria-hidden="true"
                                                                     xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 14 14">
@@ -195,43 +198,43 @@
                                                             </button>
                                                         </div>
                                                         @include('components.users.auditory-card')
-                                                        <form action="/api/emails/{{ $email->id }}" method="POST"
-                                                            id="dialog-{{ $email->id }}-form"
-                                                            class="p-3 dinamic-form grid gap-4">
+                                                        <form action="/api/users/email-access/{{ $user->id }}"
+                                                            method="POST" id="dialog-{{ $user->id }}-form"
+                                                            class="p-3 dinamic-form grid gap-4 overflow-y-auto">
                                                             @include('modules.users.emails.form', [
-                                                                'email' => $email,
+                                                                'user' => $user,
                                                             ])
                                                         </form>
                                                         <div
                                                             class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                                                            <button form="dialog-{{ $email->id }}-form" type="submit"
+                                                            <button form="dialog-{{ $user->id }}-form" type="submit"
                                                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
                                                                 Guardar</button>
                                                             <button id="button-close-scheldule-modal"
-                                                                data-modal-hide="dialog-{{ $email->id }}"
-                                                                type="button"
+                                                                data-modal-hide="dialog-{{ $user->id }}" type="button"
                                                                 class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             @endif
                                             @include('commons.avatar', [
-                                                'src' => $email->user->profile,
+                                                'src' => $user->profile,
                                                 'className' => 'w-12',
-                                                'alt' => $email->user->first_name . ' ' . $email->user->last_name,
+                                                'alt' => $user->first_name . ' ' . $user->last_name,
                                                 'altClass' => 'text-lg',
                                             ])
                                             <p class="text-sm font-normal flex-grow text-nowrap">
                                                 <span class="text-base block font-semibold">
-                                                    {{ $email->user->last_name }},
-                                                    {{ $email->user->first_name }}
+                                                    {{ $user->last_name }},
+                                                    {{ $user->first_name }}
                                                 </span>
-                                                {{ $email->user->dni }} - {{ $email->user->email }}
+                                                {{ $user->dni }} - {{ $user->email }}
                                             </p>
                                         </div>
                                     </td>
                                     <td class="relative">
-                                        @php
+                                        {{ explode('@', $user->email)[0] }}
+                                        {{-- @php
                                             $title = $email->discharged
                                                 ? 'Dada de baja el ' .
                                                     $email->discharged .
@@ -277,36 +280,30 @@
                                                     </button>
                                                 </div>
                                             @endif
-                                        </div>
-                                    </td>
-                                    <td class="relative">
-                                        <div class="flex items-center gap-2">
-                                            <a href="mailto:{{ $email->email }}"
-                                                title="Enviar correo a {{ $email->email }}"
-                                                class="bg-white flex text-sm items-center gap-1 rounded-xl hover:shadow-lg shadow-md p-3 font-medium w-fit">
-                                                {{ $email->email }}
-                                            </a>
-                                        </div>
+                                        </div> --}}
                                     </td>
                                     <td>
-                                        <p class="line-clamp-2" title="{{ $email->description }}">
-                                            {{ $email->description }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        @php
-                                            $emailaccess = $email->access ? json_decode($email->access, true) : [];
-                                        @endphp
-                                        <div class="flex items-center gap-2">
-                                            @foreach ($emailaccess as $accessValue)
-                                                @foreach ($access as $accessItem)
-                                                    @if ($accessItem['value'] === $accessValue)
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                @if (!is_null($user->email_access))
+                                                    @php
+                                                        $array = json_decode($user->email_access, true);
+                                                        $finaly = [];
+                                                        foreach (json_decode($user->email_access, true) as $access) {
+                                                            $code = explode(':', $access)[0];
+                                                            if (!isset($finaly[$code])) {
+                                                                $finaly[$code] = $access;
+                                                            }
+                                                        }
+                                                    @endphp
+                                                    @foreach ($finaly as $access)
                                                         <div
-                                                            class="bg-blue-600 text-white p-1 px-2 shadow-md rounded-full text-sm text-nowrap font-semibold">
-                                                            {{ $accessItem['name'] }}</div>
-                                                    @endif
-                                                @endforeach
-                                            @endforeach
+                                                            class="bg-blue-600 text-white uppercase p-1 px-2 shadow-md rounded-full text-sm text-nowrap font-semibold">
+                                                            {{ explode(':', $access)[0] }}
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -321,7 +318,7 @@
             @endif
         </div>
         <footer class="px-5 pt-4">
-            {!! $emails->links() !!}
+            {!! $users->links() !!}
         </footer>
     </div>
 @endsection
