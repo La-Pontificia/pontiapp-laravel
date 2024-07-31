@@ -15,7 +15,7 @@
                 @include('modules.header')
                 <main class="flex h-full overflow-auto">
                     <aside id="cta-sidebar"
-                        class="z-40 w-[270px] min-w-[270px] transition-all h-full max-md:top-12 max-md:bg-white max-md:border-r overflow-y-auto max-md:-translate-x-full max-md:fixed"
+                        class="z-40 w-[270px] bg-gradient-to-r from-white via-white to-transparent min-w-[270px] transition-all h-full max-md:top-12 max-md:bg-white max-md:border-r overflow-y-auto max-md:-translate-x-full max-md:fixed"
                         aria-label="Sidebar">
                         <div class="h-full pr-0 flex flex-col">
                             <div class="flex-grow">
