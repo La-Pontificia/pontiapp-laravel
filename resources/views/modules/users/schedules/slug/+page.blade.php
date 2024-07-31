@@ -5,46 +5,46 @@
 @php
     $days = [
         [
-            'name' => 'Domingo',
-            'value' => 'sunday',
-            'key' => 1,
-            'short' => 'D',
-        ],
-        [
             'name' => 'Lunes',
             'value' => 'monday',
-            'key' => 2,
+            'key' => 1,
             'short' => 'L',
         ],
         [
             'name' => 'Martes',
             'value' => 'tuesday',
-            'key' => 3,
+            'key' => 2,
             'short' => 'M',
         ],
         [
             'name' => 'Miércoles',
             'value' => 'wednesday',
-            'key' => 4,
+            'key' => 3,
             'short' => 'M',
         ],
         [
             'name' => 'Jueves',
             'value' => 'thursday',
-            'key' => 5,
+            'key' => 4,
             'short' => 'J',
         ],
         [
             'name' => 'Viernes',
             'value' => 'friday',
-            'key' => 6,
+            'key' => 5,
             'short' => 'V',
         ],
         [
             'name' => 'Sábado',
             'value' => 'saturday',
-            'key' => 7,
+            'key' => 6,
             'short' => 'S',
+        ],
+        [
+            'name' => 'Domingo',
+            'value' => 'sunday',
+            'key' => 7,
+            'short' => 'D',
         ],
     ];
 @endphp
