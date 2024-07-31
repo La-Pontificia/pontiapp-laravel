@@ -41,6 +41,7 @@ class UserController extends Controller
             'id_role_user' => $request->id_role_user,
             'group_schedule_id' => $request->group_schedule_id,
             'id_branch' => $request->id_branch,
+            'username' => $request->username,
             'created_by' => auth()->user()->id,
         ]);
 
@@ -125,5 +126,24 @@ class UserController extends Controller
         }
 
         return response()->json($users, 200);
+    }
+
+    public function updateEmailAccess(Request $request, $id)
+    {
+        $user = User::find($id);
+        $username = $request->username;
+        $access = $request->input('access', []);
+
+        if (!$username)
+            return response()->json('El nombre de usuario no puede estar vacio', 400);
+
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        $user->username = $username;
+        $user->email_access = $access;
+        $user->save();
+
+        return response()->json('Acceso de correo actualizado correctamente', 200);
     }
 }
