@@ -10,6 +10,7 @@ use App\Models\Department;
 use App\Models\Domain;
 use App\Models\Email;
 use App\Models\GroupSchedule;
+use App\Models\Schedule;
 use App\Models\User;
 use App\Models\UserRole;
 use Carbon\Carbon;
@@ -99,9 +100,12 @@ class UserController extends Controller
 
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
-        $schedules = $user->groupSchedule->schedules->filter(function ($schedule) {
-            return !$schedule->hidden;
+        $group = $user->groupSchedule->schedules->filter(function ($schedule) {
+            return !$schedule->archived;
         });
+        $userSchedules = Schedule::where('user_id', $user->id)->where('archived', false)->get();
+
+        $schedules = $group->merge($userSchedules);
 
         return view('modules.users.slug.schedules.+page', compact('user',  'schedules'));
     }
@@ -231,32 +235,26 @@ class UserController extends Controller
     public function emails(Request $request)
     {
 
-        $match = Email::orderBy('created_at', 'desc');
+        $match = User::orderBy('created_at', 'desc');
         $query = $request->get('q');
         $status = $request->get('status');
 
         if ($status) {
-            $match->where('discharged', $status === 'actives' ? null : '!=', null);
-        }
-
-        if ($query) {
-            $match->whereHas('user', function ($q) use ($query) {
-                $q->where('first_name', 'like', '%' . $query . '%')
-                    ->orWhere('last_name', 'like', '%' . $query . '%')
-                    ->orWhere('dni', 'like', '%' . $query . '%');
-            })
+            $match->where('first_name', 'like', '%' . $query . '%')
+                ->orWhere('last_name', 'like', '%' . $query . '%')
+                ->orWhere('dni', 'like', '%' . $query . '%')
                 ->orWhere('email', 'like', '%' . $query . '%');
+            // where('discharged', $status === 'actives' ? null : '!=', null);
         }
-
 
         $domains = Domain::all();
-        $emails = $match->paginate();
+        $users = $match->paginate();
 
         return view('modules.users.emails.+page', [
             'domains' => $domains,
-            'emails' => $emails
+            'users' => $users
         ])
-            ->with('i', (request()->input('page', 1) - 1) * $emails->perPage());
+            ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
     // domains 
