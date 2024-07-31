@@ -81,8 +81,8 @@
                         </button>
                         <div id="create-scheldule-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
                             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                            <div class="relative p-4 w-full max-w-xl max-h-full">
-                                <div class="relative bg-white rounded-2xl shadow">
+                            <div class="relative overflow-y-auto flex flex-col p-4 w-full max-w-xl max-h-full">
+                                <div class="relative overflow-y-auto flex flex-col bg-white rounded-2xl shadow">
                                     <div class="flex items-center justify-between p-3 border-b rounded-t">
                                         <h3 class="text-lg font-semibold text-gray-900">
                                             Nuevo horario
@@ -99,7 +99,7 @@
                                     </div>
                                     @include('components.users.auditory-card')
                                     <form action="/api/schedules/group/{{ $group_schedule->id }}/add" id="schedule-form-add"
-                                        method="POST" class="p-3 grid dinamic-form gap-4">
+                                        method="POST" class="p-3 overflow-y-auto flex flex-col dinamic-form gap-4">
                                         @include('modules.users.schedules.slug.form')
                                     </form>
                                     <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
@@ -174,7 +174,6 @@
                                 <button data-modal-target="edit-scheldule-modal-{{ $schedule->id }}"
                                     data-modal-toggle="edit-scheldule-modal-{{ $schedule->id }}"
                                     class="p-2 hover:bg-neutral-100 w-full block rounded-md text-left">Editar</button>
-
                                 <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el horario?"
                                     data-adescription="No podrás deshacer esta acción.?"
                                     data-param="/api/schedules/delete/{{ $schedule->id }}"
@@ -187,14 +186,13 @@
                                     class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600 hover:bg-gray-10">
                                     Archivar
                                 </button>
-
                             </div>
 
                             <div id="edit-scheldule-modal-{{ $schedule->id }}" data-modal-backdrop="static"
                                 tabindex="-1" aria-hidden="true"
                                 class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative p-4 w-full max-w-xl max-h-full">
-                                    <div class="relative bg-white rounded-2xl shadow">
+                                <div class="relative overflow-y-auto flex flex-col p-4 w-full max-w-xl max-h-full">
+                                    <div class="relative overflow-y-auto flex flex-col bg-white rounded-2xl shadow">
                                         <div class="flex items-center justify-between p-3 border-b rounded-t">
                                             <h3 class="text-lg font-semibold text-gray-900">
                                                 Editar horario
@@ -214,7 +212,7 @@
                                         @include('components.users.auditory-card')
                                         <form action="/api/schedules/{{ $schedule->id }}"
                                             id="schedule-form-edit-{{ $schedule->id }}" method="POST"
-                                            class="p-3 grid dinamic-form gap-4">
+                                            class="p-3 overflow-y-auto flex flex-col dinamic-form gap-4">
                                             @include('modules.users.schedules.slug.form', [
                                                 'schedule' => $schedule,
                                             ])
