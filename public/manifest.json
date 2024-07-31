@@ -1,6 +1,6 @@
 {
-    "theme_color": "#000000",
-    "background_color": "#2e60eb",
+    "theme_color": "#0a0a0a",
+    "background_color": "#0a0a0a",
     "icons": [
         {
             "purpose": "maskable",
@@ -21,6 +21,6 @@
     "lang": "en-US",
     "name": "La Pontificia",
     "short_name": "LP",
-    "id": "http://ci.ilp.edu.pe:8000",
-    "start_url": "http://ci.ilp.edu.pe:8000"
+    "id": "http://localhost:8000",
+    "start_url": "http://localhost:8000"
 }
