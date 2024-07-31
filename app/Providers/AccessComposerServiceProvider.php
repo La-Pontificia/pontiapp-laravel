@@ -209,11 +209,77 @@ class AccessComposerServiceProvider extends ServiceProvider
                 ],
             ];
 
+            $email_access = [
+                [
+                    'name' => 'Pontisis',
+                    'code' => 'pontisis'
+                ],
+                [
+                    'name' => 'Aula Virtual',
+                    'code' => 'aula_virtual'
+                ],
+                [
+                    'name' => 'MS. 365',
+                    'code' =>  'ms_365'
+                ],
+                [
+                    'name' => 'EDA',
+                    'code' =>  'eda'
+                ]
+            ];
+
+            $business_unit = [
+                [
+                    'code' => 'elp',
+                    'short_name' => 'ELP',
+                    'long_name' => 'Escuela Superior La Pontificia',
+                    'domain' => 'elp.edu.pe',
+                    'services_key' => ['pontisis', 'aula_virtual', 'ms_365', 'eda']
+                ],
+                [
+                    'code' => 'ilp',
+                    'short_name' => 'ILP',
+                    'long_name' => 'Instituto La Pontificia',
+                    'domain' => 'ilp.edu.pe',
+                    'services_key' => ['pontisis', 'aula_virtual', 'ms_365', 'eda']
+                ],
+                [
+                    'code' => 'ilp_andahuaylas',
+                    'short_name' => 'ILP Andahuaylas',
+                    'long_name' => 'Instituto La Pontificia - Andahuaylas',
+                    'domain' => 'ilp.edu.pe',
+                    'services_key' => ['pontisis', 'aula_virtual', 'ms_365', 'eda']
+                ],
+                [
+                    'code' => 'idiomas_lp',
+                    'short_name' => 'ILAP',
+                    'long_name' => 'Idiomas La Pontificia',
+                    'domain' => 'idiomaslp.edu.pe',
+                    'services_key' => ['pontisis', 'aula_virtual', 'ms_365', 'eda']
+                ],
+                [
+                    'code' => 'ilp_sl',
+                    'short_name' => 'ILP_SL',
+                    'long_name' => 'Instituto La Ponitificia - Sin Licenciamiento',
+                    'domain' => 'ilp.edu.pe',
+                    'services_key' => ['pontisis', 'aula_virtual', 'ms_365', 'eda']
+                ],
+                [
+                    'code' => 'lp',
+                    'short_name' => 'LP',
+                    'long_name' => 'La Ponitificia',
+                    'domain' => 'lapontificia.edu.pe',
+                    'services_key' => ['ms_365', 'eda']
+                ]
+            ];
             $user = auth()->user();
+
             if ($user) {
                 $view->with('current_user', $user);
                 $view->with('cuser', $user);
                 $view->with('system_privileges', $system_privileges);
+                $view->with('email_access', $email_access);
+                $view->with('business_unit', $business_unit);
             }
         });
     }
