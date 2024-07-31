@@ -96,4 +96,9 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Surveys routes
     Route::get('surveys', 'App\Http\Controllers\SurveyController@index')->name('surveys');
+
+    // routes if no route is found
+    Route::fallback(function () {
+        return view('+404');
+    });
 });
