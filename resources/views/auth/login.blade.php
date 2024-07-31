@@ -16,13 +16,16 @@
                                     {{-- <h1 class="text-2xl max-w-[20ch] mx-auto pb-3 text-center font-bold tracking-tighter">
                                         Centro de Administración La Pontificia
                                     </h1> --}}
-                                    <p class="pb-3 text-center">
+                                    <div class="py-7">
+                                        <img src="/lp.webp" class="w-32 drop-shadow-md mx-auto" />
+                                    </div>
+                                    {{-- <p class="pb-3 text-center mt-5">
                                         Ingresa tus credenciales para continuar.
-                                    </p>
+                                    </p> --}}
                                     <div class="w-full">
                                         <form method="POST" action="/api/login" class="grid gap-5">
                                             @csrf
-                                            <div class="space-y-3 font-semibold">
+                                            <div class="space-y-3 font-semibold text-black">
                                                 <input style="padding: 17px; border-radius: 10px" required autofocus
                                                     name="email" type="email" value="{{ old('email') }}"
                                                     class="h-12 font-normal" placeholder="Correo electrónico" />
@@ -44,9 +47,9 @@
                                             </button>
                                         </form>
                                         <div class="flex items-center gap-2 mt-4 text-sm">
-                                            <span class="w-full border-b block"></span>
-                                            <p class="text-nowrap">o continuar con</p>
-                                            <span class="w-full border-b block"></span>
+                                            <span class="w-full border-b border-neutral-500 block"></span>
+                                            <p class="text-nowrap">o tambien</p>
+                                            <span class="w-full border-b border-neutral-500 block"></span>
                                         </div>
                                         <a href="{{ route('login.azure') }}"
                                             class="w-full shadow-md hover:shadow-lg mt-4 gap-2 rounded-xl justify-center text-gray-900 bg-white hover:border-blue-600 text-sm p-4 text-center inline-flex items-center">
