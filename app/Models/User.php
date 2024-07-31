@@ -35,6 +35,8 @@ class User extends Authenticatable
         'id_branch',
         'group_schedule_id',
         'supervisor_id',
+        'email_acess',
+        'username',
         'created_by',
         'updated_by',
     ];
