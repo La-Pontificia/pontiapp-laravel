@@ -1,8 +1,11 @@
 <nav
-    class="flex-grow gap-2 text-black flex flex-col p-3 pr-2 font-semibold tracking-tight [&>a]:flex [&>a]:items-center [&>a]:gap-2 [&>a]:p-2 [&>a]:rounded-lg hover:[&>a]:text-[#0c5ce6] [&>a]:transition-colors [&>a>svg]:w-[25px] [&>a>svg]:min-w-[25px] aria-selected:[&>a]:font-semibold aria-selected:[&>a]:text-[#0c5ce6] [&>a>svg]:transition-transform">
+    class="flex-grow gap-2 text-black flex flex-col p-3 pr-2 font-semibold tracking-tight [&>a]:flex [&>a]:items-center [&>a]:gap-2 [&>a]:p-2 [&>a]:rounded-lg hover:[&>a]:text-[#0c5ce6] [&>a]:transition-colors [&>a>svg]:w-[23px] [&>a>svg]:min-w-[23px] aria-selected:[&>a]:font-semibold aria-selected:[&>a]:text-[#0c5ce6] [&>a>svg]:transition-transform">
     <a class="group" href="{{ route('modules') }}" {{ request()->is('/') ? 'aria-selected=true' : '' }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+            <path
+                d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
         </svg>
         <span>Inicio</span>
     </a>
