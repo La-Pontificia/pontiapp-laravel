@@ -6,12 +6,62 @@
 
     $start = request()->query('start_date') ? request()->query('start_date') : null;
     $end = request()->query('end_date') ? request()->query('end_date') : null;
+
+    $currentTerminals = request()->query('terminals') ? request()->query('terminals') : null;
+    $currentTerminalArray = explode(',', $currentTerminals);
+    $terminals = [
+        [
+            'name' => 'PL Alameda',
+            'value' => 'pl-alameda',
+            'checked' => in_array('pl-alameda', $currentTerminalArray) || true,
+        ],
+        [
+            'name' => 'PL Andahuaylas',
+            'value' => 'pl-andahuaylas',
+            'checked' => in_array('pl-andahuaylas', $currentTerminalArray) ?? false,
+        ],
+        [
+            'name' => 'PL Casuarina',
+            'value' => 'pl-casuarina',
+            'checked' => in_array('pl-casuarina', $currentTerminalArray) ?? false,
+        ],
+        [
+            'name' => 'PL Cybernet',
+            'value' => 'pl-cybernet',
+            'checked' => in_array('pl-cybernet', $currentTerminalArray) ?? false,
+        ],
+        [
+            'name' => 'PL Jazmines',
+            'value' => 'pl-jazmines',
+            'checked' => in_array('pl-jazmines', $currentTerminalArray) ?? false,
+        ],
+        [
+            'name' => 'RH Alameda',
+            'value' => 'rh-alameda',
+            'checked' => in_array('rh-alameda', $currentTerminalArray) ?? false,
+        ],
+        [
+            'name' => 'RH Andahuaylas',
+            'value' => 'rh-andahuaylas',
+            'checked' => in_array('rh-andahuaylas', $currentTerminalArray) ?? false,
+        ],
+        [
+            'name' => 'RH Casuarina',
+            'value' => 'rh-casuarina',
+            'checked' => in_array('rh-casuarina', $currentTerminalArray) ?? false,
+        ],
+        [
+            'name' => 'RH Jazmines',
+            'value' => 'rh-jazmines',
+            'checked' => in_array('rh-jazmines', $currentTerminalArray) ?? false,
+        ],
+    ];
 @endphp
 
 @section('layout.users.slug')
     <div class="space-y-2 flex flex-col h-full">
         <div class="p-1 flex items-end">
-            <div class="flex-grow">
+            <div class="flex-grow flex items-center flex-wrap gap-2">
                 <div id="date-range" class="flex items-center gap-1 w-[340px]">
                     <input readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start" placeholder="-">
                     <span>a</span>
@@ -20,11 +70,62 @@
                     <button id="filter"
                         class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
                 </div>
-                <p class="text-xs p-1 text-yellow-600">
-                    Se recomienda máximo 1 mes de rango de fecha.
-                </p>
+                <div>
+                    <button type="button" data-modal-target="filters-modal" data-modal-toggle="filters-modal"
+                        class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-list-filter">
+                            <path d="M3 6h18" />
+                            <path d="M7 12h10" />
+                            <path d="M10 18h4" />
+                        </svg>
+                        <span class="max-lg:hidden">Terminales</span>
+                    </button>
+                    <div id="filters-modal" data-modal-placement="top-center" tabindex="-1"
+                        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="relative w-full max-w-xl max-h-full">
+                            <div class="relative bg-white rounded-lg shadow">
+                                <div class="flex items-center justify-between p-2 px-3 border-b rounded-t">
+                                    <h3 class="text-xl font-medium text-gray-900">
+                                        Filtrar resultados de asistencias
+                                    </h3>
+                                    <button type="button"
+                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                        data-modal-hide="filters-modal">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <form class="p-3 dinamic-form-acumulate" id="form">
+                                    <p class="opacity-70 font-semibold">Terminales</p>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        @foreach ($terminals as $terminal)
+                                            <label class="flex items-center gap-1">
+                                                <input type="checkbox" class="rounded-lg"
+                                                    {{ $terminal['checked'] ? 'checked' : '' }} name="terminals[]"
+                                                    value="{{ $terminal['value'] }}" class="rounded-lg">
+                                                <span>{{ $terminal['name'] }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </form>
+                                <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
+                                    <button type="submit" form="form"
+                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Filtrar</button>
+                                    <button data-modal-hide="filters-modal" type="button"
+                                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Limpiar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
+            <button {{ count($schedules) === 0 ? 'disabled' : '' }} id="export-individuals-attendances"
+                class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
                 <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
                     <g id="SVGRepo_iconCarrier">
@@ -65,18 +166,20 @@
             </button>
         </div>
         <div class="bg-white h-full shadow-sm rounded-2xl overflow-auto mt-5">
-            <table data-value="{{ $user->id }}" class="w-full text-left relative">
+            <table id="table-export-individuals-attendances" data-value="{{ $user->id }}"
+                class="w-full text-left relative">
                 <thead class="border-b sticky top-0 z-[1] bg-white">
-                    <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-3">
-                        <th class="w-full font-semibold tracking-tight">Título</th>
+                    <tr class="[&>th]:font-medium divide-x [&>th]:text-nowrap [&>th]:p-2">
+                        <th class="font-semibold tracking-tight">Título</th>
                         <th>Fecha</th>
                         <th>Dia</th>
                         <th class="text-center">Turno</th>
                         <th class="text-center">Entrada</th>
                         <th class="text-center">Salida</th>
-                        <th>Asistencia</th>
-                        <th>Terminal</th>
+                        <th class="text-center bg-neutral-100">Entró</th>
+                        <th class="text-center bg-neutral-100">Salió</th>
                         <th>Diferencia</th>
+                        <th class="text-center">Terminal</th>
                         <th>Observaciones</th>
                     </tr>
                 </thead>
@@ -85,7 +188,7 @@
                         <tr class="">
                             <td colspan="11" class="text-center py-4">
                                 <div class="p-10">
-                                    No hay roles disponibles
+                                    No hay registros de asistencias.
                                 </div>
                             </td>
                         </tr>
@@ -101,10 +204,12 @@
 
                                 $TTorTM = $from->hour >= 12 ? 'TT' : 'TM';
                                 $day = $date->isoFormat('dddd');
+
+                                $isFuture = $date->isFuture();
                             @endphp
 
                             @if ($currentWeek !== null && $currentWeek !== $weekNumber)
-                                <tr class="h-8 bg-gray-100">
+                                <tr class="h-8" aria-hidden="true">
                                     <td colspan="11"></td>
                                 </tr>
                             @endif
@@ -113,14 +218,16 @@
                                 $currentWeek = $weekNumber;
                             @endphp
 
-                            <tr
-                                class="[&>td]:py-2 divide-x hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-3">
-                                <td data-value="{{ $schedule['title'] }}" data-name="Nombre">
+                            <tr data-dni="{{ $user->dni }}"
+                                data-fullnames ="{{ $user->last_name }}, {{ $user->first_name }}"
+                                class="[&>td]:py-2 divide-x  hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl [&>td]:px-3">
+                                <td data-value="{{ $schedule['title'] }}" data-name="title">
                                     <p class="text-nowrap">
                                         {{ $schedule['title'] }}
                                     </p>
                                 </td>
-                                <td data-value="{{ $schedule['date'] }}" data-name="Fecha">
+                                <td data-value="{{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD-MM-YYYY') }}"
+                                    data-name="date">
                                     <p class="text-nowrap flex font-semibold items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="17" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -133,73 +240,67 @@
                                         {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('LL') }}
                                     </p>
                                 </td>
-                                <td data-value="{{ $day }}" data-name="Dia">
+                                <td data-value="{{ $day }}" data-name="day">
                                     <p class="capitalize font-semibold">
                                         {{ $day }}
                                     </p>
                                 </td>
-                                <td data-value="{{ $TTorTM }}" data-name="Turno">
+                                <td data-value="{{ $TTorTM }}" data-name="turn">
                                     <p
                                         class="text-center font-semibold {{ $TTorTM === 'TM' ? 'text-yellow-500' : 'text-violet-500' }}">
                                         {{ $TTorTM }}
                                     </p>
                                 </td>
-                                <td data-value="{{ $schedule['from'] }}" data-name="Desde">
+                                <td data-value="{{ date('H:i', strtotime($schedule['from'])) }}" data-name="from">
                                     <p class="font-medium">
                                         {{ date('h:i A', strtotime($schedule['from'])) }}
                                     </p>
                                 </td>
-                                <td data-value="{{ $schedule['to'] }}" data-name="Hasta">
+                                <td data-value="{{ date('H:i', strtotime($schedule['to'])) }}" data-name="to">
                                     <p class="font-medium">
                                         {{ date('h:i A', strtotime($schedule['to'])) }}
                                     </p>
                                 </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                    <p class="flex items-center gap-1 font-semibold">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" class="lucide lucide-smartphone-charging">
-                                            <rect width="14" height="20" x="5" y="2" rx="2"
-                                                ry="2" />
-                                            <path d="M12.667 8 10 12h4l-2.667 4" />
-                                        </svg>
-                                        PL-Alameda
+                                <td class="bg-neutral-100"
+                                    data-value="{{ $schedule['marked_in'] ? date('H:i', strtotime($schedule['marked_in'])) : '-' }}"
+                                    data-name="marked_in">
+                                    <p class="font-medium text-center">
+                                        {{ $schedule['marked_in'] ? date('h:i A', strtotime($schedule['marked_in'])) : '-' }}
                                     </p>
                                 </td>
-                                {{-- 
-                                <td data-value="{{ $schedule['i_enter'] }},{{ $schedule['he_left'] }}">
-                                    @if ($schedule['i_enter'] || $schedule['he_left'])
-                                        <p
-                                            class="text-nowrap w-fit flex items-center text-sm gap-2 p-1 rounded-md px-2 bg-green-600 text-white">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" viewBox="0 0 24 24"
+                                <td class="bg-neutral-100"
+                                    data-value="{{ $schedule['marked_out'] ? date('H:i', strtotime($schedule['marked_out'])) : '-' }}"
+                                    data-name="marked_out">
+                                    <p class="font-medium text-center">
+                                        {{ $schedule['marked_out'] ? date('h:i A', strtotime($schedule['marked_out'])) : '-' }}
+                                    </p>
+                                </td>
+                                <td data-value="{{ $schedule['owes_time'] }}" data-name="difference">
+                                    <p>
+                                        {{ $schedule['owes_time'] }}
+                                    </p>
+                                </td>
+                                <td data-value="{{ $schedule['terminal'] }}" data-name="terminal">
+                                    <p class="flex items-center gap-1 font-semibold">
+                                        @if ($schedule['terminal'])
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24"
                                                 fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-clock">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <polyline points="12 6 12 12 16 14" />
+                                                class="lucide lucide-smartphone-charging">
+                                                <rect width="14" height="20" x="5" y="2" rx="2"
+                                                    ry="2" />
+                                                <path d="M12.667 8 10 12h4l-2.667 4" />
                                             </svg>
-                                            {{ $schedule['i_enter'] ? date('h:i A', strtotime($schedule['i_enter'])) : '-' }}
-                                            /
-                                            {{ $schedule['he_left'] ? date('h:i A', strtotime($schedule['he_left'])) : '-' }}
-                                        </p>
-                                    @endif
-                                </td>
-
-                                <td>
-                                    <p>
-                                        @if ($schedule['time_worked'] !== null)
-                                            @if ($schedule['time_worked'] >= 60)
-                                                {{ floor($schedule['time_worked'] / 60) }} horas con
-                                                {{ $schedule['time_worked'] % 60 }} minutos
-                                            @else
-                                                {{ $schedule['time_worked'] }} minutos
-                                            @endif
+                                            {{ $schedule['terminal'] }}
                                         @endif
                                     </p>
-                                </td> --}}
+                                </td>
+                                <td data-value="{{ $schedule['observations'] }}" data-name="observations">
+                                    <p
+                                        class="font-medium {{ $schedule['observations'] == 'Tardanza' ? 'text-yellow-600' : ($schedule['observations'] == 'Completo' ? 'text-green-500' : '') }}">
+                                        {{ !$isFuture ? $schedule['observations'] : '' }}
+                                    </p>
+                                </td>
                             </tr>
                         @endforeach
                     @endif
