@@ -49,11 +49,11 @@
 |                          | - Roles                                      | ✅     |
 |                          | - Horarios                                   | ✅     |
 |                          | - Gestión de EDAS                            | ✅     |
-|                          | - Gestión de Asistencias                     | 🔄     |
+|                          | - Gestión de Asistencias                     | ✅     |
 |                          | - Integración con SQL Server                 | ✅     |
 |                          | - Gestión de Auditoría                       | 🔄     |
 |                          | - Gestión de Mantenimiento                   | ✅     |
-| 11-16 de julio           | **Pruebas**                                  | 🔄     |
+| 11-16 de julio           | **Pruebas**                                  | ✅     |
 |                          | - Pruebas unitarias                          | ✅     |
 |                          | - Pruebas de integración                     | ✅     |
 |                          | - Pruebas de usuario                         |        |
@@ -62,8 +62,8 @@
 |                          | - Migración de datos                         | ✅     |
 |                          | - Despliegue en servidor                     | ✅     |
 | 24-30 de julio           | **Capacitación y Documentación**             | 🔄     |
-|                          | - Capacitación a usuarios finales            |        |
-|                          | - Documentación técnica y de usuario         |        |
+|                          | - Capacitación a usuarios finales            | 🔄       |
+|                          | - Documentación técnica y de usuario         | 🔄       |
 | 31 de julio              | **Mantenimiento**                            | 🔄     |
 |                          | - Corrección de errores                      | 🔄     |
 |                          | - Mejoras y actualizaciones                  | 🔄     |
