@@ -10,12 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let schedulesGroup = [];
     const group_id = $("#group-id");
-    const scheduleForm = $("#schedule-form");
     const calendarEl = $("#calendar-schedules");
-
-    const buttonDeleteSchedule = document.querySelectorAll(
-        ".delete-schelude-group"
-    );
 
     // create element example
     const elem = document.createElement("div");
