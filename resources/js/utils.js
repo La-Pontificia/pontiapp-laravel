@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const dinamicAlerts = document.querySelectorAll(".dinamic-alert");
 
+    const dinamicFormAcumulate = document.querySelectorAll(
+        ".dinamic-form-acumulate"
+    );
+
     dinamicSelects?.forEach((f) => {
         f.addEventListener("change", function (e) {
             const value = e.target.value;
@@ -173,6 +177,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
             });
+        });
+    });
+
+    // Dinamic form acumulate
+
+    dinamicFormAcumulate?.forEach((form) => {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            const array = [];
+            formData.forEach((value, key) => {
+                array.push(value);
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            params.set("terminals", array.join(","));
+            window.location.search = params.toString();
         });
     });
 });
