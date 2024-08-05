@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
 use App\Models\Attendance;
+use App\Models\Department;
+use App\Models\JobPosition;
 use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
@@ -158,6 +161,51 @@ class AssistsController extends Controller
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
 
-        return view('modules.users.slug.attendance.+page', compact('user', 'schedules', 'assistances'));
+        $match = User::orderBy('created_at', 'desc');
+
+        $area_id = $request->get('area');
+        $department_id = $request->get('department');
+
+        if ($area_id) {
+            $match->whereHas('role_position', function ($q) use ($area_id) {
+                $q->whereHas('department', function ($qq) use ($area_id) {
+                    $qq->where('id_area', $area_id);
+                });
+            });
+        }
+
+        if ($department_id) {
+            $match->whereHas('role_position', function ($q) use ($department_id) {
+                $q->where('id_department', $department_id);
+            });
+        }
+
+
+        $areas = Area::all();
+        $departments = Department::all();
+
+        if ($area_id) {
+            $departments = Department::where('id_area', $area_id)->get();
+        }
+
+        $users = [];
+
+        if ($department_id || $area_id) {
+
+            $users =  $match->get();
+        }
+
+        $schedules = [];
+
+        foreach ($users as $user) {
+            $schedules = array_merge($schedules, $this->assistsByUser($user->id, $terminals, $startDate, $endDate));
+        }
+
+        return view('modules.assists.+page', [
+            'areas' => $areas,
+            'departments' => $departments,
+            'users' => $users,
+            'schedules' => $schedules,
+        ]);
     }
 }
