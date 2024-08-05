@@ -114,7 +114,7 @@ class UserController extends Controller
 
 
 
-    public function slug_attendance(Request $request, $id)
+    public function slug_assists(Request $request, $id)
     {
         $user = User::find($id);
         if (!$user) return view('pages.500', ['error' => 'User not found']);
@@ -258,7 +258,7 @@ class UserController extends Controller
             $schedule['observations'] = implode(', ', $observations);
             $schedule['owes_time'] = is_numeric($owesTime) ? gmdate('H:i:s', $owesTime * 60) : null;
         }
-        return view('modules.users.slug.attendance.+page', compact('user', 'schedules', 'assistances'));
+        return view('modules.users.slug.assists.+page', compact('user', 'schedules', 'assistances'));
     }
 
     // schedules
