@@ -21,8 +21,8 @@
         ],
         [
             'title' => 'Asistencia',
-            'link' => '/users/' . $user->id . '/attendance',
-            'active' => request()->is('users/' . $user->id . '/attendance'),
+            'link' => '/users/' . $user->id . '/assists',
+            'active' => request()->is('users/' . $user->id . '/assists'),
         ],
     ];
 
@@ -39,7 +39,7 @@
             <div class="p-3 pb-2 flex gap-4 items-center overflow-hidden">
                 <div class="relative w-fit">
                     <div class="flex items-center gap-4">
-                        <div class="relative rounded-full overflow-hidden w-40 border aspect-square">
+                        <div class="relative rounded-full overflow-hidden w-28 border aspect-square">
                             <input data-notoutline-styles data-userid="{{ $user->id }}" class="hidden" type="file"
                                 name="profile" id="input-profile" accept="image/*">
                             <img id="preview-profile" class="w-full h-full object-cover" src={{ $profile }}
