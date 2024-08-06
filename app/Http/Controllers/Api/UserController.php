@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Collaborator;
-use App\Models\Email;
 use App\Models\User;
-use App\Models\UserRole;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -44,13 +41,6 @@ class UserController extends Controller
             'username' => $request->username,
             'created_by' => auth()->user()->id,
         ]);
-
-        if ($request->create_profile_collaborator) {
-            Collaborator::create([
-                'id_user' => $user->id,
-                'created_by' => auth()->user()->id,
-            ]);
-        }
 
         return response()->json($user, 200);
     }
