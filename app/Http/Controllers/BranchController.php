@@ -16,8 +16,10 @@ class BranchController extends Controller
                 ->orWhere('code', 'like', '%' . $q . '%')
                 ->get();
         }
+
         $branches = $match->paginate();
-        return view('pages.branches.index', compact('branches'))
+
+        return view('modules.settings.branches.+page', compact('branches'))
             ->with('i', (request()->input('page', 1) - 1) * $branches->perPage());
     }
 
