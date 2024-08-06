@@ -33,7 +33,7 @@
         <div class="flex gap-2 p-1 tracking-tight overflow-auto">
             <div class="flex-grow">
                 <button onclick="window.history.back()"
-                    class="text-blue-700 hover:bg-indigo-100 font-semibold justify-center min-w-max flex items-center rounded-full p-2 gap-1 px-2">
+                    class="text-blue-700 hover:bg-indigo-100 font-semibold justify-center min-w-max flex text-sm items-center rounded-full p-2 gap-1 px-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="lucide lucide-arrow-left">
@@ -44,24 +44,27 @@
                 </button>
             </div>
             <button data-id-eda="{{ $eda->id }}" {{ $hasApproveGoals ? '' : 'data-hidden' }} id="approve-goals-button"
-                class="bg-blue-600 hover:bg-blue-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
+                class="bg-blue-600 hover:bg-blue-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-2 gap-1 text-sm px-3">
                 Aprobar
             </button>
             <button {{ $hasSentGoals ? '' : 'data-hidden' }} disabled data-id-eda="{{ $eda->id }}"
                 id="submit-goals-button"
-                class="bg-blue-700 data-[hidden]:hidden font-semibold justify-center hover:bg-blue-600 min-w-max flex items-center rounded-lg p-2 gap-1 text-white text-sm px-3">
+                class="bg-blue-700 data-[hidden]:hidden font-semibold justify-center hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                 {{ $sent ? 'Reenviar' : 'Enviar' }} objetivos
             </button>
         </div>
         <div id="presentation-not-goals" class="p-1 h-full grid place-content-center text-center">
-            <div class="max-w-sm mx-auto space-y-2">
-                <h1 class="text-black tracking-tight font-semibold text-2xl pt-2">
-                    Agrega los objetivos necesarios.
-                </h1>
-                <p class="pt-2 text-sm">
+            <div class="max-w-sm mx-auto space-y-2 text-sm">
+                <img src="/sheet-pen.png" class="mx-auto" alt="">
+                <p class="pt-2 text-xs">
                     Una vez llegue al 100% de total de porcentaje, podrá enviar los objetivos.
                 </p>
-                <button class="bg-blue-700 px-3 p-2 rounded-full text-white font-semibold" id="add-goal-button-2">
+                <button
+                    class="bg-white flex items-center gap-2 mx-auto shadow-md px-3 p-2 rounded-full text-black font-semibold text-sm"
+                    id="add-goal-button-2">
+                    @svg('heroicon-o-plus-circle', [
+                        'class' => 'w-5 h-5',
+                    ])
                     Agregar objetivo
                 </button>
             </div>
