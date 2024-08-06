@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Export attendances
 
     exportButton?.addEventListener("click", async () => {
-        const table = $("#table-export-individuals-attendances");
+        const table = $("#table-export-assists");
         const tbody = table.querySelector("tbody");
         const rows = tbody.querySelectorAll("tr");
         const attendances = [];
@@ -124,13 +124,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             column.width = maxLength < 10 ? 10 : maxLength + 2;
         });
 
+        const dateRange = $("#date-range");
+        const start = dateRange.querySelector("input[name=start]");
+        const end = dateRange.querySelector("input[name=end]");
+
+        const name = `Asistencias ${start.value} - ${end.value}.xlsx`;
+
         workbook.xlsx.writeBuffer().then((buffer) => {
             const blob = new Blob([buffer], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = "data.xlsx";
+            link.download = name;
             link.click();
         });
     });
