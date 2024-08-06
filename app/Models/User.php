@@ -89,11 +89,6 @@ class User extends Authenticatable
         return $this->hasOne(User::class, 'id', 'updated_by');
     }
 
-    public function emails()
-    {
-        return $this->hasMany(Email::class, 'id_user', 'id');
-    }
-
     public function role()
     {
         return $this->hasOne(UserRole::class, 'id', 'id_role_user');
