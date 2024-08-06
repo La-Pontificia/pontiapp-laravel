@@ -3,7 +3,7 @@
         <div class="flex flex-grow gap-2 items-center">
 
             @if ($current_user->hasPrivilege('users:create'))
-                <a href="{{ route('users.create') }}"
+                <a href="/users/create"
                     class="bg-blue-700 shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -52,7 +52,6 @@
                                 <stop offset="1" stop-color="#0b6631"></stop>
                             </linearGradient>
                         </defs>
-                        <title>file_type_excel</title>
                         <path
                             d="M19.581,15.35,8.512,13.4V27.809A1.192,1.192,0,0,0,9.705,29h19.1A1.192,1.192,0,0,0,30,27.809h0V22.5Z"
                             style="fill:#185c37"></path>
