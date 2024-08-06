@@ -197,12 +197,12 @@ class AccessComposerServiceProvider extends ServiceProvider
                     ],
                 ],
                 [
-                    'name' => 'Mantenimiento',
+                    'name' => 'Ajustes del sistema',
                     'items' => [
                         [
-                            'name' => 'Mantenimiento',
+                            'name' => 'Ajustes del sistema',
                             'privileges' => [
-                                'maintenance' => 'Todos los privilegios',
+                                'settings' => 'Todos los ajustes',
                             ],
                         ],
                     ],
@@ -274,12 +274,20 @@ class AccessComposerServiceProvider extends ServiceProvider
             ];
             $user = auth()->user();
 
+            $business_services = [
+                'pontisis' => 'Sistema Académico',
+                'aula_virtual' => 'Aula Virtual',
+                'ms_365' => 'MS. 365 - Microsoft 365',
+                'eda' => 'EDA'
+            ];
+
             if ($user) {
                 $view->with('current_user', $user);
                 $view->with('cuser', $user);
                 $view->with('system_privileges', $system_privileges);
                 $view->with('email_access', $email_access);
                 $view->with('business_unit', $business_unit);
+                $view->with('business_services', $business_services);
             }
         });
     }
