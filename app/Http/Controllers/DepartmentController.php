@@ -34,7 +34,7 @@ class DepartmentController extends Controller
             $newCode = 'D-' . str_pad((int)explode('-', $lastArea->code)[1] + 1, 3, '0', STR_PAD_LEFT);
         }
 
-        return view('pages.departments.index', compact('areas', 'departments', 'newCode'))
+        return view('modules.settings.departments.+page', compact('areas', 'departments', 'newCode'))
             ->with('i', (request()->input('page', 1) - 1) * $departments->perPage());
     }
 
