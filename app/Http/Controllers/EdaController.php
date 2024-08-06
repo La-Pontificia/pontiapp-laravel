@@ -62,14 +62,14 @@ class EdaController  extends Controller
         $user = auth()->user();
         $year = Year::orderBy('name', 'desc')->first();
         if (!$year) return view('pages.404');
-        return redirect()->route('edas.slug', ['id_user' => $user->id, 'year' => $year->id]);
+        return redirect('/edas/' . $user->id . '/eda/' . $year->id);
     }
 
     public function user($id_user)
     {
         $user = User::find($id_user);
         $year = Year::orderBy('name', 'desc')->first();
-        return redirect()->route('edas.slug.year', ['id_user' => $user->id, 'id_year' => $year->id]);
+        return redirect('edas/' . $user->id . '/eda/' . $year->id);
     }
 
     public function year($id_user, $id_year)
