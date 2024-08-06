@@ -3,20 +3,10 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="w-full h-full py-10 space-y-5">
+    <div class="h-full py-10 space-y-5">
         <div>
-            @php
-                $hour = date('H');
-                $greeting = '';
-                if ($hour >= 5 && $hour < 12) {
-                    $greeting = 'Buenos días';
-                } elseif ($hour >= 12 && $hour < 18) {
-                    $greeting = 'Buenas tardes';
-                } else {
-                    $greeting = 'Buenas noches';
-                }
-            @endphp
-            <h1 class="text-2xl text-center tracking-tight font-serif text-stone-700">{{ $greeting }},
+            <h1 class="text-2xl text-center tracking-tight font-serif text-stone-700">
+                <span id="greeting"></span>,
                 {{ Auth()->user()->first_name }}
             </h1>
         </div>
@@ -59,4 +49,22 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        const date = new Date();
+        const hours = date.getHours();
+        let greeting = '';
+
+        if (hours >= 0 && hours < 12) {
+            greeting = 'Buenos días';
+        } else if (hours >= 12 && hours < 18) {
+            greeting = 'Buenas tardes';
+        } else {
+            greeting = 'Buenas noches';
+        }
+
+        document.getElementById('greeting').textContent = greeting;
+    </script>
 @endsection
