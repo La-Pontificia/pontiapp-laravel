@@ -1,4 +1,54 @@
+@php
+    $showYear = $cuser->hasPrivilege('edas:years:view') || $cuser->hasPrivilege('edas:years:create');
+    $showQuestionnaires =
+        $cuser->hasPrivilege('edas:questionnaires-templates:view') ||
+        $cuser->hasPrivilege('edas:questionnaires-templates:create');
+
+@endphp
+
+@php
+    $items = [
+        [
+            'icon' => 'heroicon-o-clipboard-document-list',
+            'text' => 'Asistencias',
+            'href' => '/assists',
+            'active' => request()->is('assists*'),
+            'active-icon' => 'heroicon-s-clipboard-document-list',
+        ],
+        [
+            'icon' => 'heroicon-o-circle-stack',
+            'text' => 'Bases de datos',
+            'href' => '/assists/data-bases',
+            'active' => request()->is('assists/data-bases*'),
+            'active-icon' => 'heroicon-s-circle-stack',
+        ],
+    ];
+@endphp
 <div class="flex flex-col overflow-y-auto">
+    <div class="flex items-center justify-between p-4">
+        <a href="/" class="flex gap-2 font-medium items-center text-gray-900 ">
+            @svg('heroicon-o-arrow-left', [
+                'class' => 'w-5 h-5',
+            ])
+            <span class="max-md:hidden">Gestión de asistencias</span>
+        </a>
+    </div>
+    <nav class="px-2 py-2 pt-0">
+        @foreach ($items as $item)
+            <a {{ $item['active'] ? 'data-active' : '' }} title="{{ $item['text'] }}"
+                class="flex group relative data-[active]:font-medium gap-2 p-2 hover:bg-neutral-200 rounded-lg"
+                href="{{ $item['href'] }}">
+                @svg($item['icon'], [
+                    'class' => 'w-5 h-5 max-md:w-6 max-md:mx-auto',
+                ])
+                <span class="max-md:hidden">{{ $item['text'] }}</span>
+            </a>
+        @endforeach
+    </nav>
+</div>
+
+
+{{-- <div class="flex flex-col overflow-y-auto">
     <div class="flex items-center justify-between p-2">
         <button onclick="window.history.back()" class="flex gap-2 items-center font-semibold text-gray-900 ">
             <div class="p-1 rounded-full bg-white w-8">
@@ -26,35 +76,15 @@
             </svg>
             <p>Asistencias</p>
         </a>
-        {{-- <a href="/years" {{ request()->is('edas/years*') ? 'data-active' : '' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-calendar-days">
-                <path d="M8 2v4" />
-                <path d="M16 2v4" />
-                <rect width="18" height="18" x="3" y="4" rx="2" />
-                <path d="M3 10h18" />
-                <path d="M8 14h.01" />
-                <path d="M12 14h.01" />
-                <path d="M16 14h.01" />
-                <path d="M8 18h.01" />
-                <path d="M12 18h.01" />
-                <path d="M16 18h.01" />
-            </svg>
-            <p>Años</p>
-        </a>
-        <a href="/years/questionnaires" {{ request()->is('edas/questionnaires*') ? 'data-active' : '' }}>
+        <a href="/assists/terminals" {{ request()->is('assists/terminals') ? 'data-active' : '' }}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notepad-text">
-                <path d="M8 2v4" />
-                <path d="M12 2v4" />
-                <path d="M16 2v4" />
-                <rect width="16" height="18" x="4" y="4" rx="2" />
-                <path d="M8 10h6" />
-                <path d="M8 14h8" />
-                <path d="M8 18h5" />
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pc-case">
+                <rect width="14" height="20" x="5" y="2" rx="2" />
+                <path d="M15 14h.01" />
+                <path d="M9 6h6" />
+                <path d="M9 10h6" />
             </svg>
-            <p>Cuestionarios</p>
-        </a> --}}
+            <p>DB Terminales</p>
+        </a>
     </div>
-</div>
+</div> --}}

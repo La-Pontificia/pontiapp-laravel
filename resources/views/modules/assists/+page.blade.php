@@ -1,85 +1,149 @@
 @extends('modules.assists.+layout')
 
 @php
-    $branches = [
+    $start = request()->query('start_date') ? request()->query('start_date') : null;
+    $end = request()->query('end_date') ? request()->query('end_date') : null;
+
+    $currentTerminals = request()->query('terminals') ? request()->query('terminals') : null;
+    $currentTerminalArray = explode(',', $currentTerminals);
+    $terminals = [
         [
             'name' => 'PL Alameda',
             'value' => 'pl-alameda',
+            'checked' => in_array('pl-alameda', $currentTerminalArray) || true,
         ],
         [
             'name' => 'PL Andahuaylas',
             'value' => 'pl-andahuaylas',
+            'checked' => in_array('pl-andahuaylas', $currentTerminalArray) ?? false,
         ],
         [
             'name' => 'PL Casuarina',
             'value' => 'pl-casuarina',
+            'checked' => in_array('pl-casuarina', $currentTerminalArray) ?? false,
         ],
         [
             'name' => 'PL Cybernet',
             'value' => 'pl-cybernet',
+            'checked' => in_array('pl-cybernet', $currentTerminalArray) ?? false,
         ],
         [
             'name' => 'PL Jazmines',
             'value' => 'pl-jazmines',
+            'checked' => in_array('pl-jazmines', $currentTerminalArray) ?? false,
         ],
         [
             'name' => 'RH Alameda',
             'value' => 'rh-alameda',
+            'checked' => in_array('rh-alameda', $currentTerminalArray) ?? false,
         ],
         [
             'name' => 'RH Andahuaylas',
             'value' => 'rh-andahuaylas',
+            'checked' => in_array('rh-andahuaylas', $currentTerminalArray) ?? false,
         ],
         [
             'name' => 'RH Casuarina',
             'value' => 'rh-casuarina',
+            'checked' => in_array('rh-casuarina', $currentTerminalArray) ?? false,
         ],
         [
             'name' => 'RH Jazmines',
             'value' => 'rh-jazmines',
+            'checked' => in_array('rh-jazmines', $currentTerminalArray) ?? false,
         ],
     ];
-
-    $start = request()->query('start_date') ? request()->query('start_date') : null;
-    $end = request()->query('end_date') ? request()->query('end_date') : null;
 @endphp
 
 @section('layout.assists')
     <div class="text-black h-full w-full flex-grow flex flex-col overflow-y-auto">
-        {{-- <h2 class="py-3 pb-0 font-semibold tracking-tight text-lg px-2">
+        <h2 class="py-3 pb-0  tracking-tight text-lg px-2">
             Gestion de asistencias
-        </h2> --}}
-        <div class="px-1 gap-3 flex items-center">
-            <div>
-                <p class="py-2 font-semibold text-xs opacity-70">
-                    Rango de fecha
-                </p>
-                <div id="date-range" class="flex items-center gap-1 w-[340px]">
-                    <input readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start" placeholder="-">
-                    <span>a</span>
-                    <input readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end" placeholder="-">
-                    <button id="filter"
-                        class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
+        </h2>
+        <div class="px-1 gap-3 w-full flex items-center">
+            <div class="p-1 flex-grow flex items-center gap-2">
+                <div class="flex-grow flex items-center flex-wrap gap-2">
+                    <div id="date-range" class="flex items-center gap-1 w-[340px]">
+                        <input readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start"
+                            placeholder="-">
+                        <span>a</span>
+                        <input readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end" placeholder="-">
+
+                        <button id="filter"
+                            class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm ">Filtrar</button>
+                    </div>
+                    <div>
+                        <button type="button" data-modal-target="filters-modal" data-modal-toggle="filters-modal"
+                            class=" w-fit bg-white border min-w-max flex items-center rounded-full p-2 gap-1 text-sm px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-list-filter">
+                                <path d="M3 6h18" />
+                                <path d="M7 12h10" />
+                                <path d="M10 18h4" />
+                            </svg>
+                            <span class="max-lg:hidden">Terminales</span>
+                        </button>
+                        <div id="filters-modal" data-modal-placement="top-center" tabindex="-1"
+                            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative w-full max-w-xl max-h-full">
+                                <div class="relative bg-white rounded-lg shadow">
+                                    <div class="flex items-center justify-between p-2 px-3 border-b rounded-t">
+                                        <h3 class="text-xl text-gray-900">
+                                            Filtrar resultados de asistencias
+                                        </h3>
+                                        <button type="button"
+                                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                            data-modal-hide="filters-modal">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <form class="p-3 dinamic-form-acumulate" id="form">
+                                        <p class="opacity-70 ">Terminales</p>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            @foreach ($terminals as $terminal)
+                                                <label class="flex items-center gap-1">
+                                                    <input type="checkbox" class="rounded-lg"
+                                                        {{ $terminal['checked'] ? 'checked' : '' }} name="terminals[]"
+                                                        value="{{ $terminal['value'] }}" class="rounded-lg">
+                                                    <span>{{ $terminal['name'] }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </form>
+                                    <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
+                                        <button type="submit" form="form"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center ">Filtrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <select class="dinamic-select" style="border-radius: 50px" name="area">
+                            <option value="0">Todas las areas</option>
+                            @foreach ($areas as $area)
+                                <option {{ request()->query('area') === $area->id ? 'selected' : '' }}
+                                    value="{{ $area->id }}">{{ $area->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <select class="dinamic-select" style="border-radius: 50px" name="department">
+                            <option value="0">Todos los departamentos</option>
+                            @foreach ($departments as $department)
+                                <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
+                                    value="{{ $department->id }}">{{ $department->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <p class="text-xs p-1 text-yellow-600">
-                    Se recomienda máximo 1 mes de rango de fecha.
-                </p>
-            </div>
-            <div class="pt-2 flex w-full items-center gap-2">
-                <div>
-                    <select name="branch" class="dinamic-select">
-                        @foreach ($branches as $branch)
-                            <option {{ request()->query('branch') === $branch['value'] ? 'selected' : '' }}
-                                value="{{ $branch['value'] }}">{{ $branch['name'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="flex-grow">
-                    <input value="{{ request()->query('q') }}" type="search" placeholder="DNI"
-                        class="dinamic-search w-[200px] text-black outline-0 border border-neutral-300 flex items-center rounded-full gap-2 p-1.5 text-sm px-3 bg-neutral-100">
-                </div>
-                <button
-                    class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
+                <button {{ count($users) === 0 ? 'disabled' : '' }} id="export-individuals-attendances"
+                    class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm  px-3">
                     <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
                         <g id="SVGRepo_iconCarrier">
@@ -91,7 +155,6 @@
                                     <stop offset="1" stop-color="#0b6631"></stop>
                                 </linearGradient>
                             </defs>
-                            <title>file_type_excel</title>
                             <path
                                 d="M19.581,15.35,8.512,13.4V27.809A1.192,1.192,0,0,0,9.705,29h19.1A1.192,1.192,0,0,0,30,27.809h0V22.5Z"
                                 style="fill:#185c37"></path>
@@ -125,125 +188,170 @@
                 </button>
             </div>
         </div>
-        <div class="overflow-auto flex flex-col">
-            <table class="w-full relative overflow-x-auto">
-                <thead class="border-b sticky bg-[#f1f0f4] divide-y top-0 z-10">
-                    <tr class="text-left [&>th]:px-3 [&>th]:py-3 [&>th]:font-medium">
-                        <th class="w-full">Usuario</th>
-                        <th>Sede</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($assists as $assist)
-                        @php
-                            $user = $assist->getUserFromMysql();
-                        @endphp
+        <div class="overflow-auto flex h-full flex-col">
+            <div class="h-full shadow-sm rounded-2xl overflow-auto">
+                @if (count($schedules) === 0)
+                    <div class="grid h-full w-full place-content-center">
+                        <img src="/empty-meetingList.webp" class="mx-auto" alt="">
+                        <p class="text-center text-xs max-w-[40ch] mx-auto">
+                            Seleciona una area o un departamento para ver los registros de asistencias.
+                        </p>
+                    </div>
+                @else
+                    <table id="table-export-assists" class="w-full text-left relative">
+                        <thead class="border-b sticky bg-[#f1f0f4] top-0 z-[1]">
+                            <tr class="[&>th]:text-nowrap [&>th]:font-medium [&>th]:p-2">
+                                <th class=" tracking-tight">DNI</th>
+                                <th class=" tracking-tight">Usuario</th>
+                                <th class=" tracking-tight">Título</th>
+                                <th>Fecha</th>
+                                <th>Dia</th>
+                                <th class="text-center">Turno</th>
+                                <th class="text-center">Entrada</th>
+                                <th class="text-center">Salida</th>
+                                <th class="text-center bg-neutral-100">Entró</th>
+                                <th class="text-center bg-neutral-100">Salió</th>
+                                <th>Diferencia</th>
+                                <th class="text-center">Terminal</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y z-[0]">
+                            @if (count($schedules) === 0)
+                                <tr class="">
+                                    <td colspan="11" class="text-center py-4">
+                                        <div class="p-10">
+                                            No hay registros de asistencias.
+                                        </div>
+                                    </td>
+                                </tr>
+                            @else
+                                @php
+                                    $currentWeek = null;
+                                @endphp
+                                @foreach ($schedules as $schedule)
+                                    @php
+                                        $from = \Carbon\Carbon::parse($schedule['from']);
+                                        $date = \Carbon\Carbon::parse($schedule['date']);
+                                        $weekNumber = $date->weekOfYear;
 
-                        <tr class="border-b group [&>td]:px-3 [&>td]:py-3">
-                            <td>
-                                @if ($user)
-                                    <div class="flex items-center gap-3">
-                                        @include('commons.avatar', [
-                                            'src' => $user->profile,
-                                            'className' => 'w-12',
-                                            'alt' => $user->first_name . ' ' . $user->last_name,
-                                            'altClass' => 'text-lg',
-                                        ])
-                                        <div class="flex-grow">
-                                            <a href="/profile/{{ $user->id }}"
-                                                title="Ver perfil de {{ $user->last_name }}, {{ $user->first_name }}"
-                                                class="hover:underline font-medium text-blue-700 text-nowrap">
-                                                {{ $user->last_name ?? '-' }}, {{ $user->first_name ?? '-' }}
-                                            </a>
-                                            <p class="text-sm font-normal text-nowrap">
-                                                {{ $user->role_position->job_position->name }},
-                                                {{ $user->role_position->name }},
-                                                {{ $user->role_position->department->area->name }}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <pre>
-                                                {{ $user->schedules()[0]['title'] }}
-                                            </pre>
-                                        </div>
-                                        <a href="{{ route('assists.user', ['id_user' => $user->id]) }}"
-                                            class="group-hover:opacity-100 text-nowrap opacity-0 gap-2 flex items-center border p-1.5 rounded-xl hover:border-stone-400 px-2"
-                                            title="Ver asistencias y horarios de {{ $user->last_name }}, {{ $user->first_name }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" viewBox="0 0 24 24"
-                                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                class="lucide lucide-square-arrow-up-right opacity-60">
-                                                <rect width="18" height="18" x="3" y="3" rx="2" />
-                                                <path d="M8 8h8v8" />
-                                                <path d="m8 16 8-8" />
-                                            </svg>
-                                            Ver asistencias y horarios
-                                        </a>
-                                    </div>
-                                @else
-                                    <p class="font-semibold text-nowrap text-sm opacity-60">
-                                        {{ $assist->employee->first_name }}, {{ $assist->employee->last_name }} |
-                                        {{ $assist->emp_code }}
-                                    </p>
-                                @endif
-                            </td>
-                            <td>
-                                <p class="text-nowrap font-semibold">
-                                    {{ $assist->dept_name }}
-                                </p>
-                            </td>
-                            <td>
-                                <p class="flex items-center text-nowrap gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide opacity-50 lucide-calendar-days">
-                                        <path d="M8 2v4" />
-                                        <path d="M16 2v4" />
-                                        <rect width="18" height="18" x="3" y="4" rx="2" />
-                                        <path d="M3 10h18" />
-                                        <path d="M8 14h.01" />
-                                        <path d="M12 14h.01" />
-                                        <path d="M16 14h.01" />
-                                        <path d="M8 18h.01" />
-                                        <path d="M12 18h.01" />
-                                        <path d="M16 18h.01" />
-                                    </svg>
-                                    {{ date('d/m/Y', strtotime($assist->punch_time)) }}
-                                </p>
-                            </td>
-                            <td>
-                                <p class="text-nowrap items-center flex gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide opacity-50 lucide-clock">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <polyline points="12 6 12 12 16 14" />
-                                    </svg>
-                                    @if ($assist->punch_time)
-                                        {{ date('h:i:s A', strtotime($assist->punch_time)) }}
-                                    @else
-                                        -
+                                        $TTorTM = $from->hour >= 12 ? 'TT' : 'TM';
+                                        $day = $date->isoFormat('dddd');
+
+                                        $isFuture = $date->isFuture();
+                                    @endphp
+
+                                    @if ($currentWeek !== null && $currentWeek !== $weekNumber)
+                                        <tr class="h-8" aria-hidden="true">
+                                            <td colspan="11"></td>
+                                        </tr>
                                     @endif
-                                </p>
-                            </td>
-                            {{-- <td>
-                                    <p class="text-nowrap">
-                                        @if ($assist->upload_time)
-                                            {{ date('h:i:s A', strtotime($assist->upload_time)) }}
-                                        @else
-                                            -
-                                        @endif
-                                    </p>
-                                </td> --}}
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+
+                                    @php
+                                        $currentWeek = $weekNumber;
+                                    @endphp
+
+                                    <tr data-dni="{{ $schedule['dni'] }}" data-fullnames ="{{ $schedule['full_name'] }}"
+                                        class="[&>td]:py-2 [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl [&>td]:px-3">
+                                        <td>
+                                            <p class="">
+                                                {{ $schedule['dni'] }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="">
+                                                {{ $schedule['full_name'] }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ $schedule['title'] }}" data-name="title">
+                                            <p class="text-nowrap">
+                                                {{ $schedule['title'] }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD-MM-YYYY') }}"
+                                            data-name="date">
+                                            <p class="text-nowrap flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="17"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="lucide lucide-calendar opacity-70">
+                                                    <path d="M8 2v4" />
+                                                    <path d="M16 2v4" />
+                                                    <rect width="18" height="18" x="3" y="4" rx="2" />
+                                                    <path d="M3 10h18" />
+                                                </svg>
+                                                {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('LL') }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ $day }}" data-name="day">
+                                            <p class="capitalize ">
+                                                {{ $day }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ $TTorTM }}" data-name="turn">
+                                            <p
+                                                class="text-center  {{ $TTorTM === 'TM' ? 'text-yellow-500' : 'text-violet-500' }}">
+                                                {{ $TTorTM }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ date('H:i', strtotime($schedule['from'])) }}"
+                                            data-name="from">
+                                            <p class="">
+                                                {{ date('h:i A', strtotime($schedule['from'])) }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ date('H:i', strtotime($schedule['to'])) }}" data-name="to">
+                                            <p class="">
+                                                {{ date('h:i A', strtotime($schedule['to'])) }}
+                                            </p>
+                                        </td>
+                                        <td class="bg-yellow-100"
+                                            data-value="{{ $schedule['marked_in'] ? date('H:i', strtotime($schedule['marked_in'])) : '-' }}"
+                                            data-name="marked_in">
+                                            <p class="text-center">
+                                                {{ $schedule['marked_in'] ? date('h:i A', strtotime($schedule['marked_in'])) : '-' }}
+                                            </p>
+                                        </td>
+                                        <td class="bg-yellow-100"
+                                            data-value="{{ $schedule['marked_out'] ? date('H:i', strtotime($schedule['marked_out'])) : '-' }}"
+                                            data-name="marked_out">
+                                            <p class="text-center">
+                                                {{ $schedule['marked_out'] ? date('h:i A', strtotime($schedule['marked_out'])) : '-' }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ $schedule['owes_time'] }}" data-name="difference">
+                                            <p>
+                                                {{ $schedule['owes_time'] }}
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ $schedule['terminal'] }}" data-name="terminal">
+                                            <p class="flex items-center gap-1 ">
+                                                @if ($schedule['terminal'])
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="lucide lucide-smartphone-charging">
+                                                        <rect width="14" height="20" x="5" y="2" rx="2"
+                                                            ry="2" />
+                                                        <path d="M12.667 8 10 12h4l-2.667 4" />
+                                                    </svg>
+                                                    {{ $schedule['terminal'] }}
+                                                @endif
+                                            </p>
+                                        </td>
+                                        <td data-value="{{ $schedule['observations'] }}" data-name="observations">
+                                            <p
+                                                class="{{ $schedule['observations'] == 'Tardanza' ? 'text-yellow-600' : ($schedule['observations'] == 'Completo' ? 'text-green-500' : '') }}">
+                                                {{ !$isFuture ? $schedule['observations'] : '' }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                @endif
+            </div>
         </div>
-        <footer class="px-5 pt-4">
-            {!! $assists->links() !!}
-        </footer>
     </div>
 @endsection
