@@ -4,55 +4,12 @@
     $start = request()->query('start_date') ? request()->query('start_date') : null;
     $end = request()->query('end_date') ? request()->query('end_date') : null;
 
-    $currentTerminals = request()->query('terminals') ? request()->query('terminals') : null;
-    $currentTerminalArray = explode(',', $currentTerminals);
-    $terminals = [
-        [
-            'name' => 'PL Alameda',
-            'value' => 'pl-alameda',
-            'checked' => in_array('pl-alameda', $currentTerminalArray) || true,
-        ],
-        [
-            'name' => 'PL Andahuaylas',
-            'value' => 'pl-andahuaylas',
-            'checked' => in_array('pl-andahuaylas', $currentTerminalArray) ?? false,
-        ],
-        [
-            'name' => 'PL Casuarina',
-            'value' => 'pl-casuarina',
-            'checked' => in_array('pl-casuarina', $currentTerminalArray) ?? false,
-        ],
-        [
-            'name' => 'PL Cybernet',
-            'value' => 'pl-cybernet',
-            'checked' => in_array('pl-cybernet', $currentTerminalArray) ?? false,
-        ],
-        [
-            'name' => 'PL Jazmines',
-            'value' => 'pl-jazmines',
-            'checked' => in_array('pl-jazmines', $currentTerminalArray) ?? false,
-        ],
-        [
-            'name' => 'RH Alameda',
-            'value' => 'rh-alameda',
-            'checked' => in_array('rh-alameda', $currentTerminalArray) ?? false,
-        ],
-        [
-            'name' => 'RH Andahuaylas',
-            'value' => 'rh-andahuaylas',
-            'checked' => in_array('rh-andahuaylas', $currentTerminalArray) ?? false,
-        ],
-        [
-            'name' => 'RH Casuarina',
-            'value' => 'rh-casuarina',
-            'checked' => in_array('rh-casuarina', $currentTerminalArray) ?? false,
-        ],
-        [
-            'name' => 'RH Jazmines',
-            'value' => 'rh-jazmines',
-            'checked' => in_array('rh-jazmines', $currentTerminalArray) ?? false,
-        ],
-    ];
+    $currentTerminals = request()->query('terminals');
+    if (!is_array($currentTerminals)) {
+        $currentTerminals = $currentTerminals ? explode(',', $currentTerminals) : [];
+    }
+
+    $default_terminal = 'PL-Alameda';
 @endphp
 
 @section('layout.assists')
@@ -108,9 +65,10 @@
                                             @foreach ($terminals as $terminal)
                                                 <label class="flex items-center gap-1">
                                                     <input type="checkbox" class="rounded-lg"
-                                                        {{ $terminal['checked'] ? 'checked' : '' }} name="terminals[]"
-                                                        value="{{ $terminal['value'] }}" class="rounded-lg">
-                                                    <span>{{ $terminal['name'] }}</span>
+                                                        {{ $default_terminal == $terminal->database_name || in_array($terminal->database_name, $currentTerminals) ? 'checked' : '' }}
+                                                        name="terminals[]" value="{{ $terminal->database_name }}"
+                                                        class="rounded-lg">
+                                                    <span>{{ $terminal->name }}</span>
                                                 </label>
                                             @endforeach
                                         </div>

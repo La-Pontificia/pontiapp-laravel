@@ -12,14 +12,14 @@
             'icon' => 'heroicon-o-clipboard-document-list',
             'text' => 'Asistencias',
             'href' => '/assists',
-            'active' => request()->is('assists*'),
+            'active' => request()->is('assists'),
             'active-icon' => 'heroicon-s-clipboard-document-list',
         ],
         [
             'icon' => 'heroicon-o-circle-stack',
-            'text' => 'Bases de datos',
-            'href' => '/assists/data-bases',
-            'active' => request()->is('assists/data-bases*'),
+            'text' => 'Terminales DB',
+            'href' => '/assists/terminals-db',
+            'active' => request()->is('assists/terminals-db*'),
             'active-icon' => 'heroicon-s-circle-stack',
         ],
     ];
@@ -38,8 +38,8 @@
             <a {{ $item['active'] ? 'data-active' : '' }} title="{{ $item['text'] }}"
                 class="flex group relative data-[active]:font-medium gap-2 p-2 hover:bg-neutral-200 rounded-lg"
                 href="{{ $item['href'] }}">
-                @svg($item['icon'], [
-                    'class' => 'w-5 h-5 max-md:w-6 max-md:mx-auto',
+                @svg($item['active'] ? $item['active-icon'] : $item['icon'], [
+                    'class' => 'w-5 h-5 max-md:w-6 max-md:h-6 max-md:mx-auto group-data-[active]:text-blue-800',
                 ])
                 <span class="max-md:hidden">{{ $item['text'] }}</span>
             </a>
