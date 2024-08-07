@@ -118,6 +118,66 @@ class UserController extends Controller
         return response()->json($users, 200);
     }
 
+    public function searchSupervisor(Request $request, $id)
+    {
+
+        $user = User::find($id);
+        if (!$user)
+            return response()->json([], 200);
+
+        // role_position
+        $query = $request->query('query');
+
+        $match = User::orderBy('created_at', 'desc')->limit(10);
+
+        $match->where('first_name', 'like', '%' . $query . '%')
+            ->orWhere('last_name', 'like', '%' . $query . '%')
+            ->orWhere('dni', 'like', '%' . $query . '%')
+            ->get();
+
+        $match->whereHas('role_position', function ($q) use ($user) {
+            $q->whereHas('job_position', function ($qq) use ($user) {
+                $qq->where('level', '<=', $user->role_position->job_position->level);
+            });
+        });
+
+        $users = $match->get();
+        return response()->json($users, 200);
+    }
+
+    public function removeSupervisor(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        $user->supervisor_id = null;
+        $user->save();
+
+        return response()->json('Supervisor removido correctamente', 200);
+    }
+
+    public function assignSupervisor(Request $request, $id)
+    {
+        $user = User::find($id);
+        $supervisor = User::find($request->supervisor_id);
+
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        if (!$supervisor)
+            return response()->json('El supervisor no existe', 400);
+
+        //verify level of supervisor
+        if ($supervisor->role_position->job_position->level > $user->role_position->job_position->level)
+            return response()->json('El supervisor no puede ser de un nivel inferior al usuario', 400);
+
+        $user->supervisor_id = $supervisor->id;
+        $user->save();
+
+        return response()->json('Supervisor asignado correctamente', 200);
+    }
+
     public function updateEmailAccess(Request $request, $id)
     {
         $user = User::find($id);
