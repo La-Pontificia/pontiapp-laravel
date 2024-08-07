@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
+use App\Models\AssistTerminal;
 use App\Models\Department;
 use App\Models\User;
 use App\services\AssistsService;
@@ -21,7 +22,7 @@ class AssistsController extends Controller
     public function index(Request $request)
     {
 
-        $terminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : ['pl-alameda'];
+        $queryTerminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : null;
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
 
@@ -62,14 +63,17 @@ class AssistsController extends Controller
         $schedules = [];
 
         foreach ($users as $user) {
-            $schedules = array_merge($schedules, $this->assistsService->assistsByUser($user->id, $terminals, $startDate, $endDate));
+            $schedules = array_merge($schedules, $this->assistsService->assistsByUser($user->id, $queryTerminals, $startDate, $endDate));
         }
+
+        $terminals = AssistTerminal::all();
 
         return view('modules.assists.+page', [
             'areas' => $areas,
             'departments' => $departments,
             'users' => $users,
             'schedules' => $schedules,
+            'terminals' => $terminals,
         ]);
     }
 }

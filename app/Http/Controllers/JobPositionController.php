@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class JobPositionController extends Controller
 {
+
+    // job positions 
     public function index(Request $request)
     {
         $match = JobPosition::orderBy('level', 'asc');
@@ -30,7 +32,7 @@ class JobPositionController extends Controller
         if ($lastJobPositions) {
             $newCode = 'P-' . str_pad((int)explode('-', $lastJobPositions->code)[1] + 1, 3, '0', STR_PAD_LEFT);
         }
-        return view('pages.job-positions.index', compact('jobPositions', 'newCode'))
+        return view('modules.users.job-positions.+page', compact('jobPositions', 'newCode'))
             ->with('i', (request()->input('page', 1) - 1) * $jobPositions->perPage());
     }
 
@@ -38,7 +40,6 @@ class JobPositionController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'code' => 'required',
             'level' => ['required', 'numeric'],
         ]);
 

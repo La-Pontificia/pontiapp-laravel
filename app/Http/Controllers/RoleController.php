@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+
+    // roles
     public function index(Request $request)
     {
         $match = Role::orderBy('created_at', 'asc');
@@ -21,8 +23,7 @@ class RoleController extends Controller
 
         if ($q) {
             $match->where('name', 'like', '%' . $q . '%')
-                ->orWhere('code', 'like', '%' . $q . '%')
-                ->get();
+                ->orWhere('code', 'like', '%' . $q . '%');
         }
 
         if ($id_job_position) {
@@ -40,7 +41,7 @@ class RoleController extends Controller
         if ($last) {
             $newCode = 'C-' . str_pad((int)explode('-', $last->code)[1] + 1, 3, '0', STR_PAD_LEFT);
         }
-        return view('pages.roles.index', compact('roles', 'newCode', 'departments', 'jobPositions'))
+        return view('modules.users.roles.+page', compact('roles', 'newCode', 'departments', 'jobPositions'))
             ->with('i', (request()->input('page', 1) - 1) * $roles->perPage());
     }
 
@@ -48,7 +49,6 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'code' => 'required',
             'id_job_position' => ['required', 'uuid'],
             'id_department' => ['required', 'uuid'],
         ]);
