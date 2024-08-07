@@ -6,16 +6,22 @@ use App\Models\Attendance;
 use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class AssistsService
 {
+
     public static function assistsByUser($id, $terminals, $startDate, $endDate)
     {
         $user = User::find($id);
         if (!$user) return view('pages.500', ['error' => 'User not found']);
-        $groupSchedules = $user->groupSchedule->schedules;
+        $groupSchedules = $user->group_schedule_id ? $user->groupSchedule->schedules : collect();
+
         $userSchedules = Schedule::where('user_id', $user->id)->get();
+
         $allSchedules = $groupSchedules->merge($userSchedules);
+
         $schedulesGenerated = [];
 
         foreach ($allSchedules as $schedule) {
@@ -53,30 +59,10 @@ class AssistsService
             return $date->between(Carbon::parse($startDate), Carbon::parse($endDate));
         });
 
-        $systemterminals = [
-            'pl-alameda',
-            'pl-andahuaylas',
-            'pl-casuarina',
-            'pl-cybernet',
-            'pl-jazmines',
-            'rh-alameda',
-            'rh-andahuaylas',
-            'rh-casuarina',
-            'rh-jazmines',
-        ];
-
-        //--------------------------- attendances ---------------------------
-        $finalTerminals = array_filter($systemterminals, function ($terminal) use ($terminals) {
-            return in_array($terminal, $terminals);
-        });
-
-        $connections = $finalTerminals;
-
         $assistances = collect();
-
-        foreach ($connections as $connection) {
+        foreach ($terminals ?? ['PL-Alameda'] as $terminal) {
             $match = (new Attendance())
-                ->setConnection($connection)
+                ->setConnection($terminal)
                 ->where('emp_code', $user->dni)
                 ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
                 ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
@@ -84,8 +70,6 @@ class AssistsService
                 ->get();
             $assistances = $assistances->merge($match);
         }
-
-
         $schedules = array_filter($schedules, function ($schedule) use ($startDate, $endDate) {
             $date = Carbon::parse($schedule['date']);
             return $date->between(Carbon::parse($startDate), Carbon::parse($endDate));
