@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AssistsController;
+use App\Http\Controllers\AssistTerminalController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +18,6 @@ use App\Http\Controllers\QuestionnaireTemplateController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\YearController;
 
 // -------------------------------- AUTH ROUTES ---------------------------
@@ -50,13 +49,13 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('users/schedules/create', [ScheduleController::class, 'create']);
     Route::get('users/schedules/{id}', [ScheduleController::class, 'schedule']);
 
-    Route::get('users/emails', [UserController::class, 'emails']);
+    Route::get('users/emails-access', [UserController::class, 'emails_access']);
 
     Route::get('users/domains', [UserController::class, 'domains']);
 
-    Route::get('users/job-positions', [UserController::class, 'jobPositions']);
+    Route::get('users/job-positions', [JobPositionController::class, 'index']);
 
-    Route::get('users/roles', [UserController::class, 'roles']);
+    Route::get('users/roles', [RoleController::class, 'index']);
 
     Route::get('users/create', [UserController::class, 'create']);
     Route::get('users/edit/{id}', [UserController::class, 'edit']);
@@ -84,6 +83,9 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Assists routes
     Route::get('assists', [AssistsController::class, 'index']);
+    Route::get('assists/terminals-db', [AssistTerminalController::class, 'index']);
+    Route::post('assists/terminals-db', [AssistTerminalController::class, 'store']);
+    Route::post('assists/terminals-db/{id}', [AssistTerminalController::class, 'update']);
 
     // -------- SETTINGS ROUTES ---------------------------
     Route::get('settings', [SettingController::class, 'index']);

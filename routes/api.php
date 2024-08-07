@@ -37,6 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users/{id}/profile', [UserController::class, 'profile']);
     Route::get('users/search', [UserController::class, 'search']);
     Route::post('users/email-access/{id}', [UserController::class, 'updateEmailAccess']);
+    Route::get('users/supervisor/{id}/search', [UserController::class, 'searchSupervisor']);
+    Route::post('users/supervisor/remove/{id}', [UserController::class, 'removeSupervisor']);
+    Route::post('users/supervisor/assign/{id}', [UserController::class, 'assignSupervisor']);
 
     // User user roles routes 
     Route::post('user-roles', [UserRoleController::class, 'create']);
