@@ -36,7 +36,7 @@
                         </button>
                     </div>
                     @include('components.users.auditory-card')
-                    <form action="/api/emails" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
+                    <form action="/api/roles" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
                         @include('modules.users.roles.form', [
                             'role' => null,
                         ])
@@ -133,7 +133,7 @@
                                                         </button>
                                                     </div>
                                                     @include('components.users.auditory-card')
-                                                    <form action="/api/role/{{ $role->id }}" method="POST"
+                                                    <form action="/api/roles/{{ $role->id }}" method="POST"
                                                         id="dialog-{{ $role->id }}-form"
                                                         class="p-3 dinamic-form grid gap-4">
                                                         @include('modules.users.roles.form', [
