@@ -19,6 +19,13 @@
             'active-icon' => 'heroicon-s-user-group',
         ],
         [
+            'icon' => 'heroicon-o-chart-bar',
+            'text' => 'Reporte y estadísticas',
+            'href' => '/edas/reports',
+            'active' => request()->is('edas/reports*'),
+            'active-icon' => 'heroicon-s-chart-bar',
+        ],
+        [
             'icon' => 'heroicon-o-stop',
             'text' => 'Años',
             'href' => '/edas/years',
