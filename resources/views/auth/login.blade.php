@@ -71,7 +71,7 @@
                                 <div class="flex items-center mt-6 justify-center w-full  gap-5">
                                     <img src="/elp.webp" alt="Logo - Escuela Superior La Pontificia" class="h-6" />
                                     <img src="/ilp.webp" alt="Logo - Instituto La Pontificia" class="h-6" />
-                                    <img src="/ec.webp" alt="Logo - Educación Continua La Pontificia" class="h-6 invert" />
+                                    <img src="/ec.webp" alt="Logo - Educación Continua La Pontificia" class="h-6" />
                                 </div>
                             </div>
                         </div>
