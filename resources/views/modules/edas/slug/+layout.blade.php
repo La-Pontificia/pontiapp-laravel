@@ -16,7 +16,7 @@
 @section('layout.edas')
     @if ($hassAcces)
         <div class="text-black h-full py-2 max-sm:py-1 w-full flex-grow flex overflow-y-auto gap-4">
-            <aside class="space-y-3 min-w-[250px] pb-1 bg-[#f5f7fc] shadow-sm rounded-xl">
+            <aside class="space-y-3 min-w-[270px] pb-1 bg-[#f8faff] shadow-sm rounded-xl">
                 <nav class="flex flex-col overflow-x-auto text-neutral-700">
                     <div class="p-2 border-b flex items-center gap-2">
                         @include('commons.avatar', [
