@@ -66,7 +66,7 @@
                         <path d="M10 16h4" />
                         <path d="M12 14v4" />
                     </svg>
-                    Horario de {{ $user->groupSchedule->name }}
+                    {{ $user->group_schedule_id ? 'Horario de' . $user->groupSchedule->name : 'Sin grupo de horarios aún.' }}
                 </p>
             </div>
             <div>

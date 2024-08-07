@@ -9,11 +9,11 @@
             'link' => '/users/' . $user->id,
             'active' => request()->is('users/' . $user->id),
         ],
-        [
-            'title' => 'Organización',
-            'link' => '/users/' . $user->id . '/organization',
-            'active' => request()->is('users/' . $user->id . '/organization'),
-        ],
+        // [
+        //     'title' => 'Organización',
+        //     'link' => '/users/' . $user->id . '/organization',
+        //     'active' => request()->is('users/' . $user->id . '/organization'),
+        // ],
         [
             'title' => 'Horario',
             'link' => '/users/' . $user->id . '/schedules',
