@@ -79,7 +79,7 @@ return [
         ],
 
         // PL Alameda
-        'pl-alameda' => [
+        'PL-Alameda' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -95,7 +95,7 @@ return [
         ],
 
         // PL Andahuaylas
-        'pl-andahuaylas' => [
+        'PL-Andahuaylas' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -111,7 +111,7 @@ return [
         ],
 
         // PL Casuarina
-        'pl-casuarina' => [
+        'PL-Casuarina' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -127,7 +127,7 @@ return [
         ],
 
         // PL Cybernet
-        'pl-cybernet' => [
+        'PL-CYBERNET' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -144,7 +144,7 @@ return [
 
 
         // PL Jazmines
-        'pl-jazmines' => [
+        'PL-Jazmines' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -160,7 +160,7 @@ return [
         ],
 
         // RH Alameda
-        'rh-alameda' => [
+        'RH-Alameda' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -176,7 +176,7 @@ return [
         ],
 
         // RH Andahuaylas
-        'rh-andahuaylas' => [
+        'RH-Andahuaylas' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -192,7 +192,7 @@ return [
         ],
 
         // RH Casuarina
-        'rh-casuarina' => [
+        'RH-Casuarina' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
@@ -208,7 +208,7 @@ return [
         ],
 
         // RH Jazmines
-        'rh-jazmines' => [
+        'RH-Jazmines' => [
             'driver' => 'sqlsrv',
             'url' => env('ASSIST_DATABASE_URL'),
             'host' => env('ASSIST_DB_HOST', 'localhost'),
