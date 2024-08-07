@@ -25,8 +25,8 @@
         [
             'icon' => 'heroicon-o-inbox-stack',
             'text' => 'Correos y accesos',
-            'href' => '/users/emails',
-            'active' => request()->is('users/emails*'),
+            'href' => '/users/emails-access',
+            'active' => request()->is('users/emails-access*'),
             'active-icon' => 'heroicon-s-inbox-stack',
         ],
         [
