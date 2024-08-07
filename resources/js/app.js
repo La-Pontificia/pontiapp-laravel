@@ -10,6 +10,8 @@ import "./evaluation.js";
 import "./questionnaires-templates.js";
 import "./email-access.js";
 
+import Cookie from "js-cookie";
+
 window.onPaste = (e) => {
     e.preventDefault();
     const text = e.clipboardData.getData("text/plain");
@@ -75,30 +77,36 @@ window.toast = Swal.mixin({
     timerProgressBar: true,
 });
 
+window.debounce = (func, delay) => {
+    let timeoutId;
+    return function (...args) {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+};
+
 window.defaultProfile =
     "https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg";
 
 document.addEventListener("DOMContentLoaded", function () {
     $ = document.querySelector.bind(document);
-    const sidebarState = localStorage.getItem("sidebar-state");
 
     const toogleSidebar = $("#toogle-sidebar");
-    const sidebar = $("#cta-sidebar");
 
     toogleSidebar?.addEventListener("click", function () {
-        const isClose = sidebar.classList.contains("-translate-x-full");
+        const state =
+            Cookie.get("sidebar") !== undefined
+                ? Cookie.get("sidebar")
+                : "true";
 
-        if (isClose) {
-            sidebar.classList.remove("-translate-x-full");
-            sidebar.classList.remove("max-sm:-translate-x-full");
-            sidebar.classList.remove("fixed");
+        if (state == "false") {
+            Cookie.set("sidebar", "true", { expires: 365 });
         } else {
-            sidebar.classList.add("-translate-x-full");
-            sidebar.classList.add("fixed");
+            Cookie.set("sidebar", "false", { expires: 365 });
         }
-        localStorage.setItem(
-            "sidebar-state",
-            sidebarState === "open" ? "close" : "open"
-        );
     });
 });

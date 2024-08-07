@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const Toast = Swal.mixin({
     toast: true,
     position: "bottom-left",

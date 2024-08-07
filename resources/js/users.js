@@ -26,13 +26,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const JobPositionSelect = $("#job-position-select");
     const RoleSelect = $("#role-select");
 
-    const searchSupervisor = $("#search-supervisor");
-    const listUsers = $("#list-users");
-
     const inputProfile = $("#input-profile");
     const previewProfile = $("#preview-profile");
-
-    const dischargeEmailButtons = document.querySelectorAll(".discharge-email");
 
     // SET PROFILE
     inputProfile?.addEventListener("change", async (e) => {
@@ -82,52 +77,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         error.response.data ?? "Error al enviar el formulario",
                 });
             }
-        }
-    });
-
-    // SEARCH SUPERVISOR
-    searchSupervisor?.addEventListener("input", async (e) => {
-        const search = e.target.value;
-        if (search === "") return searchSupervisor.setAttribute("data-id", "");
-        if (search.length < 3) return;
-
-        try {
-            const { data } = await axios.get(
-                `/api/users/search?query=${search}`
-            );
-            const users = data.users;
-
-            listUsers.innerHTML = "";
-
-            users.forEach((user) => {
-                const button = document.createElement("button");
-                button.type = "button";
-                button.className =
-                    "flex justify-start w-full hover:bg-neutral-200 p-1 rounded-md text-left items-center gap-2";
-                button.innerHTML = `
-                    <div class="w-10 aspect-square rounded-full overflow-hidden">
-                        <img class="w-full h-full object-cover"
-                            src="${user.profile}"
-                            alt="">
-                    </div>
-                    <div>
-                        <p class="font-semibold">
-                            ${user.first_name} ${user.last_name}
-                        </p>
-                        <p>
-                            ${user.dni}
-                        </p>
-                    </div>
-                `;
-                button.addEventListener("click", () => {
-                    searchSupervisor.value = `${user.first_name} ${user.last_name}`;
-                    searchSupervisor.setAttribute("data-id", user.id);
-                    listUsers.innerHTML = "";
-                });
-                listUsers.appendChild(button);
-            });
-        } catch (error) {
-            console.error(error);
         }
     });
 
@@ -242,38 +191,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         } finally {
             window.enabledFormChildren(UserForm);
         }
-    });
-
-    // DISCHARGE EMAIL
-    dischargeEmailButtons?.forEach((button) => {
-        button.addEventListener("click", async (e) => {
-            const id = e.target.getAttribute("data-id");
-
-            Swal.fire({
-                title: "¿Estás seguro dar de baja a este correo?",
-                text: "No podrás deshacer esta acción.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, confirmar",
-                cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        await axios.post(`/api/emails/discharge/${id}`);
-                        location.reload();
-                    } catch (error) {
-                        window.toast.fire({
-                            icon: "error",
-                            title:
-                                error.response.data ??
-                                "Error al enviar el formulario",
-                        });
-                    }
-                }
-            });
-        });
     });
 
     // SLUG SCHEDULE USER
@@ -396,6 +313,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     calendar.render();
+
+    // supervisor assign
+
+    // add supervisor to user
+    const inputs = document.querySelectorAll(".supervisor-input");
+    const itemSupervisorTemplate = $("#item-supervisor-template")?.content;
+    inputs.forEach((f) => {
+        f.addEventListener(
+            "input",
+            window.debounce(async (e) => {
+                const id = f.getAttribute("data-id");
+                const value = e.target.value;
+                const resultContainer = $(`#result-${id}`);
+
+                if (!value)
+                    return (resultContainer.innerHTML = `<p class="p-10 text-neutral-500">
+                         No se encontraron resultados o no se ha realizado una búsqueda.
+                     </p>`);
+
+                const { data: users } = await axios.get(
+                    `/api/users/supervisor/${id}/search?query=${value}`
+                );
+
+                resultContainer.innerHTML = "";
+                users.forEach((user) => {
+                    const clone = document.importNode(
+                        itemSupervisorTemplate,
+                        true
+                    );
+
+                    clone.querySelector(
+                        ".result-title"
+                    ).textContent = `${user.last_name}, ${user.first_name}`;
+
+                    clone.querySelector(".result-email").textContent =
+                        user.email;
+
+                    if (user.profile) {
+                        clone.querySelector("img").src = user.profile;
+                    } else {
+                        clone.querySelector("img").remove();
+                    }
+
+                    clone
+                        .querySelector("button")
+                        .addEventListener("click", async () => {
+                            clone.disabled = true;
+                            try {
+                                await axios.post(
+                                    `/api/users/supervisor/assign/${id}`,
+                                    {
+                                        supervisor_id: user.id,
+                                    }
+                                );
+                                window.location.reload();
+                            } catch (error) {
+                                window.toast.fire({
+                                    icon: "error",
+                                    title:
+                                        error.response.data ??
+                                        "Ocurrió un error al intentar asignar el supervisor",
+                                });
+                            } finally {
+                                clone.disabled = false;
+                            }
+                        });
+
+                    resultContainer.appendChild(clone);
+                });
+            }, 300)
+        );
+    });
 });
 
 const generateEvents = ({ startDate, endDate, days, from, to }, schedule) => {

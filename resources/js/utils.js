@@ -147,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
     dinamicAlerts?.forEach((f) => {
         f.addEventListener("click", function (e) {
             const param = f.getAttribute("data-param");
+            const method = f.getAttribute("data-method") ?? "POST";
             const atitle = f.getAttribute("data-atitle");
             const adescription = f.getAttribute("data-adescription");
             const dataAlertvariant = f.getAttribute("data-alertvariant");
@@ -162,7 +163,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await axios.post(param);
+                        await axios(param, {
+                            method: method,
+                        });
                         window.location.reload();
                     } catch (error) {
                         Swal.fire({
