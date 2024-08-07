@@ -44,6 +44,11 @@ class Eda extends Model
     return $this->hasOne('App\Models\User', 'id', 'id_user');
   }
 
+  public function goals()
+  {
+    return $this->hasMany(Goal::class, 'id_eda', 'id');
+  }
+
   public function createdBy()
   {
     return $this->hasOne('App\Models\User', 'id', 'created_by');

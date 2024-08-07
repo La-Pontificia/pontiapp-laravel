@@ -35,7 +35,7 @@ class User extends Authenticatable
         'id_branch',
         'group_schedule_id',
         'supervisor_id',
-        'email_acess',
+        'email_access',
         'username',
         'created_by',
         'updated_by',
@@ -54,6 +54,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'email_access' => 'array',
     ];
 
     static $rules = [
@@ -117,7 +118,7 @@ class User extends Authenticatable
     public function schedules()
     {
         $schedulesMatched = $this->groupSchedule->schedules;
-        $customSchedules = Schedule::where('user_id', $this->id)->where('archived', false)->get();
+        $customSchedules = Schedule::where('user_id', $this->id)->get();
         $allSchedules = $schedulesMatched->merge($customSchedules);
 
         $schedulesGenerated = [];
