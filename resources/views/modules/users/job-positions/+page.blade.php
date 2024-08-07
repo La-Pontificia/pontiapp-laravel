@@ -36,7 +36,7 @@
                         </button>
                     </div>
                     @include('components.users.auditory-card')
-                    <form action="/api/emails" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
+                    <form action="/api/job-positions" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
                         @include('modules.users.job-positions.form', [
                             'job-position' => null,
                         ])
