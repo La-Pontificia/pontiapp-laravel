@@ -42,7 +42,7 @@
             Usuarios bajo tu supervisión
         </h2>
 
-        @if ($cuser->hasPrivilege('edas:view'))
+        @if ($cuser->hasPrivilege('edas:show') || $cuser->hasPrivilege('edas:show-all'))
             <div class="overflow-auto flex-grow h-full pt-0">
                 <table class="w-full text-left">
                     <thead class="border-b">
@@ -88,9 +88,9 @@
                                         <a href="edas/{{ $user->id }}/eda" class="absolute inset-0 block"></a>
                                     </td>
                                     <td>
-                                        @if ($user->supervisor_id)
+                                        @if ($user->supervisor)
                                             <button
-                                                class="p-2 relative flex text-left items-center gap-1 rounded-xl px-3 bg-white shadow-lg font-semibold text-sm">
+                                                class="p-2 flex text-left items-center gap-1 rounded-xl px-3 bg-white shadow-lg font-semibold text-sm">
                                                 @include('commons.avatar', [
                                                     'src' => $user->supervisor->profile,
                                                     'className' => 'w-8',
