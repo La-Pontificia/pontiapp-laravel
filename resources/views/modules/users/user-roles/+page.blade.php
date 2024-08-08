@@ -58,6 +58,8 @@
                             <th class="w-max font-semibold tracking-tight">Rol</th>
                             <th></th>
                             <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y">
@@ -140,6 +142,13 @@
                                             Registrado el {{ \Carbon\Carbon::parse($role->created_at)->isoFormat('LL') }}
                                             por
                                             {{ $role->createdBy->first_name }} {{ $role->createdBy->last_name }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-nowrap flex items-center gap-2">
+                                            @svg('heroicon-o-users', 'w-5 h-5')
+                                            {{ count($role->users) }}
+                                            {{ count($role->users) == 1 ? 'Usuario' : 'Usuarios' }} con este rol
                                         </p>
                                     </td>
                                     <td>

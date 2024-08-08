@@ -33,7 +33,7 @@
             </select> --}}
         </nav>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('edas:questionnaires-templates:view'))
+            @if ($cuser->hasPrivilege('edas:questionnaires-templates:show'))
                 <table class="w-full text-left">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-4 [&>th]:px-2">

@@ -62,7 +62,7 @@
             Gestión de años de edas.
         </h2>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('edas:years:view'))
+            @if ($cuser->hasPrivilege('edas:years:show'))
                 <table class="w-full text-left">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">

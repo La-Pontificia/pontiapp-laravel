@@ -1,7 +1,7 @@
 @php
-    $showYear = $cuser->hasPrivilege('edas:years:view') || $cuser->hasPrivilege('edas:years:create');
+    $showYear = $cuser->hasPrivilege('edas:years:show') || $cuser->hasPrivilege('edas:years:create');
     $showQuestionnaires =
-        $cuser->hasPrivilege('edas:questionnaires-templates:view') ||
+        $cuser->hasPrivilege('edas:questionnaires-templates:show') ||
         $cuser->hasPrivilege('edas:questionnaires-templates:create');
 
 @endphp
