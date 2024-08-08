@@ -27,7 +27,7 @@ class UserController extends Controller
         $this->assistsService = $assistsService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $isExport = false, $onlyMatch = false)
     {
 
         $match = User::orderBy('created_at', 'desc');
@@ -60,8 +60,44 @@ class UserController extends Controller
 
         $users = $match->paginate();
 
+        if ($isExport) {
+            return $match->get();
+        }
+
+        if ($onlyMatch) {
+            return $match;
+        }
+
         return view('modules.users.+page', compact('users', 'job_positions', 'roles'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
+    }
+
+    public function export(Request $request)
+    {
+        $users =  $this->index($request, true);
+
+        foreach ($users as $user) {
+            $user->role = $user->role;
+            $user->area = $user->role_position->department->area;
+            $user->department = $user->role_position->department;
+            $user->role_position = $user->role_position;
+            $user->job_position = $user->role_position->job_position;
+            $user->branch = $user->branch;
+            $user->supervisor = $user->supervisor;
+            $user->schedule = $user->groupSchedule;
+            $user->created_by = $user->createdBy;
+            $user->updated_by = $user->updatedBy;
+        }
+        return response()->json($users);
+    }
+
+    public function exportEmailAccess(Request $request)
+    {
+        $users =  $this->index($request, true);
+
+        foreach ($users as $user) {
+        }
+        return response()->json($users);
     }
 
     public function create()
@@ -117,7 +153,6 @@ class UserController extends Controller
         return view('modules.users.slug.schedules.+page', compact('user',  'schedules'));
     }
 
-
     public function slug_assists(Request $request, $id)
     {
         $user = User::find($id);
@@ -144,31 +179,14 @@ class UserController extends Controller
     public function emails_access(Request $request)
     {
 
-        $match = User::orderBy('created_at', 'desc');
-        $query = $request->get('q');
-        $status = $request->get('status');
-
-        if ($status) {
-            $match->where('first_name', 'like', '%' . $query . '%')
-                ->orWhere('last_name', 'like', '%' . $query . '%')
-                ->orWhere('dni', 'like', '%' . $query . '%')
-                ->orWhere('email', 'like', '%' . $query . '%');
-            // where('discharged', $status === 'actives' ? null : '!=', null);
-        }
-
+        $res =  $this->index($request, false, true);
         $business_units = BusinessUnit::all();
-        $users = $match->paginate();
+        $users = $res->paginate();
 
         return view('modules.users.emails-access.+page', [
             'users' => $users,
             'business_units' => $business_units
         ])
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
-    }
-
-    // domains 
-    public function domains()
-    {
-        return view('modules.users.domains.+page');
     }
 }

@@ -32,7 +32,7 @@ class JobPositionController extends Controller
         if ($lastJobPositions) {
             $newCode = 'P-' . str_pad((int)explode('-', $lastJobPositions->code)[1] + 1, 3, '0', STR_PAD_LEFT);
         }
-        return view('modules.users.job-positions.+page', compact('jobPositions', 'newCode'))
+        return view('modules.settings.job-positions.+page', compact('jobPositions', 'newCode'))
             ->with('i', (request()->input('page', 1) - 1) * $jobPositions->perPage());
     }
 

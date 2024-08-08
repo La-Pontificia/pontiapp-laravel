@@ -41,7 +41,7 @@ class RoleController extends Controller
         if ($last) {
             $newCode = 'C-' . str_pad((int)explode('-', $last->code)[1] + 1, 3, '0', STR_PAD_LEFT);
         }
-        return view('modules.users.roles.+page', compact('roles', 'newCode', 'departments', 'jobPositions'))
+        return view('modules.settings.roles.+page', compact('roles', 'newCode', 'departments', 'jobPositions'))
             ->with('i', (request()->input('page', 1) - 1) * $roles->perPage());
     }
 
