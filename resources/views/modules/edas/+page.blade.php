@@ -90,7 +90,7 @@
                                     <td>
                                         @if ($user->supervisor_id)
                                             <button
-                                                class="p-2 relative flex text-left items-center gap-1 rounded-lg px-3 bg-white shadow-lg font-semibold text-sm">
+                                                class="p-2 relative flex text-left items-center gap-1 rounded-xl px-3 bg-white shadow-lg font-semibold text-sm">
                                                 @include('commons.avatar', [
                                                     'src' => $user->supervisor->profile,
                                                     'className' => 'w-8',
