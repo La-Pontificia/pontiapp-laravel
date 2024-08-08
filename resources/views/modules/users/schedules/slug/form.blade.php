@@ -14,14 +14,20 @@
 
     $user_id = isset($user) ? $user->id : null;
 
+    $background = isset($schedule) ? $schedule->background : '#52525b';
+
 @endphp
 
 @if ($user_id)
     <input type="hidden" name="user_id" value="{{ $user_id }}">
 @endif
 
-<input value="{{ $schedule->title ?? 'Horario laboral' }}" autofocus value="Horario laboral" type="text"
-    placeholder="Título (Opcional)" name="title">
+<div class="flex items-center gap-2">
+    <input value="{{ $schedule->title ?? 'Horario laboral' }}" autofocus value="Horario laboral" type="text"
+        placeholder="Título (Opcional)" name="title">
+    <input data-notstyles type="color" value="{{ $background }}" name="background"
+        class="w-9 h-9 aspect-square rounded-lg">
+</div>
 <div class="flex items-center gap-5">
     <div class="flex flex-col">
         <div class="text-sm opacity-60 font-semibold">Inicia:</div>
