@@ -107,6 +107,20 @@ class AccessComposerServiceProvider extends ServiceProvider
                     ],
                 ],
                 [
+                    'name' => 'Gestión de asistencias',
+                    'items' => [
+                        [
+                            'name' => 'Asistencias',
+                            'privileges' => [
+                                'assists:show' => 'Ver asistencias',
+                                'assists:create' => 'Registrar asistencias',
+                                'assists:edit' => 'Actualizar asistencias',
+                                'assists:delete' => 'Eliminar asistencias',
+                            ],
+                        ]
+                    ]
+                ],
+                [
                     'name' => 'Gestion de Edas',
                     'items' => [
                         [
