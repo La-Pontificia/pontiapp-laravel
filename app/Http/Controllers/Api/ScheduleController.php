@@ -12,49 +12,15 @@ use Carbon\Carbon;
 class ScheduleController extends Controller
 {
 
-
-
-    public function group(Request $request)
-    {
-        $request->validate([
-            'name' => ['max:255', 'required', 'string'],
-        ]);
-
-        $group = GroupSchedule::create([
-            'name' => $request->name,
-            'created_by' => auth()->user()->id
-        ]);
-        return response()->json($group, 200);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => ['max:255', 'required', 'string'],
-        ]);
-
-        $group = GroupSchedule::find($id);
-        if (!$group) {
-            return response()->json(['message' => 'Group not found'], 404);
-        }
-
-        $group->name = $request->name;
-        $group->save();
-
-        return response()->json($group, 200);
-    }
-
     public function by_user($id_user)
     {
         $user = User::find($id_user);
 
-        $group = $user->groupSchedule->schedules->filter(function ($schedule) {
-            return !$schedule->archived;
-        });
+        $groupSchedules = $user->group_schedule_id ? $user->groupSchedule->allSchedules : collect();
 
         $userSchedules = Schedule::where('user_id', $user->id)->get();
 
-        $schedules = $group->merge($userSchedules);
+        $schedules = $groupSchedules->merge($userSchedules);
 
         return response()->json($schedules, 200);
     }
@@ -74,7 +40,7 @@ class ScheduleController extends Controller
         $user_id =  $request->user_id;
 
 
-        $days = array_map('intval', $request->input('days.*'));
+        $days = $request->input('days', []);
 
         $startDate =  Carbon::parse($request->start_date);
         $endDate =  Carbon::parse($request->end_date);
@@ -96,7 +62,7 @@ class ScheduleController extends Controller
 
         if (!$group && !$user_id)  return response()->json('Group not found', 404);
 
-        $schedule = Schedule::create([
+        Schedule::create([
             'group_id' => $user_id ? null : $group->id,
             'user_id' => $user_id ?? null,
 
@@ -104,7 +70,7 @@ class ScheduleController extends Controller
             'to' => $toDateTime,
 
             'title' => $title ?? 'Horario laboral',
-            'days' => json_encode($days),
+            'days' => $days,
 
             'start_date' =>  $startDate,
             'end_date' =>  $endDate,
@@ -115,14 +81,14 @@ class ScheduleController extends Controller
             'to_start' => $toStart,
             'to_end' => $toEnd,
 
-            'background' => $this->generateRandomColor(),
+            'background' => $request->background ?? $this->generateRandomColor(),
             'created_by' => auth()->user()->id
         ]);
 
-        return response()->json($schedule, 200);
+        return response()->json('Horario registrado correctamente.', 200);
     }
 
-    public function updateSchedule(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'start_date' => 'required',
@@ -140,7 +106,7 @@ class ScheduleController extends Controller
             return response()->json('Schedule not found', 404);
         }
 
-        $days = array_map('intval', $request->input('days.*'));
+        $days = $request->input('days', []);
 
         $startDate =  Carbon::parse($request->start_date);
         $endDate =  Carbon::parse($request->end_date);
@@ -160,7 +126,7 @@ class ScheduleController extends Controller
         $schedule->from = $fromDateTime;
         $schedule->to = $toDateTime;
         $schedule->title = $request->title;
-        $schedule->days = json_encode($days);
+        $schedule->days = $days;
         $schedule->start_date = $startDate;
         $schedule->end_date = $endDate;
         $schedule->from_start = $fromStart;
@@ -168,10 +134,97 @@ class ScheduleController extends Controller
         $schedule->to_start = $toStart;
         $schedule->to_end = $toEnd;
         $schedule->updated_by = auth()->user()->id;
+        $schedule->background = $request->background ?? $this->generateRandomColor();
         $schedule->save();
 
-        return response()->json($schedule, 200);
+        return response()->json('Horario actualizado correctamente.', 200);
     }
+
+
+    // group
+    public function groupUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'name' => ['max:255', 'required', 'string'],
+        ]);
+
+        $group = GroupSchedule::find($id);
+        if (!$group) {
+            return response()->json(['message' => 'Group not found'], 404);
+        }
+
+        $group->name = $request->name;
+        $group->save();
+
+        return response()->json('Grupo de horario actualizado correctamente.', 200);
+    }
+    public function group(Request $request)
+    {
+        $request->validate([
+            'name' => ['max:255', 'required', 'string'],
+        ]);
+
+        $group = GroupSchedule::create([
+            'name' => $request->name,
+            'created_by' => auth()->user()->id
+        ]);
+        return response()->json('Grupo de horario creado correctamente.', 200);
+    }
+
+    public function remove($id)
+    {
+        $schedule = Schedule::find($id);
+        if (!$schedule) {
+            return response()->json('Schedule not found', 404);
+        }
+
+        $schedule->delete();
+        return response()->json('Horario eliminado correctamente.', 200);
+    }
+
+    public function archive($id)
+    {
+        $schedule = Schedule::find($id);
+        $schedule->archived = true;
+        $schedule->end_date = Carbon::now();
+        $schedule->save();
+        return response()->json('Horario archivado correctamente.', 200);
+    }
+
+    public function groupSchedules($id)
+    {
+        $group_schedule = GroupSchedule::find($id);
+        $schedules = $group_schedule->allSchedules()->orderBy('from', 'asc')->get();
+        return response()->json($schedules, 200);
+    }
+
+    public function groupDelete($id)
+    {
+        $group = GroupSchedule::find($id);
+        if (!$group) {
+            return response()->json('Group not found', 404);
+        }
+
+        $alreadyUsedCount = $group->schedules()->count();
+        $alreadyUsersCount = $group->users()->count();
+
+
+        if ($alreadyUsedCount > 0) {
+            $for = $alreadyUsedCount == 1 ? 'un horario' : $alreadyUsedCount . ' horarios';
+            return response()->json('No se puede eliminar el grupo porque ya está siendo usado por ' . $for . '.', 400);
+        }
+
+        if ($alreadyUsersCount > 0) {
+            $for = $alreadyUsersCount == 1 ? 'un usuario' : $alreadyUsersCount . ' usuarios';
+            return response()->json('No se puede eliminar el grupo porque ya está siendo usado por ' . $for . '.', 400);
+        }
+
+        $group->delete();
+        return response()->json('Grupo de horario eliminado correctamente', 200);
+    }
+
+
+    // utls
 
     private function generateRandomColor()
     {
@@ -203,34 +256,5 @@ class ScheduleController extends Controller
         $index = $hour % count($colors);
 
         return $colors[$index];
-    }
-
-    public function schedules($id)
-    {
-        $group_schedule = GroupSchedule::find($id);
-        $schedules = $group_schedule->schedules()->orderBy('from', 'asc')->get();
-
-        return response()->json($schedules, 200);
-    }
-
-    public function remove($id)
-    {
-        $schedule = Schedule::find($id);
-        if (!$schedule) {
-            return response()->json('Schedule not found', 404);
-        }
-
-        $schedule->delete();
-        return response()->json('Schedule removed');
-    }
-
-
-    public function archive($id)
-    {
-        $schedule = Schedule::find($id);
-        $schedule->archived = true;
-        $schedule->end_date = Carbon::now();
-        $schedule->save();
-        return response()->json('Schedule archived successfully');
     }
 }

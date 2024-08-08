@@ -22,7 +22,7 @@ class UserRoleController extends Controller
             'created_by' => auth()->user()->id,
         ]);
 
-        return response()->json('Role created succefull', 200);
+        return response()->json('Rol creado correctamente', 200);
     }
 
     public function update(Request $request, $id)
@@ -43,6 +43,26 @@ class UserRoleController extends Controller
             'updated_by' => auth()->user()->id,
         ]);
 
-        return response()->json('Role updated succefull', 200);
+        return response()->json('Rol actualizado correctamente', 200);
+    }
+
+    public function delete($id)
+    {
+        $role = UserRole::find($id);
+
+        if (!$role) {
+            return response()->json('Role not found', 404);
+        }
+
+        $alreadyUsedCount = $role->users()->count();
+
+        if ($alreadyUsedCount > 0) {
+            $for = $alreadyUsedCount == 1 ? 'un usuario' : $alreadyUsedCount . ' usuarios';
+            return response()->json('No se puede eliminar el rol porque ya está siendo usado por ' . $for . '.', 400);
+        }
+
+        $role->delete();
+
+        return response()->json('Rol eliminado correctamente', 200);
     }
 }

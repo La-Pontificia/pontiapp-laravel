@@ -194,6 +194,46 @@ class UserController extends Controller
         $user->email_access = $access;
         $user->save();
 
-        return response()->json('Acceso de correo actualizado correctamente', 200);
+        return response()->json('Acceso de correo electronico actualizado correctamente', 200);
+    }
+
+    public function resetPassword($id)
+    {
+        $user = User::find($id);
+
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        $user->password = bcrypt($user->dni);
+        $user->save();
+
+        return response()->json('Contraseña restablecida correctamente', 200);
+    }
+
+    public function changePassword(Request $request, $id)
+    {
+
+        $request->validate([
+            'old_password' => ['required', 'string'],
+            'new_password' =>  ['required', 'string', 'min:8'],
+        ]);
+
+        $user = User::find($id);
+        $cuser = auth()->user();
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        if ($user->id !== $cuser->id) {
+            return response()->json('No tienes permisos para cambiar la contraseña de este usuario', 400);
+        }
+
+        if (!password_verify($request->old_password, $user->password)) {
+            return response()->json('La contraseña actual no coincide', 400);
+        }
+
+        $user->password = bcrypt($request->new_password);
+        $user->save();
+
+        return response()->json('Contraseña actualizada correctamente', 200);
     }
 }
