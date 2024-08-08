@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <button {{ count($schedules) === 0 ? 'disabled' : '' }} id="export-individuals-attendances"
+            <button {{ count($schedules) === 0 ? 'disabled' : '' }} id="button-export-assists"
                 class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
                 <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
