@@ -54,8 +54,8 @@
         <h2 class="py-3 pb-0 font-semibold tracking-tight text-lg px-2">
             Gestion de horarios
         </h2>
-        @if ($current_user->hasPrivilege('users:schedules:view'))
-            <div class="bg-white shadow-sm h-full flex-grow overflow-auto rounded-2xl">
+        @if ($current_user->hasPrivilege('users:schedules:show'))
+            <div class="h-full flex-grow overflow-auto">
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-2 [&>th]:px-4">
@@ -80,21 +80,15 @@
                                     class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-4">
                                     <td>
                                         <div class="flex gap-2 items-center">
-                                            <p class="text-nowrap">
+                                            <p class="text-nowrap flex items-center gap-2">
+                                                @svg('heroicon-o-calendar-days', 'w-5 h-5')
                                                 {{ $group->name }}
                                             </p>
                                             @if ($cuser->hasPrivilege('users:schedules:edit'))
-                                                <button class="text-green-700"
+                                                <button class="text-green-600"
                                                     data-modal-target="edit-scheldule-modal-{{ $group->id }}"
                                                     data-modal-toggle="edit-scheldule-modal-{{ $group->id }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="lucide lucide-pencil">
-                                                        <path
-                                                            d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
-                                                        <path d="m15 5 4 4" />
-                                                    </svg>
+                                                    @svg('heroicon-o-pencil-square', 'w-5 h-5')
                                                 </button>
                                                 <div id="edit-scheldule-modal-{{ $group->id }}"
                                                     data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
@@ -120,12 +114,10 @@
                                                             </div>
                                                             @include('components.users.auditory-card')
                                                             <form action="/api/schedules/group/{{ $group->id }}"
-                                                                method="POST"
-                                                                id="schedule-form-group-{{ $group->id }}"
+                                                                method="POST" id="schedule-form-group-{{ $group->id }}"
                                                                 class="p-3 dinamic-form grid gap-4">
-                                                                <input autofocus value="{{ $group->name }}"
-                                                                    type="text" required placeholder="Nombre"
-                                                                    name="name">
+                                                                <input autofocus value="{{ $group->name }}" type="text"
+                                                                    required placeholder="Nombre" name="name">
                                                             </form>
                                                             <div
                                                                 class="flex items-center p-3 border-t border-gray-200 rounded-b">
@@ -154,11 +146,34 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="opacity-70">
+                                        <p class="opacity-70 flex items-center gap-2">
+                                            @svg('heroicon-o-clock', 'w-5 h-5')
                                             Registrado el {{ \Carbon\Carbon::parse($group->created_at)->isoFormat('LL') }}
                                             por
                                             {{ $group->createdBy->first_name }} {{ $group->createdBy->last_name }}
                                         </p>
+                                    </td>
+                                    <td>
+                                        <button class="opacity-60 relative hover:opacity-100"
+                                            data-dropdown-toggle="dropdown-{{ $group->id }}">
+                                            <svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-ellipsis-vertical">
+                                                <circle cx="12" cy="12" r="1" />
+                                                <circle cx="12" cy="5" r="1" />
+                                                <circle cx="12" cy="19" r="1" />
+                                            </svg>
+                                        </button>
+
+                                        <div id="dropdown-{{ $group->id }}"
+                                            class="z-10 hidden bg-white border divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
+                                            <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar?"
+                                                data-adescription="No podrás deshacer esta acción."
+                                                data-param="/api/schedules/group/delete/{{ $group->id }}"
+                                                class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600 hover:bg-gray-10">
+                                                Eliminar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
