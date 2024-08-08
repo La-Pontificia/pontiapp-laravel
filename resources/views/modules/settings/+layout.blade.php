@@ -3,7 +3,7 @@
 @section('title', 'Ajustes del sistema')
 
 @section('content')
-    @if ($cuser->hasPrivilege('settings'))
+    @if ($cuser->hasGroup('settings'))
         @yield('layout.settings')
     @else
         @include('+403', [

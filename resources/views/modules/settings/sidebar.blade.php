@@ -15,6 +15,22 @@
             'active-icon' => 'heroicon-s-building-office',
         ],
         [
+            'icon' => 'heroicon-o-briefcase',
+            'text' => 'Puestos',
+            'href' => '/settings/job-positions',
+            'active' => request()->is('settings/job-positions*'),
+            'active-icon' => 'heroicon-s-briefcase',
+            'enable' => $cuser->has('settings:job-positions:create') || $cuser->has('settings:job-positions:show'),
+        ],
+        [
+            'icon' => 'heroicon-o-briefcase',
+            'text' => 'Cargos',
+            'href' => '/settings/roles',
+            'active' => request()->is('settings/roles*'),
+            'active-icon' => 'heroicon-s-briefcase',
+            'enable' => $cuser->has('settings:roles:create') || $cuser->has('settings:roles:show'),
+        ],
+        [
             'icon' => 'heroicon-o-map-pin',
             'text' => 'Sedes',
             'href' => '/settings/branches',
