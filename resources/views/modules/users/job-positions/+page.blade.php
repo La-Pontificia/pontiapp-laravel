@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('users:job-positions:view'))
+            @if ($cuser->hasPrivilege('users:job-positions:show'))
                 <table class="w-full text-left" id="table-users">
                     <thead class="">
                         <tr
