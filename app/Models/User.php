@@ -100,6 +100,23 @@ class User extends Authenticatable
         return in_array($key, $this->role->privileges);
     }
 
+    public function privileges()
+    {
+        return $this->role->privileges;
+    }
+
+    public function hasGroup($key)
+    {
+        return in_array($key, array_map(function ($privilege) {
+            return explode(':', $privilege)[0];
+        }, $this->role->privileges));
+    }
+
+    public function has($key)
+    {
+        return in_array($key, $this->role->privileges);
+    }
+
     public function groupSchedule()
     {
         return $this->hasOne(GroupSchedule::class, 'id', 'group_schedule_id');

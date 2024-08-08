@@ -21,9 +21,19 @@ class GroupSchedule extends Model
         'created_by'
     ];
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'group_schedule_id', 'id');
+    }
+
     public function schedules()
     {
         return $this->hasMany(Schedule::class, 'group_id', 'id')->where('archived', false);
+    }
+
+    public function allSchedules()
+    {
+        return $this->hasMany(Schedule::class, 'group_id', 'id');
     }
 
     public function createdBy()
