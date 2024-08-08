@@ -15,7 +15,8 @@
                     placeholder="Buscar por correo o usuario">
             </div>
             <div>
-                <button class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
+                <button id="export-email-access"
+                    class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
                     <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
                         <g id="SVGRepo_iconCarrier">
@@ -61,13 +62,13 @@
             </div>
         </div>
         <div class=" overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('users:emails:view'))
+            @if ($cuser->hasPrivilege('users:emails-access:show'))
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">
                             <th class="w-full">Usuario</th>
                             <th>Nombre de usuario</th>
-                            <th>Accesos</th>
+                            <th class="px-4">Accesos</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y">
@@ -85,7 +86,7 @@
                                     class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
                                     <td>
                                         <div class="flex items-center gap-4">
-                                            @if ($cuser->hasPrivilege('users:emails:edit'))
+                                            @if ($cuser->hasPrivilege('users:emails-access:edit'))
                                                 <button class="absolute inset-0"
                                                     data-modal-target="dialog-{{ $user->id }}"
                                                     data-modal-toggle="dialog-{{ $user->id }}">
@@ -98,7 +99,7 @@
                                                         <div
                                                             class="flex items-center justify-between p-3 border-b rounded-t">
                                                             <h3 class="text-lg font-semibold text-gray-900">
-                                                                Accesos del correo
+                                                                Accesos del correos institucionales
                                                             </h3>
                                                             <button type="button"
                                                                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
@@ -147,10 +148,14 @@
                                             </p>
                                         </div>
                                     </td>
-                                    <td class="relative">
+                                    <td>
                                         {{ explode('@', $user->email)[0] }}
                                     </td>
                                     <td>
+                                        <p class="text-nowrap px-4 text-blue-600 font-medium text-sm">
+                                            Cantidad de accesos:
+                                            {{ count($user->email_access ?? []) }}
+                                        </p>
                                         {{-- <div class="flex items-center gap-2">
                                                 @if (!is_null($user->email_access))
                                                     @php

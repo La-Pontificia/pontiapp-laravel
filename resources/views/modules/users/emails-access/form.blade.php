@@ -32,7 +32,7 @@
                 <div class="mt-2 pl-10 gap-3 access-list">
                     @foreach ($business->services as $service)
                         @php
-                            $value = $business->id . '.' . $service;
+                            $value = $business->id . ':' . $service;
                         @endphp
                         <label class="flex items-center gap-2 label-child">
                             <input type="checkbox" name="access[]"
