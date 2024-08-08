@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\RolController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\UserController as ControllersUserController;
 use App\Http\Controllers\Api\UserRoleController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\BranchController;
@@ -33,6 +34,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     // Users routes
     Route::post('users', [UserController::class, 'create']);
+    Route::get('users/export', [ControllersUserController::class, 'export']);
+    Route::get('users/export-email-access', [ControllersUserController::class, 'exportEmailAccess']);
     Route::post('users/{id}', [UserController::class, 'update']);
     Route::post('users/{id}/profile', [UserController::class, 'profile']);
     Route::get('users/search', [UserController::class, 'search']);
@@ -40,10 +43,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users/supervisor/{id}/search', [UserController::class, 'searchSupervisor']);
     Route::post('users/supervisor/remove/{id}', [UserController::class, 'removeSupervisor']);
     Route::post('users/supervisor/assign/{id}', [UserController::class, 'assignSupervisor']);
+    Route::post('users/reset-password/{id}', [UserController::class, 'resetPassword']);
+    Route::post('users/change-password/{id}', [UserController::class, 'changePassword']);
+
 
     // User user roles routes 
     Route::post('user-roles', [UserRoleController::class, 'create']);
     Route::post('user-roles/{id}', [UserRoleController::class, 'update']);
+    Route::post('user-roles/delete/{id}', [UserRoleController::class, 'delete']);
 
     // Cargo routes
     Route::get('roles/by_job_position/{id}', [RolController::class, 'by_job_position']);
@@ -107,11 +114,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('schedules/delete/{id}', [ScheduleController::class, 'remove']);
     Route::post('schedules/archive/{id}', [ScheduleController::class, 'archive']);
 
+    Route::get('schedules/group/{id}', [ScheduleController::class, 'groupSchedules']);
     Route::post('schedules/group', [ScheduleController::class, 'group']);
-    Route::post('schedules/group/{id}', [ScheduleController::class, 'update']);
+    Route::post('schedules/group/{id}', [ScheduleController::class, 'groupUpdate']);
+    Route::post('schedules/group/delete/{id}', [ScheduleController::class, 'groupDelete']);
     Route::post('schedules/group/{id}/add', [ScheduleController::class, 'add']);
-    Route::post('schedules/{id}', [ScheduleController::class, 'updateSchedule']);
 
+    Route::post('schedules/{id}', [ScheduleController::class, 'update']);
     Route::get('schedules/user/{id}', [ScheduleController::class, 'by_user']);
-    Route::get('schedules/group/{id}', [ScheduleController::class, 'schedules']);
 });

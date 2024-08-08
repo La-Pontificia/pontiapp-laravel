@@ -53,10 +53,6 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     Route::get('users/domains', [UserController::class, 'domains']);
 
-    Route::get('users/job-positions', [JobPositionController::class, 'index']);
-
-    Route::get('users/roles', [RoleController::class, 'index']);
-
     Route::get('users/create', [UserController::class, 'create']);
     Route::get('users/edit/{id}', [UserController::class, 'edit']);
 
@@ -90,6 +86,9 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     // -------- SETTINGS ROUTES ---------------------------
     Route::get('settings', [SettingController::class, 'index']);
     Route::get('settings/departments', [DepartmentController::class, 'index']);
+    Route::get('settings/job-positions', [JobPositionController::class, 'index']);
+    Route::get('settings/roles', [RoleController::class, 'index']);
+
     Route::get('settings/branches', [BranchController::class, 'index']);
     Route::get('settings/business-units', [BusinessUnitController::class, 'index']);
     Route::post('settings/business-units', [BusinessUnitController::class, 'store']);
