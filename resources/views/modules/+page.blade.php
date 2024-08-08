@@ -21,9 +21,9 @@
                 Usuarios registrados recientemente
             </h2>
             <div class="relative">
-                <div class="bg-gradient-to-r from-[#f1f0f4] absolute top-0 left-0 h-full w-[50px] pointer-events-none">
+                <div class="bg-gradient-to-r from-[#e6f0f6] absolute top-0 left-0 h-full w-[50px] pointer-events-none">
                 </div>
-                <div class="bg-gradient-to-l from-[#f1f0f4] absolute top-0 right-0 h-full w-[50px] pointer-events-none">
+                <div class="bg-gradient-to-l from-[#e6f0f6] absolute top-0 right-0 h-full w-[50px] pointer-events-none">
                 </div>
                 <div class="flex items-center p-4 py-3 hidden-scroll overflow-x-auto gap-2">
                     @foreach ($users as $user)

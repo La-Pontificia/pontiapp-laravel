@@ -3,5 +3,11 @@
 @section('title', 'Gestión de usuarios')
 
 @section('content')
-    @yield('layout.users')
+    @if ($cuser->hasGroup('users'))
+        @yield('layout.users')
+    @else
+        @include('+403', [
+            'message' => 'No tienes permiso para acceder a este modulo.',
+        ])
+    @endif
 @endsection

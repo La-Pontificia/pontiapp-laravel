@@ -22,7 +22,7 @@
                 </div>
             </button>
         </template>
-        @if ($current_user->hasPrivilege('users:view'))
+        @if ($current_user->hasPrivilege('users:show'))
             <div class="overflow-auto flex-grow h-full pt-0">
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
@@ -45,7 +45,7 @@
                         @else
                             @foreach ($users as $user)
                                 <tr
-                                    class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
+                                    class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-[#f8fbfd] [&>td]:px-2">
                                     <td>
                                         <div class="flex items-center gap-4">
                                             <a class="absolute inset-0" href="/users/{{ $user->id }}">
@@ -100,7 +100,7 @@
                                     <td>
                                         <button data-modal-target="dialog-{{ $user->id }}"
                                             data-modal-toggle="dialog-{{ $user->id }}"
-                                            class="p-2 relative text-left flex items-center gap-1 rounded-lg px-3 bg-white shadow-md font-semibold text-sm hover:shadow-lg">
+                                            class="p-2 relative text-left flex items-center gap-1 rounded-xl px-3 bg-white shadow-md font-semibold text-sm hover:shadow-lg">
                                             @if ($user->supervisor_id)
                                                 @svg('heroicon-o-user-minus', ['class' => 'w-5 h-5'])
                                                 @include('commons.avatar', [

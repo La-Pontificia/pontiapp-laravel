@@ -23,26 +23,31 @@
             'icon' => 'heroicon-o-user-group',
             'text' => 'Gestión de Usuarios',
             'href' => '/users',
+            'enable' => $cuser->hasGroup('users'),
         ],
         [
             'icon' => 'heroicon-o-inbox',
             'text' => 'Gestión de Edas',
             'href' => '/edas',
+            'enable' => $cuser->hasGroup('edas'),
         ],
         [
             'icon' => 'heroicon-o-calendar',
             'text' => 'Gestión de Asistencias',
             'href' => '/assists',
+            'enable' => $cuser->hasGroup('assists'),
         ],
         [
             'icon' => 'heroicon-o-shield-check',
             'text' => 'Gestión de Auditoria',
             'href' => '/audit',
+            'enable' => $cuser->hasGroup('audit'),
         ],
         [
             'icon' => 'heroicon-o-cog',
             'text' => 'Ajustes del sistema',
             'href' => '/settings',
+            'enable' => $cuser->hasGroup('settings'),
         ],
     ];
 @endphp
@@ -77,6 +82,10 @@
     </p>
     <nav class="px-2 py-2">
         @foreach ($otherItems as $item)
+            @if (!$item['enable'])
+                @continue
+            @endif
+
             <a title="{{ $item['text'] }}" class="flex relative gap-2 p-2 hover:bg-neutral-200 rounded-lg"
                 href="{{ $item['href'] }}">
                 @svg($item['icon'], [

@@ -7,6 +7,7 @@
             'active' =>
                 request()->is('users') || request()->is('users/create') || request()->is('users/' . $cuser->id . '*'),
             'active-icon' => 'heroicon-s-users',
+            'enable' => $cuser->has('users:create') || $cuser->has('users:show'),
         ],
         [
             'icon' => 'heroicon-o-wrench-screwdriver',
@@ -14,6 +15,7 @@
             'href' => '/users/user-roles',
             'active' => request()->is('users/user-roles*'),
             'active-icon' => 'heroicon-s-wrench-screwdriver',
+            'enable' => $cuser->has('users:user-roles:create') || $cuser->has('users:user-roles:show'),
         ],
         [
             'icon' => 'heroicon-o-calendar-days',
@@ -21,6 +23,7 @@
             'href' => '/users/schedules',
             'active' => request()->is('users/schedules*'),
             'active-icon' => 'heroicon-s-calendar-days',
+            'enable' => $cuser->has('users:schedules:create') || $cuser->has('users:schedules:show'),
         ],
         [
             'icon' => 'heroicon-o-inbox-stack',
@@ -28,20 +31,7 @@
             'href' => '/users/emails-access',
             'active' => request()->is('users/emails-access*'),
             'active-icon' => 'heroicon-s-inbox-stack',
-        ],
-        [
-            'icon' => 'heroicon-o-briefcase',
-            'text' => 'Puestos',
-            'href' => '/users/job-positions',
-            'active' => request()->is('users/job-positions*'),
-            'active-icon' => 'heroicon-s-briefcase',
-        ],
-        [
-            'icon' => 'heroicon-o-briefcase',
-            'text' => 'Cargos',
-            'href' => '/users/roles',
-            'active' => request()->is('users/roles*'),
-            'active-icon' => 'heroicon-s-briefcase',
+            'enable' => $cuser->has('users:emails-access:edit') || $cuser->has('users:emails-access:show'),
         ],
     ];
 @endphp
@@ -56,6 +46,9 @@
     </div>
     <nav class="px-2 py-2 pt-0">
         @foreach ($items as $item)
+            @if (!$item['enable'])
+                @continue
+            @endif
             <a {{ $item['active'] ? 'data-active' : '' }} title="{{ $item['text'] }}"
                 class="flex group relative data-[active]:font-medium gap-2 p-2 hover:bg-neutral-200 rounded-lg"
                 href="{{ $item['href'] }}">
