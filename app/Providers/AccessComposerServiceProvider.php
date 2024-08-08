@@ -25,19 +25,18 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Usuarios',
                             'privileges' => [
-                                'users:view' => 'Ver usuarios',
-                                'users:create' => 'Agregar usuarios',
-                                'users:asing_email' => 'Asignar correos',
-                                'users:discharge' => 'Dar de baja correos',
+                                'users:show' => 'Ver usuarios',
+                                'users:create' => 'Registrar usuarios',
                                 'users:edit' => 'Actualizar usuarios',
                                 'users:disable' => 'Deshabilitar usuarios',
                                 'users:enable' => 'Habilitar usuarios',
+                                'users:reset-password' => 'Restablecer contraseñas',
                             ],
                         ],
                         [
                             'name' => 'Roles',
                             'privileges' => [
-                                'users:user-roles:view' => 'Ver roles',
+                                'users:user-roles:show' => 'Ver roles',
                                 'users:user-roles:create' => 'Agregar roles',
                                 'users:user-roles:edit' => 'Actualizar roles',
                                 'users:user-roles:delete' => 'Eliminar roles',
@@ -46,60 +45,49 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Horarios',
                             'privileges' => [
-                                'users:schedules:view' => 'Ver horarios',
+                                'users:schedules:show' => 'Ver horarios',
                                 'users:schedules:create' => 'Agregar horarios',
                                 'users:schedules:edit' => 'Actualizar horarios',
                                 'users:schedules:delete' => 'Eliminar horarios',
                             ],
                         ],
                         [
-                            'name' => 'Emails',
+                            'name' => 'Correos y accesos',
                             'privileges' => [
-                                'users:emails:view' => 'Ver correos',
-                                'users:emails:add' => 'Agregar correos',
-                                'users:emails:edit' => 'Actualizar correos',
-                                'users:emails:discharge' => 'Dar de baja',
-                                'users:emails:delete' => 'Eliminar correos',
+                                'users:emails-access:show' => 'Ver correos y accesos',
+                                'users:emails-access:edit' => 'Actualizar correos y accesos',
                             ],
                         ],
-                        // [
-                        //     'name' => 'Dominios',
-                        //     'privileges' => [
-                        //         'users:domains:view' => 'Ver dominios',
-                        //         'users:domains:create' => 'Agregar dominios',
-                        //         'users:domains:edit' => 'Actualizar dominios',
-                        //         'users:domains:delete' => 'Eliminar dominios',
-                        //     ],
-                        // ],
-                        [
-                            'name' => 'Cargos',
-                            'privileges' => [
-                                'users:roles:view' => 'Ver cargos',
-                                'users:roles:create' => 'Agregar cargos',
-                                'users:roles:edit' => 'Actualizar cargos',
-                                'users:roles:delete' => 'Eliminar cargos',
-                            ],
-                        ],
+
                         [
                             'name' => 'Puestos',
                             'privileges' => [
-                                'users:job-positions:view' => 'Ver puestos',
+                                'users:job-positions:show' => 'Ver puestos',
                                 'users:job-positions:create' => 'Agregar puestos',
                                 'users:job-positions:edit' => 'Actualizar puestos',
                                 'users:job-positions:delete' => 'Eliminar puestos',
                             ],
                         ],
+                        [
+                            'name' => 'Cargos',
+                            'privileges' => [
+                                'users:roles:show' => 'Ver cargos',
+                                'users:roles:create' => 'Agregar cargos',
+                                'users:roles:edit' => 'Actualizar cargos',
+                                'users:roles:delete' => 'Eliminar cargos',
+                            ],
+                        ],
                         // [
                         //     'name' => 'Sesiones',
                         //     'privileges' => [
-                        //         'users:sessions:view' => 'Ver sesiones',
+                        //         'users:sessions:show' => 'Ver sesiones',
                         //         'users:sessions:delete' => 'Eliminar sesiones',
                         //     ],
                         // ],
                         // [
                         //     'name' => 'Reportes',
                         //     'privileges' => [
-                        //         'users:reports:view' => 'Ver reportes',
+                        //         'users:reports:show' => 'Ver reportes',
                         //         'users:reports:generate' => 'Generar reportes',
                         //     ],
                         // ],
@@ -124,8 +112,8 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Edas',
                             'privileges' => [
-                                'edas:view_all' => 'Ver todas las edas',
-                                'edas:view' => 'Ver edas que supervisa',
+                                'edas:show_all' => 'Ver todas las edas',
+                                'edas:show' => 'Ver edas que supervisa',
                                 'edas:create_all' => 'Registrar todas las edas',
                                 'edas:create' => 'Registrar edas que supervisa',
                                 'edas:create_my' => 'Registrar sus edas',
@@ -137,7 +125,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Años',
                             'privileges' => [
-                                'edas:years:view' => 'Ver los años',
+                                'edas:years:show' => 'Ver los años',
                                 'edas:years:edit' => 'Editar años',
                                 'edas:years:create' => 'Registrar años',
                                 'edas:years:delete' => 'Eliminar años',
@@ -146,8 +134,8 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Colaboradores',
                             'privileges' => [
-                                'edas:collaborators:view_all' => 'Ver todos colaboradores',
-                                'edas:collaborators:view' => 'Ver los colaboradores que supervisa',
+                                'edas:collaborators:show_all' => 'Ver todos colaboradores',
+                                'edas:collaborators:show' => 'Ver los colaboradores que supervisa',
                                 'edas:collaborators:create' => 'Crear colaboradores',
                                 'edas:collaborators:assign_supervisors' => 'Asignar supervisores',
                             ],
@@ -155,7 +143,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Objetivos',
                             'privileges' => [
-                                'edas:goals:view' => 'Ver objetivos',
+                                'edas:goals:show' => 'Ver objetivos',
                                 'edas:goals:send' => 'Enviar objetivos',
                                 'edas:goals:edit' => 'Editar objetivos',
                                 'edas:goals:delete' => 'Eliminar objetivos',
@@ -167,7 +155,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'privileges' => [
                                 'edas:evaluations:self-qualify' => 'Autocalificar objetivos',
                                 'edas:evaluations:qualify' => 'Calificar objetivos',
-                                'edas:evaluations:view' => 'Ver evaluaciones',
+                                'edas:evaluations:show' => 'Ver evaluaciones',
                                 'edas:evaluations:close' => 'Cerrar evaluaciones',
                             ],
                         ],
@@ -182,7 +170,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Plantilla de cuestionarios',
                             'privileges' => [
-                                'edas:questionnaires-templates:view' => 'Ver plantillas de cuestionarios',
+                                'edas:questionnaires-templates:show' => 'Ver plantillas de cuestionarios',
                                 'edas:questionnaires-templates:create' => 'Crear plantillas de cuestionarios',
                                 'edas:questionnaires-templates:edit' => 'Editar plantillas de cuestionarios',
                             ],
@@ -190,8 +178,21 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Reportes',
                             'privileges' => [
-                                'edas:reports:view' => 'Ver reportes',
+                                'edas:reports:show' => 'Ver reportes',
                                 'edas:reports:generate' => 'Generar reportes',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Auditoria',
+                    'items' => [
+                        [
+                            'name' => 'Auditoria',
+                            'privileges' => [
+                                'audit:show' => 'Ver auditoria',
+                                'audit:delete' => 'Eliminar auditoria',
+                                'audit:export' => 'Exportar auditoria',
                             ],
                         ],
                     ],
@@ -202,7 +203,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Ajustes del sistema',
                             'privileges' => [
-                                'settings' => 'Todos los ajustes',
+                                'settings:show' => 'Todos los ajustes',
                             ],
                         ],
                     ],
