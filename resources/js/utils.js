@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const formData = new FormData(f);
             const url = f.action;
             const method = f.method;
+            const redirect = f.getAttribute("data-redirect");
 
             const formComponents = f.querySelectorAll(
                 "input, textarea, select"
@@ -71,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
             window.disabledFormChildren(f);
 
             try {
-                await axios({
+                const { data } = await axios({
                     method: method,
                     url: url,
                     data: formData,
@@ -79,13 +80,24 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Content-Type": "multipart/form-data",
                     },
                 });
-                window.location.reload();
+                Swal.fire({
+                    icon: "success",
+                    title: "¡Hecho!",
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    text: data ?? "Operación exitosa",
+                }).then(() => {
+                    redirect
+                        ? (window.location.href = redirect)
+                        : window.location.reload();
+                });
             } catch (error) {
                 console.log(error);
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
                     text:
                         error.response.data ?? "Error al enviar el formulario",
                 });
@@ -163,10 +175,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await axios(param, {
+                        const { data } = await axios(param, {
                             method: method,
                         });
-                        window.location.reload();
+                        Swal.fire({
+                            icon: "success",
+                            title: "¡Hecho!",
+                            confirmButtonColor: "#d33",
+                            cancelButtonColor: "#3085d6",
+                            text: data ?? "Operación exitosa",
+                        }).then(() => {
+                            window.location.reload();
+                        });
                     } catch (error) {
                         Swal.fire({
                             icon: "error",
@@ -184,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Dinamic form acumulate
-
     dinamicFormAcumulate?.forEach((form) => {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();

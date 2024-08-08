@@ -1,8 +1,6 @@
+import axios from "axios";
+import ExcelJS from "exceljs";
 import moment from "moment";
-import { Calendar } from "@fullcalendar/core";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import dayGridPlugin from "@fullcalendar/daygrid";
 
 const regexDni = /^[0-9]{8}$/;
 
@@ -193,129 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // SLUG SCHEDULE USER
-    let schedules = [];
-    const userid = $("#user_id");
-
-    const calendarEl = $("#calendar-user-slug");
-
-    // create element example
-    const elem = document.createElement("div");
-
-    const calendar = new Calendar(calendarEl ?? elem, {
-        plugins: [timeGridPlugin, interactionPlugin, dayGridPlugin],
-        locale: "es",
-        headerToolbar: {
-            left: "prev,next",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-        },
-        buttonText: {
-            today: "Hoy",
-            month: "Mes",
-            week: "Semana",
-            day: "Dia",
-        },
-        navLinks: true,
-        hiddenDays: [0],
-        eventOverlap: false,
-        allDaySlot: false,
-        slotDuration: "00:30",
-        eventStartEditable: false,
-        eventDurationEditable: false,
-        slotLabelInterval: "00:30",
-        longPressDelay: 0,
-        slotMinTime: "05:00",
-        slotMaxTime: "23:00",
-        nowIndicator: "true",
-        hiddenDays: [0],
-        slotLabelFormat: {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-            meridiem: "short",
-        },
-        initialView: "timeGridWeek",
-        selectMirror: true,
-        dayHeaderContent: (args) => {
-            const day = args.date.getDate();
-            const dayName = args.date.toLocaleDateString("es-ES", {
-                weekday: "short",
-            });
-            const displayDay =
-                dayName.charAt(0).toUpperCase() + dayName.slice(1);
-            return `${displayDay}, ${day}`;
-        },
-    });
-
-    const updateEventSource = (events) => {
-        calendar.addEventSource({
-            events,
-        });
-    };
-
-    if (userid) {
-        const { data } = await axios.get(`/api/schedules/user/${userid.value}`);
-        const groupEvents = data.map((schedule) => {
-            const startDate = new Date(moment(schedule.start_date));
-            const endDate = new Date(moment(schedule.end_date));
-            const from = schedule.from;
-            const to = schedule.to;
-            return generateEvents(
-                {
-                    startDate,
-                    endDate,
-                    days: schedule.days,
-                    from,
-                    to,
-                },
-                schedule
-            ).map((item) => ({
-                ...item,
-                title: schedule.title,
-                backgroundColor: schedule.background,
-                borderColor: schedule.background,
-            }));
-        });
-
-        schedules = groupEvents.flat();
-        updateEventSource(groupEvents.flat());
-    }
-
-    const schels = document.querySelectorAll(".schedule");
-
-    schels?.forEach((schedule) => {
-        schedule.addEventListener("click", async () => {
-            const id = schedule.dataset.id;
-            const hasSelected = schedule.hasAttribute("data-active");
-
-            const hasAllSelected =
-                document.querySelectorAll(".schedule[data-active]").length ===
-                schels.length;
-
-            schels.forEach((item) => {
-                if (hasSelected && !hasAllSelected) {
-                    item.setAttribute("data-active", true);
-                } else {
-                    item.removeAttribute("data-active");
-                }
-            });
-
-            schedule.setAttribute("data-active", true);
-
-            calendar.removeAllEvents();
-
-            if (hasSelected && !hasAllSelected) updateEventSource(schedules);
-            else {
-                updateEventSource(schedules.filter((item) => item.id === id));
-            }
-        });
-    });
-
-    calendar.render();
-
     // supervisor assign
-
     // add supervisor to user
     const inputs = document.querySelectorAll(".supervisor-input");
     const itemSupervisorTemplate = $("#item-supervisor-template")?.content;
@@ -361,19 +237,30 @@ document.addEventListener("DOMContentLoaded", async () => {
                         .addEventListener("click", async () => {
                             clone.disabled = true;
                             try {
-                                await axios.post(
+                                const { data } = await axios.post(
                                     `/api/users/supervisor/assign/${id}`,
                                     {
                                         supervisor_id: user.id,
                                     }
                                 );
-                                window.location.reload();
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "¡Hecho!",
+                                    confirmButtonColor: "#d33",
+                                    cancelButtonColor: "#3085d6",
+                                    text: data ?? "Operación exitosa",
+                                }).then(() => {
+                                    window.location.reload();
+                                });
                             } catch (error) {
-                                window.toast.fire({
+                                Swal.fire({
                                     icon: "error",
-                                    title:
+                                    title: "Oops...",
+                                    confirmButtonColor: "#d33",
+                                    cancelButtonColor: "#3085d6",
+                                    text:
                                         error.response.data ??
-                                        "Ocurrió un error al intentar asignar el supervisor",
+                                        "Error al enviar el formulario",
                                 });
                             } finally {
                                 clone.disabled = false;
@@ -385,26 +272,257 @@ document.addEventListener("DOMContentLoaded", async () => {
             }, 300)
         );
     });
-});
 
-const generateEvents = ({ startDate, endDate, days, from, to }, schedule) => {
-    let schedules = [];
-    let currentDate = new Date(startDate);
-    const endDateObj = new Date(endDate);
+    // change password
+    const formChangePassword = $("#form-change-password");
+    formChangePassword?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const action = formChangePassword.getAttribute("action");
 
-    while (currentDate <= endDateObj) {
-        const dayOfWeek = currentDate.getDay() + 1;
+        const new_password = formData.get("new_password");
+        const new_password_confirmation = formData.get(
+            "new_password_confirmation"
+        );
 
-        if (days.includes(dayOfWeek.toString())) {
-            const date = moment(currentDate).format("YYYY-MM-DD");
-            schedules.push({
-                ...schedule,
-                start: `${date} ${from.split(" ")[1]}`,
-                end: `${date} ${to.split(" ")[1]}`,
+        if (new_password.length < 8) {
+            return window.toast.fire({
+                icon: "error",
+                title: "La contraseña debe tener al menos 8 caracteres",
             });
         }
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
 
-    return schedules;
-};
+        if (new_password !== new_password_confirmation) {
+            return window.toast.fire({
+                icon: "error",
+                title: "Las contraseñas no coinciden",
+            });
+        }
+
+        window.disabledFormChildren(formChangePassword);
+
+        try {
+            const { data } = await axios.post(
+                action,
+                Object.fromEntries(formData)
+            );
+            Swal.fire({
+                icon: "success",
+                title: "¡Hecho!",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                text: data ?? "Operación exitosa",
+            }).then(() => {
+                window.location.reload();
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                text: error.response.data ?? "Error al enviar el formulario",
+            });
+        } finally {
+            window.enabledFormChildren(formChangePassword);
+        }
+    });
+
+    // export data users
+
+    const exportButton = $("#export-data-users");
+
+    exportButton?.addEventListener("click", async () => {
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
+        const uri = `/api/users/export?${searchParams.toString()}`;
+        try {
+            const { data: users } = await axios.get(uri);
+
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Usuarios");
+
+            worksheet.columns = [
+                { header: "N°", key: "index" },
+                { header: "DNI", key: "dni" },
+                { header: "Apellidos", key: "last_name" },
+                { header: "Nombres", key: "first_name" },
+                { header: "Correo", key: "email" },
+                { header: "Area", key: "area" },
+                { header: "Departamento", key: "department" },
+                { header: "Puesto", key: "job_position" },
+                { header: "Cargo", key: "role_position" },
+                { header: "Supervisor", key: "supervisor" },
+                { header: "Perfil", key: "profile" },
+                { header: "Rol", key: "role" },
+                { header: "Estado", key: "status" },
+                { header: "Sede", key: "branch" },
+                { header: "Grupo de Horario", key: "schedule" },
+                { header: "Fecha de creación", key: "created_at" },
+                { header: "Fecha de actualización", key: "updated_at" },
+                { header: "Creado por", key: "created_by" },
+                { header: "Actualizado por", key: "updated_by" },
+            ];
+
+            users.forEach((user, i) => {
+                const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
+                const row = worksheet.addRow({
+                    index,
+                    dni: user.dni,
+                    last_name: user.last_name,
+                    first_name: user.first_name,
+                    email: user.email,
+                    area: user.role_position.department.area.name,
+                    department: user.role_position.department.name,
+                    job_position: user.role_position.job_position.name,
+                    role_position: user.role_position.name,
+                    supervisor: user.supervisor
+                        ? `${user.supervisor.last_name}, ${user.supervisor.first_name}`
+                        : "",
+                    profile: user.profile,
+                    role: user.role.title,
+                    status: user.status ? "Activo" : "Inactivo",
+                    branch: user.branch.name,
+                    schedule: user.schedule?.name,
+                    created_at: moment(user.created_at).format(
+                        "DD-MM-YYYY HH:mm"
+                    ),
+                    updated_at: moment(user.updated_at).format(
+                        "DD-MM-YYYY HH:mm"
+                    ),
+                    created_by: `${user.created_by.last_name}, ${user.created_by.first_name}`,
+                    updated_by: user.updated_by
+                        ? `${user.updated_by.last_name}, ${user.updated_by.first_name}`
+                        : "",
+                });
+                row.getCell("index").alignment = { horizontal: "left" };
+            });
+            worksheet.columns.forEach((column) => {
+                let maxLength = 0;
+                column.eachCell({ includeEmpty: true }, (cell) => {
+                    const cellValue = cell.value ? cell.value.toString() : "";
+                    maxLength = Math.max(maxLength, cellValue.length);
+                });
+                column.width = maxLength < 10 ? 10 : maxLength + 2;
+            });
+
+            const date = moment().format("DD-MM-YYYY");
+            const name = `Usuarios-${date}.xlsx`;
+
+            workbook.xlsx.writeBuffer().then((buffer) => {
+                const blob = new Blob([buffer], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = name;
+                link.click();
+            });
+        } catch (error) {
+            console.error(error);
+            window.toast.fire({
+                icon: "error",
+                title: "Error al exportar los datos",
+            });
+        }
+    });
+
+    const exportEmailAcessButton = $("#export-email-access");
+
+    exportEmailAcessButton?.addEventListener("click", async () => {
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
+        const uri = `/api/users/export-email-access?${searchParams.toString()}`;
+        try {
+            const { data: users } = await axios.get(uri);
+
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet("Usuarios");
+
+            console.log(users);
+
+            // worksheet.columns = [
+            //     { header: "N°", key: "index" },
+            //     { header: "DNI", key: "dni" },
+            //     { header: "Apellidos", key: "last_name" },
+            //     { header: "Nombres", key: "first_name" },
+            //     { header: "Correo", key: "email" },
+            //     { header: "Area", key: "area" },
+            //     { header: "Departamento", key: "department" },
+            //     { header: "Puesto", key: "job_position" },
+            //     { header: "Cargo", key: "role_position" },
+            //     { header: "Supervisor", key: "supervisor" },
+            //     { header: "Perfil", key: "profile" },
+            //     { header: "Rol", key: "role" },
+            //     { header: "Estado", key: "status" },
+            //     { header: "Sede", key: "branch" },
+            //     { header: "Grupo de Horario", key: "schedule" },
+            //     { header: "Fecha de creación", key: "created_at" },
+            //     { header: "Fecha de actualización", key: "updated_at" },
+            //     { header: "Creado por", key: "created_by" },
+            //     { header: "Actualizado por", key: "updated_by" },
+            // ];
+
+            // users.forEach((user, i) => {
+            //     const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
+            //     const row = worksheet.addRow({
+            //         index,
+            //         dni: user.dni,
+            //         last_name: user.last_name,
+            //         first_name: user.first_name,
+            //         email: user.email,
+            //         area: user.role_position.department.area.name,
+            //         department: user.role_position.department.name,
+            //         job_position: user.role_position.job_position.name,
+            //         role_position: user.role_position.name,
+            //         supervisor: user.supervisor
+            //             ? `${user.supervisor.last_name}, ${user.supervisor.first_name}`
+            //             : "",
+            //         profile: user.profile,
+            //         role: user.role.title,
+            //         status: user.status ? "Activo" : "Inactivo",
+            //         branch: user.branch.name,
+            //         schedule: user.schedule?.name,
+            //         created_at: moment(user.created_at).format(
+            //             "DD-MM-YYYY HH:mm"
+            //         ),
+            //         updated_at: moment(user.updated_at).format(
+            //             "DD-MM-YYYY HH:mm"
+            //         ),
+            //         created_by: `${user.created_by.last_name}, ${user.created_by.first_name}`,
+            //         updated_by: user.updated_by
+            //             ? `${user.updated_by.last_name}, ${user.updated_by.first_name}`
+            //             : "",
+            //     });
+            //     row.getCell("index").alignment = { horizontal: "left" };
+            // });
+            // worksheet.columns.forEach((column) => {
+            //     let maxLength = 0;
+            //     column.eachCell({ includeEmpty: true }, (cell) => {
+            //         const cellValue = cell.value ? cell.value.toString() : "";
+            //         maxLength = Math.max(maxLength, cellValue.length);
+            //     });
+            //     column.width = maxLength < 10 ? 10 : maxLength + 2;
+            // });
+
+            // const date = moment().format("DD-MM-YYYY");
+            // const name = `Usuarios-${date}.xlsx`;
+
+            // workbook.xlsx.writeBuffer().then((buffer) => {
+            //     const blob = new Blob([buffer], {
+            //         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            //     });
+            //     const link = document.createElement("a");
+            //     link.href = URL.createObjectURL(blob);
+            //     link.download = name;
+            //     link.click();
+            // });
+        } catch (error) {
+            console.error(error);
+            window.toast.fire({
+                icon: "error",
+                title: "Error al exportar los datos",
+            });
+        }
+    });
+});

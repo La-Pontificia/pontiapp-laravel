@@ -8,11 +8,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 document.addEventListener("DOMContentLoaded", async () => {
     $ = document.querySelector.bind(document);
 
-    let schedulesGroup = [];
+    let schedules = [];
     const group_id = $("#group-id");
+    const user_id = $("#user-id");
     const calendarEl = $("#calendar-schedules");
 
-    // create element example
     const elem = document.createElement("div");
 
     const calendar = new Calendar(calendarEl ?? elem, {
@@ -67,11 +67,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    if (group_id) {
-        const { data } = await axios.get(
-            `/api/schedules/group/${group_id.value}`
-        );
-        const groupEvents = data.map((schedule) => {
+    if (group_id || user_id) {
+        const uri = group_id
+            ? `/api/schedules/group/${group_id.value}`
+            : `/api/schedules/user/${user_id.value}`;
+        const { data: schedulesData } = await axios.get(uri);
+
+        const groupEvents = schedulesData.map((schedule) => {
             const startDate = new Date(moment(schedule.start_date));
             const endDate = new Date(moment(schedule.end_date));
             const from = schedule.from;
@@ -93,40 +95,42 @@ document.addEventListener("DOMContentLoaded", async () => {
             }));
         });
 
-        schedulesGroup = groupEvents.flat();
+        schedules = groupEvents.flat();
         updateEventSource(groupEvents.flat());
     }
 
-    const schels = document.querySelectorAll(".schedule");
+    const $schedulesParent = $("#schedules");
+    const $schedules = $schedulesParent?.querySelectorAll(".schedule");
 
-    schels?.forEach((schedule) => {
-        schedule.addEventListener("click", async () => {
-            const id = schedule.dataset.id;
-            const hasSelected = schedule.hasAttribute("data-active");
+    $schedules?.forEach(($schedule) => {
+        $schedule.addEventListener("click", async () => {
+            const id = $schedule.dataset.id;
+            const hasSelected = $schedule.hasAttribute("data-active");
 
             const hasAllSelected =
-                document.querySelectorAll(".schedule[data-active]").length ===
-                schels.length;
+                $schedulesParent.querySelectorAll(".schedule[data-active]")
+                    .length === $schedules.length;
 
-            schels.forEach((item) => {
-                if (hasSelected && !hasAllSelected) {
-                    item.setAttribute("data-active", true);
-                } else {
-                    item.removeAttribute("data-active");
-                }
+            $schedules.forEach((item) => {
+                item.removeAttribute("data-active");
             });
 
-            schedule.setAttribute("data-active", true);
+            if (hasSelected && !hasAllSelected) {
+                $schedules.forEach((item) => {
+                    item.setAttribute("data-active", true);
+                });
+            }
 
             calendar.removeAllEvents();
 
-            if (hasSelected && !hasAllSelected)
-                updateEventSource(schedulesGroup);
-            else {
-                updateEventSource(
-                    schedulesGroup.filter((item) => item.id === id)
-                );
+            if (hasSelected && hasAllSelected) updateEventSource(schedules);
+            else if (hasSelected && !hasAllSelected) {
+                updateEventSource(schedules);
+            } else {
+                updateEventSource(schedules.filter((item) => item.id === id));
             }
+
+            $schedule.setAttribute("data-active", true);
         });
     });
 

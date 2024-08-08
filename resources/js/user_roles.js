@@ -1,34 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     const $ = document.querySelector.bind(document);
 
-    const form = $("#user-role-form");
-
-    form?.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const { title } = Object.fromEntries(new FormData(e.target));
-        const privileges = Array.from(
-            form.querySelectorAll('input[name="privileges[]"]:checked')
-        ).map((input) => input.value);
-
-        try {
-            await axios.post("/api/users/roles", {
-                title,
-                privileges,
-            });
-        } catch (error) {
-            console.error(error);
-            window.toast.fire({
-                icon: "error",
-                title:
-                    error.response.data ??
-                    "Ocurrió un error al intentar crear el rol",
-            });
-        }
-    });
-
     // UI interactions for user roles
     function updatePrivilegeCount(element) {
-        const container = element.closest(".border");
+        const container = element.closest(".content");
         const checkboxes = container.querySelectorAll(".privilege-checkbox");
         const countSpan = container.querySelector(".privilege-count");
 
@@ -46,8 +21,25 @@ document.addEventListener("DOMContentLoaded", function () {
             .forEach(updatePrivilegeCount);
     }
 
+    // function updateParentCheckboxes(checkbox) {
+    //     const subgroup = checkbox.closest(".content");
+    //     const subgroupCheckbox = subgroup.querySelector(".select-all-subgroup");
+    //     const subgroupCheckboxes = subgroup.querySelectorAll(
+    //         ".privilege-checkbox"
+    //     );
+
+    //     subgroupCheckbox.checked = Array.from(subgroupCheckboxes).every(
+    //         (cb) => cb.checked
+    //     );
+    //     subgroupCheckbox.indeterminate =
+    //         !subgroupCheckbox.checked &&
+    //         Array.from(subgroupCheckboxes).some((cb) => cb.checked);
+
+    //     updatePrivilegeCount(subgroupCheckbox);
+    // }
+
     function updateParentCheckboxes(checkbox) {
-        const subgroup = checkbox.closest(".border");
+        const subgroup = checkbox.closest(".content");
         const subgroupCheckbox = subgroup.querySelector(".select-all-subgroup");
         const subgroupCheckboxes = subgroup.querySelectorAll(
             ".privilege-checkbox"
@@ -61,11 +53,33 @@ document.addEventListener("DOMContentLoaded", function () {
             Array.from(subgroupCheckboxes).some((cb) => cb.checked);
 
         updatePrivilegeCount(subgroupCheckbox);
+
+        // Update the main group checkbox
+        const group = subgroup.closest(".group-content");
+        if (group) {
+            const groupCheckbox = group
+                .closest(".content")
+                .querySelector(".select-all-group");
+            const allSubgroupCheckboxes = group.querySelectorAll(
+                ".select-all-subgroup"
+            );
+
+            groupCheckbox.checked = Array.from(allSubgroupCheckboxes).every(
+                (cb) => cb.checked
+            );
+            groupCheckbox.indeterminate =
+                !groupCheckbox.checked &&
+                Array.from(allSubgroupCheckboxes).some(
+                    (cb) => cb.checked || cb.indeterminate
+                );
+
+            updatePrivilegeCount(groupCheckbox);
+        }
     }
 
     document.querySelectorAll(".select-all-group").forEach((groupCheckbox) => {
         groupCheckbox.addEventListener("change", function () {
-            const checkboxes = this.closest(".border").querySelectorAll(
+            const checkboxes = this.closest(".content").querySelectorAll(
                 'input[type="checkbox"]'
             );
             checkboxes.forEach((checkbox) => (checkbox.checked = this.checked));
@@ -77,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .querySelectorAll(".select-all-subgroup")
         .forEach((subgroupCheckbox) => {
             subgroupCheckbox.addEventListener("change", function () {
-                const checkboxes = this.closest(".border").querySelectorAll(
+                const checkboxes = this.closest(".content").querySelectorAll(
                     ".privilege-checkbox"
                 );
                 checkboxes.forEach(
@@ -100,12 +114,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".toggle-group").forEach((toggleButton) => {
         toggleButton.addEventListener("click", function () {
             const content =
-                this.closest(".border").querySelector(".group-content");
+                this.closest(".content").querySelector(".group-content");
+
             content.style.display =
-                content.style.display === "none" ? "grid" : "none";
+                content.style.display == "none" ? "grid" : "none";
+
             const svg = this.querySelector("svg");
             svg.style.transform =
-                content.style.display === "none"
+                content.style.display == "none"
                     ? "rotate(0deg)"
                     : "rotate(90deg)";
         });
@@ -114,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".toggle-subgroup").forEach((toggleButton) => {
         toggleButton.addEventListener("click", function () {
             const content =
-                this.closest(".border").querySelector(".subgroup-content");
+                this.closest(".content").querySelector(".subgroup-content");
             content.style.display =
                 content.style.display === "none" ? "grid" : "none";
             const svg = this.querySelector("svg");
