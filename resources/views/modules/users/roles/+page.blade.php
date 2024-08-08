@@ -81,7 +81,7 @@
             </div>
         </div>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('users:roles:view'))
+            @if ($cuser->hasPrivilege('users:roles:show'))
                 <table class="w-full text-left" id="table-users">
                     <thead class="">
                         <tr
