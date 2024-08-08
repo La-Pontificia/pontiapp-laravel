@@ -9,6 +9,7 @@ import "./utils.js";
 import "./evaluation.js";
 import "./questionnaires-templates.js";
 import "./email-access.js";
+import "./assists.js";
 
 import Cookie from "js-cookie";
 
