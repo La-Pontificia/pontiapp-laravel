@@ -16,7 +16,7 @@ class GoalEvaluation extends Model
     protected $fillable = [
         'id_goal',
         'id_evaluation',
-        'average',
+        'qualification',
         'self_qualification',
     ];
 
@@ -26,11 +26,11 @@ class GoalEvaluation extends Model
 
     public function goal()
     {
-        return $this->hasOne('App\Models\Goal', 'id', 'id_goal');
+        return $this->hasOne(Goal::class, 'id', 'id_goal');
     }
 
     public function evaluation()
     {
-        return $this->hasOne('App\Models\Evaluation', 'id', 'id_evaluation');
+        return $this->hasOne(Evaluation::class, 'id', 'id_evaluation');
     }
 }
