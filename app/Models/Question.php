@@ -15,7 +15,7 @@ class Question extends Model
 
   protected $perPage = 20;
 
-  protected $fillable = ['question', 'order', 'id_template', 'created_by', 'udpated_by'];
+  protected $fillable = ['question', 'order', 'template_id', 'created_by', 'udpated_by'];
 
   protected $keyType = 'string';
 
@@ -23,16 +23,16 @@ class Question extends Model
 
   public function template()
   {
-    return $this->hasOne('App\Models\Template', 'id_template', 'id');
+    return $this->hasOne(QuestionnaireTemplate::class, 'template_id', 'id');
   }
 
   public function createdBy()
   {
-    return $this->hasOne('App\Models\User', 'created_by', 'id');
+    return $this->hasOne(User::class, 'created_by', 'id');
   }
 
   public function updatedBy()
   {
-    return $this->hasOne('App\Models\User', 'updated_by', 'id');
+    return $this->hasOne(User::class, 'updated_by', 'id');
   }
 }
