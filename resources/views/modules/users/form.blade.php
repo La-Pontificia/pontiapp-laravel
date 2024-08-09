@@ -8,7 +8,7 @@
     $userDomain = $user ? explode('@', $user->email)[1] : null;
     $username = $user ? explode('@', $user->email)[0] : null;
 
-    $domains = ['lapontificia.edu.pe', 'ilp.edu.pe', 'elp.edu.pe', 'lp.edu.pe', 'ec.edu.pe', 'idiomas.edu.pe'];
+    $domains = ['lapontificia.edu.pe', 'ilp.edu.pe', 'elp.edu.pe', 'ec.edu.pe', 'idiomas.edu.pe'];
 
 @endphp
 
