@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\EdaController;
 use App\Http\Controllers\Api\EvaluationController;
 use App\Http\Controllers\Api\GoalController;
-use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuestionnaireTemplateController;
 use App\Http\Controllers\Api\RolController;
@@ -21,9 +20,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-// -------------------------------- AUTH ROUTES ---------------------------
-
-Route::post('login', [LoginController::class, 'login']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
