@@ -134,7 +134,7 @@ class User extends Authenticatable
 
                 if ($dayOfWeek == 8) $dayOfWeek = 1;
 
-                if (in_array((string)$dayOfWeek, json_decode($schedule->days))) {
+                if (in_array((string)$dayOfWeek, $schedule->days)) {
 
                     $schedulesGenerated[] = [
                         'title' => $schedule->title,
