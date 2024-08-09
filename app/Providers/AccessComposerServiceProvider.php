@@ -184,9 +184,9 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Plantilla de cuestionarios',
                             'privileges' => [
-                                'edas:questionnaires-templates:show' => 'Ver plantillas de cuestionarios',
-                                'edas:questionnaires-templates:create' => 'Crear plantillas de cuestionarios',
-                                'edas:questionnaires-templates:edit' => 'Editar plantillas de cuestionarios',
+                                'edas:questionnaire-templates:show' => 'Ver plantillas de cuestionarios',
+                                'edas:questionnaire-templates:create' => 'Crear plantillas de cuestionarios',
+                                'edas:questionnaire-templates:edit' => 'Editar plantillas de cuestionarios',
                             ],
                         ],
                         [
