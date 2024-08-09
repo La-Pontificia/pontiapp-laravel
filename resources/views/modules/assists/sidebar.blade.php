@@ -1,12 +1,4 @@
 @php
-    $showYear = $cuser->hasPrivilege('edas:years:show') || $cuser->hasPrivilege('edas:years:create');
-    $showQuestionnaires =
-        $cuser->hasPrivilege('edas:questionnaires-templates:show') ||
-        $cuser->hasPrivilege('edas:questionnaires-templates:create');
-
-@endphp
-
-@php
     $items = [
         [
             'icon' => 'heroicon-o-clipboard-document-list',
