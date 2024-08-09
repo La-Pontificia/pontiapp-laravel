@@ -28,7 +28,7 @@
                                 @include('modules.settings.sidebar')
                             @endif
                         </div>
-                        <footer class="p-5 max-md:hidden max-w-[300px] hover:[&>a]:underline text-xs text-black text-center">
+                        <footer class="p-5 max-lg:hidden max-w-[300px] hover:[&>a]:underline text-xs text-black text-center">
                             <a href="">
                                 Terminos y condiciones
                             </a>
