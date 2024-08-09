@@ -12,14 +12,14 @@ use Illuminate\Http\Request;
 class EdaController extends Controller
 {
 
-    public function create(Request $request)
+    public function create($year_id, $user_id)
     {
         $evaluationArray = [1, 2];
 
-        $foundedUser = User::find($request->id_user);
-        if (!$foundedUser) return response()->json('El colaborador no existe', 404);
+        $foundedUser = User::find($user_id);
+        if (!$foundedUser) return response()->json('El usuario no existe', 404);
 
-        $foundYear = Year::find($request->id_year);
+        $foundYear = Year::find($year_id);
         if (!$foundYear) return response()->json('La eda selecionado no existe', 404);
         if (!$foundYear->status) return response()->json('El año seleccionado no esta activo', 404);
 
@@ -39,7 +39,7 @@ class EdaController extends Controller
             ]);
         }
 
-        return response()->json(['eda' => $eda], 200);
+        return response()->json('Eda creado correctamente.', 200);
     }
 
     public function close(Request $request)
@@ -58,6 +58,6 @@ class EdaController extends Controller
 
         $eda->save();
 
-        return response()->json(['eda' => $eda], 200);
+        return response()->json('Eda cerrado correctamente. Se habilitó la posibilidad de resolver los cuestionarios asignados.', 200);
     }
 }
