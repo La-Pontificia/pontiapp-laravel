@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -55,18 +54,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'email_access' => 'array',
-    ];
-
-    static $rules = [
-        'dni' => 'required|numeric|digits:8',
-        'first_name' => 'required',
-        'username' => 'required',
-        'domain' => 'required',
-        'last_name' => 'required',
-        'id_role' => ['required', 'max:36'],
-        'id_role_user' => ['required', 'uuid'],
-        'id_branch' => ['required', 'uuid'],
-        'group_schedule_id' => ['uuid'],
     ];
 
 
