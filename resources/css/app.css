@@ -316,3 +316,15 @@ th.fc-col-header-cell {
         transform: translateY(-50%) rotate(359deg);
     }
 }
+
+.sortable {
+    .sortable-placeholder {
+        cursor: grabbing;
+        cursor: -moz-grabbing;
+        cursor: -webkit-grabbing;
+        border: 1px dashed #999;
+        width: calc(33.21% - 30px);
+        margin: 0 15px;
+        background: #ddd;
+    }
+}
