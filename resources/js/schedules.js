@@ -143,7 +143,7 @@ const generateEvents = ({ startDate, endDate, days, from, to }, schedule) => {
     const endDateObj = new Date(endDate);
 
     while (currentDate <= endDateObj) {
-        const dayOfWeek = currentDate.getDay() + 1;
+        const dayOfWeek = currentDate.getDay();
 
         if (days.includes(dayOfWeek.toString())) {
             const date = moment(currentDate).format("YYYY-MM-DD");
