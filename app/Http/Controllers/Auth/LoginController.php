@@ -54,11 +54,10 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // $credentials = $request->only('email', 'password');
-
-        // if (Auth::attempt($credentials)) {
-        //     return redirect()->intended('/');
-        // }
+        //  $credentials = $request->only('email', 'password')
+        //  if (Auth::attempt($credentials)) {
+        //      return redirect()->intended('/');
+        //  }
 
         $credentials = $request->only('email', 'password');
         $user = User::where('email', $credentials['email'])->first();
@@ -69,6 +68,9 @@ class LoginController extends Controller
 
         if (!$user->status) {
             return back()->withErrors(['email' => 'Tu cuenta no está activa. Comunícate con el administrador.'])->onlyInput('email');
+        }
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended('/');
         }
 
         return redirect('/login')->with('error', 'Credenciales incorrectas, Intente de nuevo.');
