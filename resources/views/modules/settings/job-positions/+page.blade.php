@@ -37,7 +37,7 @@
                     </div>
                     @include('components.users.auditory-card')
                     <form action="/api/job-positions" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
-                        @include('modules.users.job-positions.form', [
+                        @include('modules.settings.job-positions.form', [
                             'job-position' => null,
                         ])
                     </form>
@@ -142,7 +142,7 @@
                                                     <form action="/api/job-positions/{{ $job->id }}" method="POST"
                                                         id="dialog-{{ $job->id }}-form"
                                                         class="p-3 dinamic-form grid gap-4">
-                                                        @include('modules.users.job-positions.form', [
+                                                        @include('modules.settings.job-positions.form', [
                                                             'jobPosition' => $job,
                                                         ])
                                                     </form>
