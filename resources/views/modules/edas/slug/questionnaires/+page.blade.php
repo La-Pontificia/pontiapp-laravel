@@ -1,8 +1,10 @@
-@extends('layouts.eda-user')
+@extends('modules.edas.slug.+layout')
 
-@section('title', 'Cuestionario anual de EDAs')
+@section('title', 'Cuestionario Eda: ' . $current_year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
-@section('content-eda-user')
+@section('title_eda', 'Cuestionario anual')
+
+@section('layout.edas.slug')
 
     <div class="h-full flex flex-col mt-3 bg-white overflow-auto rounded-xl">
         <h1>Cuestionario anual</h1>
