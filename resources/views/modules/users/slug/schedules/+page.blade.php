@@ -119,7 +119,7 @@
                     @php
                         $from = date('h:i A', strtotime($schedule->from));
                         $to = date('h:i A', strtotime($schedule->to));
-                        $daysJson = json_decode($schedule->days);
+                        $daysJson = $schedule->days;
                     @endphp
                     <div class="relative">
                         <div data-active data-id="{{ $schedule->id }}"
