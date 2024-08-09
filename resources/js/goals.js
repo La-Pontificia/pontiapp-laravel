@@ -1,283 +1,333 @@
+import axios from "axios";
+import moment from "moment";
+
 document.addEventListener("DOMContentLoaded", async () => {
     $ = document.querySelector.bind(document);
     let goals = [];
     let goals_to_delete = [];
 
-    // hassles
-    const hasEdit = $("#has-edit-goals");
-    const hasDelete = $("#has-delete-goals");
+    const $sentGoalsButton = $("#sent-goals-button");
+    const $input_id = $("#input_id");
 
-    const approveButton = $("#approve-goals-button");
+    const $goalSheet = $("#goal-sheet");
+    const $tableContent = $("#table-content");
+    const $totalPercentage = $("#total-percentage");
+    const $initGoalSheet = $("#init-goal-sheet");
+    const $goalTemplate = $("#goal-template")?.content;
+    const $goals = $("#goals");
+    const $goalSheetclose = $goalSheet?.querySelector("#goal-sheet-close");
+    const $goalSheetsubmit = $goalSheet?.querySelector("#goal-sheet-submit");
+    const $goalSheetremove = $goalSheet?.querySelector("#goal-sheet-remove");
+    const $openGoalButtons = document.querySelectorAll(".open-goal-button");
 
-    const AddButton = $("#add-goal-button");
-    const inputHiddenId = $("#input-hidden-id-eda");
-    const SpanTotalPercentage = $("#total-percentage");
-    const PresentationNotGoals = $("#presentation-not-goals");
-    const PanelGoals = $("#panel-goals");
-    const AddButton2 = $("#add-goal-button-2");
-    const tableGoals = $("#table-goals");
-    const submitGoalsButton = $("#submit-goals-button");
-    const percentages = Array.from({ length: 100 }, (_, i) => i + 1);
+    const $title = $goalSheet?.querySelector("#goal-title");
+    const $description = $goalSheet?.querySelector("#goal-description");
+    const $indicators = $goalSheet?.querySelector("#goal-indicators");
+    const $percentage = $goalSheet?.querySelector("#goal-percentage");
+    const $comments = $goalSheet?.querySelector("#goal-comments");
+    const $info = $goalSheet?.querySelector("#goal-info");
+    // GET goals
 
-    const getTotalPercentage = () =>
-        goals.reduce((acc, goal) => acc + parseInt(goal.percentage), 0);
-
-    if (inputHiddenId) {
-        AddButton.disabled = true;
-        const res = await axios.get(`/api/goals/by-eda/${inputHiddenId.value}`);
+    if ($input_id) {
+        if ($sentGoalsButton)
+            $sentGoalsButton.textContent = "Reenviar objetivos";
+        const res = await axios.get(`/api/goals/by-eda/${$input_id.value}`);
         res.data.map((goal) => {
             goals.push({
+                _id: goal.id,
                 id: goal.id,
-                goal: goal.goal,
+                title: goal.title,
                 description: goal.description,
-                is_new: false,
                 indicators: goal.indicators,
                 percentage: goal.percentage,
+                comments: goal.comments,
                 created_at: goal.created_at,
-                created_by: goal.created_by,
-                updated_by: goal.updated_by,
+                created_by: goal.createdBy,
                 updated_at: goal.updated_at,
+                updated_by: goal.updatedBy,
             });
+        });
+        renderGoals();
+    }
+
+    // UI functions
+    function clearGoalSheet() {
+        $goalSheet.removeAttribute("data-id");
+        $title.value = "";
+        $description.value = "";
+        $indicators.value = "";
+        $percentage.value = "";
+        if ($comments) $comments.value = "";
+    }
+
+    function removeAllGoalsDataState() {
+        $goals.querySelectorAll(".goal").forEach((goal) => {
+            goal.removeAttribute("data-state");
         });
     }
 
-    const verifyGoals = () => {
-        if (!PresentationNotGoals) return;
-        if (!PanelGoals) return;
-        if (!submitGoalsButton) return;
-        if (!AddButton) return;
+    function addGoalDataState($goal) {
+        $goals.querySelectorAll(".goal").forEach((goal) => {
+            goal.removeAttribute("data-state");
+        });
+        $goal.setAttribute("data-state", "open");
+    }
+
+    function openNewGoalSheet() {
+        clearGoalSheet();
+        removeAllGoalsDataState();
+        openGoalSheet();
+    }
+    function openGoalSheet() {
+        $goalSheet.setAttribute("data-state", "open");
+        $title.focus();
+    }
+
+    function closeGoalSheet() {
+        $goalSheet.setAttribute("data-state", "close");
+        removeAllGoalsDataState();
+        clearGoalSheet();
+    }
+
+    function getTotalPercentage() {
+        return goals.reduce((acc, goal) => acc + parseInt(goal.percentage), 0);
+    }
+
+    function renderGoals() {
+        $goals.innerHTML = "";
+        $totalPercentage.textContent = `${getTotalPercentage()}%`;
+        if (getTotalPercentage() > 100) {
+            $totalPercentage.classList.add("text-red-500");
+        } else {
+            $totalPercentage.classList.remove("text-red-500");
+        }
 
         if (goals.length > 0) {
-            PresentationNotGoals.classList.add("hidden");
-            PanelGoals.classList.remove("hidden");
+            $initGoalSheet.setAttribute("data-hidden", "true");
+            $tableContent.setAttribute("data-open", "true");
         } else {
-            PresentationNotGoals.classList.remove("hidden");
-            PanelGoals.classList.add("hidden");
+            $initGoalSheet.removeAttribute("data-hidden");
+            $tableContent.removeAttribute("data-open");
         }
 
-        const totalPercentage = getTotalPercentage();
+        goals.forEach((goal) => {
+            const clone = document.importNode($goalTemplate, true);
+            const $goal = clone.querySelector(".goal");
+            const $goalIndex = clone.querySelector(".goal-index");
+            const $goalTitle = clone.querySelector(".goal-title");
+            const $goalDescription = clone.querySelector(".goal-description");
+            const $goalIndicators = clone.querySelector(".goal-indicators");
+            const $goalPercentage = clone.querySelector(".goal-percentage");
+            const $goalTimeLine = clone.querySelector(".goal-time-line");
+            const $goalFeedback = clone.querySelector(".goal-feedback");
 
-        SpanTotalPercentage.innerHTML = totalPercentage;
-        if (totalPercentage === 100) {
-            submitGoalsButton.disabled = false;
-            AddButton.disabled = true;
-        } else if (totalPercentage > 100) {
-            submitGoalsButton.disabled = true;
-            AddButton.disabled = true;
-        } else {
-            AddButton.disabled = false;
-            submitGoalsButton.disabled = true;
-        }
-    };
+            $goal.setAttribute("data-id", goal._id);
 
-    const renderGoals = () => {
-        if (!tableGoals) return;
+            $goalIndex.textContent = goals.indexOf(goal) + 1;
+            $goalTitle.textContent = goal.title;
+            $goalDescription.textContent = goal.description;
+            $goalIndicators.textContent = goal.indicators;
+            $goalPercentage.textContent = `${goal.percentage}%`;
 
-        tableGoals.innerHTML = "";
-        goals.forEach((goal, index) => {
-            // Row
-            const row = document.createElement("tr");
-            row.className =
-                "[&>td]:align-top [&>td>div]:p-2 [&>td>div]:min-h-20 [&>td>div]:min-w-[200px] [&>td>div]:bg-transparent [&>td>div]:rounded-md";
-
-            // Goal
-            const divGoal = document.createElement("div");
-            divGoal.contentEditable = !!hasEdit;
-            divGoal.className = "w-full text-blue-600 font-semibold";
-            divGoal.ariaPlaceholder = "Ingrese el nombre del objetivo";
-            divGoal.innerHTML = goal.goal;
-            divGoal.oninput = (e) => {
-                goals[index].goal = e.target.innerHTML;
-                verifyGoals();
-            };
-            divGoal.onpaste = window.onPaste;
-
-            // Description
-            const divDescription = document.createElement("div");
-            divDescription.contentEditable = !!hasEdit;
-            divDescription.className = "w-full";
-            divDescription.ariaPlaceholder = "Ingrese la descripcion";
-            divDescription.innerHTML = goal.description;
-            divDescription.oninput = (e) => {
-                goals[index].description = e.target.innerHTML;
-                verifyGoals();
-            };
-            divDescription.onpaste = window.onPaste;
-
-            // Indicators
-            const divIndicators = document.createElement("div");
-            divIndicators.contentEditable = !!hasEdit;
-            divIndicators.className = "w-full";
-            divIndicators.ariaPlaceholder = "Ingrese los indicadores";
-            divIndicators.innerHTML = goal.indicators;
-            divIndicators.oninput = (e) => {
-                goals[index].indicators = e.target.innerHTML;
-                verifyGoals();
-            };
-            divIndicators.onpaste = window.onPaste;
-
-            // Select Percentage
-            const sPercentage = document.createElement("select");
-            sPercentage.className = "border-0 bg-transparent cursor-pointer";
-            sPercentage.disabled = !hasEdit;
-            percentages.forEach((percentage) => {
-                const option = document.createElement("option");
-                option.selected =
-                    goal.percentage.toString() === percentage.toString();
-                option.value = percentage;
-                option.textContent = `${percentage}%`;
-                sPercentage.appendChild(option);
-            });
-            sPercentage.onchange = (e) => {
-                goals[index].percentage = e.target.value;
-                verifyGoals();
-            };
-
-            // Created By
-            const cCreatedBy = document.createElement("td");
-            if (goal.created_by) {
-                const createdByImg = document.createElement("img");
-                createdByImg.src =
-                    goal.created_by?.profile ?? window.defaultProfile;
-                createdByImg.className = "w-full h-full object-cover";
-                const createdFigureDivImg = document.createElement("figure");
-                createdFigureDivImg.className =
-                    "w-8 rounded-full aspect-square overflow-hidden";
-                createdFigureDivImg.title = `Agregado el ${new Date(
-                    goal.created_at
-                ).toLocaleString()} por ${goal.created_by?.full_name}`;
-                createdFigureDivImg.appendChild(createdByImg);
-                cCreatedBy.className = "font-semibold p-2";
-                cCreatedBy.appendChild(createdFigureDivImg);
+            const goalTimeLine = `${
+                goal.created_by ? `Creado por: ${goal.created_by}` : ""
             }
+            ${goal.updated_by ? `, Actualizado por: ${goal.updated_by}` : ""}
+            `;
 
-            // updated By
-            const cUpdatedBy = document.createElement("td");
-            if (goal.updated_by) {
-                const updatedByImg = document.createElement("img");
-                updatedByImg.src =
-                    goal.updated_by?.profile ?? window.defaultProfile;
-                updatedByImg.className = "w-full h-full object-cover";
-                const updatedByFigureDivImg = document.createElement("figure");
-                updatedByFigureDivImg.className =
-                    "w-8 rounded-full aspect-square overflow-hidden";
-                updatedByFigureDivImg.title = `Actualizado el ${new Date(
-                    goal.updated_at
-                ).toLocaleString()} por ${goal.updated_by?.full_name}`;
-                updatedByFigureDivImg.appendChild(updatedByImg);
-                cUpdatedBy.className = "font-semibold p-2";
-                cUpdatedBy.appendChild(updatedByFigureDivImg);
-            }
+            $goalTimeLine.innerHTML = goalTimeLine;
+            $goalFeedback.textContent = goal.comments;
 
-            // Delete Button
-            const deleteButton = document.createElement("button");
-            deleteButton.innerHTML = "Eliminar";
-            deleteButton.disabled = !hasDelete;
-            deleteButton.className =
-                "bg-neutral-200 px-2 m-2 rounded-md p-1 font-semibold";
-            deleteButton.onclick = () => {
-                goals = goals.filter((g) => g.id !== goal.id);
-                if (!goal.is_new) {
-                    goals_to_delete.push(goal.id);
+            $goals.prepend(clone);
+
+            const hasEdit = $goalSheet.hasAttribute("data-edit");
+
+            // add event listener
+            $goal.addEventListener("click", () => {
+                addGoalDataState($goal);
+                if (hasEdit) {
+                    $goalSheetsubmit.innerHTML = "Actualizar";
+                    $goalSheetremove.innerHTML = "Eliminar";
+                    $goalSheet.setAttribute("data-id", goal._id);
+                    $title.value = goal.title;
+                    $description.value = goal.description;
+                    $indicators.value = goal.indicators;
+                    $percentage.value = goal.percentage;
+
+                    $comments.hasAttribute("data-label")
+                        ? ($comments.textContent = goal.comments)
+                        : ($comments.value = goal.comments);
+                } else {
+                    $goalSheetsubmit.remove();
+                    $goalSheetremove.remove();
+                    $title.textContent = goal.title;
+                    $description.textContent = goal.description;
+                    $indicators.textContent = goal.indicators;
+                    $percentage.textContent = `${goal.percentage}%`;
+                    $comments.textContent = goal.comments;
                 }
-                renderGoals();
-            };
-
-            // C Index
-            const cIndex = document.createElement("td");
-            cIndex.className = "font-semibold p-2 text-center";
-            cIndex.innerHTML = `${index + 1}`;
-
-            const cGoal = document.createElement("td");
-            cGoal.appendChild(divGoal);
-
-            const cDescription = document.createElement("td");
-            cDescription.appendChild(divDescription);
-
-            const cIndicators = document.createElement("td");
-            cIndicators.appendChild(divIndicators);
-
-            const cPercentage = document.createElement("td");
-            cPercentage.appendChild(sPercentage);
-
-            const cButton = document.createElement("td");
-            cButton.appendChild(deleteButton);
-
-            row.appendChild(cIndex);
-            row.appendChild(cGoal);
-            row.appendChild(cDescription);
-            row.appendChild(cIndicators);
-            row.appendChild(cPercentage);
-            if (goal.created_by) row.appendChild(cCreatedBy);
-            else if (inputHiddenId)
-                row.appendChild(document.createElement("td"));
-            if (goal.updated_by) row.appendChild(cUpdatedBy);
-            else if (inputHiddenId)
-                row.appendChild(document.createElement("td"));
-            row.appendChild(cButton);
-
-            tableGoals.appendChild(row);
+                const createdBy = goal.created_by
+                    ? `Creado por: ${goal.created_by} el ${moment(
+                          goal.created_at
+                      ).format("DD/MM/YYYY")}`
+                    : "";
+                const updatedBy = goal.updated_by
+                    ? `<br/> Actualizado por: ${goal.updated_by} el ${moment(
+                          goal.updated_at
+                      ).format("DD/MM/YYYY")}`
+                    : "";
+                $info.innerHTML = `${createdBy} ${updatedBy}`;
+                openGoalSheet();
+            });
         });
-        verifyGoals();
-    };
-
-    const addGoal = () => {
-        PanelGoals.scrollTop = PanelGoals.scrollHeight;
-        goals.push({
-            id: goals.length + 1,
-            goal: "",
-            description: "",
-            indicators: "",
-            percentage: 10,
-            is_new: true,
-        });
+    }
+    function addNewGoal(goal) {
+        goals.push(goal);
         renderGoals();
-    };
+        clearGoalSheet();
+        closeGoalSheet();
+    }
 
-    AddButton2?.addEventListener("click", () => {
-        addGoal();
+    function removeGoal(_id) {
+        const goal = goals.find((g) => g._id.toString() === _id.toString());
+        if (goal.id) {
+            goals_to_delete.push(_id);
+        }
+        goals = goals.filter((g) => g._id.toString() !== _id.toString());
+        renderGoals();
+        clearGoalSheet();
+        closeGoalSheet();
+    }
+
+    function updateGoal(goal, _id) {
+        goals = goals.map((g) => {
+            if (g._id.toString() === _id.toString()) {
+                return { _id, ...g, ...goal };
+            }
+            return g;
+        });
+
+        renderGoals();
+        clearGoalSheet();
+        closeGoalSheet();
+    }
+
+    $goalSheetclose?.addEventListener("click", closeGoalSheet);
+    $openGoalButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            openNewGoalSheet();
+            $goalSheetsubmit.innerHTML = "Agregar";
+            $goalSheetremove.innerHTML = "Cancelar";
+        });
     });
 
-    AddButton?.addEventListener("click", () => {
-        addGoal();
-    });
-
-    // on submit
-    submitGoalsButton?.addEventListener("click", async () => {
-        const isInvalid =
-            goals.some(
-                (goal) =>
-                    goal.goal === "" ||
-                    goal.description === "" ||
-                    goal.indicators === ""
-            ) || getTotalPercentage() !== 100;
-        if (isInvalid) {
+    $goalSheetsubmit?.addEventListener("click", () => {
+        const _id = $goalSheet.getAttribute("data-id");
+        if (
+            !$title.value ||
+            !$description.value ||
+            !$indicators.value ||
+            !$percentage.value
+        ) {
             return Swal.fire({
                 icon: "warning",
-                title: "Hey...",
-                text: "Por favor, complete todos los campos y asegurese de que la suma de los porcentajes sea 100%",
+                title: "Hey..!",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                text: "Por favor, complete todos los campos",
             });
         }
 
-        const id_eda = submitGoalsButton.getAttribute("data-id-eda");
+        if (Number($percentage.value) < 1 || Number($percentage.value) > 100) {
+            return Swal.fire({
+                icon: "warning",
+                title: "Hey..!",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                text: "El porcentaje debe estar entre 1 y 100",
+            });
+        }
+        if (_id) {
+            updateGoal(
+                {
+                    title: $title.value,
+                    description: $description.value,
+                    indicators: $indicators.value,
+                    percentage: $percentage.value,
+                    comments: $comments && $comments.value,
+                },
+                _id
+            );
+        } else {
+            addNewGoal({
+                _id: window.crypto.randomUUID(),
+                id: null,
+                title: $title.value,
+                description: $description.value,
+                indicators: $indicators.value,
+                percentage: $percentage.value,
+                comments: $comments && $comments.value,
+            });
+        }
+    });
 
-        submitGoalsButton.disabled = true;
+    $goalSheetremove?.addEventListener("click", () => {
+        const _id = $goalSheet.getAttribute("data-id");
+        if (_id) {
+            removeGoal(_id);
+        } else {
+            closeGoalSheet();
+        }
+    });
 
-        const fetchURI = inputHiddenId
-            ? `/api/goals/update/${inputHiddenId.value}`
-            : "/api/goals/sent";
+    // send goals to server
+    $sentGoalsButton?.addEventListener("click", async () => {
+        const total = getTotalPercentage();
+        if (total !== 100) {
+            return Swal.fire({
+                icon: "warning",
+                title: "Hey..!",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                text: "La suma de los porcentajes debe ser 100%",
+            });
+        }
+
+        const id_eda = $sentGoalsButton.getAttribute("data-id-eda");
 
         try {
-            await axios.post(fetchURI, {
-                goals_to_create: goals.filter((goal) => goal.is_new),
-                goals_to_update: goals.filter((goal) => !goal.is_new),
-                id_eda,
+            const result = await Swal.fire({
+                title: "Enviar objetivos",
+                text: `¿Estás seguro de enviar los objetivos?${
+                    goals_to_delete.length > 0
+                        ? ". Se eliminarán los objetivos seleccionados y sus evaluaciones relacionadas"
+                        : ""
+                }`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, confirmar",
+                cancelButtonText: "Cancelar",
+            });
+
+            if (!result.isConfirmed) return;
+
+            const fetchURI = $input_id
+                ? `/api/goals/update/${id_eda}`
+                : `/api/goals/sent/${id_eda}`;
+
+            const { data } = await axios.post(fetchURI, {
+                goals,
                 goals_to_delete,
             });
+
             Swal.fire({
                 icon: "success",
-                title: "Objetivos enviados",
-                text: "Los objetivos fueron enviados correctamente",
+                title: "Hecho",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                text: data ?? "Los objetivos fueron enviados correctamente",
             }).then(() => {
                 window.location.reload();
             });
@@ -286,54 +336,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: "Ocurrio un error al enviar los objetivos, intentelo de nuevo",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                text: error.response.data ?? "Error al enviar el formulario",
             });
         }
     });
-
-    renderGoals();
-
-    if (inputHiddenId) {
-        submitGoalsButton.disabled = true;
-    }
-    // approve goals
-
-    if (approveButton) {
-        approveButton.addEventListener("click", async () => {
-            const id_eda = approveButton.getAttribute("data-id-eda");
-            Swal.fire({
-                title: "¿Estás seguro de aprobar los objetivos?",
-                text: "No podrás deshacer esta acción.",
-                icon: "info",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, aprobar",
-                cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const res = await axios.post("/api/goals/approve", {
-                        id_eda,
-                    });
-                    if (res.status === 200) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Objetivos aprobados",
-                            confirmButtonColor: "#d33",
-                            text: "Los objetivos fueron aprobados correctamente",
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            confirmButtonColor: "#d33",
-                            text: "Ocurrio un error al aprobar los objetivos, intentelo de nuevo",
-                        });
-                    }
-                }
-            });
-        });
-    }
 });
