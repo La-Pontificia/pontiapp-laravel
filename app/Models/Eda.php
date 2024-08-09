@@ -41,7 +41,7 @@ class Eda extends Model
 
   public function user()
   {
-    return $this->hasOne('App\Models\User', 'id', 'id_user');
+    return $this->hasOne(User::class, 'id', 'id_user');
   }
 
   public function goals()
@@ -51,31 +51,31 @@ class Eda extends Model
 
   public function createdBy()
   {
-    return $this->hasOne('App\Models\User', 'id', 'created_by');
+    return $this->hasOne(User::class, 'id', 'created_by');
   }
 
   public function approvedBy()
   {
-    return $this->hasOne('App\Models\User', 'id', 'approved_by');
+    return $this->hasOne(User::class, 'id', 'approved_by');
   }
 
   public function closedBy()
   {
-    return $this->hasOne('App\Models\User', 'id', 'closed_by');
+    return $this->hasOne(User::class, 'id', 'closed_by');
   }
 
   public function sentBy()
   {
-    return $this->hasOne('App\Models\User', 'id', 'sent_by');
+    return $this->hasOne(User::class, 'id', 'sent_by');
   }
 
   public function year()
   {
-    return $this->hasOne('App\Models\Year', 'id', 'id_year');
+    return $this->hasOne(Year::class, 'id', 'id_year');
   }
 
   public function evaluations()
   {
-    return $this->hasMany('App\Models\Evaluation', 'id_eda', 'id');
+    return $this->hasMany(Evaluation::class, 'id_eda', 'id');
   }
 }
