@@ -7,7 +7,7 @@
                 <h2 class="text-2xl font-bold">
                     500 | Error del servidor
                 </h2>
-                <p class="text-sm max-w-[35ch] text-black">
+                <p class="text-sm mx-auto max-w-[35ch] text-black">
                     A ocurrido un error, por favor intenta de nuevo
                     o volver al <a href="/" class="font-bold hover:underline">inicio</a>.
                 </p>
