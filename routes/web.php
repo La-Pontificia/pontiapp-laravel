@@ -75,6 +75,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('edas/{id_user}/eda/{id_year}', [EdaController::class, 'year']);
     Route::get('edas/{id_user}/eda/{id_year}/goals', [EdaController::class, 'goals']);
     Route::get('edas/{id_user}/eda/{id_year}/evaluation/{id_evaluation}', [EdaController::class, 'evaluation']);
+    Route::get('edas/{id_user}/eda/{id_year}/ending', [EdaController::class, 'ending']);
     Route::get('edas/{id_user}/eda/{id_year}/questionnaires', [EdaController::class, 'questionnaires']);
 
     // Assists routes
