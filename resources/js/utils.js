@@ -157,13 +157,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Dinamic alerts
 
     dinamicAlerts?.forEach((f) => {
-        f.addEventListener("click", function (e) {
+        f.addEventListener("click", async () => {
             const param = f.getAttribute("data-param");
             const method = f.getAttribute("data-method") ?? "POST";
             const atitle = f.getAttribute("data-atitle");
             const adescription = f.getAttribute("data-adescription");
             const dataAlertvariant = f.getAttribute("data-alertvariant");
-            Swal.fire({
+            const result = await Swal.fire({
                 title: atitle,
                 text: adescription,
                 icon: dataAlertvariant ?? "info",
@@ -172,34 +172,33 @@ document.addEventListener("DOMContentLoaded", function () {
                 cancelButtonColor: "#3085d6",
                 confirmButtonText: "Sí, confirmar",
                 cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        const { data } = await axios(param, {
-                            method: method,
-                        });
-                        Swal.fire({
-                            icon: "success",
-                            title: "¡Hecho!",
-                            confirmButtonColor: "#d33",
-                            cancelButtonColor: "#3085d6",
-                            text: data ?? "Operación exitosa",
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    } catch (error) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            confirmButtonColor: "#d33",
-                            cancelButtonColor: "#3085d6",
-                            text:
-                                error.response.data ??
-                                "Error al enviar el formulario",
-                        });
-                    }
-                }
             });
+
+            if (!result.isConfirmed) return;
+
+            try {
+                const { data } = await axios(param, {
+                    method: method,
+                });
+                Swal.fire({
+                    icon: "success",
+                    title: "¡Hecho!",
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    text: data ?? "Operación exitosa",
+                }).then(() => {
+                    window.location.reload();
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    text:
+                        error.response.data ?? "Error al enviar el formulario",
+                });
+            }
         });
     });
 
