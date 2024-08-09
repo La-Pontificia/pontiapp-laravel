@@ -23,8 +23,7 @@
                                         Ingresa tus credenciales para continuar.
                                     </p> --}}
                                     <div class="w-full">
-                                        <form method="POST" action="/api/login" class="grid gap-5">
-                                            @csrf
+                                        <form method="POST" action="/login" class="grid gap-5">
                                             <div class="space-y-3 font-semibold text-black">
                                                 <input style="padding: 17px; border-radius: 10px" required autofocus
                                                     name="email" type="email" value="{{ old('email') }}"
