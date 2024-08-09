@@ -41,7 +41,7 @@
             @svg('heroicon-o-arrow-left', [
                 'class' => 'w-5 h-5',
             ])
-            <span class="max-md:hidden">Gestión de usuarios</span>
+            <span class="max-lg:hidden">Gestión de usuarios</span>
         </a>
     </div>
     <nav class="px-2 py-2 pt-0">
@@ -53,9 +53,9 @@
                 class="flex group relative data-[active]:font-medium gap-2 p-2 hover:bg-neutral-200 rounded-lg"
                 href="{{ $item['href'] }}">
                 @svg($item['active'] ? $item['active-icon'] : $item['icon'], [
-                    'class' => 'w-5 h-5 max-md:w-6 max-md:h-6 max-md:mx-auto group-data-[active]:text-blue-800',
+                    'class' => 'w-5 h-5 max-lg:w-6 max-lg:h-6 max-lg:mx-auto group-data-[active]:text-blue-800',
                 ])
-                <span class="max-md:hidden">{{ $item['text'] }}</span>
+                <span class="max-lg:hidden">{{ $item['text'] }}</span>
             </a>
         @endforeach
     </nav>
