@@ -62,7 +62,7 @@
                                     ])
                                 </div>
                                 <div class="flex items-center gap-1">
-                                    <img src="{{ ($title === 'Objetivos' ? '/pen.png' : $title === 'Cuestionario anual') ? '/idea.png' : '/sheet-pen.png' }}"
+                                    <img src="{{ $title === 'Objetivos' ? '/pen.png' : ($title === 'Cuestionario anual' ? '/idea.png' : '/sheet-pen.png') }}"
                                         class="w-4">
                                     @yield('title_eda')
                                 </div>

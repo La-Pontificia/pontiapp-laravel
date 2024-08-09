@@ -13,7 +13,7 @@
             'href' => '/edas',
             'active' =>
                 request()->is('edas*') &&
-                !request()->is('edas/questionnaires-templates*') &&
+                !request()->is('edas/questionnaire-templates*') &&
                 !request()->is('edas/years*') &&
                 !request()->is('edas' . '/' . $cuser->id . '*'),
             'active-icon' => 'heroicon-s-user-group',
@@ -35,8 +35,8 @@
         [
             'icon' => 'heroicon-o-clipboard-document',
             'text' => 'Plantilla de cuestionarios',
-            'href' => '/edas/questionnaires-templates',
-            'active' => request()->is('edas/questionnaires-templates*'),
+            'href' => '/edas/questionnaire-templates',
+            'active' => request()->is('edas/questionnaire-templates*'),
             'active-icon' => 'heroicon-s-clipboard-document',
         ],
     ];
