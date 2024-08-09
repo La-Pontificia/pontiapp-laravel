@@ -11,14 +11,13 @@ use Illuminate\Http\Request;
 class GoalController extends Controller
 {
 
-
-
     public function createGoals($goals, $eda)
     {
         foreach ($goals as $goal) {
             $goal = Goal::create([
                 'id_eda' => $eda->id,
-                'goal' => $goal['goal'],
+                'title' => $goal['title'],
+                'comments' => $goal['comments'],
                 'description' => $goal['description'],
                 'indicators' => $goal['indicators'],
                 'percentage' => $goal['percentage'],
@@ -35,29 +34,23 @@ class GoalController extends Controller
         }
     }
 
-    public function sent(Request $request)
+    public function sent(Request $request, $id)
     {
-        $bodyRule = [
-            'id_eda' => ['required', 'uuid', 'max:36'],
-            'goals_to_create' => ['required', 'array'],
-        ];
 
-        $bodyValidator = validator($request->all(), $bodyRule);
-
-        if ($bodyValidator->fails()) {
-            return response()->json(['error' => $bodyValidator->errors()], 400);
-        }
-
-        $eda = Eda::find($request->id_eda);
+        $eda = Eda::find($id);
 
         if (!$eda) {
-            return response()->json(['error' => 'Eda not found'], 404);
+            return response()->json('Eda no encontrado', 404);
         }
 
-        $goals = $request->goals_to_create;
+        $request->validate([
+            'goals' => ['required', 'array'],
+        ]);
+
+        $goals = $request->goals;
 
         $rulePerGoal = [
-            'goal' => ['required', 'string', 'max:500'],
+            'title' => ['required', 'string', 'max:500'],
             'description' => ['required', 'string', 'max:2000'],
             'indicators' => ['required', 'string', 'max:2000'],
             'percentage' => ['required', 'numeric', 'min:0', 'max:100'],
@@ -67,17 +60,17 @@ class GoalController extends Controller
         foreach ($goals as $goal) {
             $validator = validator($goal, $rulePerGoal);
             if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
+                return response()->json($validator->errors()->first(), 400);
             }
         }
 
         $this->createGoals($goals, $eda);
 
-        $eda->sent = new \DateTime();
+        $eda->sent = now();
         $eda->sent_by = auth()->user()->id;
         $eda->save();
 
-        return response()->json(['message' => 'Goals created successfully'], 201);
+        return response()->json('Objetivos enviados correctamente', 200);
     }
 
     public function byEda($id)
@@ -85,81 +78,57 @@ class GoalController extends Controller
         $goals = Goal::where('id_eda', $id)->get();
 
         $goals = $goals->map(function ($goal) {
-            $updatedBy = $goal->updatedBy()->select('id', 'first_name', 'last_name', 'profile')->first();
-            $goal->updated_by = $updatedBy ? [
-                'id' => $updatedBy->id,
-                'full_name' => $updatedBy->first_name . ' ' . $updatedBy->last_name,
-                'profile' => $updatedBy->profile,
-            ] : null;
-
-            $createdBy = $goal->createdBy()->select('id', 'first_name', 'last_name', 'profile')->first();
-            $goal->created_by = $createdBy ? [
-                'id' => $createdBy->id,
-                'full_name' => $createdBy->first_name . ' ' . $createdBy->last_name,
-                'profile' => $createdBy->profile,
-            ] : null;
-
+            $goal->updatedBy = $goal->updatedBy ?  $goal->updatedBy->last_name . ', ' . $goal->updatedBy->first_name : null;
+            $goal->createdBy = $goal->createdBy ? $goal->createdBy->last_name . ', ' . $goal->createdBy->first_name : null;
             return $goal;
         });
 
         return response()->json($goals, 200);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $bodyRule = [
-            'id_eda' => ['required', 'uuid', 'max:36'],
-            'goals_to_create' => ['array'],
-            'goals_to_update' => ['array'],
+        $request->validate([
+            'goals' => ['required', 'array'],
             'goals_to_delete' => ['array'],
-        ];
+        ]);
 
-        $bodyValidator = validator($request->all(), $bodyRule);
+        $eda = Eda::find($id);
 
-        if ($bodyValidator->fails()) {
-            return response()->json(['error' => $bodyValidator->errors()], 400);
-        }
-
-        $eda = Eda::find($request->id_eda);
-
-        if (!$eda) {
-            return response()->json(['error' => 'Eda not found'], 404);
-        }
-
-        $goals_to_create = $request->goals_to_create;
-        $goals_to_update = $request->goals_to_update;
-        $goals_to_delete = $request->goals_to_delete;
+        if (!$eda)  return response()->json(['Eda not found'], 404);
 
         $rulePerGoal = [
-            'goal' => ['required', 'string', 'max:500'],
+            'title' => ['required', 'string', 'max:500'],
             'description' => ['required', 'string', 'max:2000'],
+            'comments' => ['string', 'max:2000', 'nullable'],
             'indicators' => ['required', 'string', 'max:2000'],
             'percentage' => ['required', 'numeric', 'min:0', 'max:100'],
         ];
 
-        if ($goals_to_create) {
-            foreach ($goals_to_create as $goal) {
-                $validator = validator($goal, $rulePerGoal);
-                if ($validator->fails()) {
-                    return response()->json(['error' => $validator->errors()], 400);
-                }
+        // validate each goal
+        foreach ($request->goals as $goal) {
+            $validator = validator($goal, $rulePerGoal);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->first(), 400);
             }
         }
 
-        if ($goals_to_update) {
-            foreach ($goals_to_update as $goal) {
-                $validator = validator($goal, $rulePerGoal);
-                if ($validator->fails()) {
-                    return response()->json(['error' => $validator->errors()], 400);
-                }
-            }
-        }
+        $goals_to_create = array_filter($request->goals, function ($goal) {
+            return !isset($goal['id']) || $goal['id'] === null;
+        });
+
+        $goals_to_update = array_filter($request->goals, function ($goal) {
+            return isset($goal['id']) && $goal['id'] !== null;
+        });
+
+        $goals_to_delete = $request->goals_to_delete;
 
         // delete each goal
         if ($goals_to_delete) {
             foreach ($goals_to_delete as $goalId) {
                 $goal = Goal::find($goalId);
                 if ($goal) {
+                    $goal->evaluations()->delete();
                     $goal->delete();
                 }
             }
@@ -175,48 +144,38 @@ class GoalController extends Controller
             foreach ($goals_to_update as $goal) {
                 $goalToUpdate = Goal::find($goal['id']);
 
-                $hasBeenEdited = $goalToUpdate->goal !== $goal['goal'] ||
+                $hasBeenEdited = $goalToUpdate->title !== $goal['title'] ||
                     $goalToUpdate->description !== $goal['description'] ||
                     $goalToUpdate->indicators !== $goal['indicators'] ||
                     $goalToUpdate->percentage !== $goal['percentage'];
+                $goalToUpdate->comments !== $goal['comments'];
 
                 if ($goalToUpdate && $hasBeenEdited) {
-                    $goalToUpdate->goal = $goal['goal'];
+                    $goalToUpdate->title = $goal['title'];
                     $goalToUpdate->description = $goal['description'];
                     $goalToUpdate->indicators = $goal['indicators'];
                     $goalToUpdate->percentage = $goal['percentage'];
+                    $goalToUpdate->comments = $goal['comments'];
                     $goalToUpdate->updated_by = auth()->user()->id;
                     $goalToUpdate->save();
                 }
             }
         }
 
-        return response()->json(['message' => 'Goals updated successfully'], 201);
+        return response()->json('Objetivos actualizados correctamente.', 201);
     }
 
-    public function approve(Request $request)
+    public function approve($id)
     {
-        $bodyRule = [
-            'id_eda' => ['required', 'uuid', 'max:36'],
-        ];
+        $eda = Eda::find($id);
 
-        $bodyValidator = validator($request->all(), $bodyRule);
+        if (!$eda) return response()->json('Eda not found', 404);
 
-        if ($bodyValidator->fails()) {
-            return response()->json(['error' => $bodyValidator->errors()], 400);
-        }
-
-        $eda = Eda::find($request->id_eda);
-
-        if (!$eda) {
-            return response()->json(['error' => 'Eda not found'], 404);
-        }
-
-        $eda->approved = new \DateTime();
+        $eda->approved = now();
         $eda->approved_by = auth()->user()->id;
         $eda->save();
 
-        return response()->json(['message' => 'Goals approved successfully'], 200);
+        return response()->json('Objetivos aprobados correctamente. Se habilitó las evaluaciones y cuestionarios.', 200);
     }
 
     public function byEvaluation($id)
