@@ -7,7 +7,7 @@ import "./edas.js";
 import "./goals.js";
 import "./utils.js";
 import "./evaluation.js";
-import "./questionnaires-templates.js";
+import "./questionnaire-templates.js";
 import "./email-access.js";
 import "./assists.js";
 
