@@ -56,20 +56,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('roles/by_job_position/{id}', [RolController::class, 'by_job_position']);
 
     // Edas routes
-    Route::post('edas', [EdaController::class, 'create']);
+    Route::post('edas/create/{year_id}/user/{user_id}', [EdaController::class, 'create']);
     Route::post('edas/close/{id}', [EdaController::class, 'close']);
 
     // Goals routes
-    Route::post('goals/sent', [GoalController::class, 'sent']);
-    Route::post('goals/approve', [GoalController::class, 'approve']);
+    Route::post('goals/sent/{id}', [GoalController::class, 'sent']);
     Route::post('goals/update/{id}', [GoalController::class, 'update']);
+    Route::post('goals/approve/{id}', [GoalController::class, 'approve']);
     Route::get('goals/by-eda/{id}', [GoalController::class, 'byEda']);
     Route::get('goals/by-evaluation/{id}', [GoalController::class, 'byEvaluation']);
 
     // evaluations routes
-    Route::post('evaluation/self-qualification', [EvaluationController::class, 'selfQualification']);
-    Route::post('evaluation/average', [EvaluationController::class, 'average']);
-    Route::post('evaluation/close', [EvaluationController::class, 'close']);
+    Route::post('evaluations/self-qualify/{id}', [EvaluationController::class, 'selfqualify']);
+    Route::post('evaluations/qualify/{id}', [EvaluationController::class, 'qualify']);
+    Route::post('evaluations/close/{id}', [EvaluationController::class, 'close']);
 
     // Areas routes
     Route::post('areas', [AreaController::class, 'store']);
@@ -104,11 +104,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('years/{id}', [YearController::class, 'update']);
     Route::post('years/open/{id}', [YearController::class, 'open']);
     Route::post('years/close/{id}', [YearController::class, 'close']);
-
-    // Emails routes
-    Route::post('emails', [EmailController::class, 'assign']);
-    Route::post('emails/{id}', [EmailController::class, 'update']);
-    Route::post('emails/discharge/{id}', [EmailController::class, 'discharge']);
 
     // Schedules routes
     Route::post('schedules/delete/{id}', [ScheduleController::class, 'remove']);
