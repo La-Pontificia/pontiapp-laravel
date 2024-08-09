@@ -23,6 +23,7 @@ use App\Http\Controllers\YearController;
 // -------------------------------- AUTH ROUTES ---------------------------
 
 Route::get('login/azure', [LoginController::class, 'redirectToAzure']);
+Route::post('login', [LoginController::class, 'login']);
 Route::get('login/azure/callback', [LoginController::class, 'handleAzureCallback']);
 Auth::routes();
 
