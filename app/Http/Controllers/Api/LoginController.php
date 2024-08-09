@@ -31,7 +31,11 @@ class LoginController extends Controller
         // verify the password
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended($this->redirectPath());
+            //        // if (Auth::attempt($credentials)) {
+            // //     return redirect()->intended('/');
+            // // }
+            //     return redirect('/')->with('success', 'Bienvenido');
+            return redirect()->intended('/');
         }
 
         return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
