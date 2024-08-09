@@ -11,26 +11,15 @@ class Goal extends Model
 
     protected $table = 'goals';
 
-    static $rules = [
-        'goal' => ['required', 'string', 'max:500'],
-        'description' => ['required', 'string', 'max:2000'],
-        'indicators' => ['required', 'string', 'max:2000'],
-        'percentage' => ['required', 'numeric', 'min:0', 'max:100'],
-        'id_eda' => ['required', 'max:36'],
-    ];
-
     protected $perPage = 20;
 
     protected $fillable = [
         'id_eda',
-        'goal',
+        'title',
+        'comments',
         'description',
         'indicators',
         'percentage',
-        'self_qualification',
-        'self_qualification_2',
-        'average',
-        'average_2',
         'created_by'
     ];
 
@@ -38,18 +27,24 @@ class Goal extends Model
 
     public $incrementing = false;
 
+
+    public function evaluations()
+    {
+        return $this->hasMany(GoalEvaluation::class, 'id_goal', 'id');
+    }
+
     public function eda()
     {
-        return $this->hasOne('App\Models\Eda', 'id', 'id_eda');
+        return $this->hasOne(Eda::class, 'id', 'id_eda');
     }
 
     public function createdBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
 
     public function updatedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updated_by');
     }
 }
