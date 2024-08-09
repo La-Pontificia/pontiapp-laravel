@@ -1,6 +1,7 @@
 import Sortable from "html5sortable/dist/html5sortable.es.js";
 import { arrayMoveMutable } from "array-move";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const $ = document.querySelector.bind(document);
@@ -10,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let questions = [
         {
-            _id: window.crypto.randomUUID(),
+            _id: uuidv4(),
             id: null,
             question: null,
         },
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $add = $("#add-question-button");
     $add?.addEventListener("click", () => {
         questions.push({
-            _id: window.crypto.randomUUID(),
+            _id: uuidv4(),
             id: null,
             question: "",
         });
