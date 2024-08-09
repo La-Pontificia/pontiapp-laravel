@@ -1,14 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\EdaController;
-use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\EvaluationController;
 use App\Http\Controllers\Api\GoalController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\QuestionController;
+use App\Http\Controllers\Api\QuestionnaireTemplateController;
 use App\Http\Controllers\Api\RolController;
 use App\Http\Controllers\Api\ScheduleController;
-use App\Http\Controllers\Api\TemplateController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\UserController as ControllersUserController;
 use App\Http\Controllers\Api\UserRoleController;
@@ -92,9 +91,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('branches/{id}', [BranchController::class, 'update']);
 
     // Template routes
-    Route::post('templates', [TemplateController::class, 'create']);
-    Route::post('templates/{id}', [TemplateController::class, 'update']);
-    Route::post('templates/{id}/change-in-use', [TemplateController::class, 'changeInUse']);
+    Route::post('questionnaire-templates', [QuestionnaireTemplateController::class, 'create']);
+    Route::post('questionnaire-templates/{id}', [QuestionnaireTemplateController::class, 'update']);
+    Route::post('questionnaire-templates/{id}/change-in-use', [QuestionnaireTemplateController::class, 'changeInUse']);
 
     // Questions routes
     Route::get('questions/by-template/{id}', [QuestionController::class, 'by_template']);

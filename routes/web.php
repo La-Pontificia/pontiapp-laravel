@@ -65,9 +65,9 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     // Edas routes
     Route::get('edas', [EdaController::class, 'index']);
     Route::get('edas/years', [YearController::class, 'index']);
-    Route::get('edas/questionnaires-templates', [QuestionnaireTemplateController::class, 'index']);
-    Route::get('edas/questionnaires-templates/create', [QuestionnaireTemplateController::class, 'create']);
-    Route::get('edas/questionnaires-templates/{id}/questions', [QuestionnaireTemplateController::class, 'questions']);
+    Route::get('edas/questionnaire-templates', [QuestionnaireTemplateController::class, 'index']);
+    Route::get('edas/questionnaire-templates/create', [QuestionnaireTemplateController::class, 'create']);
+    Route::get('edas/questionnaire-templates/{id}', [QuestionnaireTemplateController::class, 'slug']);
 
     Route::get('edas/me', [EdaController::class, 'me']);
 
