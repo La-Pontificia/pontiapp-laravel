@@ -156,26 +156,6 @@
                                             Cantidad de accesos:
                                             {{ count($user->email_access ?? []) }}
                                         </p>
-                                        {{-- <div class="flex items-center gap-2">
-                                                @if (!is_null($user->email_access))
-                                                    @php
-                                                        $array = json_decode($user->email_access, true);
-                                                        $finaly = [];
-                                                        foreach (json_decode($user->email_access, true) as $access) {
-                                                            $code = explode(':', $access)[0];
-                                                            if (!isset($finaly[$code])) {
-                                                                $finaly[$code] = $access;
-                                                            }
-                                                        }
-                                                    @endphp
-                                                    @foreach ($finaly as $access)
-                                                        <div
-                                                            class="bg-blue-600 text-white uppercase p-1 px-2 shadow-md rounded-full text-sm text-nowrap font-semibold">
-                                                            {{ explode(':', $access)[0] }}
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                            </div> --}}
                                     </td>
                                 </tr>
                             @endforeach
