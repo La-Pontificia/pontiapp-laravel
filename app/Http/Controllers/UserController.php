@@ -7,8 +7,6 @@ use App\Models\Role;
 use App\Models\JobPosition;
 use App\Models\Branch;
 use App\Models\BusinessUnit;
-use App\Models\Department;
-use App\Models\Domain;
 use App\Models\GroupSchedule;
 use App\Models\Schedule;
 use App\Models\User;
@@ -107,10 +105,9 @@ class UserController extends Controller
         $roles = Role::all();
         $user_roles = UserRole::all();
         $branches = Branch::all();
-        $domains = Domain::all();
         $group_schedules = GroupSchedule::all();
 
-        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'domains', 'group_schedules'));
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules'));
     }
 
     // slugs
@@ -121,13 +118,12 @@ class UserController extends Controller
         $roles = Role::all();
         $user_roles = UserRole::all();
         $branches = Branch::all();
-        $domains = Domain::all();
         $group_schedules = GroupSchedule::all();
 
 
         if (!$user) return view('pages.500', ['error' => 'User not found']);
 
-        return view('modules.users.slug.+page', compact('user', 'job_positions', 'roles', 'user_roles', 'branches', 'domains', 'group_schedules'));
+        return view('modules.users.slug.+page', compact('user', 'job_positions', 'roles', 'user_roles', 'branches', 'group_schedules'));
     }
 
     public function slug_organization($id)
