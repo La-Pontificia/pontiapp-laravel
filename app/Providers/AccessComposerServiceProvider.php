@@ -158,7 +158,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'name' => 'Objetivos',
                             'privileges' => [
                                 'edas:goals:show' => 'Ver objetivos',
-                                'edas:goals:send' => 'Enviar objetivos',
+                                'edas:goals:sent' => 'Enviar objetivos',
                                 'edas:goals:edit' => 'Editar objetivos',
                                 'edas:goals:delete' => 'Eliminar objetivos',
                                 'edas:goals:approve' => 'Aprobar objetivos',
