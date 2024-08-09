@@ -16,15 +16,15 @@ class Evaluation extends Model
     protected $fillable = [
         'number',
         'id_eda',
-        'overage',
+        'qualification',
         'self_qualification',
         'closed',
         'closed_by',
         'closed_at',
         'self_rated_at',
         'self_rated_by',
-        'averaged_at',
-        'averaged_by',
+        'qualified_at',
+        'qualified_by',
     ];
 
     protected $keyType = 'string';
@@ -41,9 +41,9 @@ class Evaluation extends Model
         return $this->hasOne('App\Models\User', 'id', 'closed_by');
     }
 
-    public function goal()
+    public function goalsEvaluations()
     {
-        return $this->hasMany('App\Models\Goal', 'id_evaluation', 'id');
+        return $this->hasMany(GoalEvaluation::class, 'id_evaluation', 'id');
     }
 
     public function selfRatedBy()
@@ -51,8 +51,8 @@ class Evaluation extends Model
         return $this->hasOne('App\Models\User', 'id', 'self_rated_by');
     }
 
-    public function averagedBy()
+    public function qualifiedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'averaged_by');
+        return $this->hasOne('App\Models\User', 'id', 'qualified_by');
     }
 }
