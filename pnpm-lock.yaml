@@ -29,12 +29,18 @@ importers:
       '@trevoreyre/autocomplete-js':
         specifier: ^3.0.2
         version: 3.0.2
+      array-move:
+        specifier: ^4.0.0
+        version: 4.0.0
       exceljs:
         specifier: ^4.4.0
         version: 4.4.0
       flowbite:
         specifier: ^1.8.1
         version: 1.8.1
+      html5sortable:
+        specifier: ^0.14.0
+        version: 0.14.0
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
@@ -1182,6 +1188,10 @@ packages:
   array-flatten@1.1.1:
     resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
 
+  array-move@4.0.0:
+    resolution: {integrity: sha512-+RY54S8OuVvg94THpneQvFRmqWdAHeqtMzgMW6JNurHxe8rsS07cHQdfGkXnTUXiBcyZ0j3SiDIxxj0RPiqCkQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
   array-union@2.1.0:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
     engines: {node: '>=8'}
@@ -2041,6 +2051,9 @@ packages:
     resolution: {integrity: sha512-ZPr5MNObqnV/T9akshPKbVgyOqLmy+Bxo7juKCfTfnjNniTAMdy4hz21YQqoofMBJD2kdREaqPPdThoR78Tgxg==}
     engines: {node: '>=6'}
     hasBin: true
+
+  html5sortable@0.14.0:
+    resolution: {integrity: sha512-esbDyvvrNEAeTwMUIVPyCHeabcrHAKetFDk2TEEOSFwySK5L4byZfy4h5wBqrKer7sfznevzRobn8iqpLobUjw==}
 
   htmlparser2@4.1.0:
     resolution: {integrity: sha512-4zDq1a1zhE4gQso/c5LP1OtrhYTncXNSpvJYtWJBtXAETPlMfi3IFNjGuQbYLuVY4ZR0QMqRVvo4Pdy9KLyP8Q==}
@@ -4932,6 +4945,8 @@ snapshots:
 
   array-flatten@1.1.1: {}
 
+  array-move@4.0.0: {}
+
   array-union@2.1.0: {}
 
   asn1.js@5.4.1:
@@ -5963,6 +5978,8 @@ snapshots:
       param-case: 3.0.4
       relateurl: 0.2.7
       terser: 4.8.1
+
+  html5sortable@0.14.0: {}
 
   htmlparser2@4.1.0:
     dependencies:
