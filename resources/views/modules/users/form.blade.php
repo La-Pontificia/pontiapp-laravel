@@ -8,6 +8,8 @@
     $userDomain = $user ? explode('@', $user->email)[1] : null;
     $username = $user ? explode('@', $user->email)[0] : null;
 
+    $domains = ['lapontificia.edu.pe', 'ilp.edu.pe', 'elp.edu.pe', 'lp.edu.pe', 'ec.edu.pe', 'idiomas.edu.pe'];
+
 @endphp
 
 @if ($user)
@@ -120,8 +122,8 @@
                 class="w-full">
             <select style="width: 170px" required name="domain">
                 @foreach ($domains as $domain)
-                    <option {{ $userDomain === $domain->domain ? 'selected' : '' }} value="{{ $domain->domain }}">
-                        {{ '@' . $domain->domain }}</option>
+                    <option {{ $userDomain === $domain ? 'selected' : '' }} value="{{ $domain }}">
+                        {{ '@' . $domain }}</option>
                 @endforeach
             </select>
         </div>
