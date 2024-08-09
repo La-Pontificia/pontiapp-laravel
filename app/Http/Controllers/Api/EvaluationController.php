@@ -11,47 +11,34 @@ use Illuminate\Http\Request;
 class EvaluationController extends Controller
 {
 
-    public function selfQualification(Request $request)
+    public function selfqualify(Request $request, $id)
     {
-        $bodyRule = [
-            'id_evaluation' => ['required', 'uuid', 'max:36'],
-            'items' => ['required', 'array'],
-        ];
 
-        $bodyValidator = validator($request->all(), $bodyRule);
-
-        if ($bodyValidator->fails()) {
-            return response()->json(['error' => $bodyValidator->errors()], 400);
-        }
+        $request->validate([
+            'items' => 'required|array',
+        ]);
 
         $items = $request->items;
-        $evaluation = Evaluation::find($request->id_evaluation);
+        $evaluation = Evaluation::find($id);
 
-        if (!$evaluation) {
-            return response()->json(['error' => 'Eda not found'], 404);
-        }
+        if (!$evaluation) return response()->json('Evaluatión not found', 404);
 
         $rulePerItem = [
             'id' => ['required', 'uuid', 'max:36'],
             'self_qualification' => ['required', 'numeric', 'max:5', 'min:1'],
         ];
 
-        // validate each goal
         foreach ($items as $item) {
             $validator = validator($item, $rulePerItem);
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
-            }
+            if ($validator->fails())  return response()->json($validator->errors()->first(), 400);
         }
 
-        // for each
         foreach ($items as $item) {
             $goalEvaluation = GoalEvaluation::find($item['id']);
             $goalEvaluation->self_qualification = $item['self_qualification'];
             $goalEvaluation->save();
         }
 
-        // total self qualification
         $totalSelfQualification = 0;
 
         foreach ($items as $item) {
@@ -65,89 +52,64 @@ class EvaluationController extends Controller
         $evaluation->self_rated_by = auth()->user()->id;
         $evaluation->save();
 
-        return response()->json(['message' => 'Self qualification saved'], 200);
+        return response()->json('Objetivos autocalificados correctamente.', 200);
     }
 
-    public function average(Request $request)
+    public function qualify(Request $request, $id)
     {
-        $bodyRule = [
-            'id_evaluation' => ['required', 'uuid', 'max:36'],
-            'items' => ['required', 'array'],
-        ];
-
-        $bodyValidator = validator($request->all(), $bodyRule);
-
-        if ($bodyValidator->fails()) {
-            return response()->json(['error' => $bodyValidator->errors()], 400);
-        }
+        $request->validate([
+            'items' => 'required|array',
+        ]);
 
         $items = $request->items;
+        $evaluation = Evaluation::find($id);
 
-        $evaluation = Evaluation::find($request->id_evaluation);
-
-        if (!$evaluation) {
-            return response()->json(['error' => 'Eda not found'], 404);
-        }
+        if (!$evaluation) return response()->json('Evaluatión not found', 404);
 
         $rulePerItem = [
             'id' => ['required', 'uuid', 'max:36'],
-            'average' => ['required', 'numeric', 'max:5', 'min:1'],
+            'qualification' => ['required', 'numeric', 'max:5', 'min:1'],
         ];
 
-        // validate each goal
         foreach ($items as $item) {
             $validator = validator($item, $rulePerItem);
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
-            }
+            if ($validator->fails())  return response()->json($validator->errors()->first(), 400);
         }
 
-        // for each
         foreach ($items as $item) {
             $goalEvaluation = GoalEvaluation::find($item['id']);
-            $goalEvaluation->average = $item['average'];
+            $goalEvaluation->qualification = $item['qualification'];
             $goalEvaluation->save();
         }
 
         // total average
-        $totalAverage = 0;
+        $totalQualify = 0;
         foreach ($items as $item) {
             $ge = GoalEvaluation::find($item['id']);
-            $note =  $item['average'] * ($ge->goal->percentage / 100);
-            $totalAverage += $note;
+            $note =  $item['qualification'] * ($ge->goal->percentage / 100);
+            $totalQualify += $note;
         }
 
-        $evaluation->average = $totalAverage;
-        $evaluation->averaged_at = now();
-        $evaluation->averaged_by = auth()->user()->id;
+        $evaluation->qualification = $totalQualify;
+        $evaluation->qualified_at = now();
+        $evaluation->qualified_by = auth()->user()->id;
         $evaluation->save();
 
-        return response()->json(['message' => 'Average saved'], 200);
+        return response()->json('Objetivos calificados correctamente.', 200);
     }
 
-    public function close(Request $request)
+    public function close($id)
     {
 
-        $bodyRule = [
-            'id_evaluation' => ['required', 'uuid', 'max:36'],
-        ];
+        $evaluation = Evaluation::find($id);
 
-        $bodyValidator = validator($request->all(), $bodyRule);
-
-        if ($bodyValidator->fails()) {
-            return response()->json(['error' => $bodyValidator->errors()], 400);
-        }
-
-        $evaluation = Evaluation::find($request->id_evaluation);
-
-        if (!$evaluation) {
-            return response()->json(['error' => 'Eda not found'], 404);
-        }
+        if (!$evaluation)
+            return response()->json('Eda not found', 404);
 
         $evaluation->closed = now();
         $evaluation->closed_by = auth()->user()->id;
         $evaluation->save();
 
-        return response()->json(['message' => 'Evaluation closed'], 200);
+        return response()->json('Evaluación cerrada correctamente', 200);
     }
 }
