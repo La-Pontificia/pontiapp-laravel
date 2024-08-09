@@ -37,7 +37,7 @@
                     </div>
                     @include('components.users.auditory-card')
                     <form action="/api/roles" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
-                        @include('modules.users.roles.form', [
+                        @include('modules.settings.roles.form', [
                             'role' => null,
                         ])
                     </form>
@@ -136,7 +136,7 @@
                                                     <form action="/api/roles/{{ $role->id }}" method="POST"
                                                         id="dialog-{{ $role->id }}-form"
                                                         class="p-3 dinamic-form grid gap-4">
-                                                        @include('modules.users.roles.form', [
+                                                        @include('modules.settings.roles.form', [
                                                             'role' => $role,
                                                         ])
                                                     </form>
