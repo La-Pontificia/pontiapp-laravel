@@ -123,7 +123,6 @@
                     @php
                         $from = date('h:i A', strtotime($schedule->from));
                         $to = date('h:i A', strtotime($schedule->to));
-                        $daysJson = json_decode($schedule->days);
                     @endphp
                     <div class="relative">
                         <div data-active data-id="{{ $schedule->id }}"
@@ -146,7 +145,7 @@
                                 </p>
                                 <div class="flex flex-wrap gap-1 pt-3">
                                     @foreach ($days as $day)
-                                        @if (in_array($day['key'], $daysJson))
+                                        @if (in_array($day['key'], $schedule->days))
                                             <span style="background-color: {{ $schedule->background }}"
                                                 class="text-xs bg-blue-700 text-white rounded-full p-1 block px-2">
                                                 {{ $day['name'] }}

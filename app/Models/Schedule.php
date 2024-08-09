@@ -39,6 +39,10 @@ class Schedule extends Model
         'to_end',
     ];
 
+    protected $casts = [
+        'days' => 'array',
+    ];
+
 
     public function createdBy()
     {
