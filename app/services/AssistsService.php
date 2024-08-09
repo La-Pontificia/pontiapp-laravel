@@ -28,7 +28,7 @@ class AssistsService
             $start = Carbon::parse($schedule->start_date);
             $end = Carbon::parse($schedule->end_date);
             for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
-                if (in_array($date->dayOfWeekIso, json_decode($schedule->days))) {
+                if (in_array($date->dayOfWeekIso, $schedule->days)) {
                     $schedulesGenerated[] = [
                         'id' => $schedule->id,
                         'dni' => $user->dni,
