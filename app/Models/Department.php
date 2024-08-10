@@ -26,21 +26,21 @@ class Department extends Model
 
     public function area()
     {
-        return $this->hasOne('App\Models\Area', 'id', 'id_area');
+        return $this->hasOne(Area::class, 'id', 'id_area');
     }
 
     public function job_positions()
     {
-        return $this->hasMany('App\Models\JobPosition', 'id_department', 'id');
+        return $this->hasMany(JobPosition::class, 'id_department', 'id');
     }
 
     public function createdBy()
     {
-        return $this->belongsTo('App\Models\User', 'created_by', 'id');
+        return $this->belongsTo(User::class, 'id', 'created_by');
     }
 
     public function updatedBy()
     {
-        return $this->belongsTo('App\Models\User', 'updated_by', 'id');
+        return $this->belongsTo(User::class, 'id', 'updated_by');
     }
 }
