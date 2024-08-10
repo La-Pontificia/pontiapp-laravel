@@ -1,5 +1,3 @@
-import axios from "axios";
-
 document.addEventListener("DOMContentLoaded", async () => {
     $ = document.querySelector.bind(document);
     const $table = $("#evaluations");
@@ -23,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             return acc + (Number(selfQualification) * Number(percentage)) / 100;
         }, 0);
-        return total;
+        return total.toFixed(2);
     }
 
     function getTotalQualification() {
@@ -38,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             return acc + (Number(qualification) * Number(percentage)) / 100;
         }, 0);
-        return total;
+        return total.toFixed(2);
     }
 
     function getItems() {
@@ -84,99 +82,36 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function qualify(id, total, items, selfQualify = true) {
         if (total == 0) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: `La ${
+            return window.alert(
+                "Oops...",
+                `La ${
                     selfQualify ? "autocalificación" : "calificación"
-                } total no puede ser 0`,
-            });
-            return;
-        }
-        try {
-            const result = await Swal.fire({
-                title: `¿Estás seguro de finalizar la ${
-                    selfQualify ? "autocalificación" : "calificación"
-                } de los objetivos?`,
-                text: "No podrás deshacer esta acción.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: `Sí, ${
-                    selfQualify ? "autocalificar" : "calificar"
-                }`,
-                cancelButtonText: "Cancelar",
-            });
-            if (!result.isConfirmed) return;
-
-            const { data } = await axios.post(
-                `/api/evaluations/${
-                    selfQualify ? "self-qualify" : "qualify"
-                }/${id}`,
-                {
-                    items,
-                }
+                } total no puede ser 0`
             );
-
-            Swal.fire({
-                icon: "success",
-                title: "¡Hecho!",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: data ?? "Operación exitosa",
-            }).then(() => {
-                window.location.reload();
-            });
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: error.response.data ?? "Error al enviar el formulario",
-            });
         }
+
+        await window.mutation(
+            `/api/evaluations/${
+                selfQualify ? "self-qualify" : "qualify"
+            }/${id}`,
+            { items },
+            `¿Estás seguro de finalizar la ${
+                selfQualify ? "autocalificación" : "calificación"
+            } de los objetivos?`,
+            "No podrás deshacer esta acción.",
+            null,
+            selfQualify ? "autocalificar" : "calificar"
+        );
     }
 
     // close
     $close?.addEventListener("click", async () => {
         const id = $close.getAttribute("data-id");
-
-        const result = await Swal.fire({
-            title: "¿Estás seguro de finalizar la evaluación?",
-            text: "No podrás deshacer esta acción.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Sí, finalizar",
-            cancelButtonText: "Cancelar",
-        });
-
-        if (!result.isConfirmed) return;
-
-        try {
-            const { data } = await axios.post(`/api/evaluations/close/${id}`);
-            Swal.fire({
-                icon: "success",
-                title: "¡Hecho!",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: data ?? "Operación exitosa",
-            }).then(() => {
-                window.location.reload();
-            });
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: error.response.data ?? "Error al enviar el formulario",
-            });
-        }
+        await window.mutation(
+            `/api/evaluations/close/${id}`,
+            {},
+            "¿Estás seguro de finalizar la evaluación?",
+            "No podrás deshacer esta acción."
+        );
     });
 });
