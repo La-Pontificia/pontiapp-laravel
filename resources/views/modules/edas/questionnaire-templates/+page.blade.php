@@ -36,6 +36,7 @@
                             <th>Dirigidos para</th>
                             <th>Preguntas</th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y">
@@ -73,27 +74,6 @@
                                                     </p>
                                                 </div>
                                             @endif
-                                            <button data-dropdown-toggle="dropdown-template-{{ $template->id }}"
-                                                class="group-hover:opacity-100 relative opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="lucide lucide-ellipsis">
-                                                    <circle cx="12" cy="12" r="1" />
-                                                    <circle cx="19" cy="12" r="1" />
-                                                    <circle cx="5" cy="12" r="1" />
-                                                </svg>
-                                            </button>
-
-                                            <div id="dropdown-template-{{ $template->id }}"
-                                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
-                                                <button data-alertvariant="warning" data-atitle="¿Usar cuestionario?"
-                                                    data-adescription="Todas los edas tendrán esta encuesta como preterminado para los {{ $template->for === 'collaborators' ? 'Colaboradores' : 'Supervisores' }}."
-                                                    data-param="/api/questionnaire-templates/{{ $template->id }}/use"
-                                                    class="p-2 text-left dinamic-alert hover:bg-neutral-100 w-full block rounded-md text-red-500 hover:bg-gray-10">
-                                                    Usar cuestionario
-                                                </button>
-                                            </div>
                                         </div>
                                     </td>
                                     <td>
@@ -112,6 +92,41 @@
                                         <p class="text-nowrap">
                                             {{ \Carbon\Carbon::parse($template->created_at)->isoFormat('LL') }}
                                         </p>
+                                    </td>
+                                    <td>
+                                        <button data-dropdown-toggle="dropdown-template-{{ $template->id }}"
+                                            class="group-hover:opacity-100 relative opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="lucide lucide-ellipsis">
+                                                <circle cx="12" cy="12" r="1" />
+                                                <circle cx="19" cy="12" r="1" />
+                                                <circle cx="5" cy="12" r="1" />
+                                            </svg>
+                                        </button>
+
+                                        <div id="dropdown-template-{{ $template->id }}"
+                                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
+                                            <button data-alertvariant="warning" data-atitle="¿Usar cuestionario?"
+                                                data-adescription="Todas los edas tendrán esta encuesta como preterminado para los {{ $template->for === 'collaborators' ? 'Colaboradores' : 'Supervisores' }}."
+                                                data-param="/api/questionnaire-templates/{{ $template->id }}/use"
+                                                class="p-2 text-left dinamic-alert hover:bg-neutral-100 w-full block rounded-md hover:bg-gray-10">
+                                                Usar cuestionario
+                                            </button>
+                                            <button data-alertvariant="warning" data-atitle="Archivar cuestionario"
+                                                data-adescription="El cuestionario no se podrá usar más en los edas."
+                                                data-param="/api/questionnaire-templates/{{ $template->id }}/archive"
+                                                class="p-2 text-left dinamic-alert hover:bg-neutral-100 w-full block rounded-md hover:bg-gray-10">
+                                                Archivar
+                                            </button>
+                                            <button data-alertvariant="warning" data-atitle="Eliminar plantilla"
+                                                data-adescription="Se eliminarán las preguntas y respuestas tanto archivados y demás de este cuestionario."
+                                                data-param="/api/questionnaire-templates/{{ $template->id }}/delete"
+                                                class="p-2 text-left dinamic-alert hover:bg-neutral-100 w-full block rounded-md text-red-500 hover:bg-gray-10">
+                                                Eliminar
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
