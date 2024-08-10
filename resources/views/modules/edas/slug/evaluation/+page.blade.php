@@ -1,6 +1,6 @@
 @extends('modules.edas.slug.+layout')
 
-@section('title', 'Eda: ' . $current_year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
+@section('title', 'Eda: ' . $current_year->name . ' - ' . $eda->user->first_name . ' ' . $eda->user->last_name)
 
 @section('title_eda', 'Evaluación N°' . $evaluation->number)
 
@@ -9,7 +9,7 @@
     @php
 
         // if current user is supervisor
-        $isSupervisor = $current_user->id === $user->supervisor_id;
+        $isSupervisor = $current_user->id === $eda->user->supervisor_id;
 
         // if has self qualification
         $hasSelfQualify =
@@ -94,7 +94,7 @@
                     </tr>
                 </thead>
                 <tbody id="evaluations" class="divide-y divide-neutral-300">
-                    @foreach ($goalevaluations as $index => $eva)
+                    @foreach ($evaluation->goalsEvaluations as $index => $eva)
                         <tr data-id="{{ $eva->id }}"
                             class="[&>td]:py-3 [&>td]:align-top hover:border-transparent hover:[&>td]shadow-md relative group [&>td]:px-2">
                             <td class="text-center goal-index whitespace-pre-line">
