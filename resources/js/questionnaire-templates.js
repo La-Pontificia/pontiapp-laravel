@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $questions = $("#questions");
     const $questionTemplate = $("#question-template")?.content;
     const $form = $("#template-form");
+    const $template_id = $("#template_id");
 
     let questions = [
         {
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             question: null,
         },
     ];
+
+    let deleteIds = [];
 
     // UI Events
     const initSortable = () => {
@@ -62,6 +65,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             $delete.addEventListener("click", () => {
                 questions = questions.filter((q) => q._id !== question._id);
+                if (question.id) {
+                    deleteIds.push(question.id);
+                }
                 renderQuestions();
             });
 
@@ -71,11 +77,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         initSortable();
     }
     renderQuestions();
-
-    // Form submit
-
     $form?.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        if (questions.length === 0) {
+            return window.alert("Hey..!", "Agrega al menos una pregunta.");
+        }
+
         const perQuestionIsValid = questions.every((q) => q.question);
         if (!perQuestionIsValid) {
             return Swal.fire({
@@ -86,11 +94,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 text: "Por favor completa todas las preguntas.",
             });
         }
-
         try {
-            const { data } = await axios.post("/api/questionnaire-templates", {
+            const URL = $template_id
+                ? `/api/questionnaire-templates/${$template_id.value}`
+                : "/api/questionnaire-templates";
+
+            const { data } = await axios.post(URL, {
                 ...Object.fromEntries(new FormData($form)),
                 questions,
+                deleteIds,
             });
             Swal.fire({
                 icon: "success",
@@ -112,4 +124,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
     });
+
+    if ($template_id) {
+        const id = $template_id.value;
+        const data = await window.query(
+            `/api/questionnaire-templates/${id}/questions`
+        );
+        // const orderBYOrder = data?.sort((a, b) => a.order - b.order);
+
+        questions = data?.map((q) => ({
+            _id: uuidv4(),
+            id: q.id,
+            question: q.question,
+        }));
+
+        renderQuestions();
+    }
 });
