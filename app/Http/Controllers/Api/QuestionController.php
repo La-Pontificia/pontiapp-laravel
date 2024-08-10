@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Question;
+use App\Models\QuestionnaireTemplate;
 
 class QuestionController extends Controller
 {
 
-    public function by_template($id)
+    public function questions($id)
     {
-        $questions = Question::where('id_template', $id)->get();
+        $template = QuestionnaireTemplate::find($id);
+        $questions = $template->questions;
+
         return response()->json($questions);
     }
 }

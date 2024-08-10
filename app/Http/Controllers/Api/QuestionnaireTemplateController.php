@@ -9,6 +9,19 @@ use Illuminate\Http\Request;
 
 class QuestionnaireTemplateController extends Controller
 {
+
+    public function createQuestions($questions, $template)
+    {
+        foreach ($questions as $index => $question) {
+            Question::create([
+                'order' => $index + 1,
+                'question' => $question['question'],
+                'template_id' => $template->id,
+                'created_by' => auth()->user()->id,
+            ]);
+        }
+    }
+
     public function create(Request $request)
     {
         $request->validate([
@@ -37,122 +50,104 @@ class QuestionnaireTemplateController extends Controller
             'created_by' => auth()->user()->id,
         ]);
 
-        foreach ($questions as $index => $question) {
-            Question::create([
-                'order' => $index + 1,
-                'question' => $question['question'],
-                'template_id' => $template->id,
-                'created_by' => auth()->user()->id,
-            ]);
-        }
+        $this->createQuestions($questions, $template);
 
         return response()->json('Plantilla creada correctamente.', 200);
     }
 
-    // public function update(Request $request)
-    // {
-    //     $request->validate([
-    //         'title' => 'required',
-    //         'for' => 'required|in:collaborators,supervisors',
-    //         'questions_to_create' => ['array'],
-    //         'questions_to_update' => ['array'],
-    //         'questions_to_delete' => ['array'],
-    //     ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required',
+            'for' => 'required|in:collaborators,supervisors',
+            'questions' => 'required|array',
+            'deleteIds' => 'array',
+        ]);
 
-    //     $rulePerQuestion = [
-    //         'order' => ['required', 'integer', 'min:1'],
-    //         'question' => ['required', 'string', 'max:500'],
-    //     ];
+        $rulePerQuestion = [
+            'question' => ['required', 'string', 'max:500'],
+        ];
 
-    //     $questions_to_create = $request->questions_to_create;
-    //     $questions_to_update = $request->questions_to_update;
-    //     $questions_to_delete = $request->questions_to_delete;
+        $template = QuestionnaireTemplate::find($id);
+        if (!$template) return response()->json('Plantilla no encontrada.', 404);
 
-    //     // validate each quesions
-    //     if ($questions_to_create) {
-    //         foreach ($questions_to_create as $question) {
-    //             $validator = validator($question, $rulePerQuestion);
-    //             if ($validator->fails()) {
-    //                 return response()->json(['error' => $validator->errors()], 400);
-    //             }
-    //         }
-    //     }
+        if ($request->questions) {
+            foreach ($request->questions as $question) {
+                $validator = validator($question, $rulePerQuestion);
+                if ($validator->fails()) return response()->json($validator->errors()->first(), 400);
+            }
+        }
 
-    //     if ($questions_to_update) {
-    //         foreach ($questions_to_update as $question) {
-    //             $validator = validator($question, $rulePerQuestion);
-    //             if ($validator->fails()) {
-    //                 return response()->json(['error' => $validator->errors()], 400);
-    //             }
-    //         }
-    //     }
+        foreach ($request->questions as $i => $question) {
+            $order = $i + 1;
+            if (isset($question['id'])) {
+                $questionToUpdate = Question::find($question['id']);
+                $questionToUpdate->order = $order;
+                $questionToUpdate->question = $question['question'];
+                $questionToUpdate->save();
+            }
 
-    //     // delete each question
-    //     if ($questions_to_delete) {
-    //         foreach ($questions_to_delete as $questionId) {
-    //             $question = Question::find($questionId);
-    //             if ($question) {
-    //                 $question->delete();
-    //             }
-    //         }
-    //     }
+            if (!isset($question['id'])) {
+                $question = Question::create([
+                    'order' => $order,
+                    'question' => $question['question'],
+                    'template_id' => $template->id,
+                    'created_by' => auth()->user()->id,
+                ]);
+            }
+        }
 
-    //     $template = Template::find($request->id);
+        if ($request->deleteIds) {
+            foreach ($request->deleteIds as $id) {
+                $question = Question::find($id);
+                $question->archived = true;
+                $question->save();
+            }
+        }
 
-    //     // create each question
-    //     if ($questions_to_create) {
-    //         foreach ($questions_to_create as $question) {
-    //             Question::create([
-    //                 'order' => $question['order'],
-    //                 'question' => $question['question'],
-    //                 'id_template' => $template->id,
-    //                 'created_by' => auth()->user()->id,
-    //             ]);
-    //         }
-    //     }
+        $template->title = $request->title;
+        $template->for = $request->for;
+        $template->updated_by = auth()->user()->id;
+        $template->save();
 
-    //     // update each questions
-    //     if ($questions_to_update) {
-    //         foreach ($questions_to_update as $question) {
-    //             $questionToUpdate = Question::find($question['id']);
-    //             $hasBeenEdited = $questionToUpdate->question !== $question['question'] ||
-    //                 $questionToUpdate->order !== $question['order'];
-    //             if ($questionToUpdate && $hasBeenEdited) {
-    //                 $questionToUpdate->question = $question['question'];
-    //                 $questionToUpdate->order = $question['order'];
-    //                 $questionToUpdate->updated_by = auth()->user()->id;
-    //                 $questionToUpdate->save();
-    //             }
-    //         }
-    //     }
+        return response()->json('Plantilla actualizado correctamente.', 200);
+    }
 
-    //     $template->title = $request->title;
-    //     $template->for = $request->for;
-    //     $template->updated_by = auth()->user()->id;
-    //     $template->save();
+    public function use($id)
+    {
+        $template = QuestionnaireTemplate::find($id);
 
-    //     return response()->json($template, 200);
-    // }
+        $for = $template->for;
 
-    // public function changeInUse($id)
-    // {
-    //     $template = Template::find($id);
+        $match = QuestionnaireTemplate::where('for', $for)->get();
 
-    //     $for = $template->for;
+        if ($match) {
+            foreach ($match as $t) {
+                $t->in_use = false;
+                $t->save();
+            }
+        }
 
-    //     $match = Template::where('for', $for)->get();
+        $template->in_use = true;
+        $template->save();
 
-    //     if ($match) {
-    //         foreach ($match as $t) {
-    //             $t->in_use = false;
-    //             $t->save();
-    //         }
-    //     }
+        return response()->json('Plantilla en uso.', 200);
+    }
 
+    public function archive($id)
+    {
+        $template = QuestionnaireTemplate::find($id);
 
-    //     $template->in_use = true;
-    //     $template->save();
+        $template->archived = true;
+        $template->save();
 
-    //     return response()->json($template, 200);
-    // }
+        return response()->json('Plantilla archivada.', 200);
+    }
+
+    public function delete($id)
+    {
+        $template = QuestionnaireTemplate::find($id);
+        $template->delete();
+        return response()->json('Plantilla eliminada.', 200);
+    }
 }

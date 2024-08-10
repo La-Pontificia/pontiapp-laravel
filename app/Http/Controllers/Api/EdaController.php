@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Eda;
 use App\Models\Evaluation;
+use App\Models\Question;
+use App\Models\Questionnaire;
+use App\Models\QuestionnaireAnswers;
+use App\Models\QuestionnaireTemplate;
 use App\Models\User;
 use App\Models\Year;
 use Illuminate\Http\Request;
@@ -23,15 +27,12 @@ class EdaController extends Controller
         if (!$foundYear) return response()->json('La eda selecionado no existe', 404);
         if (!$foundYear->status) return response()->json('El año seleccionado no esta activo', 404);
 
-        if (!auth()->user()->id) return response()->json('No tienes permisos para realizar esta acción', 403);
-
         $eda = Eda::create([
             'id_user' => $foundedUser->id,
             'id_year' => $foundYear->id,
             'created_by' => auth()->user()->id,
         ]);
 
-        // create evaluations
         foreach ($evaluationArray as $evaluation) {
             Evaluation::create([
                 'number' => $evaluation,
@@ -50,8 +51,6 @@ class EdaController extends Controller
 
         if ($eda->closed) return response()->json('La eda ya esta cerrada', 404);
 
-        if (!auth()->user()->id) return response()->json('No tienes permisos para realizar esta acción', 403);
-
         $eda->closed = now();
 
         $eda->closed_by = auth()->user()->id;
@@ -59,5 +58,41 @@ class EdaController extends Controller
         $eda->save();
 
         return response()->json('Eda cerrado correctamente. Se habilitó la posibilidad de resolver los cuestionarios asignados.', 200);
+    }
+
+    public function questionnaire(Request $request, $id)
+    {
+        $eda = Eda::find($id);
+        if (!$eda) return response()->json('La eda no existe', 404);
+        if (!$eda->closed) return response()->json('La eda no esta cerrada', 404);
+        $request->validate([
+            'answers' => 'required|array',
+        ]);
+        $rulePerAnswer = [
+            'question_id' => ['required', 'uuid'],
+            'answer' => ['required', 'string'],
+        ];
+        foreach ($request->answers as $answer) {
+            $validator = validator($answer, $rulePerAnswer);
+            if ($validator->fails()) return response()->json($validator->errors()->first(), 400);
+        }
+        $firstQuestion = Question::find($request->answers[0]['question_id']);
+        $questionnaire_template = QuestionnaireTemplate::find($firstQuestion->template_id);
+
+        if (!$questionnaire_template) return response()->json('La plantilla no existe', 404);
+        $questionnaire =  Questionnaire::create([
+            'eda_id' => $eda->id,
+            'questionnaire_template_id' => $questionnaire_template->id,
+            'answered_by' => auth()->user()->id,
+        ]);
+
+        foreach ($request->answers as $answer) {
+            QuestionnaireAnswers::create([
+                'answer' => $answer['answer'],
+                'question_id' => $answer['question_id'],
+                'questionnaire_id' => $questionnaire->id,
+            ]);
+        }
+        return response()->json('Cuestionario enviado correctamente', 200);
     }
 }
