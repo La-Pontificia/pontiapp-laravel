@@ -21,23 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .forEach(updatePrivilegeCount);
     }
 
-    // function updateParentCheckboxes(checkbox) {
-    //     const subgroup = checkbox.closest(".content");
-    //     const subgroupCheckbox = subgroup.querySelector(".select-all-subgroup");
-    //     const subgroupCheckboxes = subgroup.querySelectorAll(
-    //         ".privilege-checkbox"
-    //     );
-
-    //     subgroupCheckbox.checked = Array.from(subgroupCheckboxes).every(
-    //         (cb) => cb.checked
-    //     );
-    //     subgroupCheckbox.indeterminate =
-    //         !subgroupCheckbox.checked &&
-    //         Array.from(subgroupCheckboxes).some((cb) => cb.checked);
-
-    //     updatePrivilegeCount(subgroupCheckbox);
-    // }
-
     function updateParentCheckboxes(checkbox) {
         const subgroup = checkbox.closest(".content");
         const subgroupCheckbox = subgroup.querySelector(".select-all-subgroup");
