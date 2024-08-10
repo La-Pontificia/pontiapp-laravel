@@ -236,35 +236,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                         .querySelector("button")
                         .addEventListener("click", async () => {
                             clone.disabled = true;
-                            try {
-                                const { data } = await axios.post(
-                                    `/api/users/supervisor/assign/${id}`,
-                                    {
-                                        supervisor_id: user.id,
-                                    }
-                                );
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "¡Hecho!",
-                                    confirmButtonColor: "#d33",
-                                    cancelButtonColor: "#3085d6",
-                                    text: data ?? "Operación exitosa",
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } catch (error) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Oops...",
-                                    confirmButtonColor: "#d33",
-                                    cancelButtonColor: "#3085d6",
-                                    text:
-                                        error.response.data ??
-                                        "Error al enviar el formulario",
-                                });
-                            } finally {
-                                clone.disabled = false;
-                            }
+
+                            await window.mutation(
+                                `/api/users/supervisor/assign/${id}`,
+                                {
+                                    supervisor_id: user.id,
+                                }
+                            );
+
+                            clone.disabled = false;
                         });
 
                     resultContainer.appendChild(clone);
@@ -286,46 +266,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         if (new_password.length < 8) {
-            return window.toast.fire({
-                icon: "error",
-                title: "La contraseña debe tener al menos 8 caracteres",
-            });
+            return window.alert(
+                "Hey...",
+                "La contraseña debe tener al menos 8 caracteres"
+            );
         }
 
         if (new_password !== new_password_confirmation) {
-            return window.toast.fire({
-                icon: "error",
-                title: "Las contraseñas no coinciden",
-            });
+            return window.alert("Hey...", "Las contraseñas no coinciden");
         }
 
         window.disabledFormChildren(formChangePassword);
 
-        try {
-            const { data } = await axios.post(
-                action,
-                Object.fromEntries(formData)
-            );
-            Swal.fire({
-                icon: "success",
-                title: "¡Hecho!",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: data ?? "Operación exitosa",
-            }).then(() => {
-                window.location.reload();
-            });
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: error.response.data ?? "Error al enviar el formulario",
-            });
-        } finally {
-            window.enabledFormChildren(formChangePassword);
-        }
+        await window.mutation(action, Object.fromEntries(formData));
+
+        window.enabledFormChildren(formChangePassword);
     });
 
     // export data users
