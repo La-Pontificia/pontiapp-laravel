@@ -229,23 +229,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             !$indicators.value ||
             !$percentage.value
         ) {
-            return Swal.fire({
-                icon: "warning",
-                title: "Hey..!",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: "Por favor, complete todos los campos",
-            });
+            return window.alert(
+                "Hey..!",
+                "Por favor, complete todos los campos"
+            );
         }
 
         if (Number($percentage.value) < 1 || Number($percentage.value) > 100) {
-            return Swal.fire({
-                icon: "warning",
-                title: "Hey..!",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: "El porcentaje debe estar entre 1 y 100",
-            });
+            return window.alert(
+                "Hey..!",
+                "El porcentaje debe estar entre 1 y 100"
+            );
         }
         if (_id) {
             updateGoal(
@@ -284,13 +278,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     $sentGoalsButton?.addEventListener("click", async () => {
         const total = getTotalPercentage();
         if (total !== 100) {
-            return Swal.fire({
-                icon: "warning",
-                title: "Hey..!",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: "La suma de los porcentajes debe ser 100%",
-            });
+            return window.alert(
+                "Hey..!",
+                "La suma de los porcentajes debe ser 100%"
+            );
         }
 
         const id_eda = $sentGoalsButton.getAttribute("data-id-eda");
