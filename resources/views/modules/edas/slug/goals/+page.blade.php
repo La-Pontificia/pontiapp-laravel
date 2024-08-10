@@ -7,16 +7,25 @@
 
 @php
     $eda->userIsDev = $cuser->role === 'dev';
-    $hasAddGoals = $cuser->hasPrivilege('edas:goals:sent') && !$eda->approved;
-    $hasSentGoals = $cuser->hasPrivilege('edas:goals:sent') && !$eda->approved;
-    $hasEditGoals = $cuser->has('edas:goals:edit') && !$eda->approved;
-    $hasDeleteGoals = $cuser->hasPrivilege('edas:goals:delete') && !$eda->approved;
+    $hasAddGoals = ($cuser->has('edas:goals:sent') && !$eda->approved) || $cuser->isDev();
+    $hasSentGoals = ($cuser->has('edas:goals:sent') && !$eda->approved) || $cuser->isDev();
+    $hasEditGoals = ($cuser->has('edas:goals:edit') && !$eda->approved) || $cuser->isDev();
+    $hasDeleteGoals = ($cuser->has('edas:goals:delete') && !$eda->approved) || $cuser->isDev();
 
-    $hasSupervisor = $eda->user->supervisor_id === $cuser->id || $cuser->hasPrivilege('edas:show_all');
-    $hasApproveGoals = $cuser->hasPrivilege('edas:goals:approve') && !$eda->approved && $eda->sent && $hasSupervisor;
+    $hasSupervisor = $eda->user->supervisor_id === $cuser->id || $cuser->has('edas:show_all') || $cuser->isDev();
+    $hasApproveGoals =
+        ($cuser->has('edas:goals:approve') && !$eda->approved && $eda->sent && $hasSupervisor) || $cuser->isDev();
 @endphp
 
 @section('layout.edas.slug')
+
+
+    @if (isset($eda->sent))
+        <div id="loader" class="absolute grid rounded-xl place-content-center h-full inset-0 bg-white z-10">
+            <div class="loader"></div>
+        </div>
+    @endif
+
     <div class="h-full flex overflow-hidden flex-col pt-0 overflow-x-auto">
         @if ($eda->sent)
             <input type="hidden" id="input_id" value="{{ $eda->id }}">

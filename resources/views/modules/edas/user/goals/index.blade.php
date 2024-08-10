@@ -6,12 +6,11 @@
     $userIsDev = $current_user->role === 'dev';
     $percentages = range(0, 100);
     $sent = $eda->sent;
-    $hasAddGoals = ($current_user->hasPrivilege('add_goals') && !$eda->approved) || $userIsDev;
-    $hasSentGoals = ($current_user->hasPrivilege('sent_goals') && !$eda->approved) || $userIsDev;
-    $hasEditGoals = ($current_user->hasPrivilege('edit_goals') && !$eda->approved) || $userIsDev;
-    $hasDeleteGoals = ($current_user->hasPrivilege('delete_goals') && !$eda->approved) || $userIsDev;
-    $hasApproveGoals =
-        $current_user->hasPrivilege('approve_goals') && $user->id_supervisor === $current_user->id && !$eda->approved;
+    $hasAddGoals = ($cuser->has('add_goals') && !$eda->approved) || $userIsDev;
+    $hasSentGoals = ($cuser->has('sent_goals') && !$eda->approved) || $userIsDev;
+    $hasEditGoals = ($cuser->has('edit_goals') && !$eda->approved) || $userIsDev;
+    $hasDeleteGoals = ($cuser->has('delete_goals') && !$eda->approved) || $userIsDev;
+    $hasApproveGoals = $cuser->has('approve_goals') && $user->id_supervisor === $current_user->id && !$eda->approved;
 
 @endphp
 

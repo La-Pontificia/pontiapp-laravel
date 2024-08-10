@@ -12,7 +12,7 @@
 @section('layout.edas')
     <div>
         <nav class="border-b p-2 flex gap-3">
-            @if ($cuser->hasPrivilege('edas:questionnaire-templates:create'))
+            @if ($cuser->has('edas:questionnaire-templates:create') || $cuser->isDev())
                 <a href="/edas/questionnaire-templates/create"
                     class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-1.5 gap-1 text-white text-sm px-3">
                     @svg('heroicon-o-plus', ['class' => 'w-5 h-5'])
@@ -28,7 +28,7 @@
             </select> --}}
         </nav>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('edas:questionnaire-templates:show'))
+            @if ($cuser->has('edas:questionnaire-templates:show') || $cuser->isDev())
                 <table class="w-full text-left">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-4 [&>th]:px-2">
@@ -57,7 +57,7 @@
                                     </td>
                                     <td>
                                         <div class="flex items-center gap-3">
-                                            @if ($cuser->hasPrivilege('edas:questionnaire-templates:edit'))
+                                            @if ($cuser->has('edas:questionnaire-templates:edit') || $cuser->isDev())
                                                 <a href="/edas/questionnaire-templates/{{ $template->id }}"
                                                     class="absolute inset-0 block">
                                                 </a>

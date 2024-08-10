@@ -1,10 +1,11 @@
-@extends('modules.users.+layout')
+@extends('modules.edas.+layout')
 
-@section('title', 'Gestión de usuarios')
+@section('title', 'Gestión de Edas')
 
-@section('layout.users')
+@section('layout.edas')
     <div class="text-black h-full w-full flex-grow flex flex-col overflow-y-auto">
         <nav class="flex p-1 flex-grow gap-3 items-center">
+
             <label class="relative">
                 <div class="absolute z-[1] inset-y-0 flex items-center pl-2 opacity-60">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -17,6 +18,7 @@
                 <input value="{{ request()->query('q') }}" type="search" class="dinamic-search" placeholder="Filtrar"
                     style="padding-left: 40px;">
             </label>
+
             <div>
                 <select class="dinamic-select" name="job_position">
                     <option value="0">Todos los puestos</option>
@@ -27,6 +29,7 @@
                     @endforeach
                 </select>
             </div>
+
             <div>
                 <select class="dinamic-select" name="role">
                     <option value="0">Todos los cargos</option>
@@ -36,13 +39,14 @@
                     @endforeach
                 </select>
             </div>
+
         </nav>
 
         <h2 class="py-3 pb-0 font-semibold tracking-tight text-lg px-2">
             Usuarios bajo tu supervisión
         </h2>
 
-        @if ($cuser->hasPrivilege('edas:show') || $cuser->hasPrivilege('edas:show-all'))
+        @if ($cuser->has('edas:show') || $cuser->has('edas:show-all') || $cuser->isDev())
             <div class="overflow-auto flex-grow h-full pt-0">
                 <table class="w-full text-left">
                     <thead class="border-b">

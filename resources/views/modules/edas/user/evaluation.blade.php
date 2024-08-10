@@ -6,34 +6,31 @@
 
     @php
 
-        // if current user is dev
-        $cuIsDev = $current_user->role === 'dev';
-
         // if current user is supervisor
         $isSupervisor = $current_user->id === $user->id_supervisor;
 
         // if has self qualification
         $hasSelfQualification =
-            ($current_user->hasPrivilege('self_qualify') && !$evaluation->closed && !$evaluation->self_qualification) ||
-            $cuIsDev;
+            ($cuser->has('self_qualify') && !$evaluation->closed && !$evaluation->self_qualification) ||
+            $cuser->isDev();
 
         // if has average evaluation
         $hasAverage =
-            ($current_user->hasPrivilege('average_evaluation') &&
+            ($cuser->has('average_evaluation') &&
                 !$evaluation->closed &&
                 $isSupervisor &&
                 $evaluation->self_qualification &&
                 !$evaluation->average) ||
-            $cuIsDev;
+            $cuser->isDev();
 
         // if has close evaluation
         $hasCloseEvaluation =
-            ($current_user->hasPrivilege('close_evaluation') &&
+            ($cuser->has('close_evaluation') &&
                 !$evaluation->closed &&
                 $evaluation->average &&
                 $evaluation->self_qualification &&
                 $isSupervisor) ||
-            $cuIsDev;
+            $cuser->isDev();
     @endphp
     <div class="h-full flex flex-col mt-3 bg-white overflow-auto rounded-xl">
         <input type="hidden" id="input-hidden-id-evaluation" value="{{ $evaluation->id }}">

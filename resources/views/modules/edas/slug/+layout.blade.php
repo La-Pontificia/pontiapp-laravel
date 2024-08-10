@@ -1,6 +1,5 @@
 @extends('modules.edas.+layout')
 
-
 @php
     $edauser = isset($eda) ? $eda->user : $user;
 @endphp
@@ -8,14 +7,14 @@
 @section('title', 'Gestión de Edas: ' . $edauser->first_name . ' ' . $edauser->last_name)
 
 @php
-    $hasPosibleCreate = $cuser->hasPrivilege('edas:create') && $current_year->status;
     $hassAcces =
-        $edauser->supervisor_id === $cuser->id || $cuser->hasPrivilege('edas:show_all') || $cuser->id == $edauser->id;
+        $edauser->supervisor_id === $cuser->id ||
+        $cuser->has('edas:show_all') ||
+        $cuser->id == $edauser->id ||
+        $cuser->isDev();
 
-    $hasCreate =
-        $cuser->hasPrivilege('edas:create_all') ||
-        ($cuser->hasPrivilege('edas:create_my') && $edauser->id == $cuser->id) ||
-        ($cuser->hasPrivilege('edas:create') && $edauser->supervisor_id == $cuser->id);
+    $hasPosibleCreate =
+        $cuser->has('edas:create') || ($cuser->has('edas:create_all') && $current_year->status) || $cuser->isDev();
 
     $title = trim($__env->yieldContent('title_eda'));
 @endphp
@@ -23,16 +22,16 @@
 @section('layout.edas')
     @if ($hassAcces)
         <div class="text-black h-full max-sm:py-1 w-full flex-grow flex overflow-y-auto gap-2">
-            <aside class="space-y-3 min-w-[300px] max-md:min-w-max pb-1 bg-[#f8faff] shadow-sm rounded-xl">
+            <aside class="space-y-3 min-w-[300px] max-xl:min-w-max pb-1 bg-[#f8faff] shadow-sm rounded-xl">
                 <nav class="flex flex-col overflow-x-auto text-neutral-700">
                     <div class="p-2 border-b flex items-center gap-2">
                         @include('commons.avatar', [
                             'src' => $edauser->profile,
-                            'className' => 'w-8 max-md:mx-auto',
+                            'className' => 'w-8 max-xl:mx-auto',
                             'alt' => $edauser->first_name . ' ' . $edauser->last_name,
                             'altClass' => 'text-lg',
                         ])
-                        <div class="text-sm max-md:hidden">
+                        <div class="text-sm max-xl:hidden">
                             <p class="font-semibold tracking-tight  overflow-hidden text-ellipsis text-nowrap">
                                 {{ $edauser->first_name }}
                                 {{ $edauser->last_name }}</p>
@@ -43,7 +42,7 @@
                         @foreach ($years as $y)
                             <a {{ request()->is('edas/' . $edauser->id . '/eda/' . $y->id . '*') ? 'data-active' : '' }}
                                 href="/edas/{{ $edauser->id }}/eda/{{ $y->id }}"
-                                class="p-2 px-3 flex max-md:w-fit w-full text-sm items-center gap-2 hover:bg-neutral-200/60 data-[active]:bg-blue-100 data-[active]:text-blue-700 font-medium rounded-lg">
+                                class="p-2 px-3 flex max-xl:w-fit w-full text-sm items-center gap-2 hover:bg-neutral-200/60 data-[active]:bg-blue-100 data-[active]:text-blue-700 font-medium rounded-lg">
                                 <img src="/sheet.png" class="w-5" alt="">
                                 {{ $y->name }}
                             </a>
@@ -51,7 +50,7 @@
                     </div>
                 </nav>
             </aside>
-            <div class="h-full border flex flex-col w-full bg-[#ffffff] rounded-xl shadow-md overflow-auto">
+            <div class="h-full border relative flex flex-col w-full bg-[#ffffff] rounded-xl shadow-md overflow-auto">
                 @if ($eda)
                     <nav class="p-2 pb-1 font-medium text-sm gap-4 flex items-center w-full">
                         <div class="flex items-center flex-grow">
@@ -83,16 +82,20 @@
 
                                 <div id="dropdown"
                                     class="z-10 hidden bg-white border divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
-                                    <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
-                                        data-adescription="No podrás deshacer esta acción." {{-- data-param="/api/user-roles/delete/" --}}
-                                        class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md">
-                                        Exportar EDA
-                                    </button>
-                                    <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
-                                        data-adescription="No podrás deshacer esta acción." {{-- data-param="/api/user-roles/delete/" --}}
-                                        class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600">
-                                        Reiniciar EDA
-                                    </button>
+                                    @if ($cuser->has('edas:export') || $cuser->isDev())
+                                        <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
+                                            data-adescription="No podrás deshacer esta acción." {{-- data-param="/api/user-roles/delete/" --}}
+                                            class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md">
+                                            Exportar EDA
+                                        </button>
+                                    @endif
+                                    @if ($cuser->isDev())
+                                        <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
+                                            data-adescription="No podrás deshacer esta acción." {{-- data-param="/api/user-roles/delete/" --}}
+                                            class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600">
+                                            Reiniciar EDA
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -103,8 +106,8 @@
                         <img src="/empty-meetingList.webp" width="140" class="mx-auto" alt="">
                         <h2 class="tracking-tight font-semibold">Eda no disponible</h2>
                         <p class="text-xs">Aun no se registró el eda del año {{ $current_year->name }}</p>
-                        @if ($hasCreate)
-                            <button {{ !$hasPosibleCreate ? 'disabled' : '' }} data-id-year="{{ $current_year->id }}"
+                        @if ($hasPosibleCreate)
+                            <button data-id-year="{{ $current_year->id }}"
                                 data-param="/api/edas/create/{{ $current_year->id }}/user/{{ $edauser->id }}"
                                 data-atitle="¿Estás seguro de crear el eda?"
                                 data-adescription="Esta acción quedará registrada. No podrás deshacer esta acción."

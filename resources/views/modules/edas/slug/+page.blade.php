@@ -2,27 +2,12 @@
 
 @php
     $edauser = isset($eda) ? $eda->user : $user;
-    $hasPosibleCreate = $cuser->hasPrivilege('create_edas') && $current_year->status;
-    $hasClose =
-        $cuser->hasPrivilege('edas:close_all') ||
-        ($cuser->hasPrivilege('edas:close') && $edauser->supervisor_id == $cuser->id);
 @endphp
 
 @section('title', 'Eda: ' . $current_year->name . ' - ' . $edauser->first_name . ' ' . $edauser->last_name)
 
-
-
 @section('layout.edas.slug')
     @if ($eda)
-        {{-- @php
-            $evaluationUltimate = $eda->evaluations->last();
-            $hasCloseEda =
-                ($cuser->hasPrivilege('closet_edas') &&
-                    $edauser->supervisor_id == $cuser->id &&
-                    $evaluationUltimate->closet) ||
-                $evaluationUltimate->closet;
-        @endphp --}}
-
         <div class="h-full flex flex-col space-y-3 justify-center items-center">
             <div class="text-center">
                 <h1 class="text-sm font-semibold">Completa todas las tareas asignadas.</h1>
@@ -57,9 +42,12 @@
                 @foreach ($eda->evaluations as $index => $evaluation)
                     @php
                         $prevEvaluation = $eda->evaluations[$index - 1] ?? (object) ['closed' => true];
+                        $active = $eda->approved && $prevEvaluation->closed;
                     @endphp
-                    <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}/evaluation/{{ $evaluation->id }}"
-                        class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl {{ $eda->approved || !$prevEvaluation->closed ? '' : 'grayscale opacity-50 pointer-events-none select-none' }}">
+
+                    <a href="{{ $active ? "/edas/$edauser->id/eda/$current_year->id/evaluation/$evaluation->id" : '' }}"
+                        {{ $active ? '' : 'data-disabled' }}
+                        class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl data-[disabled]:grayscale data-[disabled]:opacity-50 data-[disabled]:pointer-events-none data-[disabled]:select-none">
                         <img src="/sheet-pen.png" class="w-6 m-3" alt="">
                         <div class="flex-grow text-sm">
                             <h2 class="font-semibold">Evaluacion N° {{ $evaluation->number }}</h2>
@@ -77,53 +65,16 @@
                     </a>
                 @endforeach
 
-                {{-- <div class="space-y-2">
-                    <button class="text-lg font-semibold tracking-tight">Finalización del Eda.</button>
-                    @if ($evaluationUltimate->average)
-                        @php
-                            $totalAverage = $eda->evaluations->sum('average') / $eda->evaluations->count();
-                            $totalSelfQualification = $eda->evaluations->sum('self_qualification') / $eda->evaluations->count();
-                        @endphp
-                        <div class="bg-white rounded-xl w-fit p-3 shadow-md">
-                            <span class="text-sm opacity-60">Detalles:</span>
-                            <p>Nota autocalificada: <b>{{ $totalSelfQualification }}</b></p>
-                            <p>Nota aprobada: <b>{{ $totalAverage }}</b></p>
-                        </div>
-                        @if ($hasClose && !$eda->closed)
-                            <p class="text-rose-500 px-1">
-                                El usuario ha terminado las tareas asignadas, por favor revisa y cierra el EDA.
-                            </p>
-                            <button id="close-eda" data-id="{{ $eda->id }}"
-                                class="p-2 px-6 bg-rose-700 hover:bg-rose-600 text-white font-semibold rounded-full">
-                                Cerrar EDA
-                            </button>
-                        @endif
-                        @if ($eda->closed)
-                            <p class="text-neutral-400 text-sm">Eda cerrado
-                                el {{ \Carbon\Carbon::parse($eda->closed)->isoFormat('LL') }} por
-                                <a title="Ir al perfil de {{ $eda->closedBy->first_name }} {{ $eda->closedBy->last_name }}"
-                                    href="/profile/{{ $eda->closedBy->id }}" class="hover:underline text-blue-600">
-                                    {{ $eda->closedBy->first_name }}
-                                    {{ $eda->closedBy->last_name }}.
-                                </a>
-                            </p>
-                        @endif
-                    @else
-                        <div class="w-full block opacity-60">
-                            Por favor espera a que las evaluaciones sean cerradas.
-                        </div>
-                    @endif
-                </div> --}}
-
-
                 @php
                     $lastEvaluation = $eda->evaluations->last();
                 @endphp
-                <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}/ending"
-                    class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl {{ $lastEvaluation->closed ? '' : 'grayscale opacity-50 pointer-events-none select-none' }}">
+
+                <a href="{{ $lastEvaluation->closed ? "/edas/$edauser->id/eda/$current_year->id/ending" : '' }} "
+                    {{ $lastEvaluation->closed ? '' : 'data-disabled' }}
+                    class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl data-[disabled]:grayscale data-[disabled]:opacity-50 data-[disabled]:pointer-events-none data-[disabled]:select-none">
                     <img src="/sheets.png" class="w-6 m-3" alt="">
                     <div class="flex-grow text-sm">
-                        <h2 class="font-semibold">Finalización del Eda.</h2>
+                        <h2 class="font-semibold">{{ $eda->closed ? 'Resumen del Eda' : 'Finalización del Eda.' }}</h2>
                         <p class="opacity-70 text-xs text-ellipsis line-clamp-2">
                             Revisa las notas finales y cierra el EDA.
                         </p>
@@ -137,8 +88,10 @@
                         </div>
                     @endif
                 </a>
-                <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}/questionnaires"
-                    class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl {{ $eda->closed ? '' : 'grayscale opacity-50 pointer-events-none select-none' }}">
+
+                <a href="{{ $eda->closed ? "/edas/$edauser->id/eda/$current_year->id/questionnaires" : '' }}"
+                    {{ $eda->closed ? '' : 'data-disabled' }}
+                    class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl data-[disabled]:grayscale data-[disabled]:opacity-50 data-[disabled]:pointer-events-none data-[disabled]:select-none">
                     <img src="/idea.png" class="w-6 m-3" alt="">
                     <div class="flex-grow">
                         <h2 class="font-semibold text-sm">Cuestionarios</h2>
@@ -147,13 +100,20 @@
                             Supervisor o colaborador.
                         </p>
                     </div>
-                    {{-- @if ($eda->approved)
-                        <div class="absolute top-2 right-2">
-                            <x-heroicon-s-check-circle class="w-6 h-6 text-blue-700" />
-                        </div>
-                    @endif --}}
                 </a>
+
             </div>
+
+            @if ($eda->closed)
+                <p class="text-xs text-neutral-400 mt-5">
+                    @svg('heroicon-o-information-circle', [
+                        'class' => 'w-5 h-5 inline-block',
+                    ])
+                    EDA cerrado el {{ \Carbon\Carbon::parse($eda->closed)->isoFormat('LL') }} por
+                    {{ $eda->closedBy->last_name }},
+                    {{ $eda->closedBy->first_name }}
+                </p>
+            @endif
         </div>
     @endif
 @endsection

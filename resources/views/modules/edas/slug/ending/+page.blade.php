@@ -6,8 +6,9 @@
 
 @php
     $hasCloseEda =
-        (($cuser->has('edas:close') && $eda->user->supervisor_id === $cuser->id) || $cuser->has('edas:close-all')) &&
-        !$eda->closed;
+        ((($cuser->has('edas:close') && $eda->user->supervisor_id === $cuser->id) || $cuser->has('edas:close-all')) &&
+            !$eda->closed) ||
+        $cuser->isDev();
 @endphp
 
 @section('layout.edas.slug')
@@ -32,7 +33,7 @@
                         </svg>
                     </button>
                 </h2>
-                <div id="goals-body" class="hidden p-2 pl-10" aria-labelledby="goals-headding">
+                <div id="goals-body" class="p-2 pl-10" aria-labelledby="goals-headding">
                     <p class="opacity-70 pb-2">
                         {{ $eda->user->first_name }} ha cumplido con los siguientes objetivos:
                     </p>
@@ -70,7 +71,8 @@
                         </svg>
                     </button>
                 </h2>
-                <div id="evaluations-body" class="hidden p-2 pl-10" aria-labelledby="evaluations-headding">
+
+                <div id="evaluations-body" class="p-2 pl-10" aria-labelledby="evaluations-headding">
                     <p class="opacity-70 pb-2 ">
                         {{ $eda->user->first_name }} ha sido evaluado en las siguientes evaluaciones:
                     </p>
@@ -84,12 +86,75 @@
                     </ul>
                 </div>
 
+
+                {{-- Questionnaire --}}
+
+                <h2 id="questionnaires-headding">
+                    <button type="button"
+                        class="aria-expanded:bg-transparent group py-2 text-neutral-400 aria-expanded:text-black flex items-center gap-3 justify-between w-full"
+                        data-accordion-target="#questionnaires-body" aria-expanded="true"
+                        aria-controls="questionnaires-body">
+                        <span class="flex items-center gap-2">
+                            <img src="/idea.png" class="w-5" alt="">
+                            Questionarios (Encuesta del EDA)</span>
+                        <svg data-accordion-icon
+                            class="w-3 h-3 text-neutral-400 group-aria-expanded:text-black rotate-180 shrink-0"
+                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 5 5 1 1 5" />
+                        </svg>
+                    </button>
+                </h2>
+
+
                 @php
-                    $totalQualification = $evaluations->sum('qualification') / $evaluations->count();
-                    $totalSelfQualification = $evaluations->sum('self_qualification') / $evaluations->count();
+                    $hasSendCollaboratorQuestionnaire = $eda->user->id === $cuser->id || $cuser->isDev();
+                    $hasSendSupervisorQuestionnaire = $eda->user->supervisor_id === $cuser->id || $cuser->isDev();
                 @endphp
 
-                <h2 class="text-2xl tracking-tight font-semibold">
+                <div id="questionnaires-body" class="p-2 pl-10" aria-labelledby="questionnaires-headding">
+
+                    <ul class="list-disc list-inside">
+                        @if ($eda->collaboratorQuestionnaire)
+                            <li>
+                                @svg('heroicon-o-information-circle', [
+                                    'class' => 'w-5 h-5 inline-block',
+                                ])
+                                Questionario de colaborador enviado el
+                                {{ \Carbon\Carbon::parse($eda->collaboratorQuestionnaire->created_at)->isoFormat('LL') }}
+                                por
+                                {{ $eda->collaboratorQuestionnaire->answeredBy->last_name }},
+                                {{ $eda->collaboratorQuestionnaire->answeredBy->first_name }}
+                            </li>
+                        @endif
+
+                        @if ($eda->supervisorQuestionnaire)
+                            <li>
+                                @svg('heroicon-o-information-circle', [
+                                    'class' => 'w-5 h-5 inline-block',
+                                ])
+                                Questionario de supervisor enviado el
+                                {{ \Carbon\Carbon::parse($eda->supervisorQuestionnaire->created_at)->isoFormat('LL') }}
+                                por
+                                {{ $eda->supervisorQuestionnaire->answeredBy->last_name }},
+                                {{ $eda->supervisorQuestionnaire->answeredBy->first_name }}
+                            </li>
+                        @endif
+                    </ul>
+
+                </div>
+
+
+                {{-- Summary --}}
+                @php
+                    $totalQualification = number_format($evaluations->sum('qualification') / $evaluations->count(), 2);
+                    $totalSelfQualification = number_format(
+                        $evaluations->sum('self_qualification') / $evaluations->count(),
+                        2,
+                    );
+                @endphp
+
+                <h2 class="text-2xl tracking-tight font-semibold mt-5">
                     Promedio total
                 </h2>
                 <div class="pt-5 pl-5">

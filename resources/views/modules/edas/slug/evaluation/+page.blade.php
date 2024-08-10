@@ -13,25 +13,28 @@
 
         // if has self qualification
         $hasSelfQualify =
-            $current_user->hasPrivilege('edas:evaluations:self-qualify') &&
-            !$evaluation->closed &&
-            !$evaluation->self_qualification;
+            ($cuser->has('edas:evaluations:self-qualify') &&
+                !$evaluation->closed &&
+                !$evaluation->self_qualification) ||
+            $cuser->isDev();
 
         // if has average evaluation
         $hasQualify =
-            $current_user->hasPrivilege('edas:evaluations:qualify') &&
-            !$evaluation->closed &&
-            $isSupervisor &&
-            $evaluation->self_qualification &&
-            !$evaluation->qualification;
+            ($cuser->has('edas:evaluations:qualify') &&
+                !$evaluation->closed &&
+                $isSupervisor &&
+                $evaluation->self_qualification &&
+                !$evaluation->qualification) ||
+            $cuser->isDev();
 
         // if has close evaluation
         $hasCloseEvaluation =
-            $current_user->hasPrivilege('edas:evaluations:close') &&
-            !$evaluation->closed &&
-            $evaluation->qualification &&
-            $evaluation->self_qualification &&
-            $isSupervisor;
+            ($cuser->has('edas:evaluations:close') &&
+                !$evaluation->closed &&
+                $evaluation->qualification &&
+                $evaluation->self_qualification &&
+                $isSupervisor) ||
+            $cuser->isDev();
     @endphp
     <div class="h-full flex overflow-hidden flex-col pt-0 overflow-x-auto">
 

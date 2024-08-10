@@ -3,7 +3,7 @@
 @section('title', 'Eda: ' . $current_year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
 @php
-    $hasPosibleCreate = $current_user->hasPrivilege('create_edas') && $current_year->status;
+    $hasPosibleCreate = ($cuser->has('create_edas') && $current_year->status) || $cuser->isDev();
 @endphp
 
 @section('content-eda-user')
@@ -12,7 +12,7 @@
             $evaluationUltimate = $evaluations->last();
 
             $hasCloseEda =
-                ($current_user->hasPrivilege('closed_edas') &&
+                ($cuser->has('closed_edas') &&
                     $user->id_supervisor == $current_user->id &&
                     $evaluationUltimate->closed) ||
                 ($current_user->hasDevelperPrivilege() && $evaluationUltimate->closed);
