@@ -26,11 +26,11 @@ class Year extends Model
 
     public function createdBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
 
     public function updatedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updated_by');
     }
 }
