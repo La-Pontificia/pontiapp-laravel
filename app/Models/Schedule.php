@@ -46,12 +46,12 @@ class Schedule extends Model
 
     public function createdBy()
     {
-        return $this->hasOne(User::class, 'created_by', 'id');
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
 
     public function updatedBy()
     {
-        return $this->hasOne(User::class, 'updated_by', 'id');
+        return $this->hasOne(User::class, 'id', 'updated_by');
     }
 
     public function groupSchedules()
