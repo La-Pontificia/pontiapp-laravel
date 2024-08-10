@@ -33,12 +33,12 @@ class Evaluation extends Model
 
     public function eda()
     {
-        return $this->hasOne('App\Models\Eda', 'id', 'id_eda');
+        return $this->hasOne(Eda::class, 'id', 'id_eda');
     }
 
     public function closedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'closed_by');
+        return $this->hasOne(User::class, 'id', 'closed_by');
     }
 
     public function goalsEvaluations()
@@ -48,11 +48,11 @@ class Evaluation extends Model
 
     public function selfRatedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'self_rated_by');
+        return $this->hasOne(User::class, 'id', 'self_rated_by');
     }
 
     public function qualifiedBy()
     {
-        return $this->hasOne('App\Models\User', 'id', 'qualified_by');
+        return $this->hasOne(User::class, 'id', 'qualified_by');
     }
 }
