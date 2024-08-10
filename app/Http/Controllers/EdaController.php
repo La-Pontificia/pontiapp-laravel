@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Eda;
 use App\Models\Evaluation;
-use App\Models\Goal;
 use App\Models\JobPosition;
 use App\Models\QuestionnaireTemplate;
 use App\Models\Role;
@@ -17,7 +16,7 @@ class EdaController  extends Controller
 
     public function index(Request $request)
     {
-        $cuser = auth()->user();
+        $cuser = User::find(auth()->user()->id);
         $match = User::orderBy('created_at', 'desc');
         $query = $request->get('q');
         $job_position = $request->get('job_position');
@@ -25,10 +24,9 @@ class EdaController  extends Controller
         $role = $request->get('role');
         $users = [];
 
-        if (in_array('edas:show', $cuser->role->privileges) &&  !in_array('edas:show_all', $cuser->role->privileges)) {
+        if ($cuser->has('edas:show') && !$cuser->has('edas:show_all')) {
             $match->where('supervisor_id', $cuser->id);
         }
-
 
         // filters
         if ($job_position) {
@@ -56,6 +54,11 @@ class EdaController  extends Controller
 
         return view('modules.edas.+page', compact('users', 'job_positions', 'roles'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
+    }
+
+    public function reports()
+    {
+        return view('modules.edas.reports.+page');
     }
 
     public function me()
@@ -159,7 +162,7 @@ class EdaController  extends Controller
                 'eda' => $eda,
                 'current_year' => $current_year,
                 'collaborator_questionnaire' => $collaborator_questionnaire,
-                'supervisor_questionnaire' => $supervisor_questionnaire
+                'supervisor_questionnaire' => $supervisor_questionnaire,
             ]
         );
     }
