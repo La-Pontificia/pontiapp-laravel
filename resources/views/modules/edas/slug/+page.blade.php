@@ -1,21 +1,24 @@
 @extends('modules.edas.slug.+layout')
 
-@section('title', 'Eda: ' . $current_year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
-
 @php
+    $edauser = isset($eda) ? $eda->user : $user;
     $hasPosibleCreate = $cuser->hasPrivilege('create_edas') && $current_year->status;
     $hasClose =
         $cuser->hasPrivilege('edas:close_all') ||
-        ($cuser->hasPrivilege('edas:close') && $user->supervisor_id == $cuser->id);
+        ($cuser->hasPrivilege('edas:close') && $edauser->supervisor_id == $cuser->id);
 @endphp
+
+@section('title', 'Eda: ' . $current_year->name . ' - ' . $edauser->first_name . ' ' . $edauser->last_name)
+
+
 
 @section('layout.edas.slug')
     @if ($eda)
         {{-- @php
-            $evaluationUltimate = $evaluations->last();
+            $evaluationUltimate = $eda->evaluations->last();
             $hasCloseEda =
                 ($cuser->hasPrivilege('closet_edas') &&
-                    $user->supervisor_id == $cuser->id &&
+                    $edauser->supervisor_id == $cuser->id &&
                     $evaluationUltimate->closet) ||
                 $evaluationUltimate->closet;
         @endphp --}}
@@ -33,7 +36,7 @@
                 </p>
             </div>
             <div class="flex gap-3 justify-center max-w-5xl flex-wrap [&>a]:max-w-[250px]">
-                <a href="/edas/{{ $user->id }}/eda/{{ $current_year->id }}/goals"
+                <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}/goals"
                     class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl">
                     <img src="/pen.png" class="w-6 m-3" alt="">
                     <div class="flex-grow">
@@ -51,11 +54,11 @@
                     @endif
                 </a>
 
-                @foreach ($evaluations as $index => $evaluation)
+                @foreach ($eda->evaluations as $index => $evaluation)
                     @php
-                        $prevEvaluation = $evaluations[$index - 1] ?? (object) ['closed' => true];
+                        $prevEvaluation = $eda->evaluations[$index - 1] ?? (object) ['closed' => true];
                     @endphp
-                    <a href="/edas/{{ $user->id }}/eda/{{ $current_year->id }}/evaluation/{{ $evaluation->id }}"
+                    <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}/evaluation/{{ $evaluation->id }}"
                         class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl {{ $eda->approved || !$prevEvaluation->closed ? '' : 'grayscale opacity-50 pointer-events-none select-none' }}">
                         <img src="/sheet-pen.png" class="w-6 m-3" alt="">
                         <div class="flex-grow text-sm">
@@ -78,8 +81,8 @@
                     <button class="text-lg font-semibold tracking-tight">Finalización del Eda.</button>
                     @if ($evaluationUltimate->average)
                         @php
-                            $totalAverage = $evaluations->sum('average') / $evaluations->count();
-                            $totalSelfQualification = $evaluations->sum('self_qualification') / $evaluations->count();
+                            $totalAverage = $eda->evaluations->sum('average') / $eda->evaluations->count();
+                            $totalSelfQualification = $eda->evaluations->sum('self_qualification') / $eda->evaluations->count();
                         @endphp
                         <div class="bg-white rounded-xl w-fit p-3 shadow-md">
                             <span class="text-sm opacity-60">Detalles:</span>
@@ -114,9 +117,9 @@
 
 
                 @php
-                    $lastEvaluation = $evaluations->last();
+                    $lastEvaluation = $eda->evaluations->last();
                 @endphp
-                <a href="/edas/{{ $user->id }}/eda/{{ $current_year->id }}/ending"
+                <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}/ending"
                     class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl {{ $lastEvaluation->closed ? '' : 'grayscale opacity-50 pointer-events-none select-none' }}">
                     <img src="/sheets.png" class="w-6 m-3" alt="">
                     <div class="flex-grow text-sm">
@@ -134,7 +137,7 @@
                         </div>
                     @endif
                 </a>
-                <a href="/edas/{{ $user->id }}/eda/{{ $current_year->id }}/questionnaires"
+                <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}/questionnaires"
                     class="bg-white border relative hover:shadow-lg shadow-md flex items-center gap-2 p-2 rounded-xl {{ $eda->closed ? '' : 'grayscale opacity-50 pointer-events-none select-none' }}">
                     <img src="/idea.png" class="w-6 m-3" alt="">
                     <div class="flex-grow">
