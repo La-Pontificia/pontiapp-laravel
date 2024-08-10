@@ -8,9 +8,7 @@ use Illuminate\Support\ServiceProvider;
 class AccessComposerServiceProvider extends ServiceProvider
 {
 
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
 
     public function boot(): void
@@ -19,6 +17,17 @@ class AccessComposerServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
             $system_privileges = [
+                [
+                    'name' => 'Development',
+                    'items' => [
+                        [
+                            'name' => 'Development',
+                            'privileges' => [
+                                'development' => 'Development',
+                            ]
+                        ],
+                    ],
+                ],
                 [
                     'name' => 'Gestión de Usuarios',
                     'items' => [
@@ -78,20 +87,6 @@ class AccessComposerServiceProvider extends ServiceProvider
                             ],
                         ],
                         // [
-                        //     'name' => 'Sesiones',
-                        //     'privileges' => [
-                        //         'users:sessions:show' => 'Ver sesiones',
-                        //         'users:sessions:delete' => 'Eliminar sesiones',
-                        //     ],
-                        // ],
-                        // [
-                        //     'name' => 'Reportes',
-                        //     'privileges' => [
-                        //         'users:reports:show' => 'Ver reportes',
-                        //         'users:reports:generate' => 'Generar reportes',
-                        //     ],
-                        // ],
-                        // [
                         //     'name' => 'Importar',
                         //     'privileges' => [
                         //         'users:import' => 'Importar usuarios',
@@ -134,6 +129,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'edas:delete' => 'Resetear edas',
                                 'edas:close_all' => 'Cerrar todas las edas',
                                 'edas:close' => 'Cerrar las edas que supervisa',
+                                'edas:export' => 'Exportar edas',
                             ],
                         ],
                         [
@@ -143,15 +139,6 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'edas:years:edit' => 'Editar años',
                                 'edas:years:create' => 'Registrar años',
                                 'edas:years:delete' => 'Eliminar años',
-                            ],
-                        ],
-                        [
-                            'name' => 'Colaboradores',
-                            'privileges' => [
-                                'edas:collaborators:show_all' => 'Ver todos colaboradores',
-                                'edas:collaborators:show' => 'Ver los colaboradores que supervisa',
-                                'edas:collaborators:create' => 'Crear colaboradores',
-                                'edas:collaborators:assign_supervisors' => 'Asignar supervisores',
                             ],
                         ],
                         [
