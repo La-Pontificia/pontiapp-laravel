@@ -2,7 +2,7 @@
     <div class="w-full items-center flex overflow-x-auto p-0.5">
         <div class="flex flex-grow gap-2 items-center">
 
-            @if ($current_user->hasPrivilege('users:create'))
+            @if ($cuser->has('users:create') || $cuser->isDev())
                 <a href="/users/create"
                     class="bg-blue-700 shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"

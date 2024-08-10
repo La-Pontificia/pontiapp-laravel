@@ -59,7 +59,7 @@
                     {{ $user->groupSchedule ? $user->groupSchedule->name : '' }}</span>
             </h1>
             <div class="mt-2">
-                @if ($current_user->hasPrivilege('users:schedules:create'))
+                @if ($cuser->has('users:schedules:create'))
                     <button type="button" data-modal-target="create-scheldule-modal"
                         data-modal-toggle="create-scheldule-modal"
                         class="bg-blue-700 mb-3 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">

@@ -4,7 +4,7 @@
 
 @section('layout.users')
     <div class="h-full flex flex-col">
-        @if ($current_user->hasPrivilege('users:user-roles:create'))
+        @if ($cuser->has('users:user-roles:create') || $cuser->isDev())
             <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                 class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -50,7 +50,7 @@
         <h2 class="py-3 font-semibold tracking-tight text-lg px-1">
             Gestión de roles
         </h2>
-        @if ($current_user->hasPrivilege('users:user-roles:show'))
+        @if ($cuser->has('users:user-roles:show') || $cuser->isDev())
             <div class="">
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
@@ -82,7 +82,7 @@
                                                 {{ $role->title }}
                                             </p>
                                         </div>
-                                        @if ($current_user->hasPrivilege('users:user-roles:edit'))
+                                        @if ($cuser->has('users:user-roles:edit') || $cuser->isDev())
                                             <button type="button" data-modal-target="dialog-{{ $role->id }}"
                                                 data-modal-toggle="dialog-{{ $role->id }}" class="absolute inset-0">
 

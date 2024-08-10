@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class=" overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('users:emails-access:show'))
+            @if ($cuser->has('users:emails-access:show') || $cuser->isDev())
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">
@@ -86,7 +86,7 @@
                                     class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-2">
                                     <td>
                                         <div class="flex items-center gap-4">
-                                            @if ($cuser->hasPrivilege('users:emails-access:edit'))
+                                            @if ($cuser->has('users:emails-access:edit') || $cuser->isDev())
                                                 <button class="absolute inset-0"
                                                     data-modal-target="dialog-{{ $user->id }}"
                                                     data-modal-toggle="dialog-{{ $user->id }}">

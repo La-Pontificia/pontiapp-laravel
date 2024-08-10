@@ -3,7 +3,7 @@
 @section('title', 'Registrar nuevo usuario')
 
 @section('layout.users')
-    @if ($current_user->hasPrivilege('users:create'))
+    @if ($cuser->has('users:create') || $cuser->isDev())
         <div class="text-black w-full flex-grow flex flex-col overflow-y-auto">
             <div class="flex items-center justify-between p-4">
                 <button onclick="window.history.back()" class="text-lg flex gap-2 items-center font-semibold text-gray-900 ">
@@ -37,6 +37,8 @@
             </div>
         </div>
     @else
-        @include('commons.+403')
+        @include('+403', [
+            'message' => 'No tienes permisos para crear usuarios.',
+        ])
     @endif
 @endsection

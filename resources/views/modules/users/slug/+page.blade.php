@@ -4,7 +4,7 @@
 
 @php
     $myaccount = $cuser->id == $user->id;
-    $hasChangePassword = $myaccount || $cuser->hasPrivilege('users:reset-password');
+    $hasChangePassword = $myaccount || $cuser->has('users:reset-password');
 @endphp
 
 @section('layout.users.slug')
@@ -69,7 +69,7 @@
                     </button>
                 @endif
             @endif
-            @if ($current_user->hasPrivilege('users:edit'))
+            @if ($cuser->has('users:edit') || $cuser->isDev())
                 <form id="edit-user-form" class="grid gap-4 px-1 w-full dinamic-form" method="POST" role="form"
                     action="/api/users/{{ $user->id }}">
                     @include('modules.users.form', [
@@ -185,7 +185,7 @@
                 </div>
             @endif
         </div>
-        @if ($current_user->hasPrivilege('users:edit'))
+        @if ($cuser->has('users:edit') || $cuser->isDev())
             <div class="pt-4 border-t">
                 <button type="submit" form="edit-user-form"
                     class="bg-blue-700 hover:bg-blue-600 disabled:opacity-40 disabled:pointer-events-none flex items-center rounded-xl p-2.5 gap-1 text-white font-semibold px-3">

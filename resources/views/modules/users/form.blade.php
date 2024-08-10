@@ -3,7 +3,7 @@
     $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
     $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
 
-    $has_assign_email = $current_user->hasPrivilege('assign_email');
+    $has_assign_email = $cuser->has('assign_email');
 
     $userDomain = $user ? explode('@', $user->email)[1] : null;
     $username = $user ? explode('@', $user->email)[0] : null;

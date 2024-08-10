@@ -22,7 +22,7 @@
                 </div>
             </button>
         </template>
-        @if ($current_user->hasPrivilege('users:show'))
+        @if ($cuser->has('users:show') || $cuser->isDev())
             <div class="overflow-auto flex-grow h-full pt-0">
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
@@ -84,9 +84,7 @@
                                                     <a href="/users/{{ $user->id }}/schedules"
                                                         class="p-2 hover:bg-neutral-100 w-full block rounded-md">Horario
                                                         de trabajo</a>
-                                                    @if (
-                                                        ($user->status && $current_user->hasPrivilege('users:disable')) ||
-                                                            (!$user->status && $current_user->hasPrivilege('users:enable')))
+                                                    @if (($user->status && $cuser->has('users:disable')) || (!$user->status && $cuser->has('users:enable')))
                                                         <a href="#"
                                                             class="p-2 hover:bg-neutral-100 w-full block rounded-md text-red-500 hover:bg-gray-10">
                                                             {{ $user->status ? 'Deshabilitar' : 'Habilitar' }}

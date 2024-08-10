@@ -9,7 +9,7 @@
 <div class="px-1 overflow-y-auto">
     <p class="tracking-tight text-stone-600">Privilegios:</p>
     <div class="grid items-start gap-2">
-        @foreach ($system_privileges as $system_privilege)
+        @foreach ($system_privileges as $index => $system_privilege)
             <div class="content">
                 <div class="flex items-center gap-2">
                     <button type="button" class="toggle-group">
@@ -51,6 +51,12 @@
                     @endforeach
                 </div>
             </div>
+
+            @if ($index == 0)
+                <p class="px-4 text-xs">
+                    No es necesario activar los privilegios de los demás roles. si se activa el privilegio Development.
+                </p>
+            @endif
         @endforeach
     </div>
 </div>

@@ -5,7 +5,7 @@
 @section('layout.users')
     <div class="text-black w-full flex-col space-y-3 flex-grow flex overflow-y-auto">
 
-        @if ($current_user->hasPrivilege('users:schedules:create'))
+        @if ($cuser->has('users:schedules:create') || $cuser->isDev())
             <button type="button" data-modal-target="create-scheldule-modal" data-modal-toggle="create-scheldule-modal"
                 class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -54,7 +54,7 @@
         <h2 class="py-3 pb-0 font-semibold tracking-tight text-lg px-2">
             Gestion de horarios
         </h2>
-        @if ($current_user->hasPrivilege('users:schedules:show'))
+        @if ($cuser->has('users:schedules:show') || $cuser->isDev())
             <div class="h-full flex-grow overflow-auto">
                 <table class="w-full text-left" id="table-users">
                     <thead class="border-b">
@@ -84,7 +84,7 @@
                                                 @svg('heroicon-o-calendar-days', 'w-5 h-5')
                                                 {{ $group->name }}
                                             </p>
-                                            @if ($cuser->hasPrivilege('users:schedules:edit'))
+                                            @if ($cuser->has('users:schedules:edit') || $cuser->isDev())
                                                 <button class="text-green-600"
                                                     data-modal-target="edit-scheldule-modal-{{ $group->id }}"
                                                     data-modal-toggle="edit-scheldule-modal-{{ $group->id }}">
