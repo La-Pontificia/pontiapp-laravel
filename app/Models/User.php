@@ -94,11 +94,6 @@ class User extends Authenticatable
         return $this->hasOne(UserRole::class, 'id', 'id_role_user');
     }
 
-    public function hasPrivilege($key)
-    {
-        return in_array($key, $this->role->privileges);
-    }
-
     public function privileges()
     {
         return $this->role->privileges;
@@ -114,6 +109,11 @@ class User extends Authenticatable
     public function has($key)
     {
         return in_array($key, $this->role->privileges);
+    }
+
+    public function isDev()
+    {
+        return $this->has('development');
     }
 
     public function groupSchedule()

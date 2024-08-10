@@ -30,6 +30,11 @@ class Questionnaire extends Model
         'updated_by',
     ];
 
+    public function template()
+    {
+        return $this->hasOne(QuestionnaireTemplate::class, 'id', 'questionnaire_template_id');
+    }
+
     public function answers()
     {
         return $this->hasMany(QuestionnaireAnswers::class, 'questionnaire_id', 'id');
@@ -43,6 +48,11 @@ class Questionnaire extends Model
     public function allQuestions()
     {
         return $this->hasMany(Question::class, 'template_id', 'id');
+    }
+
+    public function answeredBy()
+    {
+        return $this->hasOne(User::class, 'id', 'answered_by');
     }
 
     public function createdBy()

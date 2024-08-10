@@ -39,9 +39,20 @@ class Eda extends Model
 
   public $incrementing = false;
 
-  public function questionnaire()
+  public function collaboratorQuestionnaire()
   {
-    return $this->hasOne(Questionnaire::class, 'id', 'id_eda')->first();
+    return $this->hasOne(Questionnaire::class, 'eda_id', 'id')
+      ->whereHas('template', function ($q) {
+        $q->where('for', 'collaborators');
+      });
+  }
+
+  public function supervisorQuestionnaire()
+  {
+    return $this->hasOne(Questionnaire::class, 'eda_id', 'id')
+      ->whereHas('template', function ($q) {
+        $q->where('for', 'supervisors');
+      });
   }
 
   public function user()
