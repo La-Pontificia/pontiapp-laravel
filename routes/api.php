@@ -53,6 +53,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Edas routes
     Route::post('edas/create/{year_id}/user/{user_id}', [EdaController::class, 'create']);
     Route::post('edas/close/{id}', [EdaController::class, 'close']);
+    Route::post('edas/questionnaire/{id}', [EdaController::class, 'questionnaire']);
+
 
     // Goals routes
     Route::post('goals/sent/{id}', [GoalController::class, 'sent']);
@@ -89,10 +91,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Template routes
     Route::post('questionnaire-templates', [QuestionnaireTemplateController::class, 'create']);
     Route::post('questionnaire-templates/{id}', [QuestionnaireTemplateController::class, 'update']);
-    Route::post('questionnaire-templates/{id}/change-in-use', [QuestionnaireTemplateController::class, 'changeInUse']);
+    Route::post('questionnaire-templates/{id}/use', [QuestionnaireTemplateController::class, 'use']);
+    Route::post('questionnaire-templates/{id}/archive', [QuestionnaireTemplateController::class, 'archive']);
+    Route::post('questionnaire-templates/{id}/delete', [QuestionnaireTemplateController::class, 'delete']);
 
     // Questions routes
-    Route::get('questions/by-template/{id}', [QuestionController::class, 'by_template']);
+    Route::get('questionnaire-templates/{id}/questions', [QuestionController::class, 'questions']);
 
     // years routes
     Route::post('years', [YearController::class, 'create']);
