@@ -6,6 +6,7 @@ use App\Models\Eda;
 use App\Models\Evaluation;
 use App\Models\Goal;
 use App\Models\JobPosition;
+use App\Models\QuestionnaireTemplate;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Year;
@@ -74,52 +75,33 @@ class EdaController  extends Controller
 
     public function year($id_user, $id_year)
     {
-        $user = User::find($id_user);
         $years = Year::orderBy('name', 'desc')->get();
         $current_year = Year::find($id_year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $current_year->id)->first();
-
-        $evaluations = [];
-
-        if ($eda) {
-            $evaluations = Evaluation::where('id_eda', $eda->id)->get();
-        }
-
+        $user = User::find($id_user);
         return view(
             'modules.edas.slug.+page',
-            compact('user', 'years', 'current_year', 'eda', 'evaluations')
+            compact('years', 'current_year', 'eda', 'user')
         );
     }
 
     public function goals($id_user, $id_year)
     {
-        $user = User::find($id_user);
         $years = Year::orderBy('name', 'desc')->get();
-        $year = Year::find($id_year);
-        $eda = Eda::where('id_user', $id_user)->where('id_year', $year->id)->first();
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $id_year)->first();
 
-
-        // validate 
         if (!$eda) return view('+500', ['error' => 'Eda not found']);
-        if (!$year) return view('+500', ['error' => 'Year not found']);
-        if (!$user) return view('+500', ['error' => 'User not found']);
-
-        $goals = [];
-        if ($eda) {
-            $goals = Goal::where('id_eda', $eda->id)->get();
-        }
 
         $current_year = Year::find($id_year);
 
         return view(
             'modules.edas.slug.goals.+page',
-            compact('user', 'years', 'year', 'eda', 'goals', 'current_year')
+            compact('years',  'eda',  'current_year')
         );
     }
 
     public function evaluation($id_user, $id_year, $id_evaluation)
     {
-        $user = User::find($id_user);
         $evaluation = Evaluation::find($id_evaluation);
         $years = Year::orderBy('name', 'desc')->get();
         $current_year = Year::find($id_year);
@@ -127,64 +109,57 @@ class EdaController  extends Controller
 
         // validate
         if (!$eda) return view('+500', ['error' => 'Eda not found']);
-        if (!$current_year) return view('+500', ['error' => 'Year not found']);
-        if (!$user) return view('+500', ['error' => 'User not found']);
         if (!$evaluation) return view('+500', ['error' => 'Evaluation not found']);
-
-        $goalevaluations = $evaluation->goalsEvaluations;
 
         return view(
             'modules.edas.slug.evaluation.+page',
-            compact('user', 'years', 'current_year', 'eda', 'goalevaluations', 'evaluation')
+            compact('years', 'current_year', 'eda', 'evaluation')
         );
     }
 
     public function ending($id_user, $id_year)
     {
-        $user = User::find($id_user);
         $years = Year::orderBy('name', 'desc')->get();
         $current_year = Year::find($id_year);
-        $eda = Eda::where('id_user', $id_user)->where('id_year', $current_year->id)->first();
+        $eda = Eda::where('id_user', $id_user)->where('id_year', $id_year)->first();
 
         $evaluations = $eda->evaluations;
-        $goals = $eda->goals;
 
         // validate
         if (!$eda) return view('+500', ['error' => 'Eda not found']);
         if (!$eda->approved) return view('+500', ['error' => 'Eda not approved']);
         if (!$current_year) return view('+500', ['error' => 'Year not found']);
-        if (!$user) return view('+500', ['error' => 'User not found']);
         if (!$evaluations->last()->closed) return view('+500', ['error' => 'Last evaluation not closed']);
 
         return view('modules.edas.slug.ending.+page', [
-            'user' => $user,
             'current_year' => $current_year,
             'eda' => $eda,
             'years' => $years,
             'evaluations' => $evaluations,
-            'goals' => $goals
         ]);
     }
 
     public function questionnaires($id_user, $id_year)
     {
-        $user = User::find($id_user);
         $years = Year::orderBy('name', 'desc')->get();
         $current_year = Year::find($id_year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $id_year)->first();
 
+        $collaborator_questionnaire = QuestionnaireTemplate::where('for', 'collaborators')->first();
+        $supervisor_questionnaire = QuestionnaireTemplate::where('for', 'supervisors')->first();
+
         // validate
         if (!$eda) return view('+500', ['error' => 'Eda not found']);
         if (!$current_year) return view('+500', ['error' => 'Current year not found']);
-        if (!$user) return view('+500', ['error' => 'User not found']);
 
         return view(
             'modules.edas.slug.questionnaires.+page',
             [
-                'user' => $user,
                 'years' => $years,
                 'eda' => $eda,
-                'current_year' => $current_year
+                'current_year' => $current_year,
+                'collaborator_questionnaire' => $collaborator_questionnaire,
+                'supervisor_questionnaire' => $supervisor_questionnaire
             ]
         );
     }
