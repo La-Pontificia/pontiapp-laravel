@@ -1,18 +1,18 @@
 @extends('modules.edas.slug.+layout')
 
-@section('title', 'Objetivos: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
+@section('title', 'Objetivos: ' . $current_year->name . ' - ' . $eda->user->first_name . ' ' . $eda->user->last_name)
 
 @section('title_eda', 'Objetivos')
 
 
 @php
-    $userIsDev = $cuser->role === 'dev';
+    $eda->userIsDev = $cuser->role === 'dev';
     $hasAddGoals = $cuser->hasPrivilege('edas:goals:sent') && !$eda->approved;
     $hasSentGoals = $cuser->hasPrivilege('edas:goals:sent') && !$eda->approved;
     $hasEditGoals = $cuser->has('edas:goals:edit') && !$eda->approved;
     $hasDeleteGoals = $cuser->hasPrivilege('edas:goals:delete') && !$eda->approved;
 
-    $hasSupervisor = $user->supervisor_id === $cuser->id || $cuser->hasPrivilege('edas:show_all');
+    $hasSupervisor = $eda->user->supervisor_id === $cuser->id || $cuser->hasPrivilege('edas:show_all');
     $hasApproveGoals = $cuser->hasPrivilege('edas:goals:approve') && !$eda->approved && $eda->sent && $hasSupervisor;
 @endphp
 
