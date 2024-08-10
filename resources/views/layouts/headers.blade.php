@@ -8,9 +8,7 @@
     <title>@yield('title', 'La Pontificia')</title>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    {{-- <link rel="stylesheet" href="resources/css/app.css"> --}}
-    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" /> --}}
-    <link rel="icon" href="{{ asset('/elp-only-logo.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('/lp-square.webp') }}" type="image/x-icon">
     <link rel="manifest" href="/manifest.json">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
