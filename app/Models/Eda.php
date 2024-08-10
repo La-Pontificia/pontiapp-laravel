@@ -39,6 +39,11 @@ class Eda extends Model
 
   public $incrementing = false;
 
+  public function questionnaire()
+  {
+    return $this->hasOne(Questionnaire::class, 'id', 'id_eda')->first();
+  }
+
   public function user()
   {
     return $this->hasOne(User::class, 'id', 'id_user');
