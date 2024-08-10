@@ -7,7 +7,7 @@
 
 @section('layout.users')
     <div class="text-black w-full flex-col flex-grow flex overflow-auto">
-        @if ($cuser->hasPrivilege('users:job-positions:create'))
+        @if ($cuser->has('users:job-positions:create'))
             <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                 class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('users:job-positions:show'))
+            @if ($cuser->has('users:job-positions:show'))
                 <table class="w-full text-left" id="table-users">
                     <thead class="">
                         <tr
@@ -113,7 +113,7 @@
                                         <p class="opacity-70 text-nowrap">
                                             {{ \Carbon\Carbon::parse($job->created_at)->isoFormat('LL') }}
                                         </p>
-                                        @if ($cuser->hasPrivilege('users:job-positions:edit'))
+                                        @if ($cuser->has('users:job-positions:edit'))
                                             <button class="absolute inset-0" data-modal-target="dialog-{{ $job->id }}"
                                                 data-modal-toggle="dialog-{{ $job->id }}">
                                             </button>

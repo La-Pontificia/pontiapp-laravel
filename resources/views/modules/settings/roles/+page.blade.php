@@ -6,7 +6,7 @@
 
 @section('layout.users')
     <div class="text-black w-full flex-col flex-grow flex overflow-auto">
-        @if ($cuser->hasPrivilege('users:roles:create'))
+        @if ($cuser->has('users:roles:create'))
             <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                 class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -81,7 +81,7 @@
             </div>
         </div>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->hasPrivilege('users:roles:show'))
+            @if ($cuser->has('users:roles:show'))
                 <table class="w-full text-left" id="table-users">
                     <thead class="">
                         <tr
@@ -107,7 +107,7 @@
                                 <tr
                                     class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-4">
                                     <td>
-                                        @if ($cuser->hasPrivilege('users:roles:edit'))
+                                        @if ($cuser->has('users:roles:edit'))
                                             <button class="absolute inset-0" data-modal-target="dialog-{{ $role->id }}"
                                                 data-modal-toggle="dialog-{{ $role->id }}">
                                             </button>
