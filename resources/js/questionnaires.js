@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const $questions = $supervisorQuestions.querySelectorAll(
             "*[data-id-question]"
         );
-        const id_eda = $supervisorQuestions.getAttribute("data-id");
+        const id_eda = $supervisorQuestions.getAttribute("data-id-eda");
         void sendQuestionnaire($questions, id_eda);
     });
 
