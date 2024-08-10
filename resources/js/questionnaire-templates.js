@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $questionTemplate = $("#question-template")?.content;
     const $form = $("#template-form");
     const $template_id = $("#template_id");
+    const $add = $("#add-question-button");
 
     let questions = [
         {
@@ -32,11 +33,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         sortableInstance.removeEventListener("sortupdate", handleSortUpdate);
         sortableInstance.addEventListener("sortupdate", handleSortUpdate);
     };
+
     const handleSortUpdate = ({ detail: { origin, destination } }) => {
         arrayMoveMutable(questions, origin.index, destination.index);
         renderQuestions();
     };
-    const $add = $("#add-question-button");
+
     $add?.addEventListener("click", () => {
         questions.push({
             _id: uuidv4(),
@@ -45,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         renderQuestions();
     });
+
     function renderQuestions() {
         if (!$questions) return;
         $questions.innerHTML = "";
@@ -86,43 +89,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const perQuestionIsValid = questions.every((q) => q.question);
         if (!perQuestionIsValid) {
-            return Swal.fire({
-                icon: "warning",
-                title: "Hey..!",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: "Por favor completa todas las preguntas.",
-            });
+            return window.alert(
+                "Hey..!",
+                "Por favor completa todas las preguntas."
+            );
         }
-        try {
-            const URL = $template_id
-                ? `/api/questionnaire-templates/${$template_id.value}`
-                : "/api/questionnaire-templates";
 
-            const { data } = await axios.post(URL, {
+        await window.mutation(
+            $template_id
+                ? `/api/questionnaire-templates/${$template_id.value}`
+                : "/api/questionnaire-templates",
+            {
                 ...Object.fromEntries(new FormData($form)),
                 questions,
                 deleteIds,
-            });
-            Swal.fire({
-                icon: "success",
-                title: "Hecho",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: data ?? "Formulario enviado correctamente",
-            }).then(() => {
-                window.location.href = "/edas/questionnaire-templates";
-            });
-        } catch (error) {
-            console.error(error);
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: error.response.data ?? "Error al enviar el formulario",
-            });
-        }
+            },
+            "Guardar plantilla",
+            "¿Estás seguro de guardar la plantilla?",
+            "/edas/questionnaire-templates"
+        );
     });
 
     if ($template_id) {
@@ -130,7 +115,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await window.query(
             `/api/questionnaire-templates/${id}/questions`
         );
-        // const orderBYOrder = data?.sort((a, b) => a.order - b.order);
 
         questions = data?.map((q) => ({
             _id: uuidv4(),
