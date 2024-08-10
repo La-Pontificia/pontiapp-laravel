@@ -6,22 +6,16 @@
     <section class="">
         <div class="min-h-svh max-sm:w-full text-white flex max-sm:justify-start">
             <div class="flex h-full w-full">
-                <div style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.70), rgba(0, 0, 0, 0.70)), url('/background.jpg');"
+                <div style="background-image: linear-gradient(to bottom, rgba(6, 9, 13, 0.9), rgba(9, 5, 8, 0.9), rgba(15, 15, 8, 0.9)), url('/background.webp');"
                     class="w-full min-h-svh bg-center bg-cover grid place-content-center">
                     <div
                         class="flex flex-col flex-grow justify-center gap-4 relative sm:rounded-lg items-center max-sm:justify-start max-sm:items-start">
                         <div class="flex-grow  flex flex-col justify-center">
                             <div class="p-10 relative z-10 w-[450px] max-sm:w-full max-w-full">
                                 <div class="w-full ">
-                                    {{-- <h1 class="text-2xl max-w-[20ch] mx-auto pb-3 text-center font-bold tracking-tighter">
-                                        Centro de Administración La Pontificia
-                                    </h1> --}}
                                     <div class="py-7">
-                                        <img src="/lp.webp" class="w-32 drop-shadow-md mx-auto" />
+                                        <img src="/lp-square.webp" class="w-12 drop-shadow-md mx-auto" />
                                     </div>
-                                    {{-- <p class="pb-3 text-center mt-5">
-                                        Ingresa tus credenciales para continuar.
-                                    </p> --}}
                                     <div class="w-full">
                                         <form method="POST" action="/login" class="grid gap-5">
                                             @csrf
@@ -64,7 +58,7 @@
                                     <p class="mt-6 text-xs text-gray-100 text-center">
                                         @2024 <a href="https://lp.com.pe" target="_blank"
                                             class="border-b border-gray-500 border-dotted">
-                                            Grupo La Pontificia.
+                                            La Pontificia.
                                         </a> All rights reserved.
                                     </p>
                                 </div>
@@ -82,9 +76,9 @@
                     </div>
                 </div>
             </div>
-            <div class="fixed max-sm:hidden pointer-events-none inset-0 opacity-60">
+            {{-- <div class="fixed max-sm:hidden pointer-events-none inset-0 opacity-60">
                 <img src="/2_11d9e3bcdfede9ce5ce5ace2d129f1c4.svg" class="object-cover w-full h-full" alt="">
-            </div>
+            </div> --}}
         </div>
     </section>
 @endsection
