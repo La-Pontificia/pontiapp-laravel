@@ -72,6 +72,7 @@
                                     <p class="text-nowrap">
                                         {{ $branch->name }}
                                     </p>
+
                                     <button title="Click para editar" class="absolute inset-0"
                                         data-modal-target="dialog-{{ $branch->id }}"
                                         data-modal-toggle="dialog-{{ $branch->id }}">
