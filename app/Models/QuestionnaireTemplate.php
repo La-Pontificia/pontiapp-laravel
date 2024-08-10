@@ -26,18 +26,29 @@ class QuestionnaireTemplate extends Model
 
   public $incrementing = false;
 
+  protected $hidden = [
+    'archived',
+    'created_by',
+    'updated_by',
+  ];
+
   public function questions()
+  {
+    return $this->hasMany(Question::class, 'template_id', 'id')->where('archived', false)->orderBy('order');
+  }
+
+  public function allQuestions()
   {
     return $this->hasMany(Question::class, 'template_id', 'id');
   }
 
   public function createdBy()
   {
-    return $this->belongsTo(User::class, 'created_by', 'id');
+    return $this->belongsTo(User::class, 'id', 'created_by');
   }
 
   public function updatedBy()
   {
-    return $this->belongsTo(User::class, 'updated_by', 'id');
+    return $this->belongsTo(User::class, 'id', 'updated_by');
   }
 }
