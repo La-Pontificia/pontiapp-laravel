@@ -10,9 +10,9 @@
 
 <div class="p-4 pb-2">
     @if (isset($template))
-        <input type="hidden" id="has-id" value="{{ $template->id }}">
+        <input type="hidden" id="template_id" value="{{ $template->id }}">
     @endif
-    <div class="grid grid-cols-12 gap-4 max-w-xl ">
+    <div class="grid relative grid-cols-12 gap-4 max-w-xl ">
         <label class="flex flex-col col-span-5 font-normal">
             <span class="block pb-1">Título</span>
             <input name="title" value="{{ $title }}" required>
@@ -82,3 +82,9 @@
         </div>
     </div>
 </div>
+
+@if (isset($template))
+    <div id="loader" class="absolute grid rounded-xl place-content-center h-full inset-0 bg-white z-10">
+        <div class="loader"></div>
+    </div>
+@endif
