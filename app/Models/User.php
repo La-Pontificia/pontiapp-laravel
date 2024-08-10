@@ -50,6 +50,18 @@ class User extends Authenticatable
     ];
 
 
+    static $rules = [
+        'dni' => 'required|numeric|digits:8',
+        'first_name' => 'required',
+        'username' => 'required',
+        'domain' => 'required',
+        'last_name' => 'required',
+        'id_role' => ['required', 'max:36'],
+        'id_role_user' => ['required', 'uuid'],
+        'id_branch' => ['required', 'uuid'],
+        'group_schedule_id' => ['uuid'],
+    ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
