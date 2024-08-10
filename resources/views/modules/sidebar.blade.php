@@ -23,40 +23,39 @@
             'icon' => 'heroicon-o-user-group',
             'text' => 'Gestión de Usuarios',
             'href' => '/users',
-            'enable' => $cuser->hasGroup('users'),
+            'enable' => $cuser->hasGroup('users') || $cuser->isDev(),
         ],
         [
             'icon' => 'heroicon-o-inbox',
             'text' => 'Gestión de Edas',
             'href' => '/edas',
-            'enable' => $cuser->hasGroup('edas'),
+            'enable' => $cuser->hasGroup('edas') || $cuser->isDev(),
         ],
         [
             'icon' => 'heroicon-o-calendar',
             'text' => 'Gestión de Asistencias',
             'href' => '/assists',
-            'enable' => $cuser->hasGroup('assists'),
+            'enable' => $cuser->hasGroup('assists') || $cuser->isDev(),
         ],
         [
             'icon' => 'heroicon-o-shield-check',
             'text' => 'Gestión de Auditoria',
             'href' => '/audit',
-            'enable' => $cuser->hasGroup('audit'),
+            'enable' => $cuser->hasGroup('audit') || $cuser->isDev(),
         ],
         [
             'icon' => 'heroicon-o-cog',
             'text' => 'Ajustes del sistema',
             'href' => '/settings',
-            'enable' => $cuser->hasGroup('settings'),
+            'enable' => $cuser->hasGroup('settings') || $cuser->isDev(),
         ],
     ];
 @endphp
 
-<nav class="p-4 max-lg:p-2">
-    <p class="font-medium px-3 max-lg:hidden flex-grow text-ellipsis">
-        {{ $cuser->first_name }} {{ $cuser->last_name }}
-    </p>
-    <div class="max-lg:flex hidden justify-center">
+
+
+<nav class="px-2 py-3 max-xl:space-y-3">
+    <div class="max-xl:flex hidden justify-center">
         @include('commons.avatar', [
             'src' => $cuser->profile,
             'className' => 'w-7',
@@ -64,35 +63,45 @@
             'altClass' => 'text-sm',
         ])
     </div>
-    <nav class="px-2 py-2">
-        @foreach ($userItems as $item)
-            <a title="{{ $item['text'] }}" class="flex relative gap-2 p-2 hover:bg-neutral-200 rounded-lg"
-                href="{{ $item['href'] }}">
-                @svg($item['icon'], [
-                    'class' => 'w-5 h-5 max-lg:w-6 max-lg:mx-auto',
-                ])
-                <span class="max-lg:hidden">{{ $item['text'] }}</span>
-            </a>
-        @endforeach
-    </nav>
-</nav>
-<nav class="p-4 max-lg:p-2 pt-3">
-    <p class="font-medium px-3 max-lg:hidden flex-grow text-ellipsis">
-        Administración
+    <p class="font-medium text-xs opacity-50 px-3 max-xl:hidden flex-grow text-ellipsis">
+        {{ $cuser->first_name }} {{ $cuser->last_name }}
     </p>
-    <nav class="px-2 py-2">
+    @foreach ($userItems as $item)
+        <a title="{{ $item['text'] }}"
+            class="flex group relative data-[active]:font-medium gap-2 p-2 hover:bg-white rounded-lg"
+            href="{{ $item['href'] }}">
+            @svg($item['icon'], [
+                'class' => 'w-5 h-5 max-xl:w-6 max-xl:h-6 max-xl:mx-auto',
+            ])
+            <span class="max-xl:hidden">{{ $item['text'] }}</span>
+        </a>
+    @endforeach
+</nav>
+
+@if (
+    $otherItems[0]['enable'] &&
+        $otherItems[1]['enable'] &&
+        $otherItems[2]['enable'] &&
+        $otherItems[3]['enable'] &&
+        $otherItems[4]['enable']
+)
+    <nav class="px-2 py-3 border-t border-neutral-300 max-xl:space-y-3">
+        <p class="font-medium text-xs opacity-50 px-3 max-xl:hidden flex-grow text-ellipsis">
+            Administración
+        </p>
         @foreach ($otherItems as $item)
             @if (!$item['enable'])
                 @continue
             @endif
 
-            <a title="{{ $item['text'] }}" class="flex relative gap-2 p-2 hover:bg-neutral-200 rounded-lg"
+            <a title="{{ $item['text'] }}"
+                class="flex group relative data-[active]:font-medium gap-2 p-2 hover:bg-white rounded-lg"
                 href="{{ $item['href'] }}">
                 @svg($item['icon'], [
-                    'class' => 'w-5 h-5 max-lg:w-6 max-lg:mx-auto',
+                    'class' => 'w-5 h-5 max-xl:w-6 max-xl:h-6 max-xl:mx-auto',
                 ])
-                <span class="max-lg:hidden">{{ $item['text'] }}</span>
+                <span class="max-xl:hidden">{{ $item['text'] }}</span>
             </a>
         @endforeach
     </nav>
-</nav>
+@endif

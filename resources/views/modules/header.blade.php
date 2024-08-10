@@ -1,10 +1,7 @@
 <nav class="bg-[#f5f7fc] text-blue-700 h-14 w-full z-30">
     <div class="flex w-full gap-5 items-center h-full px-3">
         <div class="flex-grow flex gap-2 items-center">
-            <a href="/"><img src="/lp.webp" class="w-24 invert" /></a>
-            <p class="font-semibold text-ellipsis overflow-hidden text-nowrap tracking-tight">
-                Grupo La Pontificia
-            </p>
+            <a href="/"><img src="/lp.webp" class="w-32" /></a>
         </div>
         <button>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -31,7 +28,7 @@
             id="user-dropdown">
             <div class="flex p-3 pb-0 items-center ">
                 <div class="flex items-center flex-grow gap-2">
-                    <img src="/lp.webp" class="w-20 invert" />
+                    <img src="/lp.webp" class="w-20 " />
                 </div>
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault();document.getElementById('logout-form').submit();"

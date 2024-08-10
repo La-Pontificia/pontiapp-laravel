@@ -28,7 +28,7 @@
                                 @include('modules.settings.sidebar')
                             @endif
                         </div>
-                        <footer class="p-5 max-lg:hidden max-w-[300px] hover:[&>a]:underline text-xs text-black text-center">
+                        <footer class="p-5 max-xl:hidden max-w-[300px] hover:[&>a]:underline text-xs text-black text-center">
                             <a href="">
                                 Terminos y condiciones
                             </a>
@@ -46,7 +46,7 @@
                             </a>
                         </footer>
                     </aside>
-                    <div class="overflow-auto w-full flex-grow p-2 flex flex-col h-full">
+                    <div class="overflow-auto w-full flex-grow p-2 max-xl:pl-0 flex flex-col h-full">
                         @yield('content')
                     </div>
                 </main>
