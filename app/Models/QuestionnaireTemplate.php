@@ -44,11 +44,11 @@ class QuestionnaireTemplate extends Model
 
   public function createdBy()
   {
-    return $this->belongsTo(User::class, 'id', 'created_by');
+    return $this->hasOne(User::class, 'id', 'created_by');
   }
 
   public function updatedBy()
   {
-    return $this->belongsTo(User::class, 'id', 'updated_by');
+    return $this->hasOne(User::class, 'id', 'updated_by');
   }
 }

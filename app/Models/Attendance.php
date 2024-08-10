@@ -35,6 +35,6 @@ class Attendance extends Model
 
     public function employee()
     {
-        return $this->belongsTo(AttendanceEmp::class, 'emp_id', 'id');
+        return $this->hasOne(AttendanceEmp::class, 'emp_id', 'id');
     }
 }

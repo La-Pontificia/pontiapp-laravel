@@ -22,6 +22,6 @@ class AttendanceEmp extends Model
 
     public function department()
     {
-        return $this->belongsTo(AttendanceDept::class, 'department_id', 'id');
+        return $this->hasOne(AttendanceDept::class, 'department_id', 'id');
     }
 }
