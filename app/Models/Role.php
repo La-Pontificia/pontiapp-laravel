@@ -27,21 +27,21 @@ class Role extends Model
 
     public function department()
     {
-        return $this->hasOne('App\Models\Department', 'id', 'id_department');
+        return $this->hasOne(Department::class, 'id', 'id_department');
     }
 
     public function job_position()
     {
-        return $this->hasOne('App\Models\JobPosition', 'id', 'id_job_position');
+        return $this->hasOne(JobPosition::class, 'id', 'id_job_position');
     }
 
     public function createdBy()
     {
-        return $this->hasOne('App\Models\User', 'created_by', 'id');
+        return $this->hasOne(User::class, 'id', 'created_by');
     }
 
     public function updatedBy()
     {
-        return $this->hasOne('App\Models\User', 'updated_by', 'id');
+        return $this->hasOne(User::class, 'id', 'updated_by');
     }
 }
