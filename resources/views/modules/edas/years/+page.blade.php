@@ -7,7 +7,7 @@
     <div class="w-full flex flex-col h-full overflow-y-auto">
         <nav class="border-b mb-2 p-2 flex items-center gap-3">
 
-            @if ($cuser->has('edas:years:create'))
+            @if ($cuser->has('edas:years:create') || $cuser->isDev())
                 <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                     class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -62,7 +62,7 @@
             Gestión de años de edas.
         </h2>
         <div class="overflow-auto flex-grow">
-            @if ($cuser->has('edas:years:show'))
+            @if ($cuser->has('edas:years:show') || $cuser->isDev())
                 <table class="w-full text-left">
                     <thead class="border-b">
                         <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-1.5 [&>th]:px-2">
