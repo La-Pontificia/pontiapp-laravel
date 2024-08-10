@@ -1,12 +1,12 @@
 @extends('modules.edas.slug.+layout')
 
-@section('title', 'Eda: ' . $current_year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
+@section('title', 'Eda: ' . $current_year->name . ' - ' . $eda->user->first_name . ' ' . $eda->user->last_name)
 
 @section('title_eda', 'Finalización del EDA')
 
 @php
     $hasCloseEda =
-        (($cuser->has('edas:close') && $user->supervisor_id === $cuser->id) || $cuser->has('edas:close-all')) &&
+        (($cuser->has('edas:close') && $eda->user->supervisor_id === $cuser->id) || $cuser->has('edas:close-all')) &&
         !$eda->closed;
 @endphp
 
@@ -23,7 +23,7 @@
                         data-accordion-target="#goals-body" aria-expanded="true" aria-controls="goals-body">
                         <span class="flex items-center gap-2">
                             <img src="/pen.png" class="w-5" alt="">
-                            Objectivos: {{ count($goals) }}</span>
+                            Objectivos: {{ count($eda->goals) }}</span>
                         <svg data-accordion-icon
                             class="w-3 text-neutral-400 group-aria-expanded:text-black h-3 rotate-180 shrink-0"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -34,10 +34,10 @@
                 </h2>
                 <div id="goals-body" class="hidden p-2 pl-10" aria-labelledby="goals-headding">
                     <p class="opacity-70 pb-2">
-                        {{ $user->first_name }} ha cumplido con los siguientes objetivos:
+                        {{ $eda->user->first_name }} ha cumplido con los siguientes objetivos:
                     </p>
                     <ul class="list-disc list-inside">
-                        @foreach ($goals as $goal)
+                        @foreach ($eda->goals as $goal)
                             <li>{{ $goal->title }} | {{ $goal->percentage }}%</li>
                         @endforeach
                     </ul>
@@ -72,7 +72,7 @@
                 </h2>
                 <div id="evaluations-body" class="hidden p-2 pl-10" aria-labelledby="evaluations-headding">
                     <p class="opacity-70 pb-2 ">
-                        {{ $user->first_name }} ha sido evaluado en las siguientes evaluaciones:
+                        {{ $eda->user->first_name }} ha sido evaluado en las siguientes evaluaciones:
                     </p>
                     <ul class="list-disc list-inside">
                         @foreach ($evaluations as $evaluation)
@@ -105,7 +105,7 @@
                     @if ($hasCloseEda)
                         <button data-param="/api/edas/close/{{ $eda->id }}" data-id="{{ $eda->id }}"
                             data-atitle="Cerrar EDA"
-                            data-adescription="¿Estás seguro de cerrar el EDA de {{ $user->first_name }} {{ $user->last_name }} del año {{ $current_year->name }}?"
+                            data-adescription="¿Estás seguro de cerrar el EDA de {{ $eda->user->first_name }} {{ $eda->user->last_name }} del año {{ $current_year->name }}?"
                             class="bg-red-600 shadow-sm dinamic-alert shadow-red-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-red-700 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
                             @svg('heroicon-o-x-mark', [
                                 'class' => 'w-5 h-5',
