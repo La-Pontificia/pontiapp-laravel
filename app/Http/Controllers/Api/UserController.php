@@ -42,7 +42,7 @@ class UserController extends Controller
             'created_by' => auth()->user()->id,
         ]);
 
-        return response()->json($user, 200);
+        return response()->json('Usuario creado correctamente.', 200);
     }
 
     public function update(Request $request, $id)
@@ -79,7 +79,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return response()->json(['success' => $user], 200);
+        return response()->json('Usuario actualizado correctamente.', 200);
     }
 
     public function profile(Request $request, $id)
@@ -97,7 +97,7 @@ class UserController extends Controller
             'profile' => $request->profile,
         ]);
 
-        return response()->json(['success' => $request->profile], 200);
+        return response()->json('Foto de perfil actualizado correctamente.', 200);
     }
 
     public function search(Request $request)
