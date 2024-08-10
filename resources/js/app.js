@@ -10,8 +10,11 @@ import "./evaluation.js";
 import "./questionnaire-templates.js";
 import "./email-access.js";
 import "./assists.js";
+import "./ui.js";
+import "./questionnaires.js";
 
 import Cookie from "js-cookie";
+import axios from "axios";
 
 window.onPaste = (e) => {
     e.preventDefault();
@@ -88,6 +91,84 @@ window.debounce = (func, delay) => {
             func.apply(this, args);
         }, delay);
     };
+};
+
+window.query = async (url) => {
+    const $$ = document.querySelector.bind(document);
+    const $loader = $$("#loader");
+    try {
+        const { data: resData } = await axios.get(url);
+        return resData;
+    } catch (error) {
+        console.error(error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            text: error.response.data ?? "Algo salió mal.",
+        });
+        return null;
+    } finally {
+        if ($loader) {
+            $loader.classList.add("hidden");
+        }
+    }
+};
+
+window.alert = (title = "Confirmar", text = "Confirmar", icon = "warning") =>
+    Swal.fire({
+        icon,
+        title,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        text,
+    });
+
+window.mutation = async (
+    url,
+    data,
+    title = "Confirmar operación",
+    text = "¿Estás seguro de realizar esta operación?",
+    redirect = null,
+    confirmButtonText = "Sí, confirmar"
+) => {
+    try {
+        const result = await Swal.fire({
+            title,
+            text,
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText,
+            cancelButtonText: "Cancelar",
+        });
+
+        if (!result.isConfirmed) return;
+
+        const { data: json } = await axios.post(url, data);
+        Swal.fire({
+            icon: "success",
+            title: "¡Hecho!",
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            text: json ?? "Operación exitosa",
+        }).then(() => {
+            redirect
+                ? (window.location.href = redirect)
+                : window.location.reload();
+        });
+    } catch (error) {
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            text: error.response.data ?? "Error al realizar la operación",
+        });
+    }
 };
 
 window.defaultProfile =
