@@ -30,11 +30,11 @@ class JobPosition extends Model
 
     public function createdBy()
     {
-        return $this->belongsTo('App\Models\User', 'created_by', 'id');
+        return $this->belongsTo(User::class, 'id', 'created_by');
     }
 
     public function updatedBy()
     {
-        return $this->belongsTo('App\Models\User', 'updated_by', 'id');
+        return $this->belongsTo(User::class, 'id', 'updated_by');
     }
 }
