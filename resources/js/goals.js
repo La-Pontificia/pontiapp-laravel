@@ -1,4 +1,3 @@
-import axios from "axios";
 import moment from "moment";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -28,28 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $info = $goalSheet?.querySelector("#goal-info");
     // GET goals
 
-    if ($input_id) {
-        if ($sentGoalsButton)
-            $sentGoalsButton.textContent = "Reenviar objetivos";
-        const res = await axios.get(`/api/goals/by-eda/${$input_id.value}`);
-        res.data.map((goal) => {
-            goals.push({
-                _id: goal.id,
-                id: goal.id,
-                title: goal.title,
-                description: goal.description,
-                indicators: goal.indicators,
-                percentage: goal.percentage,
-                comments: goal.comments,
-                created_at: goal.created_at,
-                created_by: goal.createdBy,
-                updated_at: goal.updated_at,
-                updated_by: goal.updatedBy,
-            });
-        });
-        renderGoals();
-    }
-
     // UI functions
     function clearGoalSheet() {
         $goalSheet.removeAttribute("data-id");
@@ -78,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         removeAllGoalsDataState();
         openGoalSheet();
     }
+
     function openGoalSheet() {
         $goalSheet.setAttribute("data-state", "open");
         $title.focus();
@@ -181,6 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
     }
+
     function addNewGoal(goal) {
         goals.push(goal);
         renderGoals();
@@ -286,51 +265,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const id_eda = $sentGoalsButton.getAttribute("data-id-eda");
 
-        try {
-            const result = await Swal.fire({
-                title: "Enviar objetivos",
-                text: `¿Estás seguro de enviar los objetivos?${
-                    goals_to_delete.length > 0
-                        ? ". Se eliminarán los objetivos seleccionados y sus evaluaciones relacionadas"
-                        : ""
-                }`,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, confirmar",
-                cancelButtonText: "Cancelar",
-            });
-
-            if (!result.isConfirmed) return;
-
-            const fetchURI = $input_id
+        await window.mutation(
+            $input_id
                 ? `/api/goals/update/${id_eda}`
-                : `/api/goals/sent/${id_eda}`;
-
-            const { data } = await axios.post(fetchURI, {
+                : `/api/goals/sent/${id_eda}`,
+            {
                 goals,
                 goals_to_delete,
-            });
-
-            Swal.fire({
-                icon: "success",
-                title: "Hecho",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: data ?? "Los objetivos fueron enviados correctamente",
-            }).then(() => {
-                window.location.reload();
-            });
-        } catch (error) {
-            console.error(error);
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                text: error.response.data ?? "Error al enviar el formulario",
-            });
-        }
+            },
+            "Enviar objetivos",
+            `¿Estás seguro de enviar los objetivos?${
+                goals_to_delete.length > 0
+                    ? ". Se eliminarán los objetivos seleccionados y sus evaluaciones relacionadas"
+                    : ""
+            }`
+        );
     });
+
+    if ($input_id) {
+        if ($sentGoalsButton)
+            $sentGoalsButton.textContent = "Reenviar objetivos";
+        const data = await window.query(`/api/goals/by-eda/${$input_id.value}`);
+        data.map((goal) => {
+            goals.push({
+                _id: goal.id,
+                id: goal.id,
+                title: goal.title,
+                description: goal.description,
+                indicators: goal.indicators,
+                percentage: goal.percentage,
+                comments: goal.comments,
+                created_at: goal.created_at,
+                created_by: goal.createdBy,
+                updated_at: goal.updated_at,
+                updated_by: goal.updatedBy,
+            });
+        });
+        renderGoals();
+    }
 });
