@@ -11,5 +11,11 @@ export default {
         "./node_modules/flowbite/**/*.js",
     ],
     darkMode: "media",
-    plugins: [require("flowbite/plugin")],
+    plugins: [
+        require("flowbite/plugin")({
+            charts: false,
+            forms: false,
+            tooltips: false,
+        }),
+    ],
 };
