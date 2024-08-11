@@ -34,12 +34,12 @@
 @endphp
 
 @section('layout.users')
-    <div class="text-black w-full flex-col flex-grow flex overflow-y-auto">
-        <header class="border-b border-gray-300">
-            <div class="p-3 pb-2 flex gap-4 items-center overflow-hidden">
+    <div class="text-black max-w-5xl mx-auto w-full flex-col flex-grow flex overflow-y-auto">
+        <header class="border-b px-4 border-gray-300">
+            <div class="pb-2 flex gap-4 items-center overflow-hidden">
                 <div class="relative w-fit">
                     <div class="flex items-center gap-4">
-                        <div class="relative rounded-full overflow-hidden w-28 border aspect-square">
+                        <div class="relative rounded-full overflow-hidden w-24 border aspect-square">
                             <input data-notoutline-styles data-userid="{{ $user->id }}" class="hidden" type="file"
                                 name="profile" id="input-profile" accept="image/*">
                             <img id="preview-profile" class="w-full h-full object-cover" src={{ $profile }}
@@ -68,16 +68,11 @@
                     </div>
                 </div>
             </div>
-            <nav class="flex text-[15px] font-medium overflow-x-auto">
+            <nav class="flex text-sm gap-2 pb-3 overflow-x-auto">
                 @foreach ($items as $item)
                     <a href="{{ $item['link'] }}" {{ $item['active'] ? 'data-active' : '' }}
-                        class="hover:bg-neutral-200/70 text-nowrap data-[active]:font-medium data-[active]:text-blue-700 relative group rounded-t-md p-3 block">
+                        class="border-2 data-[active]:border-blue-600 hover:border-neutral-500 data-[active]:text-blue-700 data-[active]:bg-blue-500/10 rounded-full py-1.5 px-4">
                         {{ $item['title'] }}
-                        <div class="absolute bottom-0 left-0 w-full">
-                            <div
-                                class="group-data-[active]:h-[2px] group-hover:h-[2px] group-data-[active]:bg-blue-700 bg-neutral-300 w-[86%] group-data-[active]:group-hover:w-full transition-all mx-auto rounded-full">
-                            </div>
-                        </div>
                     </a>
                 @endforeach
             </nav>
