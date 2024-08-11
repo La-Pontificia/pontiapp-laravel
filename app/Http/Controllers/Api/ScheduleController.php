@@ -158,6 +158,7 @@ class ScheduleController extends Controller
 
         return response()->json('Grupo de horario actualizado correctamente.', 200);
     }
+
     public function group(Request $request)
     {
         $request->validate([
@@ -169,6 +170,23 @@ class ScheduleController extends Controller
             'created_by' => auth()->user()->id
         ]);
         return response()->json('Grupo de horario creado correctamente.', 200);
+    }
+
+    public function groupDefault($id)
+    {
+        $group = GroupSchedule::find($id);
+        $groups = GroupSchedule::where('default', true)->get();
+        if (!$group)  return response()->json('Group not found', 404);
+
+        foreach ($groups as $g) {
+            $g->default = false;
+            $g->save();
+        }
+
+        $group->default = true;
+        $group->save();
+
+        return response()->json('Grupo de horario predeterminado actualizado correctamente.', 200);
     }
 
     public function remove($id)
@@ -222,7 +240,6 @@ class ScheduleController extends Controller
         $group->delete();
         return response()->json('Grupo de horario eliminado correctamente', 200);
     }
-
 
     // utls
 
