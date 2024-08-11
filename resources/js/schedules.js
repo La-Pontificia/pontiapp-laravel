@@ -67,38 +67,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    if (group_id || user_id) {
-        const uri = group_id
-            ? `/api/schedules/group/${group_id.value}`
-            : `/api/schedules/user/${user_id.value}`;
-        const { data: schedulesData } = await axios.get(uri);
-
-        const groupEvents = schedulesData.map((schedule) => {
-            const startDate = new Date(moment(schedule.start_date));
-            const endDate = new Date(moment(schedule.end_date));
-            const from = schedule.from;
-            const to = schedule.to;
-            return generateEvents(
-                {
-                    startDate,
-                    endDate,
-                    days: schedule.days,
-                    from,
-                    to,
-                },
-                schedule
-            ).map((item) => ({
-                ...item,
-                title: schedule.title,
-                backgroundColor: schedule.background,
-                borderColor: schedule.background,
-            }));
-        });
-
-        schedules = groupEvents.flat();
-        updateEventSource(groupEvents.flat());
-    }
-
     const $schedulesParent = $("#schedules");
     const $schedules = $schedulesParent?.querySelectorAll(".schedule");
 
@@ -133,6 +101,39 @@ document.addEventListener("DOMContentLoaded", async () => {
             $schedule.setAttribute("data-active", true);
         });
     });
+
+    if (group_id || user_id) {
+        const uri = group_id
+            ? `/api/schedules/group/${group_id.value}`
+            : `/api/schedules/user/${user_id.value}`;
+
+        const data = await window.query(uri);
+
+        const groupEvents = data.map((schedule) => {
+            const startDate = new Date(moment(schedule.start_date));
+            const endDate = new Date(moment(schedule.end_date));
+            const from = schedule.from;
+            const to = schedule.to;
+            return generateEvents(
+                {
+                    startDate,
+                    endDate,
+                    days: schedule.days,
+                    from,
+                    to,
+                },
+                schedule
+            ).map((item) => ({
+                ...item,
+                title: schedule.title,
+                backgroundColor: schedule.background,
+                borderColor: schedule.background,
+            }));
+        });
+
+        schedules = groupEvents.flat();
+        updateEventSource(groupEvents.flat());
+    }
 
     calendar.render();
 });

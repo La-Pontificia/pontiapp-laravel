@@ -16,6 +16,9 @@ import "./questionnaires.js";
 import Cookie from "js-cookie";
 import axios from "axios";
 
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import "sweetalert2/src/sweetalert2.scss";
+
 window.onPaste = (e) => {
     e.preventDefault();
     const text = e.clipboardData.getData("text/plain");
@@ -72,14 +75,6 @@ window.enabledFormChildren = (form) => {
         }
     });
 };
-
-window.toast = Swal.mixin({
-    toast: true,
-    position: "bottom-left",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-});
 
 window.debounce = (func, delay) => {
     let timeoutId;
