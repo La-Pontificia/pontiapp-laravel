@@ -17,7 +17,7 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-    protected $perPage = 20;
+    protected $perPage = 15;
 
     protected $fillable = [
         'id',

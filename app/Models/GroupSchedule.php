@@ -18,6 +18,7 @@ class GroupSchedule extends Model
 
     protected $fillable = [
         'name',
+        'default',
         'created_by'
     ];
 
