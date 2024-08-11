@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\JobPosition;
 use App\Models\Branch;
 use App\Models\BusinessUnit;
+use App\Models\Department;
 use App\Models\GroupSchedule;
 use App\Models\Schedule;
 use App\Models\User;
@@ -31,19 +32,37 @@ class UserController extends Controller
         $match = User::orderBy('created_at', 'desc');
         $query = $request->get('q');
         $job_position = $request->get('job_position');
-        $job_positions = JobPosition::all();
+        $status = $request->get('status');
         $role = $request->get('role');
+        $department = $request->get('department');
+        $job_positions = JobPosition::all();
+        $user_roles = UserRole::all();
         $users = [];
 
-        // filters
+        if ($status && $status == 'actives') {
+            $match->where('status', true);
+        }
+
+        if ($status && $status == 'inactives') {
+            $match->where('status', false);
+        }
+
+        if ($role) {
+            $match->where('id_role_user', $role);
+        }
+
         if ($job_position) {
             $match->whereHas('role_position', function ($q) use ($job_position) {
                 $q->where('id_job_position', $job_position);
             });
         }
 
-        if ($role) {
-            $match->where('id_role', $role);
+        if ($department) {
+            $match->whereHas('role_position', function ($q) use ($department) {
+                $q->whereHas('department', function ($q) use ($department) {
+                    $q->where('id', $department);
+                });
+            });
         }
 
         if ($query) {
@@ -54,7 +73,7 @@ class UserController extends Controller
         }
 
         $jobPostions = JobPosition::all();
-        $roles = Role::all();
+        $departments = Department::all();
 
         $users = $match->paginate();
 
@@ -66,7 +85,7 @@ class UserController extends Controller
             return $match;
         }
 
-        return view('modules.users.+page', compact('users', 'job_positions', 'roles'))
+        return view('modules.users.+page', compact('users', 'job_positions', 'user_roles', 'departments'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
@@ -121,7 +140,7 @@ class UserController extends Controller
         $group_schedules = GroupSchedule::all();
 
 
-        if (!$user) return view('pages.500', ['error' => 'User not found']);
+        if (!$user) return view('+500', ['error' => 'User not found']);
 
         return view('modules.users.slug.+page', compact('user', 'job_positions', 'roles', 'user_roles', 'branches', 'group_schedules'));
     }
@@ -129,7 +148,7 @@ class UserController extends Controller
     public function slug_organization($id)
     {
         $user = User::find($id);
-        if (!$user) return view('pages.500', ['error' => 'User not found']);
+        if (!$user) return view('+500', ['error' => 'User not found']);
 
         return view('modules.users.slug.organization.+page', compact('user'));
     }
@@ -138,7 +157,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (!$user) return view('pages.500', ['error' => 'User not found']);
+        if (!$user) return view('+500', ['error' => 'User not found']);
 
         $groupSchedules = $user->group_schedule_id ? $user->groupSchedule->schedules : collect();
 
@@ -152,7 +171,7 @@ class UserController extends Controller
     public function slug_assists(Request $request, $id)
     {
         $user = User::find($id);
-        if (!$user) return view('pages.500', ['error' => 'User not found']);
+        if (!$user) return view('+500', ['error' => 'User not found']);
 
         $qterminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : null;
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));

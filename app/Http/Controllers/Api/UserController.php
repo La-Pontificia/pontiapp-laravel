@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\GroupSchedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,8 @@ class UserController extends Controller
         if ($alreadyByEmail->count() > 0)
             return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
 
+        $defaultSchedule = GroupSchedule::where('default', true)->first();
+
         $user = User::create([
             'profile' => $request->profile ?? null,
             'dni' => $request->dni,
@@ -36,13 +39,13 @@ class UserController extends Controller
             'status' => true,
             'id_role' => $request->id_role,
             'id_role_user' => $request->id_role_user,
-            'group_schedule_id' => $request->group_schedule_id,
+            'group_schedule_id' => $request->group_schedule_id ?? $defaultSchedule->id,
             'id_branch' => $request->id_branch,
             'username' => $request->username,
             'created_by' => auth()->user()->id,
         ]);
 
-        return response()->json('Usuario creado correctamente.', 200);
+        return response()->json($user, 200);
     }
 
     public function update(Request $request, $id)
