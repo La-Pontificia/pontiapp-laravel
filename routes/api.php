@@ -109,6 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('schedules/archive/{id}', [ScheduleController::class, 'archive']);
 
     Route::get('schedules/group/{id}', [ScheduleController::class, 'groupSchedules']);
+    Route::post('schedules/group/default/{id}', [ScheduleController::class, 'groupDefault']);
     Route::post('schedules/group', [ScheduleController::class, 'group']);
     Route::post('schedules/group/{id}', [ScheduleController::class, 'groupUpdate']);
     Route::post('schedules/group/delete/{id}', [ScheduleController::class, 'groupDelete']);
