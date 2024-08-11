@@ -2,12 +2,12 @@
     $privileges = isset($role) ? $role->privileges : [];
     $title = isset($role) ? $role->title : null;
 @endphp
-<label class="block px-1">
+<label class="label">
     <span>Título:</span>
-    <input value="{{ $title }}" required type="text" name="title" placeholder="Ejemplo: Administrador">
+    <input value="{{ $title }}" required type="" name="title" placeholder="Ejemplo: Administrador">
 </label>
-<div class="px-1 overflow-y-auto">
-    <p class="tracking-tight text-stone-600">Privilegios:</p>
+<div class="px-1">
+    <p class="tracking-tight pt-2 text-stone-600">Privilegios:</p>
     <div class="grid items-start gap-2">
         @foreach ($system_privileges as $index => $system_privilege)
             <div class="content">
