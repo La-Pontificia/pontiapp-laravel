@@ -1,4 +1,4 @@
-<div class="rounded-full overflow-hidden shadow-sm aspect-square {{ $className }}">
+<div class="rounded-full overflow-hidden shadow-sm border aspect-square {{ $className }}">
     @if ($src)
         <img src={{ $src }} class="w-full h-full object-cover" alt="">
     @else
