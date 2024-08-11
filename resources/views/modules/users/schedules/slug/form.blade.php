@@ -18,29 +18,35 @@
 
 @endphp
 
-@if ($user_id)
-    <input type="hidden" name="user_id" value="{{ $user_id }}">
-@endif
+
 
 <div class="flex items-center gap-2">
-    <input value="{{ $schedule->title ?? 'Horario laboral' }}" autofocus value="Horario laboral" type="text"
-        placeholder="Título (Opcional)" name="title">
-    <input data-notstyles type="color" value="{{ $background }}" name="background"
-        class="w-9 h-9 aspect-square rounded-lg">
+    <label class="label">
+        <span>Nombre</span>
+        <input value="{{ $schedule->title ?? 'Horario laboral' }}" autofocus value="Horario laboral" type="text"
+            placeholder="Título (Opcional)" name="title">
+    </label>
+
+    <label class="label">
+        <span>Color</span>
+        <input type="color" value="{{ $background }}" name="background" class="w-9 h-9 p-0 aspect-square rounded-lg">
+    </label>
+
 </div>
-<div class="flex items-center gap-5">
-    <div class="flex flex-col">
-        <div class="text-sm opacity-60 font-semibold">Inicia:</div>
-        <input value="{{ $startDate }}" required style="width: 170px" type="date" placeholder="Nombre"
-            name="start_date">
-    </div>
-    <div class="flex flex-col">
-        <div class="text-sm opacity-60 font-semibold">Finaliza:</div>
-        <input value="{{ $endDate }}" style="width: 170px" type="date" name="end_date">
-    </div>
+
+<div class="grid grid-cols-2 gap-5">
+    <label class="label">
+        <span>Inicia a partir de la fecha:</span>
+        <input value="{{ $startDate }}" required type="date" placeholder="Nombre" name="start_date">
+    </label>
+    <label class="label">
+        <span>Finaliza en la fecha:</span>
+        <input value="{{ $endDate }}" type="date" name="end_date">
+    </label>
 </div>
+
 <div>
-    <div class="p-1">Días de la semana:</div>
+    <span class="block pb-2 font-semibold text-xs opacity-80">Días de la semana:</span>
     <div class="flex items-center gap-5">
         @foreach ($days as $day)
             <label title="{{ $day['name'] }}" class="flex items-center gap-1">
@@ -55,41 +61,43 @@
         @endforeach
     </div>
 </div>
-<div class="flex border-y py-3 gap-2">
-    <div class="flex flex-col w-full">
-        <div class="text-sm opacity-60 font-semibold">Entrada:</div>
+
+<div class="grid border-y grid-cols-2 py-3 gap-4">
+    <label class="label">
+        <span>Entrada:</span>
         <input value="{{ $from }}" min="05:00" max="23:00" required type="time"
             value="05:00"name="from" class="w-full">
-    </div>
+    </label>
     <div class="w-full">
-        <div class="flex flex-col">
-            <div class="text-sm opacity-60 font-semibold">Permite marcar entrada desde:</div>
+        <label class="label">
+            <span>Permite marcar entrada desde:</span>
             <input value="{{ $from_start }}" min="04:00" max="24:00" required type="time" name="from_start"
                 class="w-full">
-        </div>
-        <div class="flex flex-col">
-            <div class="text-sm opacity-60 font-semibold">Permite marcar entrada hasta:</div>
+        </label>
+        <label class="label">
+            <span>Permite marcar entrada hasta:</span>
             <input value="{{ $from_end }}" min="04:00" max="24:00" required type="time" name="from_end"
                 class="w-full">
-        </div>
+        </label>
     </div>
 </div>
-<div class="flex border-y py-3  gap-2">
-    <div class="flex flex-col w-full">
-        <div class="text-sm opacity-60 font-semibold">Salida:</div>
+
+<div class="grid grid-cols-2 py-3 gap-4">
+    <label class="label">
+        <span>Salida:</span>
         <input value="{{ $to }}" min="05:00" max="23:00" required type="time" name="to"
             class="w-full">
-    </div>
+    </label>
     <div class="w-full">
-        <div class="flex flex-col">
-            <div class="text-sm opacity-60 font-semibold">Permite marcar salida desde:</div>
+        <label class="label">
+            <span>Permite marcar salida desde:</span>
             <input value="{{ $to_start }}" min="04:00" max="24:00" required type="time" name="to_start"
                 class="w-full">
-        </div>
-        <div class="flex flex-col">
-            <div class="text-sm opacity-60 font-semibold">Permite marcar salida hasta:</div>
+        </label>
+        <label class="label">
+            <span>Permite marcar salida hasta:</span>
             <input value="{{ $to_end }}" min="04:00" max="24:00" required type="time" name="to_end"
                 class="w-full">
-        </div>
+        </label>
     </div>
 </div>
