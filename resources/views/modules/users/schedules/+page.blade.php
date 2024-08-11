@@ -3,188 +3,114 @@
 @section('title', 'Horarios')
 
 @section('layout.users')
-    <div class="text-black w-full flex-col space-y-3 flex-grow flex overflow-y-auto">
-
-        @if ($cuser->has('users:schedules:create') || $cuser->isDev())
-            <button type="button" data-modal-target="create-scheldule-modal" data-modal-toggle="create-scheldule-modal"
-                class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-plus">
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                </svg>
-                <span class="max-lg:hidden">Nuevo grupo de horario</span>
-            </button>
-            <div id="create-scheldule-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
-                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                <div class="relative p-4 w-full max-w-xl max-h-full">
-                    <div class="relative bg-white rounded-2xl shadow">
-                        <div class="flex items-center justify-between p-3 border-b rounded-t">
-                            <h3 class="text-lg font-semibold text-gray-900">
-                                Nuevo horario
-                            </h3>
-                            <button type="button"
-                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                data-modal-hide="create-scheldule-modal">
-                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 14 14">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                </svg>
-                            </button>
-                        </div>
-                        @include('components.users.auditory-card')
-                        <form action="/api/schedules/group" method="POST" id="schedule-form-group"
-                            class="p-3 dinamic-form grid gap-4">
+    <div class="w-full max-w-5xl mx-auto">
+        <h2 class="py-5">Grupo de horarios establecidos.</h2>
+        <div class="flex flex-col w-full bg-white border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
+            @if ($cuser->has('users:schedules:create') || $cuser->isDev())
+                <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary m-2">
+                    @svg('bx-plus', 'w-5 h-5')
+                    <span>Nuevo</span>
+                </button>
+                <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                    <div class="content lg:max-w-lg max-w-full">
+                        <header>
+                            Agregar nuevo grupo
+                        </header>
+                        <form action="/api/schedules/group" method="POST" id="dialog-form"
+                            class="dinamic-form body grid gap-4">
                             <input autofocus type="text" required placeholder="Nombre" name="name">
                         </form>
-                        <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                            <button form="schedule-form-group" type="submit"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
+
+                        <footer>
+                            <button data-modal-hide="dialog" type="button">Cancelar</button>
+                            <button form="dialog-form" type="submit">
                                 Guardar</button>
-                            <button id="button-close-scheldule-modal" data-modal-hide="create-scheldule-modal"
-                                type="button"
-                                class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
-                        </div>
+                        </footer>
                     </div>
                 </div>
-            </div>
-        @endif
-        <h2 class="py-3 pb-0 font-semibold tracking-tight text-lg px-2">
-            Gestion de horarios
-        </h2>
-        @if ($cuser->has('users:schedules:show') || $cuser->isDev())
-            <div class="h-full flex-grow overflow-auto">
-                <table class="w-full text-left" id="table-users">
-                    <thead class="border-b">
-                        <tr class="[&>th]:font-medium [&>th]:text-nowrap [&>th]:p-2 [&>th]:px-4">
-                            <th class="w-max font-semibold tracking-tight">Nombre</th>
-                            <th>Horarios</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y">
-                        @if ($group_schedules->count() === 0)
-                            <tr class="">
-                                <td colspan="11" class="text-center py-4">
-                                    <div class="p-10">
-                                        No hay horarios registrados
-                                    </div>
-                                </td>
-                            </tr>
-                        @else
-                            @foreach ($group_schedules as $group)
-                                <tr
-                                    class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-4">
-                                    <td>
-                                        <div class="flex gap-2 items-center">
-                                            <p class="text-nowrap flex items-center gap-2">
-                                                @svg('heroicon-o-calendar-days', 'w-5 h-5')
-                                                {{ $group->name }}
-                                            </p>
-                                            @if ($cuser->has('users:schedules:edit') || $cuser->isDev())
-                                                <button class="text-green-600"
-                                                    data-modal-target="edit-scheldule-modal-{{ $group->id }}"
-                                                    data-modal-toggle="edit-scheldule-modal-{{ $group->id }}">
-                                                    @svg('heroicon-o-pencil-square', 'w-5 h-5')
-                                                </button>
-                                                <div id="edit-scheldule-modal-{{ $group->id }}"
-                                                    data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
-                                                    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                                    <div class="relative p-4 w-full max-w-xl max-h-full">
-                                                        <div class="relative bg-white rounded-2xl shadow">
-                                                            <div
-                                                                class="flex items-center justify-between p-3 border-b rounded-t">
-                                                                <h3 class="text-lg font-semibold text-gray-900">
-                                                                    Editar horario
-                                                                </h3>
-                                                                <button type="button"
-                                                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                                                    data-modal-hide="edit-scheldule-modal-{{ $group->id }}">
-                                                                    <svg class="w-3 h-3" aria-hidden="true"
-                                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                        viewBox="0 0 14 14">
-                                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                                            stroke-linejoin="round" stroke-width="2"
-                                                                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                                    </svg>
-                                                                </button>
-                                                            </div>
-                                                            @include('components.users.auditory-card')
-                                                            <form action="/api/schedules/group/{{ $group->id }}"
-                                                                method="POST" id="schedule-form-group-{{ $group->id }}"
-                                                                class="p-3 dinamic-form grid gap-4">
-                                                                <input autofocus value="{{ $group->name }}" type="text"
-                                                                    required placeholder="Nombre" name="name">
-                                                            </form>
-                                                            <div
-                                                                class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                                                                <button form="schedule-form-group-{{ $group->id }}"
-                                                                    type="submit"
-                                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
-                                                                    Guardar</button>
-                                                                <button id="button-close-scheldule-modal"
-                                                                    data-modal-hide="edit-scheldule-modal-{{ $group->id }}"
-                                                                    type="button"
-                                                                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="relative">
-                                        <div class="flex items-center gap-2">
-                                            <a href="/users/schedules/{{ $group->id }}"
-                                                class="text-blue-700 text-nowrap hover:underline">
-                                                {{ $group->schedules->count() }}
-                                                {{ $group->schedules->count() === 1 ? 'horario' : 'horarios' }}
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="opacity-70 flex items-center gap-2">
-                                            @svg('heroicon-o-clock', 'w-5 h-5')
-                                            Registrado el {{ \Carbon\Carbon::parse($group->created_at)->isoFormat('LL') }}
-                                            por
-                                            {{ $group->createdBy->first_name }} {{ $group->createdBy->last_name }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <button class="opacity-60 relative hover:opacity-100"
-                                            data-dropdown-toggle="dropdown-{{ $group->id }}">
-                                            <svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-ellipsis-vertical">
-                                                <circle cx="12" cy="12" r="1" />
-                                                <circle cx="12" cy="5" r="1" />
-                                                <circle cx="12" cy="19" r="1" />
-                                            </svg>
-                                        </button>
+            @endif
+            <div class="flex flex-col divide-y">
+                @if ($cuser->has('users:schedules:show') || $cuser->isDev())
+                    @forelse ($group_schedules as $group)
+                        <div class="flex relative items-center p-3 gap-2">
+                            @svg('bx-calendar', 'w-5 h-5 mr-2')
+                            <div class="flex-grow">
+                                <p>{{ $group->name }}</p>
+                                <p class="flex text-nowrap text-sm items-center flex-wrap gap-1 text-neutral-600">
+                                    @svg('bx-calendar-week', 'w-4 h-4')
+                                    {{ count($group->schedules) }} horarios y usados por @svg('bx-group', 'w-4 h-4')
+                                    {{ count($group->users) }}
+                                    usuarios.
+                                </p>
+                            </div>
 
-                                        <div id="dropdown-{{ $group->id }}"
-                                            class="z-10 hidden bg-white border divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
-                                            <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar?"
-                                                data-adescription="No podrás deshacer esta acción."
-                                                data-param="/api/schedules/group/delete/{{ $group->id }}"
-                                                class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600 hover:bg-gray-10">
-                                                Eliminar
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    </tbody>
-                </table>
+                            @if ($group->default)
+                                <span class="text-sm text-nowrap bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Por
+                                    defecto</span>
+                            @endif
+
+                            <button type="button" data-modal-target="dialog-{{ $group->id }}"
+                                data-modal-toggle="dialog-{{ $group->id }}"
+                                class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
+                                @svg('bx-pencil', 'w-4 h-4')
+                            </button>
+                            <div id="dialog-{{ $group->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                                <div class="content lg:max-w-lg max-w-full">
+                                    <header>
+                                        Editar horario: {{ $group->name }}
+                                    </header>
+                                    <form action="/api/schedules/group/{{ $group->id }}" method="POST"
+                                        id="dialog-{{ $group->id }}-form"
+                                        class="dinamic-form body grid gap-4 overflow-y-auto">
+                                        <input autofocus value="{{ $group->name }}" type="text" required
+                                            placeholder="Nombre" name="name">
+                                    </form>
+                                    <footer>
+                                        <button data-modal-hide="dialog-{{ $group->id }}"
+                                            type="button">Cancelar</button>
+                                        <button form="dialog-{{ $group->id }}-form" type="submit">
+                                            Guardar</button>
+                                    </footer>
+                                </div>
+                            </div>
+                            <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
+                                data-dropdown-toggle="dropdown-{{ $group->id }}">
+                                @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                            </button>
+                            <div id="dropdown-{{ $group->id }}" class="dropdown-content hidden">
+                                @if ($cuser->has('users:schedules:edit') || $cuser->isDev())
+                                    <button data-atitle="¿Estás seguro de seleccionar por defecto este grupo?"
+                                        data-adescription="Todos los usuarios que se registren a partir de ahora, tendrán este grupo de horarios por defecto."
+                                        data-param="/api/schedules/group/default/{{ $group->id }}"
+                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        Por defecto
+                                    </button>
+                                @endif
+                                @if ($cuser->has('users:schedules:delete') || $cuser->isDev())
+                                    <button data-atitle="¿Estás seguro de eliminar?"
+                                        data-adescription="No podrás deshacer esta acción."
+                                        data-param="/api/schedules/group/delete/{{ $group->id }}"
+                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        Eliminar
+                                    </button>
+                                @endif
+                            </div>
+                            <a title="Ver horarios" href="/users/schedules/{{ $group->id }}"
+                                class="rounded-full p-2 hover:bg-neutral-200 transition-colors block">
+                                @svg('bx-chevron-right', 'w-5 h-5')
+                            </a>
+                        </div>
+                    @empty
+                        <p class="p-20 grid place-content-center text-center">
+                            No hay nada que mostrar.
+                        </p>
+                    @endforelse
+                @else
+                    <p class="p-20 grid place-content-center text-center">
+                        No tienes permisos para visualizar estos datos.
+                    </p>
+                @endif
             </div>
-        @else
-            @include('+403', [
-                'message' => 'No tienes permisos para ver los horarios',
-            ])
-        @endif
+        </div>
     </div>
 @endsection
