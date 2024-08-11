@@ -6,7 +6,7 @@
     <div id="app" class="h-svh flex flex-col overflow-y-auto ">
         @guest
             @if (Route::has('login'))
-                <main class="min-h-screen bg-[#fffdfc]">
+                <main class="min-h-screen ">
                     @yield('content')
                 </main>
             @endif
