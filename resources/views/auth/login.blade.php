@@ -22,10 +22,10 @@
                                             <div class="space-y-3 font-semibold text-black">
                                                 <input style="padding: 17px; border-radius: 10px" required autofocus
                                                     name="email" type="email" value="{{ old('email') }}"
-                                                    class="h-12 font-normal" placeholder="Correo electrónico" />
+                                                    class="h-12 w-full font-normal" placeholder="Correo electrónico" />
                                                 <input type="password" style="padding: 17px; border-radius: 10px" required
-                                                    name="password" value="{{ old('password') }}" class="h-12 font-normal"
-                                                    placeholder="Contraseña" />
+                                                    name="password" value="{{ old('password') }}"
+                                                    class="h-12 font-normal w-full" placeholder="Contraseña" />
                                             </div>
                                             @error('email')
                                                 <span class="text-sm px-2 text-red-500" role="alert">
