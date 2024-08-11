@@ -16,7 +16,7 @@
     <input type="hidden" name="id" value="{{ $user->id }}">
 @endif
 
-<div class="space-y-2">
+<div class="space-y-2 max-w-xl">
     {{-- User Profile Image --}}
     @if (!$user)
         <div class="flex items-center gap-4">
@@ -32,6 +32,28 @@
         </div>
     @endif
 
+    <div class="max-w-[500px]">
+        <p class="text-xs">
+            Selecciona el rol que tendrá el usuario. Los permisos se asignarán una vez que el usuario haya sido
+            registrado. Si este usuario necesita privilegios especifícos, <a href="/users/user-roles"
+                class="text-blue-600 hover:underline">crea uno aquí.</a>
+        </p>
+    </div>
+
+    <div class="max-w-[300px]">
+        <label class="label">
+            <span>Rol y privilegios</span>
+            <select required name="id_role_user">
+                @foreach ($user_roles as $role)
+                    <option {{ $user && $user->id_role_user === $role->id ? 'selected' : '' }}
+                        value="{{ $role->id }}">
+                        {{ $role->title }}
+                    </option>
+                @endforeach
+            </select>
+        </label>
+    </div>
+
     {{-- User Profile Details --}}
     <h2 class="tracking-tight pt-5 text-xl font-semibold">
         Detalles del usuario
@@ -40,28 +62,30 @@
         <p class="text-sm text-yellow-500 pb-3 max-w-[50ch]">
             Ingresa el documento de identidad para hacer una busqueda rapida a la Reniec.
         </p>
-        <div class="rounded-2xl [&>div]:divide-x divide-y max-w-[500px] border bg-white shadow-md">
-            <div class="gap-4">
-                <input style="border-radius: 1rem 1rem 0px 0px;border:0px;" name="dni" id="dni-input"
-                    value="{{ $user ? $user->dni : '' }}" required type="number" class="w-full"
-                    placeholder="Documento de Identidad">
+        <div class="grid gap-4">
+            <label class="label w-[200px]">
+                <span>Documento de Identidad</span>
+                <input name="dni" id="dni-input" autocomplete="off" value="{{ $user ? $user->dni : '' }}" required
+                    type="number">
+            </label>
+            <div class="grid grid-cols-2 gap-4">
+                <label class="label">
+                    <span>Apellidos</span>
+                    <input autocomplete="off" value="{{ $user ? $user->last_name : '' }}" name="last_name"
+                        id="last_name-input" required type="text">
+                </label>
+                <label class="label">
+                    <span>Nombres</span>
+                    <input autocomplete="off" value="{{ $user ? $user->first_name : '' }}" name="first_name"
+                        id="first_name-input" required type="text">
+                </label>
             </div>
-            <div class="grid grid-cols-2">
-                <div>
-                    <input style="border-radius: 0px;border:0px;" placeholder="Apellidos"
-                        value="{{ $user ? $user->last_name : '' }}" name="last_name" id="last_name-input" required
-                        type="text">
-                </div>
-                <div>
-                    <input style="border-radius: 0px;border:0px;" placeholder="Nombres"
-                        value="{{ $user ? $user->first_name : '' }}" name="first_name" id="first_name-input" required
-                        type="text">
-                </div>
-            </div>
-            <div class="grid grid-cols-2">
-                <div>
-                    <select style="border-radius: 0px;border:0px;" name="id_job_position" id="job-position-select"
-                        required>
+            <div class="grid grid-cols-2 gap-4">
+                <label class="label">
+                    <span>
+                        Puesto de Trabajo
+                    </span>
+                    <select name="id_job_position" id="job-position-select" required>
                         @foreach ($job_positions as $item)
                             <option
                                 {{ $user && $user->role_position->job_position->id === $item->id ? 'selected' : '' }}
@@ -70,9 +94,12 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
-                <div>
-                    <select style="border-radius: 0px;border:0px;" name="id_role" id="role-select" required>
+                </label>
+                <label class="label">
+                    <span>
+                        Cargo
+                    </span>
+                    <select name="id_role" id="role-select" required>
                         @foreach ($roles as $role)
                             <option {{ $user && $user->role_position->id === $role->id ? 'selected' : '' }}
                                 value="{{ $role->id }}">
@@ -80,46 +107,28 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
+                </label>
             </div>
-            <div>
-                <select style="border-radius: 0px 0px 1rem 1rem;border:0px;" name="id_branch" required>
+            <label class="label w-[200px]">
+                <span>
+                    Sede
+                </span>
+                <select name="id_branch" required>
                     @foreach ($branches as $branch)
                         <option {{ $user && $user->id_branch === $branch->id ? 'selected' : '' }}
                             value="{{ $branch->id }}">
                             Sede: {{ $branch->name }}</option>
                     @endforeach
                 </select>
-            </div>
+            </label>
         </div>
     </div>
-    @if ($user)
-        <div class="py-3 px-1 grid gap-2">
-            <p class="font-semibold [&>span]:font-normal">Area:
-                <span>{{ $user->role_position->department->area->name }}</span>
-            </p>
-            <p class="font-semibold [&>span]:font-normal">Departamento:
-                <span>{{ $user->role_position->department->name }}</span>
-            </p>
-            <p class="font-semibold [&>span]:font-normal">Cargo:
-                <span>{{ $user->role_position->job_position->name }}</span>
-            </p>
-            <p class="font-semibold [&>span]:font-normal">Puesto:
-                <span>{{ $user->role_position->name }}</span>
-            </p>
-        </div>
-    @endif
 
-    {{-- Email --}}
-    <div>
-        <h2 class="tracking-tight pt-5 text-xl font-semibold">
-            Email
-        </h2>
-    </div>
-    <div class="max-w-[500px]">
-        <div class="flex items-center gap-1">
-            <input value="{{ $username }}" required type="text" name="username" placeholder="Nombre de usuario"
-                class="w-full">
+    <div class="label pt-6">
+        <span>Email</span>
+        <div class="flex gap-4">
+            <input value="{{ $username }}" required type="text" name="username" class="w-full"
+                placeholder="Nombre de usuario">
             <select style="width: 170px" required name="domain">
                 @foreach ($domains as $domain)
                     <option {{ $userDomain === $domain ? 'selected' : '' }} value="{{ $domain }}">
@@ -142,28 +151,17 @@
         </div>
         <div class="max-w-[500px]">
             <div class="flex items-center gap-1">
-                <input type="password" name="password" class="w-full">
+                <input autocomplete="off" type="password" name="password" class="w-full">
             </div>
         </div>
     @endif
 
     {{-- Group Schedules --}}
 
-    <div class="max-w-[500px]">
-        <h2 class="tracking-tight pt-5 text-xl font-semibold">
-            Horario preterminado
-        </h2>
-        <div class="relative mt-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="absolute z-10 w-4 text-stone-500 top-3.5 left-3"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" class="lucide lucide-calendar-plus-2">
-                <path d="M8 2v4" />
-                <path d="M16 2v4" />
-                <rect width="18" height="18" x="3" y="4" rx="2" />
-                <path d="M3 10h18" />
-                <path d="M10 16h4" />
-                <path d="M12 14v4" />
-            </svg>
+    <label class="label pt-3">
+        <span>Grupo de horario</span>
+        <div class="relative">
+            @svg('bx-calendar', 'absolute z-10 w-4 text-stone-500 top-0 left-3')
             <select style="padding-left: 35px" name="group_schedule_id">
                 <option disabled selected>Grupo de horario</option>
                 @foreach ($group_schedules as $scheldule)
@@ -172,30 +170,6 @@
                 @endforeach
             </select>
         </div>
-    </div>
+    </label>
 
-    {{-- Role --}}
-    <div class="max-w-[500px]">
-        <h2 class="tracking-tight pt-5 text-xl font-semibold">
-            Rol
-        </h2>
-        <p class="text-xs">
-            Selecciona el rol que tendrá el usuario. Los permisos se asignarán una vez que el usuario haya sido
-            registrado. Si este usuario necesita privilegios especifícos, <a href="/users/roles"
-                class="text-blue-600 hover:underline">crea uno aquí.</a>
-        </p>
-    </div>
-
-    <div class="max-w-[500px]">
-        <div class="flex items-center gap-1">
-            <select required name="id_role_user">
-                @foreach ($user_roles as $role)
-                    <option {{ $user && $user->id_role_user === $role->id ? 'selected' : '' }}
-                        value="{{ $role->id }}">
-                        {{ $role->title }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
 </div>

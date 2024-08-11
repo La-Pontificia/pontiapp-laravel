@@ -1,64 +1,81 @@
 @php
     $items = [
         [
-            'icon' => 'heroicon-o-users',
+            'icon' => 'bx-user-circle',
             'text' => 'Usuarios',
             'href' => '/users',
             'active' =>
                 request()->is('users') || request()->is('users/create') || request()->is('users/' . $cuser->id . '*'),
-            'active-icon' => 'heroicon-s-users',
+            'active-icon' => 'bxs-user-circle',
             'enable' => $cuser->has('users:create') || $cuser->has('users:show') || $cuser->isDev(),
         ],
         [
-            'icon' => 'heroicon-o-wrench-screwdriver',
-            'text' => 'Roles',
+            'icon' => 'bx-wrench',
+            'text' => 'Roles y permisos',
             'href' => '/users/user-roles',
             'active' => request()->is('users/user-roles*'),
-            'active-icon' => 'heroicon-s-wrench-screwdriver',
+            'active-icon' => 'bxs-wrench',
             'enable' =>
                 $cuser->has('users:user-roles:create') || $cuser->has('users:user-roles:show') || $cuser->isDev(),
         ],
         [
-            'icon' => 'heroicon-o-calendar-days',
+            'icon' => 'bx-calendar',
             'text' => 'Horarios',
             'href' => '/users/schedules',
             'active' => request()->is('users/schedules*'),
-            'active-icon' => 'heroicon-s-calendar-days',
+            'active-icon' => 'bxs-calendar',
             'enable' => $cuser->has('users:schedules:create') || $cuser->has('users:schedules:show') || $cuser->isDev(),
         ],
         [
-            'icon' => 'heroicon-o-inbox-stack',
+            'icon' => 'bx-universal-access',
             'text' => 'Correos y accesos',
             'href' => '/users/emails-access',
             'active' => request()->is('users/emails-access*'),
-            'active-icon' => 'heroicon-s-inbox-stack',
+            'active-icon' => 'bxs-universal-access',
             'enable' =>
                 $cuser->has('users:emails-access:edit') || $cuser->has('users:emails-access:show') || $cuser->isDev(),
         ],
+        // [
+        //     'icon' => 'bx-down-arrow-circle',
+        //     'text' => 'Importar',
+        //     'href' => '/users/import',
+        //     'active' => request()->is('users/import*'),
+        //     'active-icon' => 'bxs-down-arrow-circle',
+        //     'enable' => $cuser->has('users:import') || $cuser->isDev(),
+        // ],
+        // [
+        //     'icon' => 'bx-up-arrow-circle',
+        //     'text' => 'Exportar',
+        //     'href' => '/users/export',
+        //     'active' => request()->is('users/export*'),
+        //     'active-icon' => 'bxs-up-arrow-circle',
+        //     'enable' => $cuser->has('users:export') || $cuser->isDev(),
+        // ],
     ];
 @endphp
-<div class="flex flex-col overflow-y-auto">
-    <div class="flex items-center justify-between p-4">
-        <a href="/" class="flex gap-2 font-medium items-center text-gray-900 ">
-            @svg('heroicon-o-arrow-left', [
-                'class' => 'w-5 h-5',
-            ])
-            <span class="max-xl:hidden">Gestión de usuarios</span>
-        </a>
-    </div>
-    <nav class="px-2 py-3 max-xl:space-y-3">
-        @foreach ($items as $item)
-            @if (!$item['enable'])
-                @continue
-            @endif
-            <a {{ $item['active'] ? 'data-active' : '' }} title="{{ $item['text'] }}"
-                class="flex group relative data-[active]:font-medium gap-2 p-2 hover:bg-white rounded-lg"
-                href="{{ $item['href'] }}">
-                @svg($item['active'] ? $item['active-icon'] : $item['icon'], [
-                    'class' => 'w-5 h-5 max-xl:w-6 max-xl:h-6 max-xl:mx-auto group-data-[active]:text-blue-800',
-                ])
-                <span class="max-xl:hidden">{{ $item['text'] }}</span>
-            </a>
-        @endforeach
-    </nav>
+
+<div class="border-b pb-3">
+    <a href="/" class="flex items-center gap-2 group p-2 px-4 pb-0">
+        @svg('bx-arrow-back', [
+            'class' => 'w-7 h-7 rounded-full p-1 group-hover:bg-neutral-200',
+        ])
+        <span class="opacity-80">Administración de usuarios</span>
+    </a>
 </div>
+<nav class="py-3 ">
+    @foreach ($items as $item)
+        @if (!$item['enable'])
+            @continue
+        @endif
+
+        <a title="{{ $item['text'] }}" {{ $item['active'] ? 'data-active' : '' }}
+            class="flex group relative items-center data-[active]:font-medium data-[active]:bg-[#e8f0fe] data-[active]:text-[#1967da] gap-3 p-2 px-5 text-[#202124] hover:bg-[#e8eaed] rounded-r-full"
+            href="{{ $item['href'] }}">
+            @svg($item['active'] ? $item['active-icon'] : $item['icon'], [
+                'class' => 'w-5 h-5 m-0.5',
+                'stroke-width' => 1.4,
+            ])
+            <span class="text-nowrap">{{ $item['text'] }}</span>
+        </a>
+    @endforeach
+</nav>
