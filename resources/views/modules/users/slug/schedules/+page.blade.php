@@ -49,7 +49,6 @@
     ];
 @endphp
 
-
 @section('layout.users.slug')
     <div class="flex w-full overflow-y-auto h-full">
         <div class="rounded-2xl w-[350px] h-full flex flex-col px-1 overflow-y-auto">
@@ -59,7 +58,7 @@
                     {{ $user->groupSchedule ? $user->groupSchedule->name : '' }}</span>
             </h1>
             <div class="mt-2">
-                @if ($cuser->has('users:schedules:create'))
+                @if ($cuser->has('users:schedules:create') || $cuser->isDev())
                     <button type="button" data-modal-target="create-scheldule-modal"
                         data-modal-toggle="create-scheldule-modal"
                         class="bg-blue-700 mb-3 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
@@ -161,7 +160,7 @@
                                 <circle cx="12" cy="19" r="1" />
                             </svg>
                         </button>
-                        @if ($cuser->has('users:schedules:edit'))
+                        @if ($cuser->has('users:schedules:edit') || $cuser->isDev())
                             <div id="dropdown-schelude-{{ $schedule->id }}"
                                 class="z-10 hidden bg-white border divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
                                 <button data-modal-target="edit-scheldule-modal-{{ $schedule->id }}"
