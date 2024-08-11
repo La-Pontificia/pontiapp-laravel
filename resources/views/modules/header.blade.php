@@ -1,11 +1,17 @@
-<nav class="bg-[#f5f7fc] text-blue-700 h-14 w-full z-30">
+<nav class="bg-white text-blue-700 h-14 w-full z-30">
     <div class="flex w-full gap-5 items-center h-full px-3">
-        <div class="flex-grow flex gap-2 items-center">
-            <a href="/"><img src="/lp.webp" class="w-32" /></a>
+        <div class="flex-grow flex text-neutral-800 items-center gap-3">
+            <button class="lg:hidden block" id="sidebar-button">
+                @svg('bx-menu', [
+                    'class' => 'w-8 h-8',
+                ])
+            </button>
+            <a href="/" class="px-2 block"><img src="/lp.webp" class="w-24 lg:w-28" /></a>
         </div>
         <button>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-bell">
                 <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
                 <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
             </svg>
