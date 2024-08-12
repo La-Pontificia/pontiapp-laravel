@@ -1,3 +1,5 @@
+import axios from "axios";
+
 document.addEventListener("DOMContentLoaded", async () => {
     $ = document.querySelector.bind(document);
     const $table = $("#evaluations");
@@ -113,5 +115,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             "¿Estás seguro de finalizar la evaluación?",
             "No podrás deshacer esta acción."
         );
+    });
+
+    // feedback
+
+    const $feedback = $("#feedback-open");
+
+    $feedback?.addEventListener("click", async () => {
+        const id = $feedback.getAttribute("data-id");
+        const read = $feedback.hasAttribute("data-read");
+
+        if (read) return;
+
+        await axios.post(`/api/evaluations/${id}/feedback/read`);
+
+        $feedback.addAttribute("data-read", true);
     });
 });

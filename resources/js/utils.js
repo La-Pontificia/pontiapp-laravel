@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const queryInputs = document.querySelectorAll(".dinamic-search");
     const dinamicSelects = document.querySelectorAll(".dinamic-select");
     const dinamicForms = document.querySelectorAll(".dinamic-form");
-    const autocompletes = document.querySelectorAll(".autocompletes");
+    const $autocompletes = document.querySelectorAll(".autocomplete");
 
     const dinamicAlerts = document.querySelectorAll(".dinamic-alert");
 
@@ -108,8 +108,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // autocompletes
-    autocompletes?.forEach((f) => {
-        const param = f.getAttribute("data-params");
+    $autocompletes?.forEach((f) => {
+        const param = f.getAttribute("data-param");
         const atitle = f.getAttribute("data-atitle");
         const avalue = f.getAttribute("data-value");
         const adescription = f.getAttribute("data-adescription");
