@@ -40,6 +40,8 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'users:disable' => 'Deshabilitar usuarios',
                                 'users:enable' => 'Habilitar usuarios',
                                 'users:reset-password' => 'Restablecer contraseñas',
+                                'users:export' => 'Exportar usuarios',
+
                             ],
                         ],
                         [
