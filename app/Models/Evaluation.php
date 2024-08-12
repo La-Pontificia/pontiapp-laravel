@@ -25,6 +25,18 @@ class Evaluation extends Model
         'self_rated_by',
         'qualified_at',
         'qualified_by',
+
+        'feedback',
+        'feedback_by',
+        'feedback_score',
+        'feedback_at',
+        'feedback_read_at',
+
+    ];
+
+    protected $casts = [
+        'feedback_read_at' => 'datetime',
+        'feedback_at' => 'datetime',
     ];
 
     protected $keyType = 'string';
@@ -54,5 +66,10 @@ class Evaluation extends Model
     public function qualifiedBy()
     {
         return $this->hasOne(User::class, 'id', 'qualified_by');
+    }
+
+    public function feedbackBy()
+    {
+        return $this->hasOne(User::class, 'id', 'feedback_by');
     }
 }
