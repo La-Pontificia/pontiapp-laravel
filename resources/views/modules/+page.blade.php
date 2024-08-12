@@ -51,29 +51,7 @@
                 Dashboard
             </h2>
 
-            <div class="relative">
-                <div class="flex items-center p-4 py-3 hidden-scroll overflow-x-auto gap-2">
-                    @foreach ($users as $user)
-                        <a href="/users/{{ $user->id }}"
-                            class="border block w-[170px] min-w-[170px] rounded-2xl overflow-hidden bg-white shadow-md shadow-stone-400/5 hover:border-stone-400/60">
-                            <div>
-                                @include('commons.avatar', [
-                                    'src' => $user->profile,
-                                    'className' => 'w-full h-[90px] border-none rounded-none',
-                                    'alt' => $user->first_name . ' ' . $user->last_name,
-                                    'altClass' => 'text-3xl',
-                                ])
-                            </div>
-                            <div class="p-3 text-left">
-                                <p class="text-nowrap overflow-ellipsis overflow-hidden font-medium">{{ $user->first_name }}
-                                    {{ $user->last_name }}
-                                </p>
-                                <p class="text-xs">{{ $user->role_position->name }}</p>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
+
         </div>
     </div>
 @endsection
