@@ -42,12 +42,12 @@
                             <li>{{ $goal->title }} | {{ $goal->percentage }}%</li>
                         @endforeach
                     </ul>
-                    <p class="opacity-70 pt-2 text-xs border-t mt-2">
+                    <p class="opacity-70 pt-2 border-t mt-2">
                         - Enviados el {{ \Carbon\Carbon::parse($eda->sent)->isoFormat('LL') }} por
                         {{ $eda->createdBy->last_name }},
                         {{ $eda->createdBy->first_name }}
                     </p>
-                    <p class="opacity-70 pt-2 text-xs">
+                    <p class="opacity-70 pt-2">
                         - Aprobado el {{ \Carbon\Carbon::parse($eda->approved)->isoFormat('LL') }} por
                         {{ $eda->approvedBy->last_name }},
                         {{ $eda->approvedBy->first_name }}
@@ -76,11 +76,30 @@
                     <p class="opacity-70 pb-2 ">
                         {{ $eda->user->first_name }} ha sido evaluado en las siguientes evaluaciones:
                     </p>
-                    <ul class="list-disc list-inside">
+                    <ul class="list-decimal list-inside">
                         @foreach ($evaluations as $evaluation)
-                            <li>Evaluacion N° {{ $evaluation->number }} | Calificación:
-                                <span class="font-medium">{{ $evaluation->qualification }}</span> | Autocalificación:
-                                <span class="font-medium">{{ $evaluation->self_qualification }}</span>
+                            <li>
+                                Evaluacion N° {{ $evaluation->number }}
+                                <ul class="list-disc list-inside ml-5">
+                                    <li>
+                                        Nota autocalificada: <b>{{ $evaluation->qualification }}</b>
+                                    </li>
+                                    @if ($evaluation->selfRatedBy)
+                                        <li>
+                                            Autocalificada por: {{ $evaluation->selfRatedBy->last_name }},
+                                            {{ $evaluation->selfRatedBy->first_name }}
+                                        </li>
+                                    @endif
+                                    <li>
+                                        Nota evaluada: <b>{{ $evaluation->self_qualification }}</b>
+                                    </li>
+                                    @if ($evaluation->qualifiedBy)
+                                        <li>
+                                            Evaluada por: {{ $evaluation->qualifiedBy->last_name }},
+                                            {{ $evaluation->qualifiedBy->first_name }}
+                                        </li>
+                                    @endif
+                                </ul>
                             </li>
                         @endforeach
                     </ul>
@@ -96,7 +115,7 @@
                         aria-controls="questionnaires-body">
                         <span class="flex items-center gap-2">
                             <img src="/idea.png" class="w-5" alt="">
-                            Questionarios (Encuesta del EDA)</span>
+                            Cuestionarios (Encuesta del EDA)</span>
                         <svg data-accordion-icon
                             class="w-3 h-3 text-neutral-400 group-aria-expanded:text-black rotate-180 shrink-0"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -120,7 +139,7 @@
                                 @svg('heroicon-o-information-circle', [
                                     'class' => 'w-5 h-5 inline-block',
                                 ])
-                                Questionario de colaborador enviado el
+                                Cuestionario de colaborador enviado el
                                 {{ \Carbon\Carbon::parse($eda->collaboratorQuestionnaire->created_at)->isoFormat('LL') }}
                                 por
                                 {{ $eda->collaboratorQuestionnaire->answeredBy->last_name }},
@@ -133,7 +152,7 @@
                                 @svg('heroicon-o-information-circle', [
                                     'class' => 'w-5 h-5 inline-block',
                                 ])
-                                Questionario de supervisor enviado el
+                                Cuestionario de supervisor enviado el
                                 {{ \Carbon\Carbon::parse($eda->supervisorQuestionnaire->created_at)->isoFormat('LL') }}
                                 por
                                 {{ $eda->supervisorQuestionnaire->answeredBy->last_name }},

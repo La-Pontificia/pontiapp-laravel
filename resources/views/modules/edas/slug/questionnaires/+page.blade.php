@@ -45,7 +45,7 @@
                     @svg('heroicon-o-information-circle', [
                         'class' => 'w-5 h-5 inline-block',
                     ])
-                    Questionario enviada el
+                    Cuestionario enviada el
                     {{ \Carbon\Carbon::parse($eda->collaboratorQuestionnaire->created_at)->isoFormat('LL') }} por
                     {{ $eda->collaboratorQuestionnaire->answeredBy->last_name }},
                     {{ $eda->collaboratorQuestionnaire->answeredBy->first_name }}
@@ -114,7 +114,7 @@
                     @svg('heroicon-o-information-circle', [
                         'class' => 'w-5 h-5 inline-block',
                     ])
-                    Questionario enviada el
+                    Cuestionario enviada el
                     {{ \Carbon\Carbon::parse($eda->supervisorQuestionnaire->created_at)->isoFormat('LL') }} por
                     {{ $eda->supervisorQuestionnaire->answeredBy->last_name }},
                     {{ $eda->supervisorQuestionnaire->answeredBy->first_name }}

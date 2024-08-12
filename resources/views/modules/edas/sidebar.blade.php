@@ -10,39 +10,38 @@
         ],
         [
             'icon' => 'bx-group',
-            'text' => 'Colaboradores',
-            'href' => '/edas',
+            'text' => 'Colaboradores y edas',
+            'href' => '/edas/collaborators',
             'active' =>
-                request()->is('edas*') &&
-                !request()->is('edas/questionnaire-templates*') &&
+                (request()->is('edas/collaborators*') || request()->is('edas*')) &&
+                !request()->is('edas/me*') &&
                 !request()->is('edas/years*') &&
-                !request()->is('edas/reports*') &&
-                !request()->is('edas' . '/' . $cuser->id . '*'),
+                !request()->is('edas/questionnaire-templates*'),
             'active-icon' => 'bxs-group',
             'enable' => true,
         ],
-        [
-            'icon' => 'bx-bar-chart-alt-2',
-            'text' => 'Reporte y estadísticas',
-            'href' => '/edas/reports',
-            'active' => request()->is('edas/reports*'),
-            'active-icon' => 'bxs-bar-chart-alt-2',
-            'enable' => $cuser->has('edas:reports:show') || $cuser->isDev(),
-        ],
+        // [
+        //     'icon' => 'bx-bar-chart-alt-2',
+        //     'text' => 'Reporte y estadísticas',
+        //     'href' => '/edas/reports',
+        //     'active' => request()->is('edas/reports*'),
+        //     'active-icon' => 'bxs-bar-chart-alt-2',
+        //     'enable' => $cuser->has('edas:reports:show') || $cuser->isDev(),
+        // ],
         [
             'icon' => 'bx-notification',
             'text' => 'Años',
             'href' => '/edas/years',
             'active' => request()->is('edas/years*'),
-            'active-icon' => 'bxb-notification',
+            'active-icon' => 'bxs-notification',
             'enable' => $cuser->has('edas:years:show') || $cuser->has('edas:years:create') || $cuser->isDev(),
         ],
         [
-            'icon' => 'bx-spreadsheet',
+            'icon' => 'bx-file-blank',
             'text' => 'Plantilla de cuestionarios',
             'href' => '/edas/questionnaire-templates',
             'active' => request()->is('edas/questionnaire-templates*'),
-            'active-icon' => 'bxs-spreadsheet',
+            'active-icon' => 'bxs-file-blank',
             'enable' =>
                 $cuser->has('edas:questionnaire-templates:show') ||
                 $cuser->has('edas:questionnaire-templates:create') ||

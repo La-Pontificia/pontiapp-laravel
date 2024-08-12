@@ -46,7 +46,7 @@
                 <label>
                     <div class="pb-2 text-sm font-semibold">Título</div>
                     @if ($hasEditGoals)
-                        <input id="goal-title" type="text">
+                        <input class="w-full" id="goal-title" type="text">
                     @else
                         <p id="goal-title" class="opacity-60 whitespace-pre-line"></p>
                     @endif
@@ -54,7 +54,7 @@
                 <label>
                     <div class="pb-2 text-sm font-semibold">Descripción</div>
                     @if ($hasEditGoals)
-                        <textarea id="goal-description" rows="4"></textarea>
+                        <textarea class="w-full" id="goal-description" rows="4"></textarea>
                     @else
                         <p id="goal-description" class="opacity-60 whitespace-pre-line"></p>
                     @endif
@@ -62,7 +62,7 @@
                 <label>
                     <div class="pb-2 text-sm font-semibold ">Indicadores</div>
                     @if ($hasEditGoals)
-                        <textarea id="goal-indicators" rows="6"></textarea>
+                        <textarea id="goal-indicators" class="w-full" rows="6"></textarea>
                     @else
                         <p id="goal-indicators" class="opacity-60 whitespace-pre-line"></p>
                     @endif
@@ -70,7 +70,7 @@
                 <label class="w-[140px] block">
                     <div class="pb-2 text-sm font-semibold">Porcentaje (1 - 100)</div>
                     @if ($hasEditGoals)
-                        <input id="goal-percentage" type="number">
+                        <input id="goal-percentage" type="number" class="w-full">
                     @else
                         <p id="goal-percentage" class="opacity-60 whitespace-pre-wrap"></p>
                     @endif
@@ -78,7 +78,8 @@
                 <label>
                     <div class="pb-2 text-sm font-semibold">Comentario</div>
                     @if ($hasEditGoals && $hasSupervisor)
-                        <textarea id="goal-comments" style="border-color: #c27803; background-color:#fdf6b2; color: #8e4b10 " rows="6"></textarea>
+                        <textarea id="goal-comments" style="border-color: #c27803; background-color:#fdf6b2; color: #8e4b10 " rows="6"
+                            class="w-full"></textarea>
                     @else
                         <p id="goal-comments" data-label class="text-yellow-500 text-sm whitespace-pre-line">
                         </p>
@@ -89,12 +90,10 @@
                 </p>
             </div>
             <div class="py-4 border-t flex items-center gap-2">
-                <button id="goal-sheet-submit"
-                    class="bg-blue-700 shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
+                <button id="goal-sheet-submit" class="primary">
                     Guardar
                 </button>
-                <button id="goal-sheet-remove"
-                    class="bg-white shadow-md shadow-neutral-500/30 border font-semibold hover:shadow-lg min-w-max flex items-center rounded-full p-2 gap-1 text-black text-sm px-3">
+                <button id="goal-sheet-remove" class="secondary">
                     Remover
                 </button>
             </div>
@@ -135,12 +134,9 @@
             </div>
             @if ($hasAddGoals)
                 <div class="flex gap-2 justify-center max-md:justify-between max-md:pl-3 items-center w-full">
-                    <button
-                        class="bg-white open-goal-button max-md:group-data-[hidden]:mx-0 flex items-center gap-2 mx-auto shadow-md px-3 p-2 rounded-full text-black font-semibold text-sm">
-                        @svg('heroicon-o-plus-circle', [
-                            'class' => 'w-5 h-5 ',
-                        ])
-                        <span class="max-md:hidden">Agregar objetivo</span>
+                    <button class="secondary open-goal-button">
+                        @svg('bx-plus', 'w-5 h-5')
+                        <span>Agregar objetivo</span>
                     </button>
                 </div>
             @endif

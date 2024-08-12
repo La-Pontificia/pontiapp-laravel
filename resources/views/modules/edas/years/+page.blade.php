@@ -4,7 +4,137 @@
 
 
 @section('layout.edas')
-    <div class="w-full flex flex-col h-full overflow-y-auto">
+    <div class="w-full max-w-2xl mx-auto">
+        <h2 class="py-5">Años para implementar las edas.</h2>
+        <div class="flex flex-col w-full bg-white border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
+            @if ($cuser->has('edas:years:create') || $cuser->isDev())
+                <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary m-2">
+                    @svg('bx-plus', 'w-5 h-5')
+                    <span>Nuevo</span>
+                </button>
+                <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                    <div class="content lg:max-w-lg max-w-full">
+                        <header>
+                            Agregar nuevo año
+                        </header>
+                        <form action="/api/years" method="POST" id="dialog-form" class="dinamic-form body grid gap-4">
+                            @include('modules.edas.years.form')
+                        </form>
+                        <footer>
+                            <button data-modal-hide="dialog" type="button">Cancelar</button>
+                            <button form="dialog-form" type="submit">
+                                Guardar</button>
+                        </footer>
+                    </div>
+                </div>
+            @endif
+            <div class="flex flex-col divide-y">
+                @if ($cuser->has('edas:years:show') || $cuser->isDev())
+                    @forelse ($years as $year)
+                        <div class="flex relative items-center hover:bg-neutral-100 p-3 gap-2">
+                            @svg('bx-file-blank', 'w-5 h-5 mr-2')
+                            <div class="flex-grow">
+                                <p>{{ $year->name }}</p>
+                            </div>
+
+                            @if ($year->status)
+                                <span class="text-sm text-nowrap bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                    Abierto
+                                </span>
+                            @endif
+
+                            <button type="button" data-modal-target="dialog-{{ $year->id }}"
+                                data-modal-toggle="dialog-{{ $year->id }}"
+                                class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
+                                @svg('bx-pencil', 'w-4 h-4')
+                            </button>
+
+                            <div id="dialog-{{ $year->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                                <div class="content lg:max-w-lg max-w-full">
+                                    <header>
+                                        Editar año: {{ $year->title }}
+                                    </header>
+                                    <form action="/api/years/{{ $year->id }}" method="POST" id="dialog-form"
+                                        class="dinamic-form body grid gap-4">
+                                        @include('modules.edas.years.form', [
+                                            'year' => $year,
+                                        ])
+                                    </form>
+                                    <footer>
+                                        <button data-modal-hide="dialog-{{ $year->id }}"
+                                            type="button">Cancelar</button>
+                                        <button form="dialog-{{ $year->id }}-form" type="submit">
+                                            Guardar</button>
+                                    </footer>
+                                </div>
+                            </div>
+                            <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
+                                data-dropdown-toggle="dropdown-{{ $year->id }}">
+                                @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                            </button>
+                            <div id="dropdown-{{ $year->id }}" class="dropdown-content hidden">
+                                @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())
+                                    <button data-atitle="Abrir o cerrar año"
+                                        data-adescription="¿Estas seguro de {{ $year->status ? 'cerrar' : 'abrir' }} el año?"
+                                        data-param="/api/years/{{ $year->id }}/close-or-open"
+                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        {{ $year->status ? 'Cerrar' : 'Abrir' }} año
+                                    </button>
+                                @endif
+                                @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())
+                                    <button data-atitle="¿Eliminar año?"
+                                        data-adescription="Todos los edas, evaluaciones, cuestionarios de este año serán eliminados. ¿Estás seguro de eliminar este año?"
+                                        data-param="/api/years/{{ $year->id }}/delete"
+                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        Eliminar año
+                                    </button>
+                                @endif
+                            </div>
+
+                            {{-- <a href="/edas/questionnaire-templates/{{ $template->id }}" class="absolute inset-0"></a>
+                            @if ($template->use_for !== null)
+                                <span class="text-sm text-nowrap bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                    {{ $template->use_for === 'collaborators' ? 'Colaboradores' : 'Supervisores' }}
+                                </span>
+                            @endif
+                            <p>
+                                {{ $template->questions->count() }} preguntas
+                            </p>
+                            <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
+                                data-dropdown-toggle="dropdown-{{ $template->id }}">
+                                @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                            </button>
+                            <div id="dropdown-{{ $template->id }}" class="dropdown-content hidden">
+                                @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())
+                                    <button data-atitle="¿Usar como cuestionario para colaboradores?"
+                                        data-adescription="Todos los colaboradores tendrán este cuestionario en sus edas."
+                                        data-param="/api/questionnaire-templates/{{ $template->id }}/use/collaborators"
+                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        Usar para colaboradores
+                                    </button>
+                                    <button data-atitle="¿Usar como cuestionario para supervisores?"
+                                        data-adescription="Todos los supervisores tendrán este cuestionario en sus edas."
+                                        data-param="/api/questionnaire-templates/{{ $template->id }}/use/supervisors"
+                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        Usar para supervisores
+                                    </button>
+                                @endif
+                            </div> --}}
+                        </div>
+                    @empty
+                        <p class="p-20 grid place-content-center text-center">
+                            No hay nada que mostrar.
+                        </p>
+                    @endforelse
+                @else
+                    <p class="p-20 grid place-content-center text-center">
+                        No tienes permisos para visualizar estos datos.
+                    </p>
+                @endif
+            </div>
+        </div>
+    </div>
+    {{-- <div class="w-full flex flex-col h-full overflow-y-auto">
         <nav class="border-b mb-2 p-2 flex items-center gap-3">
 
             @if ($cuser->has('edas:years:create') || $cuser->isDev())
@@ -189,5 +319,5 @@
         <footer class="px-5 pt-4">
             {!! $years->links() !!}
         </footer>
-    </div>
+    </div> --}}
 @endsection

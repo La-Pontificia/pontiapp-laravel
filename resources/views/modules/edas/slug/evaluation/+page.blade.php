@@ -35,6 +35,10 @@
                 $evaluation->self_qualification &&
                 $isSupervisor) ||
             $cuser->isDev();
+
+        $hasSendFeedback =
+            ($cuser->has('edas:evaluations:feedback') && $evaluation->closed && $user->supervisor_id === $cuser->id) ||
+            $cuser->isDev();
     @endphp
     <div class="h-full flex overflow-hidden flex-col pt-0 overflow-x-auto">
 
@@ -43,21 +47,123 @@
                 <div class="flex-grow">
                 </div>
                 <div class="flex gap-2 items-center p-1 tracking-tight">
+
+                    @if ($evaluation->closed)
+                        <button data-id="{{ $evaluation->id }}"
+                            id="{{ $evaluation->feedback_read_at ? 'feedback-open' : '' }}"
+                            {{ $evaluation->feedback_read_at ? 'data-read' : '' }}
+                            class="secondary"style="padding-block:3px;" data-modal-target="dialog" data-modal-toggle="dialog">
+                            @svg('bx-wink-smile', 'w-5 h-5')
+                            Feedback
+                        </button>
+
+                        @php
+                            $feebackScore = [
+                                [
+                                    'key' => 1,
+                                    'icon' => 'bx-sad',
+                                    'checked' => false,
+                                ],
+                                [
+                                    'key' => 2,
+                                    'icon' => 'bx-meh',
+                                    'checked' => false,
+                                ],
+                                [
+                                    'key' => 3,
+                                    'icon' => 'bx-smile',
+                                    'checked' => true,
+                                ],
+                                [
+                                    'key' => 4,
+                                    'icon' => 'bx-happy',
+                                    'checked' => false,
+                                ],
+                                [
+                                    'key' => 5,
+                                    'icon' => 'bx-happy-heart-eyes',
+                                    'checked' => false,
+                                ],
+                            ];
+                        @endphp
+
+                        <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                            <div class="content lg:max-w-lg max-w-full">
+                                <header>
+                                    Feedback de la evaluación
+                                </header>
+                                @if ($evaluation->feedback_at && !$cuser->isDev())
+                                    <div class=" body grid gap-4">
+                                        <div>
+                                            <p class="font-semibold">Score</p>
+                                            @svg($feebackScore[$evaluation->feedback_score - 1]['icon'], 'w-8 h-8')
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold">Feedback</p>
+                                            <p>{{ $evaluation->feedback ?? '-' }}</p>
+                                        </div>
+                                        <p>
+                                            Enviado el {{ $evaluation->feedback_at->format('d/m/Y') }} por
+                                            {{ $evaluation->feedbackBy->first_name }}
+                                            {{ $evaluation->feedbackBy->last_name }}
+                                        </p>
+                                    </div>
+                                    <footer>
+                                        <button data-modal-hide="dialog" type="button" class="primary">Aceptar</button>
+                                    </footer>
+                                @elseif($hasSendFeedback)
+                                    <form action="/api/evaluations/{{ $evaluation->id }}/feedback/send" method="POST"
+                                        id="dialog-form" class="dinamic-form body grid gap-4">
+
+                                        <div class="flex items-center justify-center">
+                                            @foreach ($feebackScore as $score)
+                                                <div class="flex flex-col items-center">
+                                                    <input type="radio"
+                                                        {{ !$evaluation->feedback_at && $score['checked'] ? 'checked' : '' }}
+                                                        {{ $evaluation->feedback_at && $evaluation->feedback_score == $score['key'] ? 'checked' : '' }}
+                                                        id="score-{{ $score['key'] }}" name="feedback_score"
+                                                        value="{{ $score['key'] }}" class="peer" required>
+                                                    <label for="score-{{ $score['key'] }}" class="p-1 rounded-full block">
+                                                        @svg($score['icon'], 'w-8 h-8')
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <label class="label">
+                                            <span>Descripción (Opcional)</span>
+                                            <textarea name="feedback" cols="30" rows="7" class="w-full"
+                                                placeholder="Escribe aquí tu feedback sobre esta evaluación.">{{ $evaluation->feedback }}</textarea>
+                                        </label>
+                                        @if ($evaluation->feedback_at)
+                                            <p>
+                                                Enviado el {{ $evaluation->feedback_at->format('d/m/Y') }} por
+                                                {{ $evaluation->feedbackBy->first_name }}
+                                                {{ $evaluation->feedbackBy->last_name }}
+                                            </p>
+                                        @endif
+                                    </form>
+                                    <footer>
+                                        <button data-modal-hide="dialog" type="button">Cancelar</button>
+                                        <button form="dialog-form" type="submit">
+                                            Enviar</button>
+                                    </footer>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+
                     @if ($hasSelfQualify)
                         <button id="evaluation-self-qualify-button" data-id="{{ $evaluation->id }}"
                             class="bg-sky-600 shadow-sm shadow-sky-500/10 hover:bg-sky-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-1 gap-1 text-sm px-3">
-                            @svg('heroicon-s-check', [
-                                'class' => 'w-5 h-5',
-                            ])
+                            @svg('bx-plus', 'w-5 h-5')
                             Autocalificar
                         </button>
                     @endif
                     @if ($hasQualify)
                         <button data-id="{{ $evaluation->id }}" id="evaluation-qualify-button"
                             class="bg-violet-700 shadow-sm shadow-violet-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-violet-600 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
-                            @svg('heroicon-o-clipboard-document-check', [
-                                'class' => 'w-5 h-5',
-                            ])
+                            @svg('bxs-check-shield', 'w-5 h-5')
                             Calificiar
                         </button>
                     @endif
@@ -65,9 +171,7 @@
                     @if ($hasCloseEvaluation)
                         <button data-id="{{ $evaluation->id }}" id="evaluation-close-button"
                             class="bg-red-600 shadow-sm shadow-red-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-red-700 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
-                            @svg('heroicon-o-x-mark', [
-                                'class' => 'w-5 h-5',
-                            ])
+                            @svg('bx-x', 'w-5 h-5')
                             Cerrar
                         </button>
                     @endif
