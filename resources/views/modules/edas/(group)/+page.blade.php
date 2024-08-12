@@ -18,7 +18,7 @@
         ],
     ];
 
-    $hasCreate = $cuser->has('users:edas:create_all') || $cuser->isDev();
+    $hasCreate = $cuser->has('edas:create_all') || $cuser->isDev();
 @endphp
 
 @section('layout.group.edas')
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             @endif
-            @if ($cuser->has('users:schedules:export') || $cuser->isDev())
+            @if ($cuser->has('edas:export') || $cuser->isDev())
                 <button {{ count($edas) == 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown" class="secondary ml-auto">
                     @svg('bx-up-arrow-circle', 'w-5 h-5')
                     <span>
@@ -100,7 +100,7 @@
             </div> --}}
         </div>
         <div class="flex flex-col h-full divide-y overflow-y-auto">
-            @if ($cuser->has('users:edas:show') || $cuser->isDev())
+            @if ($cuser->has('edas:show') || $cuser->isDev())
                 @if ($edas->isEmpty())
                     <p class="p-20 grid place-content-center text-center">
                         No hay nada que mostrar.
