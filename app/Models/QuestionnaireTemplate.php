@@ -17,8 +17,7 @@ class QuestionnaireTemplate extends Model
 
   protected $fillable = [
     'title',
-    'for',
-    'in_use',
+    'use_for',
     'archived'
   ];
 
