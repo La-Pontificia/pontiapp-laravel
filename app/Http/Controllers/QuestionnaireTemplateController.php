@@ -3,20 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\QuestionnaireTemplate;
-use Illuminate\Http\Request;
 
 class QuestionnaireTemplateController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $for = $request->get('for');
-
-        $match = QuestionnaireTemplate::orderBy('in_use', 'desc');
-
-        if ($for) {
-            $match->where('for', $for);
-        }
-
+        $match = QuestionnaireTemplate::orderBy('use_for', 'desc');
         $templates = $match->paginate();
 
         return view('modules.edas.questionnaire-templates.+page', [

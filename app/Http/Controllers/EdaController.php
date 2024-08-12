@@ -2,57 +2,120 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Eda;
 use App\Models\Evaluation;
 use App\Models\JobPosition;
 use App\Models\QuestionnaireTemplate;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserRole;
 use App\Models\Year;
 use Illuminate\Http\Request;
 
 class EdaController  extends Controller
 {
-
     public function index(Request $request)
     {
+        $cuser = User::find(auth()->user()->id);
+        $match = Eda::orderBy('created_at', 'desc');
+        $query = $request->get('q');
+        $status = $request->get('status');
+        $year_id = $request->get('year');
+
+        if ($status && $status == 'sent') {
+            $match->where('sent', '!=', null);
+        }
+        if ($status && $status == 'approved') {
+            $match->where('approved', '!=', null);
+        }
+        if ($status && $status == 'closed') {
+            $match->where('closed', '!=', null);
+        }
+        if ($year_id) {
+            $match->where('id_year', $year_id);
+        }
+
+        if ($query) {
+            $match->whereHas('user', function ($q) use ($query) {
+                $q->where('first_name', 'like', '%' . $query . '%')
+                    ->orWhere('last_name', 'like', '%' . $query . '%')
+                    ->orWhere('dni', 'like', '%' . $query . '%');
+            });
+        }
+
+        if ($cuser->has('edas:show') && !$cuser->has('edas:show_all')) {
+            $match->whereHas('user', function ($q) use ($cuser) {
+                $q->where('supervisor_id', $cuser->id);
+            });
+        }
+
+        $edas = $match->paginate();
+        $years = Year::orderBy('name', 'desc')->get();
+
+        return view('modules.edas.(group).+page', compact('edas', 'years'))
+            ->with('i', (request()->input('page', 1) - 1) * $edas->perPage());
+    }
+
+    public function collaborators(Request $request)
+    {
+        $role = $request->get('role');
         $cuser = User::find(auth()->user()->id);
         $match = User::orderBy('created_at', 'desc');
         $query = $request->get('q');
         $job_position = $request->get('job_position');
+        $status = $request->get('status');
+        $department = $request->get('department');
         $job_positions = JobPosition::all();
-        $role = $request->get('role');
-        $users = [];
+        $user_roles = UserRole::all();
 
         if ($cuser->has('edas:show') && !$cuser->has('edas:show_all')) {
             $match->where('supervisor_id', $cuser->id);
         }
 
         // filters
+        if ($status && $status == 'actives') {
+            $match->where('status', true);
+        }
+
+        if ($status && $status == 'inactives') {
+            $match->where('status', false);
+        }
+
+        if ($role) {
+            $match->where('id_role_user', $role);
+        }
+
         if ($job_position) {
             $match->whereHas('role_position', function ($q) use ($job_position) {
                 $q->where('id_job_position', $job_position);
             });
         }
 
-        if ($role) {
-            $match->where('id_role', $role);
+        if ($department) {
+            $match->whereHas('role_position', function ($q) use ($department) {
+                $q->whereHas('department', function ($q) use ($department) {
+                    $q->where('id', $department);
+                });
+            });
         }
 
         if ($query) {
             $match->where('first_name', 'like', '%' . $query . '%')
                 ->orWhere('last_name', 'like', '%' . $query . '%')
                 ->orWhere('dni', 'like', '%' . $query . '%')
-                ->orWhere('email', 'like', '%' . $query . '%')
                 ->get();
         }
 
+
         $jobPostions = JobPosition::all();
         $roles = Role::all();
+        $user_roles = UserRole::all();
+        $departments = Department::all();
 
         $users = $match->paginate();
 
-        return view('modules.edas.+page', compact('users', 'job_positions', 'roles'))
+        return view('modules.edas.(group).collaborators.+page', compact('users', 'job_positions', 'user_roles', 'departments', 'roles'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
@@ -148,8 +211,8 @@ class EdaController  extends Controller
         $current_year = Year::find($id_year);
         $eda = Eda::where('id_user', $id_user)->where('id_year', $id_year)->first();
 
-        $collaborator_questionnaire = QuestionnaireTemplate::where('for', 'collaborators')->first();
-        $supervisor_questionnaire = QuestionnaireTemplate::where('for', 'supervisors')->first();
+        $collaborator_questionnaire = QuestionnaireTemplate::where('use_for', 'collaborators')->first();
+        $supervisor_questionnaire = QuestionnaireTemplate::where('use_for', 'supervisors')->first();
 
         // validate
         if (!$eda) return view('+500', ['error' => 'Eda not found']);
