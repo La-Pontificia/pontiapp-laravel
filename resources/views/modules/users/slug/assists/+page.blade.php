@@ -19,110 +19,71 @@
 @section('layout.users.slug')
     <div class="space-y-2 flex flex-col h-full">
         <div class="p-1 flex items-end">
-            <div class="flex-grow flex items-center flex-wrap gap-2">
-                <div id="date-range" class="flex items-center gap-1 w-[340px]">
-                    <input readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start" placeholder="-">
+            <div class="flex-grow flex items-center flex-wrap gap-4">
+                <div id="date-range" class="flex items-center gap-1">
+                    <input class="w-[100px]" readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start"
+                        placeholder="-">
                     <span>a</span>
-                    <input readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end" placeholder="-">
-
+                    <input class="w-[100px]" readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end"
+                        placeholder="-">
                     <button id="filter"
                         class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
                 </div>
-                <div>
-                    <button type="button" data-modal-target="filters-modal" data-modal-toggle="filters-modal"
+                <div class="border-l pl-4">
+                    <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                         class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-list-filter">
-                            <path d="M3 6h18" />
-                            <path d="M7 12h10" />
-                            <path d="M10 18h4" />
-                        </svg>
+                        @svg('bx-devices', 'w-5 h-5')
                         <span class="max-lg:hidden">Terminales</span>
                     </button>
-                    <div id="filters-modal" data-modal-placement="top-center" tabindex="-1"
-                        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                        <div class="relative w-full max-w-xl max-h-full">
-                            <div class="relative bg-white rounded-lg shadow">
-                                <div class="flex items-center justify-between p-2 px-3 border-b rounded-t">
-                                    <h3 class="text-xl font-medium text-gray-900">
-                                        Filtrar resultados de asistencias
-                                    </h3>
-                                    <button type="button"
-                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                        data-modal-hide="filters-modal">
-                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                    </button>
+
+                    <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                        <div class="content lg:max-w-lg max-w-full">
+                            <header>
+                                Filtrar resultados de asistencias por bases de datos y/o terminales.
+                            </header>
+                            <form method="POST" id="form"
+                                class="p-3 dinamic-form-acumulate gap-4 overflow-y-auto flex flex-col">
+                                <p class="opacity-70 font-semibold">Terminales</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    @foreach ($terminals as $terminal)
+                                        <label class="flex items-center gap-1">
+                                            <input type="checkbox" class="rounded-lg"
+                                                {{ $default_terminal == $terminal->database_name || in_array($terminal->database_name, $currentTerminals) ? 'checked' : '' }}
+                                                name="terminals[]" value="{{ $terminal->database_name }}"
+                                                class="rounded-lg">
+                                            <span>{{ $terminal->name }}</span>
+                                        </label>
+                                    @endforeach
                                 </div>
-                                <form class="p-3 dinamic-form-acumulate" id="form">
-                                    <p class="opacity-70 font-semibold">Terminales</p>
-                                    <div class="grid grid-cols-3 gap-2">
-                                        @foreach ($terminals as $terminal)
-                                            <label class="flex items-center gap-1">
-                                                <input type="checkbox" class="rounded-lg"
-                                                    {{ $default_terminal == $terminal->database_name || in_array($terminal->database_name, $currentTerminals) ? 'checked' : '' }}
-                                                    name="terminals[]" value="{{ $terminal->database_name }}"
-                                                    class="rounded-lg">
-                                                <span>{{ $terminal->name }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                </form>
-                                <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                                    <button type="submit" form="form"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Filtrar</button>
-                                </div>
-                            </div>
+                            </form>
+                            <footer>
+                                <button data-modal-hide="dialog" type="button">Cancelar</button>
+                                <button form="form" type="submit" class="primary">Filtrar</button>
+                            </footer>
                         </div>
                     </div>
                 </div>
             </div>
-            <button {{ count($schedules) === 0 ? 'disabled' : '' }} id="button-export-assists"
-                class="bg-white hover:shadow-md flex items-center rounded-full gap-2 p-2 text-sm font-semibold px-3">
-                <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                    <g id="SVGRepo_iconCarrier">
-                        <defs>
-                            <linearGradient id="a" x1="4.494" y1="-2092.086" x2="13.832" y2="-2075.914"
-                                gradientTransform="translate(0 2100)" gradientUnits="userSpaceOnUse">
-                                <stop offset="0" stop-color="#18884f"></stop>
-                                <stop offset="0.5" stop-color="#117e43"></stop>
-                                <stop offset="1" stop-color="#0b6631"></stop>
-                            </linearGradient>
-                        </defs>
-                        <path
-                            d="M19.581,15.35,8.512,13.4V27.809A1.192,1.192,0,0,0,9.705,29h19.1A1.192,1.192,0,0,0,30,27.809h0V22.5Z"
-                            style="fill:#185c37"></path>
-                        <path d="M19.581,3H9.705A1.192,1.192,0,0,0,8.512,4.191h0V9.5L19.581,16l5.861,1.95L30,16V9.5Z"
-                            style="fill:#21a366"></path>
-                        <path d="M8.512,9.5H19.581V16H8.512Z" style="fill:#107c41"></path>
-                        <path d="M16.434,8.2H8.512V24.45h7.922a1.2,1.2,0,0,0,1.194-1.191V9.391A1.2,1.2,0,0,0,16.434,8.2Z"
-                            style="opacity:0.10000000149011612;isolation:isolate"></path>
-                        <path d="M15.783,8.85H8.512V25.1h7.271a1.2,1.2,0,0,0,1.194-1.191V10.041A1.2,1.2,0,0,0,15.783,8.85Z"
-                            style="opacity:0.20000000298023224;isolation:isolate"></path>
-                        <path d="M15.783,8.85H8.512V23.8h7.271a1.2,1.2,0,0,0,1.194-1.191V10.041A1.2,1.2,0,0,0,15.783,8.85Z"
-                            style="opacity:0.20000000298023224;isolation:isolate"></path>
-                        <path d="M15.132,8.85H8.512V23.8h6.62a1.2,1.2,0,0,0,1.194-1.191V10.041A1.2,1.2,0,0,0,15.132,8.85Z"
-                            style="opacity:0.20000000298023224;isolation:isolate"></path>
-                        <path
-                            d="M3.194,8.85H15.132a1.193,1.193,0,0,1,1.194,1.191V21.959a1.193,1.193,0,0,1-1.194,1.191H3.194A1.192,1.192,0,0,1,2,21.959V10.041A1.192,1.192,0,0,1,3.194,8.85Z"
-                            style="fill:url(#a)"></path>
-                        <path
-                            d="M5.7,19.873l2.511-3.884-2.3-3.862H7.758L9.013,14.6c.116.234.2.408.238.524h.017c.082-.188.169-.369.26-.546l1.342-2.447h1.7l-2.359,3.84,2.419,3.905H10.821l-1.45-2.711A2.355,2.355,0,0,1,9.2,16.8H9.176a1.688,1.688,0,0,1-.168.351L7.515,19.873Z"
-                            style="fill:#fff"></path>
-                        <path d="M28.806,3H19.581V9.5H30V4.191A1.192,1.192,0,0,0,28.806,3Z" style="fill:#33c481">
-                        </path>
-                        <path d="M19.581,16H30v6.5H19.581Z" style="fill:#107c41"></path>
-                    </g>
-                </svg>
-                <span class="max-lg:hidden">Exportar</span>
+            <button {{ count($schedules) === 0 ? 'disabled' : '' }}}} data-dropdown-toggle="dropdown"
+                class="secondary ml-auto">
+                @svg('bx-up-arrow-circle', 'w-5 h-5')
+                <span>
+                    Exportar
+                </span>
             </button>
+            <div id="dropdown" class="dropdown-content hidden">
+                <button data-type="excel"
+                    class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
+                    Excel (.xlsx)
+                </button>
+                <button data-type="json"
+                    class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
+                    JSON (.json)
+                </button>
+            </div>
         </div>
-        <div class="overflow-auto flex h-full flex-col">
+        <div
+            class="overflow-auto flex bg-white flex-col border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl h-full">
             <div class="h-full shadow-sm rounded-2xl overflow-auto">
                 @if (count($schedules) === 0)
                     <div class="grid h-full w-full place-content-center">
@@ -133,7 +94,7 @@
                     </div>
                 @else
                     <table id="table-export-assists" class="w-full text-left relative">
-                        <thead class="border-b sticky bg-[#f1f0f4] top-0 z-[1]">
+                        <thead class="border-b sticky bg-white top-0 z-[1]">
                             <tr class="[&>th]:text-nowrap [&>th]:font-medium [&>th]:p-2">
                                 <th class=" tracking-tight">DNI</th>
                                 <th class=" tracking-tight">Usuario</th>
@@ -143,8 +104,8 @@
                                 <th class="text-center">Turno</th>
                                 <th class="text-center">Entrada</th>
                                 <th class="text-center">Salida</th>
-                                <th class="text-center bg-neutral-100">Entró</th>
-                                <th class="text-center bg-neutral-100">Salió</th>
+                                <th class="text-center bg-yellow-100">Entró</th>
+                                <th class="text-center bg-yellow-100">Salió</th>
                                 <th>Diferencia</th>
                                 <th class="text-center">Terminal</th>
                                 <th>Observaciones</th>
@@ -197,9 +158,8 @@
                                         data-name="date">
                                         <p class="text-nowrap flex items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="17" viewBox="0 0 24 24"
-                                                fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-calendar opacity-70">
+                                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" class="lucide lucide-calendar opacity-70">
                                                 <path d="M8 2v4" />
                                                 <path d="M16 2v4" />
                                                 <rect width="18" height="18" x="3" y="4" rx="2" />
