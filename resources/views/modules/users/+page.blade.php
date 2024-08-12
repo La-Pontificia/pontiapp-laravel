@@ -91,7 +91,7 @@
                 </select>
             </div>
             <div class="flex flex-col divide-y overflow-y-auto">
-                @if ($cuser->has('users:users:show') || $cuser->isDev())
+                @if ($cuser->has('users:show') || $cuser->isDev())
                     @if ($users->isEmpty())
                         <p class="p-20 grid place-content-center text-center">
                             No hay nada que mostrar.
