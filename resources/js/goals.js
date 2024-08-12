@@ -1,5 +1,7 @@
 import moment from "moment";
 
+import { v4 as uuidv4 } from "uuid";
+
 document.addEventListener("DOMContentLoaded", async () => {
     $ = document.querySelector.bind(document);
     let goals = [];
@@ -233,7 +235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
         } else {
             addNewGoal({
-                _id: window.crypto.randomUUID(),
+                _id: uuidv4(),
                 id: null,
                 title: $title.value,
                 description: $description.value,
