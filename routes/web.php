@@ -66,6 +66,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Edas routes
     Route::get('edas', [EdaController::class, 'index']);
+    Route::get('edas/collaborators', [EdaController::class, 'collaborators']);
     Route::get('edas/reports', [EdaController::class, 'reports']);
     Route::get('edas/years', [YearController::class, 'index']);
     Route::get('edas/questionnaire-templates', [QuestionnaireTemplateController::class, 'index']);

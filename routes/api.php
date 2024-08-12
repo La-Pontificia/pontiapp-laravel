@@ -52,9 +52,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Edas routes
     Route::post('edas/create/{year_id}/user/{user_id}', [EdaController::class, 'create']);
+    Route::post('edas/create-independent', [EdaController::class, 'createIndependent']);
     Route::post('edas/close/{id}', [EdaController::class, 'close']);
     Route::post('edas/questionnaire/{id}', [EdaController::class, 'questionnaire']);
-
 
     // Goals routes
     Route::post('goals/sent/{id}', [GoalController::class, 'sent']);
@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('evaluations/self-qualify/{id}', [EvaluationController::class, 'selfqualify']);
     Route::post('evaluations/qualify/{id}', [EvaluationController::class, 'qualify']);
     Route::post('evaluations/close/{id}', [EvaluationController::class, 'close']);
+    Route::post('evaluations/{id}/feedback/send', [EvaluationController::class, 'feedback']);
+    Route::post('evaluations/{id}/feedback/read', [EvaluationController::class, 'readFeedback']);
 
     // Areas routes
     Route::post('areas', [AreaController::class, 'store']);
@@ -94,6 +96,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('questionnaire-templates/{id}/use', [QuestionnaireTemplateController::class, 'use']);
     Route::post('questionnaire-templates/{id}/archive', [QuestionnaireTemplateController::class, 'archive']);
     Route::post('questionnaire-templates/{id}/delete', [QuestionnaireTemplateController::class, 'delete']);
+    Route::post('questionnaire-templates/{id}/use/{for}', [QuestionnaireTemplateController::class, 'use']);
+
 
     // Questions routes
     Route::get('questionnaire-templates/{id}/questions', [QuestionController::class, 'questions']);
