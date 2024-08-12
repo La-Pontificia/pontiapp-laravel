@@ -35,7 +35,7 @@ class Question extends Model
 
   public function answers()
   {
-    return $this->hasMany(QuestionnaireQuestion::class, 'question_id', 'id');
+    return $this->hasMany(QuestionnaireAnswer::class, 'question_id', 'id');
   }
 
   public function createdBy()
