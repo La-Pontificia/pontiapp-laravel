@@ -15,7 +15,8 @@
         $hasSelfQualify =
             ($cuser->has('edas:evaluations:self-qualify') &&
                 !$evaluation->closed &&
-                !$evaluation->self_qualification) ||
+                !$evaluation->self_qualification &&
+                $isSupervisor) ||
             $cuser->isDev();
 
         // if has average evaluation
