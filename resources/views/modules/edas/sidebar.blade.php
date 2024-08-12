@@ -14,7 +14,7 @@
             'href' => '/edas/collaborators',
             'active' =>
                 (request()->is('edas/collaborators*') || request()->is('edas*')) &&
-                !request()->is('edas/me*') &&
+                !request()->is('edas' . '/' . $cuser->id . '*') &&
                 !request()->is('edas/years*') &&
                 !request()->is('edas/questionnaire-templates*'),
             'active-icon' => 'bxs-group',
