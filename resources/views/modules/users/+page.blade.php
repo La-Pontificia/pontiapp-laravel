@@ -31,7 +31,7 @@
                         <span>Nuevo</span>
                     </a>
                 @endif
-                @if ($cuser->has('users:schedules:export') || $cuser->isDev())
+                @if ($cuser->has('users:export') || $cuser->isDev())
                     <button data-dropdown-toggle="dropdown" class="secondary ml-auto">
                         @svg('bx-up-arrow-circle', 'w-5 h-5')
                         <span>
