@@ -26,7 +26,6 @@ class QuestionnaireTemplateController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'for' => 'required|in:collaborators,supervisors',
             'questions' => 'required|array',
         ]);
 
@@ -46,7 +45,6 @@ class QuestionnaireTemplateController extends Controller
 
         $template = QuestionnaireTemplate::create([
             'title' => $request->title,
-            'for' => $request->for,
             'created_by' => auth()->user()->id,
         ]);
 
@@ -59,7 +57,6 @@ class QuestionnaireTemplateController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'for' => 'required|in:collaborators,supervisors',
             'questions' => 'required|array',
             'deleteIds' => 'array',
         ]);
@@ -106,29 +103,23 @@ class QuestionnaireTemplateController extends Controller
         }
 
         $template->title = $request->title;
-        $template->for = $request->for;
         $template->updated_by = auth()->user()->id;
         $template->save();
 
         return response()->json('Plantilla actualizado correctamente.', 200);
     }
 
-    public function use($id)
+    public function use($id, $for)
     {
         $template = QuestionnaireTemplate::find($id);
 
-        $for = $template->for;
-
-        $match = QuestionnaireTemplate::where('for', $for)->get();
-
-        if ($match) {
-            foreach ($match as $t) {
-                $t->in_use = false;
-                $t->save();
-            }
+        if ($for !== 'collaborators' && $for !== 'supervisors') {
+            return response()->json('El uso de la plantilla no es válido.', 400);
         }
 
-        $template->in_use = true;
+        QuestionnaireTemplate::where('use_for', $for)->update(['use_for' => null]);
+
+        $template->use_for = $for;
         $template->save();
 
         return response()->json('Plantilla en uso.', 200);

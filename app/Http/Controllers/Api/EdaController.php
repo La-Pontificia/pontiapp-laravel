@@ -7,7 +7,7 @@ use App\Models\Eda;
 use App\Models\Evaluation;
 use App\Models\Question;
 use App\Models\Questionnaire;
-use App\Models\QuestionnaireAnswers;
+use App\Models\QuestionnaireAnswer;
 use App\Models\QuestionnaireTemplate;
 use App\Models\User;
 use App\Models\Year;
@@ -15,6 +15,48 @@ use Illuminate\Http\Request;
 
 class EdaController extends Controller
 {
+    public function createIndependent(Request $request)
+    {
+
+        $request->validate([
+            'year_id' => 'required|uuid',
+            'user_id' => 'required|uuid',
+        ]);
+
+        $year_id = $request->year_id;
+        $user_id = $request->user_id;
+        $cuser = User::find(auth()->user()->id);
+        $user = User::find($user_id);
+        $year = Year::find($year_id);
+
+        if (!$year->status) return response()->json('El año seleccionado no esta activo', 404);
+        if (!$user->status) return response()->json('El usuario seleccionado no esta activo', 404);
+
+        $hasAccess = ($cuser->has('edas:create') && $user->supervisor_id === $cuser->id || $cuser->has('edas:create_all')) || $cuser->isDev();
+        if (!$hasAccess) return response()->json('No tienes permisos para realizar esta acción', 403);
+
+
+        $alreadyExists = Eda::where('id_user', $user_id)->where('id_year', $year_id)->first();
+
+        if ($alreadyExists) return response()->json('El usuario ya tiene un eda con el año seleccionado.', 400);
+
+        $evaluationArray = [1, 2];
+
+        $eda = Eda::create([
+            'id_user' => $user_id,
+            'id_year' => $year_id,
+            'created_by' => auth()->user()->id,
+        ]);
+
+        foreach ($evaluationArray as $evaluation) {
+            Evaluation::create([
+                'number' => $evaluation,
+                'id_eda' => $eda->id,
+            ]);
+        }
+
+        return response()->json('Eda creado correctamente.', 200);
+    }
 
     public function create($year_id, $user_id)
     {
@@ -87,7 +129,7 @@ class EdaController extends Controller
         ]);
 
         foreach ($request->answers as $answer) {
-            QuestionnaireAnswers::create([
+            QuestionnaireAnswer::create([
                 'answer' => $answer['answer'],
                 'question_id' => $answer['question_id'],
                 'questionnaire_id' => $questionnaire->id,

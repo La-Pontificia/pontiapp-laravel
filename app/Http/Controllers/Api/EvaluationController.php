@@ -112,4 +112,38 @@ class EvaluationController extends Controller
 
         return response()->json('Evaluación cerrada correctamente', 200);
     }
+
+    public function feedback(Request $request, $id)
+    {
+        $request->validate([
+            'feedback' => 'string|nullable',
+            'feedback_score' => 'required|numeric|max:5|min:1',
+        ]);
+
+        $evaluation = Evaluation::find($id);
+
+        if (!$evaluation)
+            return response()->json('Evaluation not found', 404);
+
+        $evaluation->feedback = $request->feedback;
+        $evaluation->feedback_by = auth()->user()->id;
+        $evaluation->feedback_score = $request->feedback_score;
+        $evaluation->feedback_at = now();
+        $evaluation->save();
+
+        return response()->json('Feedback enviado correctamente', 200);
+    }
+
+    public function readFeedback($id)
+    {
+        $evaluation = Evaluation::find($id);
+
+        if (!$evaluation)
+            return response()->json('Evaluation not found', 404);
+
+        $evaluation->feedback_read_at = now();
+        $evaluation->save();
+
+        return response()->json('Feedback leído correctamente', 200);
+    }
 }
