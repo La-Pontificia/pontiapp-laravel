@@ -33,7 +33,7 @@
         [
             'icon' => 'bx-folder',
             'text' => 'Gestión de Edas',
-            'href' => '/edas',
+            'href' => '/edas/collaborators',
             'enable' => $cuser->hasGroup('edas') || $cuser->isDev(),
         ],
         [
