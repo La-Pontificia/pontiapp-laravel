@@ -17,7 +17,6 @@ class Eda extends Model
     'id',
     'id_year',
     'id_user',
-    'open',
     'closed',
     'send',
     'approved',
@@ -43,7 +42,7 @@ class Eda extends Model
   {
     return $this->hasOne(Questionnaire::class, 'eda_id', 'id')
       ->whereHas('template', function ($q) {
-        $q->where('for', 'collaborators');
+        $q->where('use_for', 'collaborators');
       });
   }
 
@@ -51,7 +50,7 @@ class Eda extends Model
   {
     return $this->hasOne(Questionnaire::class, 'eda_id', 'id')
       ->whereHas('template', function ($q) {
-        $q->where('for', 'supervisors');
+        $q->where('use_for', 'supervisors');
       });
   }
 
