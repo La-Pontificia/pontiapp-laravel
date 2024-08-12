@@ -3,7 +3,7 @@
 @section('title', 'Horarios')
 
 @section('layout.users')
-    <div class="w-full max-w-5xl mx-auto">
+    <div class="w-full max-w-2xl mx-auto">
         <h2 class="py-5">Grupo de horarios establecidos.</h2>
         <div class="flex flex-col w-full bg-white border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
             @if ($cuser->has('users:schedules:create') || $cuser->isDev())
