@@ -22,16 +22,16 @@
 @section('layout.edas')
     @if ($hassAcces)
         <div class="text-black h-full max-sm:py-1 w-full flex-grow flex overflow-y-auto gap-2">
-            <aside class="space-y-3 min-w-[300px] max-xl:min-w-max pb-1 bg-neutral-100 border shadow-sm rounded-xl">
+            <aside class="space-y-3 min-w-[300px] max-lg:min-w-max pb-1 bg-neutral-100 border shadow-sm rounded-xl">
                 <nav class="flex flex-col overflow-x-auto text-neutral-700">
                     <div class="p-2 border-b flex items-center gap-2">
                         @include('commons.avatar', [
                             'src' => $edauser->profile,
-                            'className' => 'w-8 max-xl:mx-auto',
+                            'className' => 'w-8 max-lg:mx-auto',
                             'alt' => $edauser->first_name . ' ' . $edauser->last_name,
                             'altClass' => 'text-lg',
                         ])
-                        <div class="text-sm max-xl:hidden">
+                        <div class="text-sm max-lg:hidden">
                             <p class="font-semibold tracking-tight  overflow-hidden text-ellipsis text-nowrap">
                                 {{ $edauser->first_name }}
                                 {{ $edauser->last_name }}</p>
@@ -43,7 +43,7 @@
                         @foreach ($years as $y)
                             <a {{ request()->is('edas/' . $edauser->id . '/eda/' . $y->id . '*') ? 'data-active' : '' }}
                                 href="/edas/{{ $edauser->id }}/eda/{{ $y->id }}"
-                                class="p-2.5 px-3.5 flex max-xl:w-fit w-full text-sm items-center gap-2 hover:bg-white data-[active]:bg-white data-[active]:border data-[active]:text-blue-700 font-medium rounded-lg">
+                                class="p-2.5 px-3.5 flex max-lg:w-fit w-full text-sm items-center gap-2 hover:bg-white data-[active]:bg-white data-[active]:border data-[active]:text-blue-700 font-medium rounded-lg">
                                 <img src="/sheet.png" class="w-5" alt="">
                                 {{ $y->name }}
                             </a>
