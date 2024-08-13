@@ -136,9 +136,7 @@
                     <ul class="list-disc list-inside">
                         @if ($eda->collaboratorQuestionnaire)
                             <li>
-                                @svg('heroicon-o-information-circle', [
-                                    'class' => 'w-5 h-5 inline-block',
-                                ])
+                                @svg('bx-info-circle', 'w-5 h-5 inline-block')
                                 Cuestionario de colaborador enviado el
                                 {{ \Carbon\Carbon::parse($eda->collaboratorQuestionnaire->created_at)->isoFormat('LL') }}
                                 por
@@ -149,9 +147,7 @@
 
                         @if ($eda->supervisorQuestionnaire)
                             <li>
-                                @svg('heroicon-o-information-circle', [
-                                    'class' => 'w-5 h-5 inline-block',
-                                ])
+                                @svg('bx-info-circle', 'w-5 h-5 inline-block')
                                 Cuestionario de supervisor enviado el
                                 {{ \Carbon\Carbon::parse($eda->supervisorQuestionnaire->created_at)->isoFormat('LL') }}
                                 por
@@ -187,7 +183,7 @@
 
                 <div class="py-4 mt-auto">
                     @if ($hasCloseEda)
-                        <button data-param="/api/edas/close/{{ $eda->id }}" data-id="{{ $eda->id }}"
+                        <button data-param="/api/edas/{{ $eda->id }}/close" data-id="{{ $eda->id }}"
                             data-atitle="Cerrar EDA"
                             data-adescription="¿Estás seguro de cerrar el EDA de {{ $eda->user->first_name }} {{ $eda->user->last_name }} del año {{ $current_year->name }}?"
                             class="bg-red-600 shadow-sm dinamic-alert shadow-red-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-red-700 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
