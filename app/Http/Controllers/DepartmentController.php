@@ -64,7 +64,7 @@ class DepartmentController extends Controller
         $department->created_by = auth()->user()->id;
         $department->save();
 
-        return response()->json($department, 200);
+        return response()->json('Departamento creado correctamente.', 200);
     }
 
     public function update(Request $request, $id)
@@ -87,6 +87,14 @@ class DepartmentController extends Controller
         $department->updated_by = auth()->user()->id;
         $department->save();
 
-        return response()->json($department, 200);
+        return response()->json('Departamento actualizado correctamente.', 200);
+    }
+
+    public function delete($id)
+    {
+        $department = Department::find($id);
+        $department->delete();
+
+        return response()->json('Eliminado correctamente', 204);
     }
 }
