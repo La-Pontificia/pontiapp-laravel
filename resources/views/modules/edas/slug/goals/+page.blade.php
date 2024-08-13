@@ -20,13 +20,13 @@
 @section('layout.edas.slug')
 
 
-    @if (isset($eda->sent))
-        <div id="loader" class="absolute grid rounded-xl place-content-center h-full inset-0 bg-white z-10">
-            <div class="loader"></div>
-        </div>
-    @endif
 
-    <div class="h-full flex overflow-hidden flex-col pt-0 overflow-x-auto">
+    <div class="h-full flex overflow-hidden relative flex-col pt-0 overflow-x-auto">
+        @if (isset($eda->sent))
+            <div id="loader" class="absolute grid rounded-xl place-content-center h-full inset-0 bg-white z-10">
+                <div class="loader"></div>
+            </div>
+        @endif
         @if ($eda->sent)
             <input type="hidden" id="input_id" value="{{ $eda->id }}">
         @endif
@@ -105,12 +105,10 @@
                 </div>
                 <div class="flex gap-2 items-center p-1 tracking-tight">
                     @if ($hasApproveGoals)
-                        <button data-atitle="Aprobar objetivos" data-param="/api/goals/approve/{{ $eda->id }}"
+                        <button data-atitle="Aprobar objetivos" data-param="/api/edas/{{ $eda->id }}/goals/approve"
                             data-adescription="¿Estás seguro de aprobar los objetivos?. Este paso habilitará el acceso a las evaluaciones del EDA."
-                            class="bg-orange-600 shadow-sm shadow-orange-500/10 dinamic-alert hover:bg-orange-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-1 gap-1 text-sm px-3">
-                            @svg('heroicon-s-check', [
-                                'class' => 'w-5 h-5',
-                            ])
+                            class="bg-violet-600 shadow-sm shadow-orange-500/10 dinamic-alert hover:bg-violet-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-1 gap-1 text-sm px-3">
+                            @svg('bxs-right-top-arrow-circle', 'w-5 h-5')
                             Aprobar
                         </button>
                     @endif
@@ -169,7 +167,7 @@
             </tr>
         </template>
 
-        <div id="table-content" class="h-full data-[open]:block hidden flex-grow overflow-y-auto w-full">
+        <div id="table-content" class="h-full relative data-[open]:block hidden flex-grow overflow-y-auto w-full">
             <table class="pt-3 text-sm w-full max-lg:grid-cols-1 px-1 py-1 gap-5">
                 <thead class="border-b border-neutral-300">
                     <tr class="[&>th]:font-medium [&>th]:px-3 [&>th]:py-2">
