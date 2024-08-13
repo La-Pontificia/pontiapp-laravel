@@ -1,7 +1,7 @@
 @php
-    $name = isset($businessUnit) ? $businessUnit->name : null;
-    $domain = isset($businessUnit) ? $businessUnit->domain : null;
-    $services = isset($businessUnit) ? $businessUnit->services : [];
+    $name = isset($business) ? $business->name : null;
+    $domain = isset($business) ? $business->domain : null;
+    $services = isset($business) ? $business->services : [];
     $business_services = [
         [
             'code' => 'pontisis',
@@ -23,18 +23,18 @@
 @endphp
 
 
-<label>
-    <span class="block pb-1 text-sm font-semibold opacity-50 ">Nombre</span>
+<label class="label">
+    <span>Nombre</span>
     <input required value="{{ $name }}" type="text" name="name" placeholder="Nombre de la unidad de negocio">
 </label>
 
-<label>
-    <span class="block pb-1 text-sm font-semibold opacity-50">Dominio</span>
+<label class="label">
+    <span>Dominio</span>
     <input required value="{{ $domain }}" type="text" name="domain" placeholder="Ej. elp.edu.pe">
 </label>
 
-<label>
-    <span class="block pb-1 text-sm font-semibold opacity-50 ">Servicios</span>
+<label class="label">
+    <span>Servicios</span>
     <div class="grid grid-cols-2 gap-2">
         @foreach ($business_services as $business_service)
             <label>
