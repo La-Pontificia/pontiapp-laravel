@@ -9,9 +9,9 @@ class AssistTerminalController extends Controller
 {
     public function index()
     {
-        $assists_databases = AssistTerminal::all();
+        $terminals = AssistTerminal::all();
         return view('modules.assists.terminals.+page', [
-            'assists_databases' => $assists_databases
+            'terminals' => $terminals
         ]);
     }
 
@@ -28,7 +28,7 @@ class AssistTerminalController extends Controller
         $data['created_by'] = auth()->id();
         $data['updated_by'] = auth()->id();
         $terminal = AssistTerminal::create($data);
-        return response()->json($terminal, 200);
+        return response()->json('Terminal registrada.', 200);
     }
 
     public function update(Request $request, $id)
@@ -50,6 +50,18 @@ class AssistTerminalController extends Controller
         $data['updated_by'] = auth()->id();
         $terminal->update($data);
 
-        return response()->json($terminal, 200);
+        return response()->json('Terminal actualizada.', 200);
+    }
+
+    public function delete($id)
+    {
+        $terminal = AssistTerminal::find($id);
+
+        if (!$terminal) {
+            return response()->json('Terminal not found', 404);
+        }
+
+        $terminal->delete();
+        return response()->json('Terminal eliminada.', 200);
     }
 }
