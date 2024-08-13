@@ -9,11 +9,11 @@ class BusinessUnitController extends Controller
 {
     public function index()
     {
-        $businessUnits = BusinessUnit::paginate();
+        $businesses = BusinessUnit::paginate();
         return view('modules.settings.business-units.+page', [
-            'businessUnits' => $businessUnits
+            'businesses' => $businesses
         ])
-            ->with('i', (request()->input('page', 1) - 1) * $businessUnits->perPage());
+            ->with('i', (request()->input('page', 1) - 1) * $businesses->perPage());
     }
 
     public function store(Request $request)
@@ -25,14 +25,14 @@ class BusinessUnitController extends Controller
 
         $services =  $request->input('services', []);
 
-        $businessUnit = BusinessUnit::create([
+        BusinessUnit::create([
             'name' => $request->name,
             'domain' => $request->domain,
             'services' => $services,
             'created_by' => auth()->id(),
         ]);
 
-        return response()->json($businessUnit, 200);
+        return response()->json('Unidad de negocio creado.', 200);
     }
 
     public function updated(Request $request, $id)
@@ -57,6 +57,19 @@ class BusinessUnitController extends Controller
             'updated_by' => auth()->id(),
         ]);
 
-        return response()->json($businessUnit, 200);
+        return response()->json('Unidad de negocio actualizada.', 200);
+    }
+
+    public function delete($id)
+    {
+        $businessUnit = BusinessUnit::find($id);
+
+        if (!$businessUnit) {
+            return response()->json('Business unit not found', 404);
+        }
+
+        $businessUnit->delete();
+
+        return response()->json('Empresa eliminado', 200);
     }
 }
