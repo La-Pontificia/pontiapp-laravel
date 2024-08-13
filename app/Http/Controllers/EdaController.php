@@ -15,13 +15,16 @@ use Illuminate\Http\Request;
 
 class EdaController  extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $isExport = false)
     {
         $cuser = User::find(auth()->user()->id);
         $match = Eda::orderBy('created_at', 'desc');
         $query = $request->get('q');
         $status = $request->get('status');
         $year_id = $request->get('year');
+
+        $job_position = $request->get('job_position');
+        $department = $request->get('department');
 
         if ($status && $status == 'sent') {
             $match->where('sent', '!=', null);
@@ -32,6 +35,17 @@ class EdaController  extends Controller
         if ($status && $status == 'closed') {
             $match->where('closed', '!=', null);
         }
+
+        if ($status && $status == 'not-sent') {
+            $match->where('sent', '==', null);
+        }
+        if ($status && $status == 'not-approved') {
+            $match->where('approved', '==', null);
+        }
+        if ($status && $status == 'not-closed') {
+            $match->where('closed', '==', null);
+        }
+
         if ($year_id) {
             $match->where('id_year', $year_id);
         }
@@ -44,17 +58,179 @@ class EdaController  extends Controller
             });
         }
 
+        if ($job_position) {
+            $match->whereHas('user', function ($q) use ($job_position) {
+                $q->whereHas('role_position', function ($q) use ($job_position) {
+                    $q->where('id_job_position', $job_position);
+                });
+            });
+        }
+
+        if ($department) {
+            $match->whereHas('user', function ($q) use ($department) {
+                $q->whereHas('role_position', function ($q) use ($department) {
+                    $q->whereHas('department', function ($q) use ($department) {
+                        $q->where('id', $department);
+                    });
+                });
+            });
+        }
+
         if ($cuser->has('edas:show') && !$cuser->has('edas:show_all')) {
             $match->whereHas('user', function ($q) use ($cuser) {
                 $q->where('supervisor_id', $cuser->id);
             });
         }
 
+        if ($isExport) {
+            return $match;
+        }
+
         $edas = $match->paginate();
         $years = Year::orderBy('name', 'desc')->get();
+        $job_positions = JobPosition::all();
+        $departments = Department::all();
 
-        return view('modules.edas.(group).+page', compact('edas', 'years'))
+        return view('modules.edas.(group).+page', compact('edas', 'years', 'job_positions', 'departments'))
             ->with('i', (request()->input('page', 1) - 1) * $edas->perPage());
+    }
+
+    public function export(Request $request)
+    {
+        $match = $this->index($request, true);
+        $all = $match->get();
+        $type = $request->type;
+
+        $edas = [];
+
+        foreach ($all as $eda) {
+            $evaluation01 = $eda->evaluations->where('number', 1)->first();
+            $evaluation02 = $eda->evaluations->where('number', 2)->first();
+
+            if ($type === 'basic') {
+
+                $edas[] = [
+                    'year' => $eda->year->name,
+                    'full_name' => $eda->user->first_name . ', ' . $eda->user->last_name,
+                    'dni' => $eda->user->dni,
+                    'role' => $eda->user->role_position->name,
+                    'job_position' => $eda->user->role_position->job_position->name,
+                    'closed' => $eda->closed,
+                    'goals' => [
+                        'count' => $eda->goals->count(),
+                        'sent' => $eda->sent,
+                        'approved' => $eda->approved,
+                    ],
+                    'evaluations' => [
+                        '1' => [
+                            'qualification' => $evaluation01->qualification,
+                            'self_qualification' => $evaluation01->self_qualification,
+                            'closed' => $evaluation01->closed,
+                            'feedback' => $evaluation01->feedback_at ? $evaluation01->feedback_at : null,
+                        ],
+                        '2' => [
+                            'qualification' => $evaluation02->qualification,
+                            'self_qualification' => $evaluation02->self_qualification,
+                            'closed' => $evaluation02->closed,
+                            'feedback' => $evaluation02->feedback_at ? $evaluation02->feedback_at : null,
+                        ]
+                    ],
+                    'questionnaires' => [
+                        'collaborator' => [
+                            'resolved' => $eda->collaboratorQuestionnaire ? $eda->collaboratorQuestionnaire->created_at : null,
+                            // 'resolved_by' => $eda->collaboratorQuestionnaire ? $eda->collaboratorQuestionnaire->answeredBy->first_name . ' ' . $eda->collaboratorQuestionnaire->answeredBy->last_name : null,
+                        ],
+                        'supervisor' => [
+                            'resolved' => $eda->supervisorQuestionnaire ? $eda->supervisorQuestionnaire->created_at : null,
+                            // 'resolved_by' => $eda->supervisorQuestionnaire ? $eda->supervisorQuestionnaire->answeredBy->first_name . ' ' . $eda->supervisorQuestionnaire->answeredBy->last_name : null,
+                        ]
+                    ]
+                ];
+            }
+
+            if ($type === 'advanced') {
+
+                $edas[] = [
+                    'year' => $eda->year->name,
+                    'full_name' => $eda->user->first_name . ' ' . $eda->user->last_name,
+                    'dni' => $eda->user->dni,
+                    'role' => $eda->user->role_position->name,
+                    'job_position' => $eda->user->role_position->job_position->name,
+                    'closed' => $eda->closed ? true : false,
+                    'closed_by' => $eda->closedBy ? $eda->closedBy->first_name . ' ' . $eda->closedBy->last_name : null,
+                    'created_at' => $eda->created_at,
+                    'created_by' => $eda->createdBy ? $eda->createdBy->first_name . ' ' . $eda->createdBy->last_name : null,
+
+                    'goals' => [
+                        'count' => $eda->goals->count(),
+                        'sent' => $eda->sent ? true : false,
+                        'sent_at' => $eda->sent,
+                        'approved' => $eda->approved ? true : false,
+                        'items' => $eda->goals->map(function ($goal) {
+                            return [
+                                'title' => $goal->title,
+                                'description' => $goal->description,
+                                'indicators' => $goal->indicators,
+                                'percentage' => $goal->percentage,
+                                'comments' => $goal->comments,
+                            ];
+                        }),
+                    ],
+                    'evaluations' => [
+                        '1' => [
+                            'qualification' => $evaluation01->qualification,
+                            'qulification_by' => $evaluation01->qualifiedBy ? $evaluation01->qualifiedBy->first_name . ' ' . $evaluation01->qualifiedBy->last_name : null,
+                            'self_qualification' => $evaluation01->self_qualification,
+                            'self_qualification_by' => $evaluation01->selfRatedBy ? $evaluation01->selfRatedBy->first_name . ' ' . $evaluation01->selfRatedBy->last_name : null,
+                            'closed' => $evaluation01->closed,
+                            'closed_by' => $evaluation01->closedBy ? $evaluation01->closedBy->first_name . ' ' . $evaluation01->closedBy->last_name : null,
+                            'feedback' => $evaluation01->feedback ? true : false,
+                            'feedback_score' => $evaluation01->feedback_score,
+                            'feedback_by' => $evaluation01->feedbackBy ? $evaluation01->feedbackBy->first_name . ' ' . $evaluation01->feedbackBy->last_name : null,
+                            'items' => $evaluation01->goalsEvaluations->map(function ($goalEvaluation) {
+                                return [
+                                    'goal' => $goalEvaluation->goal->title,
+                                    'qualification' => $goalEvaluation->qualification,
+                                    'self_qualification' => $goalEvaluation->self_qualification,
+                                ];
+                            }),
+                        ],
+                        '2' => [
+                            'qualification' => $evaluation02->qualification,
+                            'qulification_by' => $evaluation02->qualifiedBy ? $evaluation02->qualifiedBy->first_name . ' ' . $evaluation02->qualifiedBy->last_name : null,
+                            'self_qualification' => $evaluation02->self_qualification,
+                            'self_qualification_by' => $evaluation02->selfRatedBy ? $evaluation02->selfRatedBy->first_name . ' ' . $evaluation02->selfRatedBy->last_name : null,
+                            'closed' => $evaluation02->closed,
+                            'closed_by' => $evaluation02->closedBy ? $evaluation02->closedBy->first_name . ' ' . $evaluation02->closedBy->last_name : null,
+                            'feedback' => $evaluation02->feedback ? true : false,
+                            'feedback_score' => $evaluation02->feedback_score,
+                            'feedback_by' => $evaluation02->feedbackBy ? $evaluation02->feedbackBy->first_name . ' ' . $evaluation02->feedbackBy->last_name : null,
+                            'items' => $evaluation02->goalsEvaluations->map(function ($goalEvaluation) {
+                                return [
+                                    'goal' => $goalEvaluation->goal->title,
+                                    'qualification' => $goalEvaluation->qualification,
+                                    'self_qualification' => $goalEvaluation->self_qualification,
+                                ];
+                            }),
+                        ]
+                    ],
+                    'questionnaires' => [
+                        'collaborator' => [
+                            'count' => $eda->collaboratorQuestionnaire ? $eda->collaboratorQuestionnaire->answers->count() : 0,
+                            'resolved' => $eda->collaboratorQuestionnaire ? $eda->collaboratorQuestionnaire->created_at : null,
+                            'resolved_by' => $eda->collaboratorQuestionnaire ? $eda->collaboratorQuestionnaire->answeredBy->first_name . ' ' . $eda->collaboratorQuestionnaire->answeredBy->last_name : null,
+                        ],
+                        'supervisor' => [
+                            'count' => $eda->supervisorQuestionnaire ? $eda->supervisorQuestionnaire->answers->count() : 0,
+                            'resolved' => $eda->supervisorQuestionnaire ? $eda->supervisorQuestionnaire->created_at : null,
+                            'resolved_by' => $eda->supervisorQuestionnaire ? $eda->supervisorQuestionnaire->answeredBy->first_name . ' ' . $eda->supervisorQuestionnaire->answeredBy->last_name : null,
+                        ]
+                    ]
+                ];
+            }
+        }
+
+        return response()->json($edas);
     }
 
     public function collaborators(Request $request)
