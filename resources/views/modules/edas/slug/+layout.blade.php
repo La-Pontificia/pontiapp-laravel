@@ -83,16 +83,18 @@
 
                                 <div id="dropdown"
                                     class="z-10 hidden bg-white border divide-y divide-gray-100 rounded-xl p-1 shadow-xl w-60">
-                                    @if ($cuser->has('edas:export') || $cuser->isDev())
+                                    {{-- @if ($cuser->has('edas:export') || $cuser->isDev())
                                         <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
-                                            data-adescription="No podrás deshacer esta acción." {{-- data-param="/api/user-roles/delete/" --}}
+                                            data-adescription="No podrás deshacer esta acción." 
+                                            data-param="/api/user-roles/delete/"
                                             class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md">
                                             Exportar EDA
                                         </button>
-                                    @endif
+                                    @endif --}}
                                     @if ($cuser->isDev())
-                                        <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
-                                            data-adescription="No podrás deshacer esta acción." {{-- data-param="/api/user-roles/delete/" --}}
+                                        <button data-alertvariant="warning" data-atitle="¿Estás seguro de reiniciar el eda?"
+                                            data-adescription="Todos los objetivos y cuestionarios serán eliminados. No podrás deshacer esta acción."
+                                            data-param="/api/edas/{{ $eda->id }}/restart"
                                             class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600">
                                             Reiniciar EDA
                                         </button>
