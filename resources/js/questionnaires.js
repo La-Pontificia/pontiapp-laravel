@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
         }
         await window.mutation(
-            `/api/edas/questionnaire/${id_eda}`,
+            `/api/edas/${id_eda}/questionnaire`,
             {
                 answers: questions,
             },
