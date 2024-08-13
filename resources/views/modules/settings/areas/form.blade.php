@@ -3,14 +3,13 @@
     $name = isset($area) ? $area->name : null;
 
 @endphp
-<label>
-    <span class="block pb-1 text-sm font-semibold opacity-50 ">Codigo</span>
+<label class="label">
+    <span>Codigo</span>
     <input autofocus required type="text" name="code" placeholder= "{{ $code ?? 'Código' }}"
-        value="{{ $code }}" class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
+        value="{{ $code }}">
 </label>
 
-<label>
-    <span class="block pb-1 text-sm font-semibold opacity-50 ">Nombre</span>
-    <input required value="{{ $name }}" type="text" name="name" placeholder="Nombre de la area"
-        class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
+<label class="label">
+    <span>Nombre</span>
+    <input required value="{{ $name }}" type="text" name="name" placeholder="Nombre de la area">
 </label>
