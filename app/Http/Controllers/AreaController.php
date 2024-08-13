@@ -55,7 +55,7 @@ class AreaController extends Controller
         $area->created_by = auth()->user()->id;
         $area->save();
 
-        return response()->json($area, 200);
+        return response()->json('Area creada correctamente.', 200);
     }
 
     public function update(Request $request, $id)
@@ -76,6 +76,14 @@ class AreaController extends Controller
         $area->updated_by = auth()->user()->id;
         $area->save();
 
-        return response()->json($area, 200);
+        return response()->json('Area actualizada correctamente.', 200);
+    }
+
+    public function delete($id)
+    {
+        $area = Area::find($id);
+        $area->delete();
+
+        return response()->json('Eliminado correctamente', 204);
     }
 }
