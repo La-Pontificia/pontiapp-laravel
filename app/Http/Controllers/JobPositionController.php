@@ -25,15 +25,15 @@ class JobPositionController extends Controller
             $match->where('level', $level);
         }
 
-        $jobPositions = $match->paginate();
-        $lastJobPositions = JobPosition::orderBy('created_at', 'desc')->first();
+        $jobs = $match->paginate();
+        $lastJob = JobPosition::orderBy('created_at', 'desc')->first();
 
         $newCode = 'P-001';
-        if ($lastJobPositions) {
-            $newCode = 'P-' . str_pad((int)explode('-', $lastJobPositions->code)[1] + 1, 3, '0', STR_PAD_LEFT);
+        if ($lastJob) {
+            $newCode = 'P-' . str_pad((int)explode('-', $lastJob->code)[1] + 1, 3, '0', STR_PAD_LEFT);
         }
-        return view('modules.settings.job-positions.+page', compact('jobPositions', 'newCode'))
-            ->with('i', (request()->input('page', 1) - 1) * $jobPositions->perPage());
+        return view('modules.settings.job-positions.+page', compact('jobs', 'newCode'))
+            ->with('i', (request()->input('page', 1) - 1) * $jobs->perPage());
     }
 
     public function store(Request $request)
@@ -86,5 +86,12 @@ class JobPositionController extends Controller
         $update->save();
 
         return response()->json($update, 200);
+    }
+
+    public function delete($id)
+    {
+        $job = JobPosition::find($id);
+        $job->delete();
+        return response()->json('Registro eliminado correctamente.', 200);
     }
 }
