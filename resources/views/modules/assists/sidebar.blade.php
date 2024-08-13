@@ -9,9 +9,9 @@
         ],
         [
             'icon' => 'heroicon-o-circle-stack',
-            'text' => 'Terminales DB',
-            'href' => '/assists/terminals-db',
-            'active' => request()->is('assists/terminals-db*'),
+            'text' => 'Terminales',
+            'href' => '/assists/terminals',
+            'active' => request()->is('assists/terminals*'),
             'active-icon' => 'heroicon-s-circle-stack',
         ],
     ];
