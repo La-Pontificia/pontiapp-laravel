@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EdaController;
+use App\Http\Controllers\EdaController as ControllersEdaController;
 use App\Http\Controllers\Api\EvaluationController;
 use App\Http\Controllers\Api\GoalController;
 use App\Http\Controllers\Api\QuestionController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\UserController as ControllersUserController;
 use App\Http\Controllers\Api\UserRoleController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BusinessUnitController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\RoleController;
@@ -53,15 +55,18 @@ Route::middleware('auth:sanctum')->group(function () {
     // Edas routes
     Route::post('edas/create/{year_id}/user/{user_id}', [EdaController::class, 'create']);
     Route::post('edas/create-independent', [EdaController::class, 'createIndependent']);
-    Route::post('edas/close/{id}', [EdaController::class, 'close']);
-    Route::post('edas/questionnaire/{id}', [EdaController::class, 'questionnaire']);
+    Route::post('edas/{id}/close', [EdaController::class, 'close']);
+    Route::post('edas/{id}/restart', [EdaController::class, 'restart']);
+    Route::post('edas/{id}/questionnaire', [EdaController::class, 'questionnaire']);
+    Route::get('edas/export', [ControllersEdaController::class, 'export']);
+
 
     // Goals routes
-    Route::post('goals/sent/{id}', [GoalController::class, 'sent']);
-    Route::post('goals/update/{id}', [GoalController::class, 'update']);
-    Route::post('goals/approve/{id}', [GoalController::class, 'approve']);
-    Route::get('goals/by-eda/{id}', [GoalController::class, 'byEda']);
-    Route::get('goals/by-evaluation/{id}', [GoalController::class, 'byEvaluation']);
+    Route::post('edas/{id}/goals/sent', [GoalController::class, 'sent']);
+    Route::post('edas/{id}/goals/update', [GoalController::class, 'update']);
+    Route::post('edas/{id}/goals/approve', [GoalController::class, 'approve']);
+    Route::get('edas/{id}/goals', [GoalController::class, 'byEda']);
+    Route::get('edas/{id}/goals/evaluations', [GoalController::class, 'evaluations']);
 
     // evaluations routes
     Route::post('evaluations/self-qualify/{id}', [EvaluationController::class, 'selfqualify']);
@@ -73,22 +78,33 @@ Route::middleware('auth:sanctum')->group(function () {
     // Areas routes
     Route::post('areas', [AreaController::class, 'store']);
     Route::post('areas/{id}', [AreaController::class, 'update']);
+    Route::post('areas/delete/{id}', [AreaController::class, 'delete']);
 
     // Departments routes
     Route::post('departments', [DepartmentController::class, 'store']);
     Route::post('departments/{id}', [DepartmentController::class, 'update']);
+    Route::post('departments/delete/{id}', [DepartmentController::class, 'delete']);
+
 
     // Job Positions routes
     Route::post('job-positions', [JobPositionController::class, 'store']);
     Route::post('job-positions/{id}', [JobPositionController::class, 'update']);
+    Route::post('job-positions/delete/{id}', [JobPositionController::class, 'delete']);
 
     // Roles routes
     Route::post('roles', [RoleController::class, 'store']);
     Route::post('roles/{id}', [RoleController::class, 'update']);
+    Route::post('roles/delete/{id}', [RoleController::class, 'delete']);
 
     // Branches routes
     Route::post('branches', [BranchController::class, 'store']);
     Route::post('branches/{id}', [BranchController::class, 'update']);
+    Route::post('branches/delete/{id}', [BranchController::class, 'delete']);
+
+    // Business Unit
+    Route::post('business-units', [BusinessUnitController::class, 'store']);
+    Route::post('business-units/{id}', [BusinessUnitController::class, 'updated']);
+    Route::post('business-units/delete/{id}', [BusinessUnitController::class, 'delete']);
 
     // Template routes
     Route::post('questionnaire-templates', [QuestionnaireTemplateController::class, 'create']);
@@ -107,6 +123,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('years/{id}', [YearController::class, 'update']);
     Route::post('years/open/{id}', [YearController::class, 'open']);
     Route::post('years/close/{id}', [YearController::class, 'close']);
+    Route::post('years/delete/{id}', [YearController::class, 'delete']);
 
     // Schedules routes
     Route::post('schedules/delete/{id}', [ScheduleController::class, 'remove']);
