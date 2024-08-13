@@ -269,8 +269,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         await window.mutation(
             $input_id
-                ? `/api/goals/update/${id_eda}`
-                : `/api/goals/sent/${id_eda}`,
+                ? `/api/edas/${id_eda}/goals/`
+                : `/api/edas/${id_eda}/goals/sent`,
             {
                 goals,
                 goals_to_delete,
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if ($input_id) {
         if ($sentGoalsButton)
             $sentGoalsButton.textContent = "Reenviar objetivos";
-        const data = await window.query(`/api/goals/by-eda/${$input_id.value}`);
+        const data = await window.query(`/api/edas/${$input_id.value}/goals`);
         data.map((goal) => {
             goals.push({
                 _id: goal.id,
