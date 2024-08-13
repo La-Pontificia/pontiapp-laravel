@@ -29,9 +29,9 @@ class Department extends Model
         return $this->hasOne(Area::class, 'id', 'id_area');
     }
 
-    public function job_positions()
+    public function roles()
     {
-        return $this->hasMany(JobPosition::class, 'id_department', 'id');
+        return $this->hasMany(Role::class, 'id_department', 'id');
     }
 
     public function createdBy()

@@ -25,6 +25,11 @@ class Role extends Model
 
     public $incrementing = false;
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_role', 'id');
+    }
+
     public function department()
     {
         return $this->hasOne(Department::class, 'id', 'id_department');

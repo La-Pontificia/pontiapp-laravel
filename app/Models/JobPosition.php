@@ -28,6 +28,11 @@ class JobPosition extends Model
         'level' => ['required', 'numeric'],
     ];
 
+    public function roles()
+    {
+        return $this->hasMany(Role::class, 'id_job_position', 'id');
+    }
+
     public function createdBy()
     {
         return $this->hasOne(User::class, 'id', 'created_by');

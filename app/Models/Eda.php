@@ -54,6 +54,11 @@ class Eda extends Model
       });
   }
 
+  public function questionnaires()
+  {
+    return $this->hasMany(Questionnaire::class, 'eda_id', 'id');
+  }
+
   public function user()
   {
     return $this->hasOne(User::class, 'id', 'id_user');
