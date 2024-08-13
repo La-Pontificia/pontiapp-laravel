@@ -1,50 +1,50 @@
 @php
     $items = [
         [
-            'icon' => 'heroicon-o-building-office-2',
+            'icon' => 'bx-buildings',
             'text' => 'Areas',
             'href' => '/settings',
             'active' => request()->is('settings'),
-            'active-icon' => 'heroicon-s-building-office-2',
+            'active-icon' => 'bxs-buildings',
         ],
         [
-            'icon' => 'heroicon-o-building-office',
+            'icon' => 'bx-building-house',
             'text' => 'Departamentos',
             'href' => '/settings/departments',
             'active' => request()->is('settings/departments*'),
-            'active-icon' => 'heroicon-s-building-office',
+            'active-icon' => 'bxs-building-house',
         ],
         [
-            'icon' => 'heroicon-o-briefcase',
+            'icon' => 'bx-briefcase-alt-2',
             'text' => 'Puestos',
             'href' => '/settings/job-positions',
             'active' => request()->is('settings/job-positions*'),
-            'active-icon' => 'heroicon-s-briefcase',
+            'active-icon' => 'bxs-briefcase-alt-2',
         ],
         [
-            'icon' => 'heroicon-o-briefcase',
+            'icon' => 'bx-briefcase-alt-2',
             'text' => 'Cargos',
             'href' => '/settings/roles',
             'active' => request()->is('settings/roles*'),
-            'active-icon' => 'heroicon-s-briefcase',
+            'active-icon' => 'bxs-briefcase-alt-2',
         ],
         [
-            'icon' => 'heroicon-o-map-pin',
+            'icon' => 'bx-map',
             'text' => 'Sedes',
             'href' => '/settings/branches',
             'active' => request()->is('settings/branches*'),
-            'active-icon' => 'heroicon-s-map-pin',
+            'active-icon' => 'bxs-map',
         ],
         [
-            'icon' => 'heroicon-o-home-modern',
+            'icon' => 'bx-building',
             'text' => 'Unidad de negocios',
             'href' => '/settings/business-units',
             'active' => request()->is('settings/business-units*'),
-            'active-icon' => 'heroicon-s-home-modern',
+            'active-icon' => 'bxs-building',
         ],
     ];
 @endphp
-<div class="flex flex-col overflow-y-auto">
+{{-- <div class="flex flex-col overflow-y-auto">
     <div class="flex items-center justify-between p-4">
         <a href="/" class="flex gap-2 font-medium items-center text-gray-900 ">
             @svg('heroicon-o-arrow-left', [
@@ -65,4 +65,26 @@
             </a>
         @endforeach
     </nav>
+</div> --}}
+
+<div class="border-b pb-3">
+    <a href="/" class="flex items-center gap-2 group p-2 px-4 pb-0">
+        @svg('bx-arrow-back', [
+            'class' => 'w-7 h-7 rounded-full p-1 group-hover:bg-neutral-200',
+        ])
+        <span>Ajustes del sistema</span>
+    </a>
 </div>
+<nav class="py-3 ">
+    @foreach ($items as $item)
+        <a title="{{ $item['text'] }}" {{ $item['active'] ? 'data-active' : '' }}
+            class="flex group relative items-center data-[active]:font-medium data-[active]:bg-[#e8f0fe] data-[active]:text-[#1967da] gap-3 p-2 px-5 text-[#202124] hover:bg-[#e8eaed] rounded-r-full"
+            href="{{ $item['href'] }}">
+            @svg($item['active'] ? $item['active-icon'] : $item['icon'], [
+                'class' => 'w-5 h-5 m-0.5',
+                'stroke-width' => 1.4,
+            ])
+            <span class="text-nowrap">{{ $item['text'] }}</span>
+        </a>
+    @endforeach
+</nav>
