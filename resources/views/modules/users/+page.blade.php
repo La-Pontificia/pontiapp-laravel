@@ -213,7 +213,7 @@
                                                                 data-param='/api/users/supervisor/remove/{{ $user->id }}'
                                                                 data-atitle='Remover supervisor'
                                                                 data-adescription='¿Estás seguro de que deseas remover el supervisor de este usuario?'
-                                                                type="button" class="secondary">
+                                                                type="button" class="secondary dinamic-alert">
                                                                 @svg('bx-user-minus', 'w-5 h-5')
                                                                 Remover
                                                                 supervisor</button>
