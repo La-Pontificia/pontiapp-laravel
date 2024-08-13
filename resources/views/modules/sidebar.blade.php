@@ -42,12 +42,12 @@
             'href' => '/assists',
             'enable' => $cuser->hasGroup('assists') || $cuser->isDev(),
         ],
-        [
-            'icon' => 'bx-bar-chart-alt-2',
-            'text' => 'Gestión de Auditoria',
-            'href' => '/audit',
-            'enable' => $cuser->hasGroup('audit') || $cuser->isDev(),
-        ],
+        // [
+        //     'icon' => 'bx-bar-chart-alt-2',
+        //     'text' => 'Gestión de Auditoria',
+        //     'href' => '/audit',
+        //     'enable' => $cuser->hasGroup('audit') || $cuser->isDev(),
+        // ],
         [
             'icon' => 'bx-cog',
             'text' => 'Ajustes',
@@ -72,13 +72,9 @@
     @endforeach
 </nav>
 
-@if (
-    $otherItems[0]['enable'] &&
-        $otherItems[1]['enable'] &&
-        $otherItems[2]['enable'] &&
-        $otherItems[3]['enable'] &&
-        $otherItems[4]['enable']
-)
+{{-- // $otherItems[4]['enable'] --}}
+
+@if ($otherItems[0]['enable'] && $otherItems[1]['enable'] && $otherItems[2]['enable'] && $otherItems[3]['enable'])
     <nav class="py-3 border-t border-neutral-300 ">
         <p class="font-medium text-xs opacity-50 px-5  flex-grow text-ellipsis">
             Administración
