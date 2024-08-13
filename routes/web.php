@@ -84,9 +84,10 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Assists routes
     Route::get('assists', [AssistsController::class, 'index']);
-    Route::get('assists/terminals-db', [AssistTerminalController::class, 'index']);
-    Route::post('assists/terminals-db', [AssistTerminalController::class, 'store']);
-    Route::post('assists/terminals-db/{id}', [AssistTerminalController::class, 'update']);
+    Route::get('assists/terminals', [AssistTerminalController::class, 'index']);
+    Route::post('assists/terminals', [AssistTerminalController::class, 'store']);
+    Route::post('assists/terminals/{id}', [AssistTerminalController::class, 'update']);
+    Route::post('assists/terminals/delete/{id}', [AssistTerminalController::class, 'delete']);
 
     // -------- SETTINGS ROUTES ---------------------------
     Route::get('settings', [SettingController::class, 'index']);
@@ -96,8 +97,6 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     Route::get('settings/branches', [BranchController::class, 'index']);
     Route::get('settings/business-units', [BusinessUnitController::class, 'index']);
-    Route::post('settings/business-units', [BusinessUnitController::class, 'store']);
-    Route::post('settings/business-units/{id}', [BusinessUnitController::class, 'updated']);
 
     // routes if no route is found
     Route::fallback(function () {
