@@ -55,7 +55,7 @@
         @svg('bx-arrow-back', [
             'class' => 'w-7 h-7 rounded-full p-1 group-hover:bg-neutral-200',
         ])
-        <span class="opacity-80">Edas la Pontificia</span>
+        <span>Edas y colaboradores</span>
     </a>
 </div>
 <nav class="py-3 ">
