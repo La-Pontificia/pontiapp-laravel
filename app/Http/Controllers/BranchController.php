@@ -30,13 +30,13 @@ class BranchController extends Controller
             'address' => 'required',
         ]);
 
-        $department = new Branch();
-        $department->name = $request->name;
-        $department->address = $request->address;
-        $department->created_by = auth()->user()->id;
-        $department->save();
+        $branch = new Branch();
+        $branch->name = $request->name;
+        $branch->address = $request->address;
+        $branch->created_by = auth()->user()->id;
+        $branch->save();
 
-        return response()->json($department, 200);
+        return response()->json('Sede creado correctamente.', 200);
     }
 
     public function update(Request $request, $id)
@@ -46,12 +46,20 @@ class BranchController extends Controller
             'address' => 'required',
         ]);
 
-        $department = Branch::find($id);
-        $department->name = $request->name;
-        $department->address = $request->address;
-        $department->updated_by = auth()->user()->id;
-        $department->save();
+        $branch = Branch::find($id);
+        $branch->name = $request->name;
+        $branch->address = $request->address;
+        $branch->updated_by = auth()->user()->id;
+        $branch->save();
 
-        return response()->json($department, 200);
+        return response()->json('Sede actualizado correctamente.', 200);
+    }
+
+    public function delete($id)
+    {
+        $branch = Branch::find($id);
+        $branch->delete();
+
+        return response()->json('Sede eliminado correctamente.', 204);
     }
 }
