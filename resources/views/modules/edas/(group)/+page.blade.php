@@ -16,6 +16,18 @@
             'value' => 'closed',
             'text' => 'Cerrado',
         ],
+        [
+            'value' => 'not-sent',
+            'text' => 'No enviado',
+        ],
+        [
+            'value' => 'not-approved',
+            'text' => 'No aprobado',
+        ],
+        [
+            'value' => 'not-closed',
+            'text' => 'No cerrado',
+        ],
     ];
 
     $hasCreate = $cuser->has('edas:create_all') || $cuser->isDev();
@@ -48,196 +60,212 @@
                 </div>
             @endif
             @if ($cuser->has('edas:export') || $cuser->isDev())
-                <button {{ count($edas) == 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown" class="secondary ml-auto">
+                {{-- <button {{ count($edas) == 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown" class="secondary ml-auto">
                     @svg('bx-up-arrow-circle', 'w-5 h-5')
                     <span>
                         Exportar
                     </span>
+                </button> --}}
+                <button {{ count($edas) == 0 ? 'disabled' : '' }} data-modal-target="dialog-export"
+                    data-modal-toggle="dialog-export" class="secondary ml-auto">
+                    @svg('bx-up-arrow-circle', 'w-5 h-5')
+                    <span>Exportar</span>
                 </button>
-                <div id="dropdown" class="dropdown-content hidden">
-                    <button data-type="excel"
-                        class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
-                        Excel (.xlsx)
-                    </button>
-                    <button data-type="json"
-                        class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
-                        JSON (.json)
-                    </button>
+                <div id="dialog-export" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                    <div class="content lg:max-w-md max-w-full">
+                        <header>
+                            Exportar edas
+                        </header>
+                        <form method="POST" id="form-export-edas" class="body grid gap-4">
+                            <div class="grid grid-cols-3 gap-4">
+                                <label class="flex items-center gap-1">
+                                    <input type="radio" checked name="type" value="basic">
+                                    <span>
+                                        Básico
+                                    </span>
+                                </label>
+                                <label class="flex items-center gap-1">
+                                    <input disabled type="radio" name="type" value="advanced">
+                                    <span>
+                                        Avanzado
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="text-sm space-y-1 flex flex-col">
+                                <p class="opacity-30 grayscale">
+                                    <span class="block font-semibold">Avanzado</span>
+                                    Se exportarán todos lo datos de intermedio y adicionalmente se exportarán la lista de
+                                    objetivos, descripciones, indicadores, etc. La lista de las evaluacionesm los
+                                    cuestionarios y
+                                    las respuestas. Y todas las fechas de los registros.
+                                </p>
+                            </div>
+                        </form>
+                        <footer>
+                            <button data-modal-hide="dialog-export" type="button">Cancelar</button>
+                            <button form="form-export-edas" id="button-export-edas" type="submit"
+                                class="flex items-center gap-1">
+                                @svg('bxs-file-doc', 'w-5 h-5')
+                                <span>Exportar (.xlsx)</span>
+                            </button>
+                        </footer>
+                    </div>
                 </div>
             @endif
         </div>
-        <div class="flex items-center gap-2 p-3 pt-0">
-            <label class="relative w-full">
-                <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
-                    @svg('bx-search', 'w-5 h-5')
-                </div>
-                <input value="{{ request()->get('q') }}" placeholder="Filtrar edas..." type="search"
-                    class="w-full pl-9 dinamic-search">
-            </label>
-
-            <select class="dinamic-select w-[140px]" name="status">
-                <option value="0">Estado</option>
-                @foreach ($status as $item)
-                    <option {{ request()->query('status') === $item['value'] ? 'selected' : '' }}
-                        value="{{ $item['value'] }}">{{ $item['text'] }}</option>
-                @endforeach
-            </select>
-
-            <select class="dinamic-select w-[100px]" name="year">
-                <option value="0">Año</option>
-                @foreach ($years as $year)
-                    <option {{ request()->query('year') === $year->id ? 'selected' : '' }} value="{{ $year->id }}">
-                        {{ $year->name }}</option>
-                @endforeach
-            </select>
-            {{-- 
-            <div class="flex items-center text-nowrap line-clamp-2 gap-1 text-sm">
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
+        <div class="bg-[#ffffff] rounded-xl m-2 h-full flex flex-col shadow-md overflow-auto border">
+            <div class="flex items-center gap-2 p-3">
+                <label class="relative w-full">
+                    <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
+                        @svg('bx-search', 'w-5 h-5')
+                    </div>
+                    <input value="{{ request()->get('q') }}" placeholder="Filtrar edas..." type="search"
+                        class="w-full pl-9 dinamic-search">
                 </label>
-                Evaluaciones
-            </div> --}}
-        </div>
-        <div class="flex flex-col h-full divide-y overflow-y-auto">
-            @if ($cuser->has('edas:show') || $cuser->isDev())
-                @if ($edas->isEmpty())
-                    <p class="p-20 grid place-content-center text-center">
-                        No hay nada que mostrar.
-                    </p>
-                @else
-                    <table>
-                        <thead>
-                            <tr class="border-b text-sm">
-                                <td class="px-2">Eda</td>
-                                <td class="w-full"></td>
-                                <td class="pb-2 text-center px-4">Objetivos</td>
-                                <td class="pb-2 text-center px-4">Evaluaciones</td>
-                                <td class="pb-2 text-center px-4"></td>
-                                <td></td>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            @foreach ($edas as $eda)
-                                <tr class="relative group text-sm hover:bg-neutral-100 [&>td]:p-3">
-                                    <td>
-                                        <a title="Ver eda" href="/edas/{{ $eda->user->id }}/eda/{{ $eda->year->id }}"
-                                            class="absolute inset-0">
-                                        </a>
-                                        <p>{{ $eda->year->name }}</p>
-                                    </td>
-                                    <td>
-                                        <div class="flex items-center gap-2">
-                                            @include('commons.avatar', [
-                                                'src' => $eda->user->profile,
-                                                'className' => 'w-8',
-                                                'alt' => $eda->user->first_name . ' ' . $eda->user->last_name,
-                                                'altClass' => 'text-base',
-                                            ])
-                                            <div class="flex-grow">
-                                                <p>
-                                                    {{ $eda->user->last_name . ', ' . $eda->user->first_name }}
-                                                </p>
-                                                <p class="line-clamp-2 flex text-sm items-center gap-1 text-neutral-600">
-                                                    {{ $eda->user->role_position->name }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-3">
-                                        <p class="text flex-nowrap text-center">
-                                            {{ count($eda->goals) }}
-                                        </p>
-                                    </td>
-                                    <td class="px-3">
-                                        <p class="text flex-nowrap text-center">
-                                            {{ count($eda->evaluations->where('closed', true)) }}
-                                        </p>
-                                    </td>
-                                    <td class="px-3">
-                                        <div class="flex items-center gap-2">
+                <select class="dinamic-select w-[140px]" name="department">
+                    <option value="0">Departamento</option>
+                    @foreach ($departments as $department)
+                        <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
+                            value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+                <select class="dinamic-select w-[100px]" name="job_position">
+                    <option value="0">Puesto</option>
+                    @foreach ($job_positions as $job)
+                        <option {{ request()->query('job_position') === $job->id ? 'selected' : '' }}
+                            value="{{ $job->id }}">{{ $job->name }}</option>
+                    @endforeach
+                </select>
 
-                                            @if ($eda->closed)
-                                                <span class="p-2 flex text-nowrap bg-red-500 text-white text-xs rounded-md">
-                                                    Eda cerrado
-                                                </span>
-                                            @elseif ($eda->approved)
-                                                <span
-                                                    class="p-2 flex text-nowrap bg-blue-500 text-white text-xs rounded-md">
-                                                    Objetivos aprobados
-                                                </span>
-                                            @elseif ($eda->sent)
-                                                <span
-                                                    class="p-2 flex text-nowrap bg-green-500 text-white text-xs rounded-md">
-                                                    Objetivos enviados
-                                                </span>
-                                            @else
-                                                <span
-                                                    class="p-2 flex text-nowrap bg-yellow-500 text-white text-xs rounded-md">
-                                                    Objetivos pendientes
-                                                </span>
-                                            @endif
+                <select class="dinamic-select w-[140px]" name="status">
+                    <option value="0">Estado</option>
+                    @foreach ($status as $item)
+                        <option {{ request()->query('status') === $item['value'] ? 'selected' : '' }}
+                            value="{{ $item['value'] }}">{{ $item['text'] }}</option>
+                    @endforeach
+                </select>
 
-                                        </div>
-                                    </td>
-                                    {{-- <td>
-                                        <p class="text-nowrap">
-                                            {{ $user->email }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <div
-                                            class="p-1 w-fit relative text-left bg-neutral-50 flex text-sm items-center gap-1 rounded-lg border px-2">
-                                            @if ($user->supervisor_id)
+                <select class="dinamic-select w-[100px]" name="year">
+                    <option value="0">Año</option>
+                    @foreach ($years as $year)
+                        <option {{ request()->query('year') === $year->id ? 'selected' : '' }}
+                            value="{{ $year->id }}">
+                            {{ $year->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex flex-col h-full  divide-y overflow-y-auto w-full ">
+                @if ($cuser->has('edas:show') || $cuser->isDev())
+                    @if ($edas->isEmpty())
+                        <p class="p-20 grid place-content-center text-center">
+                            No hay nada que mostrar.
+                        </p>
+                    @else
+                        <table>
+                            <thead>
+                                <tr class="border-b text-sm">
+                                    <td class="px-2">Eda</td>
+                                    <td class="w-full"></td>
+                                    <td class="pb-2 text-center px-4">Objetivos</td>
+                                    <td class="pb-2 text-center px-4">Evaluaciones</td>
+                                    <td class="pb-2 text-center px-4">Cuestionarios</td>
+                                    <td class="pb-2 text-center px-4"></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y">
+                                @foreach ($edas as $eda)
+                                    <tr class="relative group text-sm hover:bg-neutral-100 [&>td]:p-3">
+                                        <td>
+                                            <a title="Ver eda" href="/edas/{{ $eda->user->id }}/eda/{{ $eda->year->id }}"
+                                                class="absolute inset-0">
+                                            </a>
+                                            <p>{{ $eda->year->name }}</p>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center gap-2">
                                                 @include('commons.avatar', [
-                                                    'src' => $user->supervisor->profile,
+                                                    'src' => $eda->user->profile,
                                                     'className' => 'w-8',
-                                                    'alt' =>
-                                                        $user->supervisor->first_name .
-                                                        ' ' .
-                                                        $user->supervisor->last_name,
-                                                    'altClass' => 'text-md',
+                                                    'alt' => $eda->user->first_name . ' ' . $eda->user->last_name,
+                                                    'altClass' => 'text-base',
                                                 ])
-                                                <div>
-                                                    <p class="text-nowrap">
-                                                        {{ $user->supervisor->first_name }}
+                                                <div class="flex-grow">
+                                                    <p>
+                                                        {{ $eda->user->last_name . ', ' . $eda->user->first_name }}
                                                     </p>
-                                                    <p class="text-xs font-normal text-nowrap">
-                                                        {{ $user->supervisor->role_position->name }}
+                                                    <p
+                                                        class="line-clamp-2 flex text-sm items-center gap-1 text-neutral-600">
+                                                        {{ $eda->user->role_position->name }}
                                                     </p>
                                                 </div>
-                                            @else
-                                                -
-                                            @endif
-                                            </button>
-                                    </td>
-                                    <td>
-                                        <p class="rounded-full p-2 hover:bg-neutral-200 transition-colors block">
-                                            @svg('bx-chevron-right', 'w-5 h-5')
-                                        </p>
-                                    </td> --}}
-                                    <td class="px-3">
-                                        <p class="text-xs text-nowrap">
-                                            <span class="text-neutral-400"> Registrado el
-                                                {{ $eda->created_at->format('d/m/Y') }}
-                                                por
-                                                {{ $eda->createdBy->first_name }}
-                                            </span>
-                                        </p>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <footer class="px-5 py-4">
-                        {!! $edas->links() !!}
-                    </footer>
+                                            </div>
+                                        </td>
+                                        <td class="px-3">
+                                            <p class="text flex-nowrap text-center">
+                                                {{ count($eda->goals) }}
+                                            </p>
+                                        </td>
+                                        <td class="px-3">
+                                            <p class="text flex-nowrap text-center">
+                                                {{ count($eda->evaluations->where('closed', true)) }}
+                                            </p>
+                                        </td>
+                                        <td class="px-3">
+                                            <p class="text flex-nowrap text-center">
+                                                {{ count($eda->questionnaires) }}
+                                            </p>
+                                        </td>
+                                        <td class="px-3">
+                                            <div class="flex items-center gap-2">
+
+                                                @if ($eda->closed)
+                                                    <span
+                                                        class="p-2 flex text-nowrap bg-red-500 text-white text-xs rounded-md">
+                                                        Eda cerrado
+                                                    </span>
+                                                @elseif ($eda->approved)
+                                                    <span
+                                                        class="p-2 flex text-nowrap bg-blue-500 text-white text-xs rounded-md">
+                                                        Objetivos aprobados
+                                                    </span>
+                                                @elseif ($eda->sent)
+                                                    <span
+                                                        class="p-2 flex text-nowrap bg-green-500 text-white text-xs rounded-md">
+                                                        Objetivos enviados
+                                                    </span>
+                                                @else
+                                                    <span
+                                                        class="p-2 flex text-nowrap bg-yellow-500 text-white text-xs rounded-md">
+                                                        Objetivos pendientes
+                                                    </span>
+                                                @endif
+
+                                            </div>
+                                        </td>
+                                        <td class="px-3">
+                                            <p class="text-xs text-nowrap">
+                                                <span class="text-neutral-400"> Registrado el
+                                                    {{ $eda->created_at->format('d/m/Y') }}
+                                                    por
+                                                    {{ $eda->createdBy->first_name }}
+                                                </span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <footer class="px-5 py-4">
+                            {!! $edas->links() !!}
+                        </footer>
+                    @endif
+                @else
+                    <p class="p-20 grid place-content-center text-center">
+                        No tienes permisos para visualizar estos datos.
+                    </p>
                 @endif
-            @else
-                <p class="p-20 grid place-content-center text-center">
-                    No tienes permisos para visualizar estos datos.
-                </p>
-            @endif
+            </div>
         </div>
     </div>
 @endsection
