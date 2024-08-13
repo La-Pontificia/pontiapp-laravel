@@ -1,27 +1,22 @@
 @php
-    $code = $jobPosition->code ?? null;
-    $name = $jobPosition->name ?? null;
-    $level = $jobPosition->level ?? null;
+    $code = $job->code ?? null;
+    $name = $job->name ?? null;
+    $level = $job->level ?? null;
 @endphp
 
-<div class="grid gap-2">
-    <label>
-        <span class="block pb-1 text-sm font-semibold opacity-50 ">Codigo</span>
-        <input type="text" name="code" placeholder= "{{ $code ?? $newCode }}" value="{{ $code }}"
-            class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
+<label class="label">
+    <span>Codigo</span>
+    <input type="text" name="code" placeholder= "{{ $code ?? $newCode }}" value="{{ $code }}">
+</label>
+
+<div class="grid grid-cols-2 gap-3">
+    <label class="label">
+        <span>Nivel</span>
+        <input required value="{{ $level }}" type="number" name="level" placeholder="Nivel" value="">
     </label>
 
-    <div class="flex gap-3">
-        <label class="block w-[100px]">
-            <span class="block pb-1 text-sm font-semibold opacity-50 ">Nivel</span>
-            <input required value="{{ $level }}" type="number" name="level" placeholder="Nivel" value=""
-                class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-        </label>
-
-        <label class="w-full block">
-            <span class="block pb-1 text-sm font-semibold opacity-50 ">Nombre</span>
-            <input required value="{{ $name }}" type="text" name="name" placeholder="Nombre del puesto"
-                class="bg-neutral-100 w-full border-2 border-neutral-400 p-1 px-2 rounded-lg">
-        </label>
-    </div>
+    <label class="label">
+        <span>Nombre</span>
+        <input required value="{{ $name }}" type="text" name="name" placeholder="Nombre del puesto">
+    </label>
 </div>
