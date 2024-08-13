@@ -1,164 +1,91 @@
 @extends('modules.users.+layout')
 
 @section('title', 'Puestos de trabajo')
-@php
-    $levels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-@endphp
 
 @section('layout.users')
-    <div class="text-black w-full flex-col flex-grow flex overflow-auto">
-        <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
-            class="bg-blue-700 w-fit shadow-md shadow-blue-500/30 font-semibold hover:bg-blue-600 min-w-max flex items-center rounded-full p-2 gap-1 text-white text-sm px-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-plus">
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-            </svg>
-            <span class="max-lg:hidden">Nuevo cargo</span>
-        </button>
-        <div id="dialog" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
-            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative w-full max-w-md max-h-full bg-white rounded-2xl shadow">
-                <div class="flex items-center justify-between p-3 border-b rounded-t">
-                    <h3 class="text-lg font-semibold text-gray-900">
-                        Crear cargo
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                        data-modal-hide="dialog">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                    </button>
-                </div>
-                @include('components.users.auditory-card')
-                <form action="/api/job-positions" method="POST" id="dialog-form" class="p-3 dinamic-form grid gap-4">
-                    @include('modules.settings.job-positions.form', [
-                        'job-position' => null,
-                    ])
-                </form>
-                <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                    <button form="dialog-form" type="submit"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
-                        Guardar</button>
-                    <button id="button-close-scheldule-modal" data-modal-hide="dialog" type="button"
-                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
+    <div class="w-full max-w-2xl mx-auto">
+        <h2 class="py-5">Puestos de trabajo.</h2>
+        <div class="flex flex-col w-full bg-white border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
+            <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary m-2">
+                @svg('bx-plus', 'w-5 h-5')
+                <span>Agregar nuevo puesto.</span>
+            </button>
+            <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                <div class="content lg:max-w-lg max-w-full">
+                    <header>
+                        Registrar nuevo puesto
+                    </header>
+                    <form action="/api/job-positions" method="POST" id="dialog-form" class="dinamic-form body grid gap-4">
+                        @include('modules.settings.job-positions.form')
+                    </form>
+                    <footer>
+                        <button data-modal-hide="dialog" type="button">Cancelar</button>
+                        <button form="dialog-form" type="submit">
+                            Guardar</button>
+                    </footer>
                 </div>
             </div>
-        </div>
-
-        <h2 class="py-3 pb-0 font-semibold tracking-tight text-lg px-1">
-            Gestión de puestos de trabajo
-        </h2>
-        <div class="py-2 px-1 flex o items-center gap-2">
-            <div class="w-[200px]">
-                <select class="dinamic-select bg-transparent p-1 border-transparent rounded-lg cursor-pointer"
-                    name="level">
-                    <option value="">Todos los niveles</option>
-                    @foreach ($levels as $level)
-                        <option value="{{ $level }}">{{ $level }}</option>
-                    @endforeach
-                </select>
+            <div class="flex flex-col divide-y">
+                @forelse ($jobs as $job)
+                    <div class="flex relative hover:bg-neutral-100 items-center p-2.5 gap-2">
+                        @svg('bx-folder', 'w-5 h-5 mr-2')
+                        <div class="flex-grow">
+                            <p>{{ $job->code }}-{{ $job->name }}</p>
+                            <p class="flex text-nowrap text-sm items-center flex-wrap gap-1 text-neutral-600">
+                                {{ $job->roles->count() }} cargos asociados.
+                            </p>
+                        </div>
+                        <div class="px-2">
+                            <span class="text-sm text-nowrap bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                Nivel {{ $job->level }}
+                            </span>
+                        </div>
+                        <button type="button" data-modal-target="dialog-{{ $job->id }}"
+                            data-modal-toggle="dialog-{{ $job->id }}"
+                            class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
+                            @svg('bx-pencil', 'w-4 h-4')
+                        </button>
+                        <div id="dialog-{{ $job->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                            <div class="content lg:max-w-lg max-w-full">
+                                <header>
+                                    Editar puesto: {{ $job->name }}
+                                </header>
+                                <form action="/api/job-positions/{{ $job->id }}" method="POST"
+                                    id="dialog-{{ $job->id }}-form"
+                                    class="dinamic-form body grid gap-4 overflow-y-auto">
+                                    @include('modules.settings.job-positions.form', [
+                                        'job' => $job,
+                                    ])
+                                </form>
+                                <footer>
+                                    <button data-modal-hide="dialog-{{ $job->id }}" type="button">Cancelar</button>
+                                    <button form="dialog-{{ $job->id }}-form" type="submit">
+                                        Guardar</button>
+                                </footer>
+                            </div>
+                        </div>
+                        <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
+                            data-dropdown-toggle="dropdown-{{ $job->id }}">
+                            @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                        </button>
+                        <div id="dropdown-{{ $job->id }}" class="dropdown-content hidden">
+                            <button data-atitle="¿Estás seguro de eliminar?"
+                                data-adescription="Se eliminará el puesto de trabajo y todos los cargos asociados."
+                                data-param="/api/job-positions/delete/{{ $job->id }}"
+                                class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <p class="p-20 grid place-content-center text-center">
+                        No hay nada que mostrar.
+                    </p>
+                @endforelse
+                <footer class="px-5 py-4">
+                    {!! $jobs->links() !!}
+                </footer>
             </div>
-            <div class="flex-grow">
-                <input value="{{ request()->query('q') }}" class="dinamic-search" type="text" placeholder="Buscar...">
-            </div>
         </div>
-        <div class="overflow-auto flex-grow">
-            <table class="w-full text-left" id="table-users">
-                <thead class="">
-                    <tr
-                        class="[&>th]:font-medium bg-white [&>th]:text-nowrap [&>th]:p-3 first:[&>th]:rounded-l-xl last:[&>th]:rounded-r-xl">
-                        <th>Codigo</th>
-                        <th>Puesto</th>
-                        <th class="text-center">Nivel</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
-                    @if ($jobPositions->count() === 0)
-                        <tr class="">
-                            <td colspan="11" class="text-center py-4">
-                                <div class="p-10">
-                                    No hay horarios registrados
-                                </div>
-                            </td>
-                        </tr>
-                    @else
-                        @foreach ($jobPositions as $job)
-                            <tr
-                                class="[&>td]:py-3 hover:border-transparent hover:[&>td]shadow-md relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl hover:bg-white [&>td]:px-4">
-                                <td>
-                                    <p class="text-nowrap font-semibold">
-                                        {{ $job->code }}
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="text-nowrap">
-                                        {{ $job->name }}
-                                    </p>
-                                </td>
-                                <td class="text-center font-medium text-orange-500">
-                                    <p class="text-nowrap">
-                                        {{ $job->level }}
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="opacity-70 text-nowrap">
-                                        {{ \Carbon\Carbon::parse($job->created_at)->isoFormat('LL') }}
-                                    </p>
-                                    <button class="absolute inset-0" data-modal-target="dialog-{{ $job->id }}"
-                                        data-modal-toggle="dialog-{{ $job->id }}">
-                                    </button>
-                                    <div id="dialog-{{ $job->id }}" data-modal-backdrop="static" tabindex="-1"
-                                        aria-hidden="true"
-                                        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                        <div class="relative w-full max-w-md max-h-full bg-white rounded-2xl shadow">
-                                            <div class="flex items-center justify-between p-3 border-b rounded-t">
-                                                <h3 class="text-lg font-semibold text-gray-900">
-                                                    Editar puesto
-                                                </h3>
-                                                <button type="button"
-                                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                                                    data-modal-hide="dialog-{{ $job->id }}">
-                                                    <svg class="w-3 h-3" aria-hidden="true"
-                                                        xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                        viewBox="0 0 14 14">
-                                                        <path stroke="currentColor" stroke-linecap="round"
-                                                            stroke-linejoin="round" stroke-width="2"
-                                                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            @include('components.users.auditory-card')
-                                            <form action="/api/job-positions/{{ $job->id }}" method="POST"
-                                                id="dialog-{{ $job->id }}-form" class="p-3 dinamic-form grid gap-4">
-                                                @include('modules.settings.job-positions.form', [
-                                                    'jobPosition' => $job,
-                                                ])
-                                            </form>
-                                            <div class="flex items-center p-3 border-t border-gray-200 rounded-b">
-                                                <button form="dialog-{{ $job->id }}-form" type="submit"
-                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-5 py-2.5 text-center">
-                                                    Actualizar</button>
-                                                <button id="button-close-scheldule-modal"
-                                                    data-modal-hide="dialog-{{ $job->id }}" type="button"
-                                                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-xl border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Cancelar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-        </div>
-        <footer class="px-5 pt-4">
-            {!! $jobPositions->links() !!}
-        </footer>
     </div>
 @endsection
