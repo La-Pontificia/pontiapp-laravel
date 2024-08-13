@@ -102,6 +102,37 @@ class EdaController extends Controller
         return response()->json('Eda cerrado correctamente. Se habilitó la posibilidad de resolver los cuestionarios asignados.', 200);
     }
 
+    public function restart(Request $request)
+    {
+        $eda = Eda::find($request->id);
+
+        if (!$eda) return response()->json('La eda no existe', 404);
+
+        $eda->closed = null;
+        $eda->sent = null;
+        $eda->sent_by = null;
+        $eda->approved = null;
+        $eda->approved_by = null;
+        $eda->closed_by = null;
+
+        $eda->questionnaires()->delete();
+        $eda->goals()->delete();
+        $eda->evaluations()->delete();
+
+        $evaluationArray = [1, 2];
+
+        $eda->save();
+
+        foreach ($evaluationArray as $evaluation) {
+            Evaluation::create([
+                'number' => $evaluation,
+                'id_eda' => $eda->id,
+            ]);
+        }
+
+        return response()->json('El eda se ha reiniciado correctamente.', 200);
+    }
+
     public function questionnaire(Request $request, $id)
     {
         $eda = Eda::find($id);
