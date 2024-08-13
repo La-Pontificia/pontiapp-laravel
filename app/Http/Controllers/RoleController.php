@@ -100,4 +100,11 @@ class RoleController extends Controller
 
         return response()->json($update, 200);
     }
+
+    public function delete($id)
+    {
+        $role = Role::find($id);
+        $role->delete();
+        return response()->json('Registro eliminado correctamente.', 200);
+    }
 }
