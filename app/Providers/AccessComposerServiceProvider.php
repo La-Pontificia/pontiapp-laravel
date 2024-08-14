@@ -114,6 +114,15 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'assists:edit' => 'Actualizar asistencias',
                                 'assists:delete' => 'Eliminar asistencias',
                             ],
+                        ],
+                        [
+                            'name' => 'Terminales',
+                            'privileges' => [
+                                'assists:terminals:show' => 'Ver terminales',
+                                'assists:terminals:create' => 'Agregar terminales',
+                                'assists:terminals:edit' => 'Actualizar terminales',
+                                'assists:terminals:delete' => 'Eliminar terminales',
+                            ],
                         ]
                     ]
                 ],
