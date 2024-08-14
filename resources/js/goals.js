@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         await window.mutation(
             $input_id
-                ? `/api/edas/${id_eda}/goals/`
+                ? `/api/edas/${id_eda}/goals/update`
                 : `/api/edas/${id_eda}/goals/sent`,
             {
                 goals,
