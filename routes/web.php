@@ -57,9 +57,12 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('users/create', [UserController::class, 'create']);
     Route::get('users/edit/{id}', [UserController::class, 'edit']);
 
+    Route::get('users/{id}/details', [UserController::class, 'slug_details']);
+    Route::get('users/{id}/segurity-access', [UserController::class, 'slug_segurity_access']);
     Route::get('users/{id}/organization', [UserController::class, 'slug_organization']);
     Route::get('users/{id}/schedules', [UserController::class, 'slug_schedules']);
     Route::get('users/{id}/assists', [UserController::class, 'slug_assists']);
+
 
     Route::get('users/{id}', [UserController::class, 'slug']);
 
