@@ -5,6 +5,7 @@
             'icon' => 'bx-home-smile',
             'text' => $cuser->first_name,
             'href' => '/users/' . $cuser->id,
+            'active' => request()->is('users/' . $cuser->id . '*'),
         ],
         [
             'icon' => 'bx-folder',
@@ -209,10 +210,10 @@
 
 <nav class="pb-2 transition-all">
     @foreach ($userItems as $item)
-        <a title="{{ $item['text'] }}"
-            class="flex group relative transition-all items-center data-[active]:font-medium gap-3 p-2 px-5 text-[#202124] hover:bg-[#e8eaed] rounded-r-full"
+        <a title="{{ $item['text'] }}" {{ isset($item['active']) && $item['active'] ? 'data-active' : '' }}
+            class="flex group relative transition-all items-center data-[active]:font-medium gap-3 p-2 px-5 data-[active]:text-[#1967da] text-[#202124] hover:bg-[#e8eaed] rounded-r-full"
             href="{{ $item['href'] }}">
-            @svg($item['icon'], 'w-5 h-5 m-0.5 opacity-70')
+            @svg($item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
             <span class="text-nowrap">{{ $item['text'] }}</span>
         </a>
     @endforeach
