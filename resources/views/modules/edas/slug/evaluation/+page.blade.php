@@ -10,7 +10,7 @@
 
         // if current user is supervisor
         $isSupervisor = $cuser->id === $eda->user->supervisor_id;
-        $isMyEda = $cuser->id === $eda->user_id;
+        $isMyEda = $cuser->id === $eda->id_user;
 
         // if has self qualification
         $hasSelfQualify =
