@@ -85,6 +85,65 @@ class UserController extends Controller
         return response()->json('Usuario actualizado correctamente.', 200);
     }
 
+    public function updateDetails(Request $request, $id)
+    {
+
+        request()->validate(User::$detailsRules);
+
+        $user = User::find($id);
+
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        $user->id_role_user = $request->id_role_user;
+        $user->dni = $request->dni;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->group_schedule_id = $request->group_schedule_id;
+        $user->save();
+
+        return response()->json('Detalles actualizados correctamente.', 200);
+    }
+
+    public function updateOrganization(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        request()->validate(User::$organizationRules);
+
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        $user->id_role = $request->id_role;
+        $user->id_branch = $request->id_branch;
+        $user->save();
+
+        return response()->json('Organización actualizada correctamente.', 200);
+    }
+
+    public function updateSegurityAccess(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        request()->validate(User::$segurityAccessRules);
+
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        $username = explode('@', $user->email)[0];
+
+        $alreadyByEmail = User::where('email', $request->email)->get();
+
+        if ($alreadyByEmail->count() > 0 && $alreadyByEmail->first()->id !== $id)
+            return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
+
+        $user->username = $username;
+        $user->email = $request->email;
+        $user->save();
+
+        return response()->json('Acceso de seguridad actualizado correctamente.', 200);
+    }
+
     public function profile(Request $request, $id)
     {
         $user = User::find($id);
@@ -222,11 +281,11 @@ class UserController extends Controller
         ]);
 
         $user = User::find($id);
-        $cuser = auth()->user();
+        $cuser = User::find(auth()->user()->id);
         if (!$user)
             return response()->json('El usuario no existe', 400);
 
-        if ($user->id !== $cuser->id) {
+        if (($user->id !== $cuser->id) && !$cuser->isDev()) {
             return response()->json('No tienes permisos para cambiar la contraseña de este usuario', 400);
         }
 
@@ -238,5 +297,18 @@ class UserController extends Controller
         $user->save();
 
         return response()->json('Contraseña actualizada correctamente', 200);
+    }
+
+    public function toggleStatus($id)
+    {
+        $user = User::find($id);
+
+        if (!$user)
+            return response()->json('El usuario no existe', 400);
+
+        $user->status = !$user->status;
+        $user->save();
+
+        return response()->json('Estado actualizado correctamente', 200);
     }
 }
