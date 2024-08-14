@@ -78,7 +78,7 @@
         <div class="grid grid-cols-2 gap-4">
             <div class="label">
                 <span>
-                    Bajo de supervision de
+                    Bajo supervision de
                 </span>
                 @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
                     <button data-modal-target="dialog" data-modal-toggle="dialog" tip="Asignar o Editar supervisor"
