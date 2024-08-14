@@ -39,18 +39,19 @@
             $cuser->isDev();
 
         $hasSendFeedback =
-            ($cuser->has('edas:evaluations:feedback') && $evaluation->closed && $user->supervisor_id === $cuser->id) ||
-            $cuser->isDev();
+            ($cuser->has('edas:evaluations:feedback') && $evaluation->closed && $isSupervisor) || $cuser->isDev();
+
+        $hasFeedback = $isMyEda || $isSupervisor || $cuser->isDev();
     @endphp
     <div class="h-full flex overflow-hidden flex-col pt-0 overflow-x-auto">
 
-        @if ($hasSelfQualify || $hasQualify || $hasCloseEvaluation)
+        @if ($hasSelfQualify || $hasQualify || $hasCloseEvaluation || $hasFeedback)
             <div class="flex items-center px-3 gap-2">
                 <div class="flex-grow">
                 </div>
                 <div class="flex gap-2 items-center p-1 tracking-tight">
 
-                    @if ($evaluation->closed)
+                    @if ($hasFeedback)
                         <button data-id="{{ $evaluation->id }}"
                             id="{{ $evaluation->feedback_read_at ? 'feedback-open' : '' }}"
                             {{ $evaluation->feedback_read_at ? 'data-read' : '' }}
@@ -162,6 +163,7 @@
                             Autocalificar
                         </button>
                     @endif
+
                     @if ($hasQualify)
                         <button data-id="{{ $evaluation->id }}" id="evaluation-qualify-button"
                             class="bg-violet-700 shadow-sm shadow-violet-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-violet-600 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
