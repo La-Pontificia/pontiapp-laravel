@@ -122,6 +122,14 @@
             </div>
         @endif
 
+        @if ($eda->approved)
+            <span class="text-neutral-400 text-lg text-center pb-5">Aprobado
+                el {{ \Carbon\Carbon::parse($eda->approved)->isoFormat('LL') }} por
+                {{ $eda->approvedBy->last_name }},
+                {{ $eda->approvedBy->first_name }}
+            </span>
+        @endif
+
         <div id="init-goal-sheet"
             class=" group data-[hidden]:h-auto peer h-full grid text-sm place-content-center data-[hidden]:place-content-stretch text-center">
             <div class="max-w-sm group-data-[hidden]:hidden pb-2">
@@ -199,13 +207,6 @@
                     el {{ \Carbon\Carbon::parse($eda->sent)->isoFormat('LL') }} por
                     {{ $eda->createdBy->last_name }},
                     {{ $eda->createdBy->first_name }}
-                </span>
-            @endif
-            @if ($eda->approved)
-                <span class="text-neutral-400"> y Aprobado
-                    el {{ \Carbon\Carbon::parse($eda->approved)->isoFormat('LL') }} por
-                    {{ $eda->approvedBy->last_name }},
-                    {{ $eda->approvedBy->first_name }}
                 </span>
             @endif
         </p>
