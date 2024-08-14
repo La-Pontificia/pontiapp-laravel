@@ -165,22 +165,3 @@ window.mutation = async (
 
 window.defaultProfile =
     "https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg";
-
-document.addEventListener("DOMContentLoaded", function () {
-    $ = document.querySelector.bind(document);
-
-    const toogleSidebar = $("#toogle-sidebar");
-
-    toogleSidebar?.addEventListener("click", function () {
-        const state =
-            Cookie.get("sidebar") !== undefined
-                ? Cookie.get("sidebar")
-                : "true";
-
-        if (state == "false") {
-            Cookie.set("sidebar", "true", { expires: 365 });
-        } else {
-            Cookie.set("sidebar", "false", { expires: 365 });
-        }
-    });
-});
