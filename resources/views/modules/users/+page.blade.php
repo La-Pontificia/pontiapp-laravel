@@ -16,23 +16,23 @@
         </button>
     </template>
 
-    <div class="w-full mx-auto overflow-y-auto flex flex-col">
+    <div class="w-full mx-auto p-2 h-full overflow-y-auto flex flex-col">
         <header class="py-2">
             <h2 class="text-base">Gestión de usuarios.</h2>
             <p class="text-sm">
                 Administracion de los usuarios del sistema, asigna roles, horarios y privilegios.
             </p>
         </header>
-        <div class="flex flex-col w-full overflow-y-auto h-full">
+        <div class="flex bg-white shadow-md border rounded-xl flex-col w-full overflow-y-auto h-full">
             <div class="flex items-center p-2">
                 @if ($cuser->has('users:create') || $cuser->isDev())
-                    <a href="/users/create" class="primary">
+                    <a tip="Crear nuevo usuario" href="/users/create" class="primary">
                         @svg('bx-plus', 'w-5 h-5')
                         <span>Nuevo</span>
                     </a>
                 @endif
                 @if ($cuser->has('users:export') || $cuser->isDev())
-                    <button data-dropdown-toggle="dropdown" class="secondary ml-auto">
+                    <button tip="Exportar lista de usuarios" data-dropdown-toggle="dropdown" class="secondary ml-auto">
                         @svg('bx-up-arrow-circle', 'w-5 h-5')
                         <span>
                             Exportar
@@ -90,7 +90,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="flex flex-col divide-y overflow-y-auto">
+            <div class="flex flex-col h-full divide-y overflow-y-auto">
                 @if ($cuser->has('users:show') || $cuser->isDev())
                     @if ($users->isEmpty())
                         <p class="p-20 grid place-content-center text-center">
@@ -102,130 +102,182 @@
                                 <tr class="border-b text-sm">
                                     <td class="w-full"></td>
                                     <td></td>
+                                    <td></td>
                                     <td class="text-left pb-1.5">Bajo supervisión de </td>
                                     <td></td>
                                 </tr>
                             </thead>
                             <tbody class="divide-y">
                                 @foreach ($users as $user)
-                                    <tr class="relative group hover:bg-neutral-100 [&>td]:p-3">
+                                    <tr class="relative even:bg-neutral-50 group hover:bg-neutral-50 [&>td]:p-3">
                                         <td>
-                                            <a title="Ver usuario" href="/users/{{ $user->id }}"
-                                                class="absolute inset-0">
-                                            </a>
                                             <div class="flex items-center gap-2">
                                                 @include('commons.avatar', [
                                                     'src' => $user->profile,
-                                                    'className' => 'w-8',
+                                                    'className' => 'w-12',
                                                     'alt' => $user->first_name . ' ' . $user->last_name,
-                                                    'altClass' => 'text-base',
+                                                    'altClass' => 'text-xl',
                                                 ])
                                                 <div class="flex-grow">
-                                                    <p class="group-hover:underline text-nowrap">
+                                                    <p class="text-nowrap font-medium">
                                                         {{ $user->last_name . ', ' . $user->first_name }}
                                                     </p>
                                                     <p
                                                         class="line-clamp-2 flex text-sm items-center gap-1 text-neutral-600">
-                                                        {{ $user->role_position->name }}
+                                                        {{ $user->role_position->name }},
+                                                        {{ $user->role_position->department->name }}
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
+                                            <span
+                                                class="text-sm text-nowrap {{ $user->status ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} px-2 py-1 rounded-full">
+                                                {{ $user->status ? 'Activo' : 'Inactivo' }}
+                                            </span>
+                                        </td>
+                                        <td>
                                             <p class="text-nowrap">
+                                                @svg('bx-envelope', 'w-4 h-4 inline-block mr-1')
                                                 {{ $user->email }}
                                             </p>
                                         </td>
                                         <td>
-                                            <button data-modal-target="dialog-{{ $user->id }}"
-                                                data-modal-toggle="dialog-{{ $user->id }}"
-                                                class="p-1 relative text-left bg-neutral-50 flex text-sm items-center gap-1 rounded-lg border px-2">
-                                                @if ($user->supervisor_id)
-                                                    @include('commons.avatar', [
-                                                        'src' => $user->supervisor->profile,
-                                                        'className' => 'w-8',
-                                                        'alt' =>
-                                                            $user->supervisor->first_name .
-                                                            ' ' .
-                                                            $user->supervisor->last_name,
-                                                        'altClass' => 'text-md',
-                                                    ])
-                                                    <div>
-                                                        <p class="text-nowrap">
-                                                            {{ $user->supervisor->first_name }}
-                                                        </p>
-                                                        <p class="text-xs font-normal text-nowrap">
-                                                            {{ $user->supervisor->role_position->name }}
-                                                        </p>
-                                                    </div>
-                                                @else
-                                                    @svg('bx-plus', 'w-5 h-5')
-                                                    Asignar
-                                                @endif
-                                            </button>
+                                            @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
+                                                <button data-modal-target="dialog-{{ $user->id }}"
+                                                    data-modal-toggle="dialog-{{ $user->id }}"
+                                                    tip="Asignar o cambiar supervisor"
+                                                    class="bg-neutral-100 relative text-left hover:bg-neutral-200 rounded-xl p-2 flex px-3 items-center gap-2">
+                                                    @if ($user->supervisor_id)
+                                                        @include('commons.avatar', [
+                                                            'src' => $user->supervisor->profile,
+                                                            'className' => 'w-8',
+                                                            'alt' =>
+                                                                $user->supervisor->first_name .
+                                                                ' ' .
+                                                                $user->supervisor->last_name,
+                                                            'altClass' => 'text-md',
+                                                        ])
+                                                        <div>
+                                                            <p class="text-nowrap">
+                                                                {{ $user->supervisor->first_name }}
+                                                            </p>
+                                                            <p class="text-xs font-normal text-nowrap">
+                                                                {{ $user->supervisor->role_position->name }}
+                                                            </p>
+                                                        </div>
+                                                    @else
+                                                        @svg('bx-plus', 'w-5 h-5')
+                                                        Asignar
+                                                    @endif
+                                                </button>
 
-                                            <div id="dialog-{{ $user->id }}" tabindex="-1" aria-hidden="true"
-                                                class="dialog hidden">
-                                                <div class="content lg:max-w-lg max-w-full">
-                                                    <header>
-                                                        Asignar o cambiar supervisor
-                                                    </header>
-                                                    {{-- <form action="/api/schedules/group/{{ $group->id }}" method="POST"
-                                                        id="dialog-{{ $group->id }}-form"
-                                                        class="dinamic-form body grid gap-4 overflow-y-auto">
-                                                        <input autofocus value="{{ $group->name }}" type="text"
-                                                            required placeholder="Nombre" name="name">
-                                                    </form> --}}
+                                                <div id="dialog-{{ $user->id }}" tabindex="-1" aria-hidden="true"
+                                                    class="dialog hidden">
+                                                    <div class="content lg:max-w-lg max-w-full">
+                                                        <header>
+                                                            Asignar o cambiar supervisor
+                                                        </header>
 
-                                                    <div class="p-3 gap-4 overflow-y-auto flex flex-col">
-                                                        @php
-                                                            $defaultvalue = $user->supervisor_id
-                                                                ? $user->supervisor->first_name .
-                                                                    ' ' .
-                                                                    $user->supervisor->last_name
-                                                                : null;
-                                                        @endphp
-                                                        <div class="grid gap-2">
-                                                            <label class="relative">
-                                                                <div
-                                                                    class="absolute z-[1] inset-y-0 px-2 flex items-center">
-                                                                    @svg('bx-search-alt-2', 'w-5 h-5 opacity-60')
+                                                        <div class="p-3 gap-4 overflow-y-auto flex flex-col">
+                                                            @php
+                                                                $defaultvalue = $user->supervisor_id
+                                                                    ? $user->supervisor->first_name .
+                                                                        ' ' .
+                                                                        $user->supervisor->last_name
+                                                                    : null;
+                                                            @endphp
+                                                            <div class="grid gap-2">
+                                                                <label class="relative">
+                                                                    <div
+                                                                        class="absolute z-[1] inset-y-0 px-2 flex items-center">
+                                                                        @svg('bx-search-alt-2', 'w-5 h-5 opacity-60')
+                                                                    </div>
+                                                                    <input value="{{ $defaultvalue }}"
+                                                                        data-id="{{ $user->id }}" type="search"
+                                                                        class="supervisor-input w-full"
+                                                                        style="padding-left: 30px"
+                                                                        placeholder="Correo, DNI, nombres...">
+                                                                </label>
+                                                                <div id="result-{{ $user->id }}"
+                                                                    class="p-1 grid gap-2 text-center">
+                                                                    <p class="p-10 text-neutral-500">
+                                                                        No se encontraron resultados o no se ha realizado
+                                                                        una
+                                                                        búsqueda.
+                                                                    </p>
                                                                 </div>
-                                                                <input value="{{ $defaultvalue }}"
-                                                                    data-id="{{ $user->id }}" type="search"
-                                                                    class="supervisor-input w-full"
-                                                                    style="padding-left: 30px"
-                                                                    placeholder="Correo, DNI, nombres...">
-                                                            </label>
-                                                            <div id="result-{{ $user->id }}"
-                                                                class="p-1 grid gap-2 text-center">
-                                                                <p class="p-10 text-neutral-500">
-                                                                    No se encontraron resultados o no se ha realizado
-                                                                    una
-                                                                    búsqueda.
-                                                                </p>
                                                             </div>
                                                         </div>
+                                                        @if ($user->supervisor_id)
+                                                            <footer>
+                                                                <button data-alertvariant="warning"
+                                                                    data-param='/api/users/supervisor/remove/{{ $user->id }}'
+                                                                    data-atitle='Remover supervisor'
+                                                                    data-adescription='¿Estás seguro de que deseas remover el supervisor de este usuario?'
+                                                                    type="button" class="secondary dinamic-alert">
+                                                                    @svg('bx-user-minus', 'w-5 h-5')
+                                                                    Remover
+                                                                    supervisor</button>
+                                                            </footer>
+                                                        @endif
                                                     </div>
-                                                    @if ($user->supervisor_id)
-                                                        <footer>
-                                                            <button data-alertvariant="warning"
-                                                                data-param='/api/users/supervisor/remove/{{ $user->id }}'
-                                                                data-atitle='Remover supervisor'
-                                                                data-adescription='¿Estás seguro de que deseas remover el supervisor de este usuario?'
-                                                                type="button" class="secondary dinamic-alert">
-                                                                @svg('bx-user-minus', 'w-5 h-5')
-                                                                Remover
-                                                                supervisor</button>
-                                                        </footer>
-                                                    @endif
                                                 </div>
-                                            </div>
+                                            @else
+                                                -
+                                            @endif
                                         </td>
                                         <td>
-                                            <p class="rounded-full p-2 hover:bg-neutral-200 transition-colors block">
-                                                @svg('bx-chevron-right', 'w-5 h-5')
-                                            </p>
+                                            <div class="flex items-center gap-2">
+                                                <button
+                                                    class="rounded-full relative p-2 hover:bg-neutral-200 transition-colors"
+                                                    data-dropdown-toggle="dropdown-{{ $user->id }}">
+                                                    @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                                                </button>
+                                                <div id="dropdown-{{ $user->id }}" class="dropdown-content hidden">
+                                                    <a href="/users/{{ $user->id }}"
+                                                        class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                        Ver perfil
+                                                    </a>
+                                                    @if ($cuser->has('users:edit') || $cuser->isDev())
+                                                        <a href="/users/{{ $user->id }}?view=edit"
+                                                            class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                            Editar perfil
+                                                        </a>
+                                                    @endif
+                                                    <a href="/users/{{ $user->id }}/schedules"
+                                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                        Ver Horarios
+                                                    </a>
+                                                    <a href="/users/{{ $user->id }}/assists"
+                                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                        Ver Asistencias
+                                                    </a>
+                                                    @if (($cuser->has('users:reset-password') && !$user->has('development')) || $cuser->isDev())
+                                                        <button data-atitle="Restablecer contraseña"
+                                                            data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
+                                                            data-param="/api/users/reset-password/{{ $user->id }}"
+                                                            class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                            Restablecer contraseña
+                                                        </button>
+                                                    @endif
+                                                    @if (($cuser->has('users:toggle-disable') && !$user->has('development')) || $cuser->isDev())
+                                                        <button
+                                                            data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
+                                                            data-adescription="No podrás deshacer esta acción."
+                                                            data-param="/api/users/toggle-status/{{ $user->id }}"
+                                                            class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10 {{ $user->status ? 'text-red-600' : 'text-green-600' }}">
+                                                            {{ $user->status ? 'Desactivar' : 'Activar' }}
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                                <a tip="Ver detalles" href="/users/{{ $user->id }}">
+                                                    <p
+                                                        class="rounded-full p-2 hover:bg-neutral-200 transition-colors block">
+                                                        @svg('bx-chevron-right', 'w-5 h-5')
+                                                    </p>
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
