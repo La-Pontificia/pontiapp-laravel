@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Dinamic alerts
 
     dinamicAlerts?.forEach((f) => {
-        f.addEventListener("click", async () => {
+        f.onclick = async () => {
             const param = f.getAttribute("data-param");
             const method = f.getAttribute("data-method") ?? "POST";
             const atitle = f.getAttribute("data-atitle");
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         error.response.data ?? "Error al enviar el formulario",
                 });
             }
-        });
+        };
     });
 
     // Dinamic form acumulate
@@ -217,5 +217,28 @@ document.addEventListener("DOMContentLoaded", function () {
             params.set("terminals", array.join(","));
             window.location.search = params.toString();
         });
+    });
+
+    // TOOLTIP
+
+    Array.from(document.querySelectorAll("[tip]")).forEach((el) => {
+        let tip = document.createElement("div");
+        tip.classList.add("tooltip");
+        tip.innerText = el.getAttribute("tip");
+        let delay = el.getAttribute("tip-delay");
+        if (delay) {
+            tip.style.transitionDelay = delay + "s";
+        }
+        tip.style.transform =
+            "translate(" +
+            (el.hasAttribute("tip-left") ? "calc(-100% - 5px)" : "15px") +
+            ", " +
+            (el.hasAttribute("tip-top") ? "-100%" : "0") +
+            ")";
+        el.appendChild(tip);
+        el.onmousemove = (e) => {
+            tip.style.left = e.clientX + "px";
+            tip.style.top = e.clientY + "px";
+        };
     });
 });
