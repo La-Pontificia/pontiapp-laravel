@@ -546,3 +546,41 @@ th.fc-col-header-cell {
         clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
     }
 }
+
+/* Custom tooltip */
+
+[tip] .tooltip {
+    position: fixed;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 5px 7px;
+    background: black;
+    color: white;
+    text-wrap: nowrap;
+    border-radius: 10px;
+    z-index: 9999;
+    visibility: hidden;
+    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s, visiblity 0s;
+}
+[tip]:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Sidebar item css */
+
+.sidebar-item-content {
+    -moz-transition: max-height 0.7s ease;
+    -ms-transition: max-height 0.7s ease;
+    -o-transition: max-height 0.7s ease;
+    -webkit-transition: max-height 0.7s ease;
+    transition: max-height 0.7s ease;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.sidebar-item-content[data-expanded] {
+    max-height: 500px;
+}
