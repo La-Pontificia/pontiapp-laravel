@@ -133,16 +133,25 @@ class UserController extends Controller
     public function slug($id)
     {
         $user = User::find($id);
-        $job_positions = JobPosition::all();
-        $roles = Role::all();
+        if (!$user) return view('+500', ['error' => 'User not found']);
+        return view('modules.users.slug.+page', compact('user'));
+    }
+
+    public function slug_details($id)
+    {
+        $user = User::find($id);
         $user_roles = UserRole::all();
-        $branches = Branch::all();
         $group_schedules = GroupSchedule::all();
-
-
         if (!$user) return view('+500', ['error' => 'User not found']);
 
-        return view('modules.users.slug.+page', compact('user', 'job_positions', 'roles', 'user_roles', 'branches', 'group_schedules'));
+        return view('modules.users.slug.details.+page', compact('user', 'user_roles', 'group_schedules'));
+    }
+
+    public function slug_segurity_access($id)
+    {
+        $user = User::find($id);
+        if (!$user) return view('+500', ['error' => 'User not found']);
+        return view('modules.users.slug.segurity-access.+page', compact('user'));
     }
 
     public function slug_organization($id)
@@ -150,7 +159,11 @@ class UserController extends Controller
         $user = User::find($id);
         if (!$user) return view('+500', ['error' => 'User not found']);
 
-        return view('modules.users.slug.organization.+page', compact('user'));
+        $job_positions = JobPosition::all();
+        $roles = Role::all();
+        $branches = Branch::all();
+
+        return view('modules.users.slug.organization.+page', compact('user', 'job_positions', 'roles', 'branches'));
     }
 
     public function slug_schedules($id)
