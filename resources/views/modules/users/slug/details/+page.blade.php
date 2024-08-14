@@ -107,10 +107,12 @@
                 Registrado el {{ \Carbon\Carbon::parse($user->created_at)->isoFormat('LL') }} por
                 {{ $user->createdBy->last_name }}, {{ $user->createdBy->first_name }}
             </p>
-            <p>
-                Ultima actualización el {{ \Carbon\Carbon::parse($user->updated_at)->isoFormat('LL') }} por
-                {{ $user->updatedBy->last_name }}, {{ $user->updatedBy->first_name }}
-            </p>
+            @if ($user->updatedBy)
+                <p>
+                    Ultima actualización el {{ \Carbon\Carbon::parse($user->updated_at)->isoFormat('LL') }} por
+                    {{ $user->updatedBy->last_name }}, {{ $user->updatedBy->first_name }}
+                </p>
+            @endif
         </div>
         @if ($hasEdit)
             <div class="flex items-center gap-2 border-t pt-4">
