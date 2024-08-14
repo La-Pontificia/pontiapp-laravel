@@ -9,17 +9,17 @@
         [
             'icon' => 'bx-folder',
             'text' => 'Mis edas',
-            'href' => 'edas/me',
+            'href' => '/edas/me',
         ],
         [
             'icon' => 'bx-calendar-event',
             'text' => 'Mis horarios',
-            'href' => 'users/' . $cuser->id . '/schedules',
+            'href' => '/users/' . $cuser->id . '/schedules',
         ],
         [
             'icon' => 'bx-calendar-check',
             'text' => 'Mis asistencias',
-            'href' => 'users/' . $cuser->id . '/assists',
+            'href' => '/users/' . $cuser->id . '/assists',
         ],
     ];
 
@@ -28,7 +28,7 @@
             'icon' => 'bx-group',
             'text' => 'Gestión de Usuarios',
             'href' => null,
-            'active' => request()->is('users*'),
+            'active' => request()->is('users*') && !request()->is('users/' . $cuser->id . '*'),
             'enable' => $cuser->hasGroup('users') || $cuser->isDev(),
             'subItems' => [
                 [
@@ -36,9 +36,8 @@
                     'text' => 'Usuarios',
                     'href' => '/users',
                     'active' =>
-                        request()->is('users') ||
-                        request()->is('users/create') ||
-                        request()->is('users/' . $cuser->id . '*'),
+                        (request()->is('users') || request()->is('users/create')) &&
+                        !request()->is('users/' . $cuser->id . '*'),
                     'active-icon' => 'bxs-user-circle',
                     'enable' => $cuser->has('users:create') || $cuser->has('users:show') || $cuser->isDev(),
                 ],
