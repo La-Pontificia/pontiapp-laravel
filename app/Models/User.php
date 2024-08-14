@@ -56,10 +56,27 @@ class User extends Authenticatable
         'username' => 'required',
         'domain' => 'required',
         'last_name' => 'required',
-        'id_role' => ['required', 'max:36'],
-        'id_role_user' => ['required', 'uuid'],
-        'id_branch' => ['required', 'uuid'],
-        'group_schedule_id' => ['uuid'],
+        'id_role' => 'uuid|required',
+        'id_role_user' => 'uuid|required',
+        'id_branch' => 'uuid|required',
+        'group_schedule_id' => 'uuid',
+    ];
+
+    static $detailsRules = [
+        'id_role_user' => 'uuid',
+        'dni' => 'required|numeric|digits:8',
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'group_schedule_id' => 'uuid|nullable',
+    ];
+
+    static $organizationRules = [
+        'id_branch' => 'uuid|required',
+        'id_role' => 'uuid|required',
+    ];
+
+    static $segurityAccessRules = [
+        'email' => 'email|required',
     ];
 
     protected $casts = [
