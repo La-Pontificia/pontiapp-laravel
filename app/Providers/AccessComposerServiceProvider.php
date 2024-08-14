@@ -35,10 +35,10 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'name' => 'Usuarios',
                             'privileges' => [
                                 'users:show' => 'Ver usuarios',
+                                'users:asign-supervisor' => 'Asignar supervisores',
                                 'users:create' => 'Registrar usuarios',
                                 'users:edit' => 'Actualizar usuarios',
-                                'users:disable' => 'Deshabilitar usuarios',
-                                'users:enable' => 'Habilitar usuarios',
+                                'users:toggle-disable' => 'Deshabilitar o habilitar usuarios',
                                 'users:reset-password' => 'Restablecer contraseñas',
                                 'users:export' => 'Exportar usuarios',
 
