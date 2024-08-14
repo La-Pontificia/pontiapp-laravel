@@ -161,7 +161,6 @@ class GoalController extends Controller
                 }
             }
         }
-
         return response()->json('Objetivos actualizados correctamente.', 201);
     }
 
