@@ -48,4 +48,29 @@ document.addEventListener("DOMContentLoaded", function () {
         $sidebar.classList.add("max-lg:-translate-x-full");
         $sidebarOverlay.classList.add("hidden");
     });
+
+    const $itemsSidebar = $sidebar.querySelectorAll(".sidebar-item");
+    const $itemContents = $sidebar.querySelectorAll(".sidebar-item-content");
+
+    $itemsSidebar?.forEach(($item) => {
+        const $button = $item.querySelector(".sidebar-item-button");
+        const $content = $item.querySelector(".sidebar-item-content");
+
+        $button.onclick = () => {
+            const expanded = $item.getAttribute("data-expanded");
+            if (expanded) {
+                $item.removeAttribute("data-expanded");
+                $content.removeAttribute("data-expanded");
+            } else {
+                $itemsSidebar.forEach(($item) => {
+                    $item.removeAttribute("data-expanded");
+                });
+                $itemContents.forEach(($content) => {
+                    $content.removeAttribute("data-expanded");
+                });
+                $item.setAttribute("data-expanded", "true");
+                $content.setAttribute("data-expanded", "true");
+            }
+        };
+    });
 });
