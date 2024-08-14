@@ -34,6 +34,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users/export', [ControllersUserController::class, 'export']);
     Route::get('users/export-email-access', [ControllersUserController::class, 'exportEmailAccess']);
     Route::post('users/{id}', [UserController::class, 'update']);
+    Route::post('users/update-details/{id}', [UserController::class, 'updateDetails']);
+    Route::post('users/organization/{id}', [UserController::class, 'updateOrganization']);
+    Route::post('users/update-segurity-access/{id}', [UserController::class, 'updateSegurityAccess']);
+
     Route::post('users/{id}/profile', [UserController::class, 'profile']);
     Route::get('users/search', [UserController::class, 'search']);
     Route::post('users/email-access/{id}', [UserController::class, 'updateEmailAccess']);
@@ -42,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users/supervisor/assign/{id}', [UserController::class, 'assignSupervisor']);
     Route::post('users/reset-password/{id}', [UserController::class, 'resetPassword']);
     Route::post('users/change-password/{id}', [UserController::class, 'changePassword']);
+    Route::post('users/toggle-status/{id}', [UserController::class, 'toggleStatus']);
 
 
     // User user roles routes 
