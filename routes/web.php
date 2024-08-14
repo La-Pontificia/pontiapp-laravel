@@ -36,7 +36,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('/home', [HomeController::class, 'index']);
 
     // Module routes
-    Route::get('/', [ModuleController::class, 'index']);
+    Route::get('/', [HomeController::class, 'index']);
 
     // User roles routes
     Route::get('users/user-roles', [UserRoleController::class, 'index']);
