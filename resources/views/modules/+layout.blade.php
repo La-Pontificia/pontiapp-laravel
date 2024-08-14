@@ -19,18 +19,8 @@
                         <div class="p-5 pb-3 lg:hidden block">
                             <a href="/"><img src="/lp.webp" class="w-24" /></a>
                         </div>
-                        <div class="flex-grow overflow-y-auto">
-                            @if (request()->is('/'))
-                                @include('modules.sidebar')
-                            @elseif(request()->is('users*'))
-                                @include('modules.users.sidebar')
-                            @elseif(request()->is('edas*'))
-                                @include('modules.edas.sidebar')
-                            @elseif(request()->is('assists*'))
-                                @include('modules.assists.sidebar')
-                            @elseif(request()->is('settings*'))
-                                @include('modules.settings.sidebar')
-                            @endif
+                        <div class="flex-grow overflow-y-auto transition-all">
+                            @include('modules.sidebar')
                         </div>
                         <footer class="p-5 font-normal max-w-[300px] hover:[&>a]:underline text-xs text-black text-center">
                             <a href="">
@@ -58,4 +48,17 @@
             </div>
         @endguest
     </div>
+
+    <template id="item-supervisor-template">
+        <button title="Seleccionar supervisor"
+            class="flex w-full disabled:opacity-50 disabled:pointer-events-none text-left items-center gap-2 p-2 rounded-lg hover:bg-neutral-200">
+            <div class="bg-neutral-300 overflow-hidden rounded-full w-8 h-8 aspect-square">
+                <img src="" class="object-cover w-full h-full" alt="">
+            </div>
+            <div class="text-sm">
+                <p class="result-title"></p>
+                <p class="text-xs result-email"></p>
+            </div>
+        </button>
+    </template>
 @endsection
