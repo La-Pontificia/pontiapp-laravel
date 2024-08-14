@@ -103,7 +103,7 @@
                                     <td class="w-full"></td>
                                     <td></td>
                                     <td></td>
-                                    <td class="text-left pb-1.5">Bajo supervisión de </td>
+                                    <td class="text-left text-nowrap pb-1.5">Bajo supervisión de </td>
                                     <td></td>
                                 </tr>
                             </thead>
