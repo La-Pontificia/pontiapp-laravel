@@ -70,23 +70,25 @@
                     </div>
                 </div>
             </div>
-            <button {{ count($schedules) === 0 ? 'disabled' : '' }}}} data-dropdown-toggle="dropdown"
-                class="secondary ml-auto">
-                @svg('bx-up-arrow-circle', 'w-5 h-5')
-                <span>
-                    Exportar
-                </span>
-            </button>
-            <div id="dropdown" class="dropdown-content hidden">
-                <button data-type="excel"
-                    class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
-                    Excel (.xlsx)
+            @if ($cuser->has('assists:export') || $cuser->isDev())
+                <button {{ count($schedules) === 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown"
+                    class="secondary ml-auto">
+                    @svg('bx-up-arrow-circle', 'w-5 h-5')
+                    <span>
+                        Exportar
+                    </span>
                 </button>
-                <button data-type="json"
-                    class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
-                    JSON (.json)
-                </button>
-            </div>
+                <div id="dropdown" class="dropdown-content hidden">
+                    <button data-type="excel"
+                        class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
+                        Excel (.xlsx)
+                    </button>
+                    <button data-type="json"
+                        class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
+                        JSON (.json)
+                    </button>
+                </div>
+            @endif
         </div>
         <div class="h-full w-full overflow-auto">
             @if (count($schedules) === 0)

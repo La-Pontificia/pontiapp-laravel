@@ -113,6 +113,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'assists:create' => 'Registrar asistencias',
                                 'assists:edit' => 'Actualizar asistencias',
                                 'assists:delete' => 'Eliminar asistencias',
+                                'assists:export' => 'Export asistencias',
                             ],
                         ],
                         [
