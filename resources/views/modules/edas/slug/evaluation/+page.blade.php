@@ -9,14 +9,15 @@
     @php
 
         // if current user is supervisor
-        $isSupervisor = $current_user->id === $eda->user->supervisor_id;
+        $isSupervisor = $cuser->id === $eda->user->supervisor_id;
+        $isMyEda = $cuser->id === $eda->user_id;
 
         // if has self qualification
         $hasSelfQualify =
             ($cuser->has('edas:evaluations:self-qualify') &&
                 !$evaluation->closed &&
                 !$evaluation->self_qualification &&
-                $isSupervisor) ||
+                $isMyEda) ||
             $cuser->isDev();
 
         // if has average evaluation
