@@ -104,7 +104,7 @@
                     <div class="grid h-full w-full place-content-center">
                         <img src="/empty-meetingList.webp" class="mx-auto" alt="">
                         <p class="text-center text-xs max-w-[40ch] mx-auto">
-                            No se encontraron horariosy asistencias. por favor seleccione un area o departamento.
+                            No se encontraron horarios y asistencias. por favor seleccione un area o departamento.
                         </p>
                     </div>
                 @else
