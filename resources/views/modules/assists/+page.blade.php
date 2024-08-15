@@ -16,7 +16,7 @@
     <p class="pb-2">
         Gestion de asistencia de usuarios.
     </p>
-    <div class="space-y-2 flex flex-col h-full">
+    <div class="space-y-2 flex flex-col h-full overflow-auto">
         <div class="p-1 flex items-end">
             <div class="flex-grow flex items-center flex-wrap gap-4">
 
