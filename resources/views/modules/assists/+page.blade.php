@@ -318,9 +318,26 @@
     <div class="space-y-2 flex flex-col h-full">
         <div class="p-1 flex items-end">
             <div class="flex-grow flex items-center flex-wrap gap-4">
+
+                <select class="dinamic-select" name="area">
+                    <option value="0">Todas las areas</option>
+                    @foreach ($areas as $area)
+                        <option {{ request()->query('area') === $area->id ? 'selected' : '' }} value="{{ $area->id }}">
+                            {{ $area->name }}</option>
+                    @endforeach
+                </select>
+
+                <select class="dinamic-select" name="department">
+                    <option value="0">Todos los departamentos</option>
+                    @foreach ($departments as $department)
+                        <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
+                            value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+
                 <div id="date-range" class="flex items-center gap-1">
-                    <input class="w-[100px]" readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start"
-                        placeholder="-">
+                    <input class="w-[100px]" readonly {{ $start ? "data-default=$start" : '' }} type="text"
+                        name="start" placeholder="-">
                     <span>a</span>
                     <input class="w-[100px]" readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end"
                         placeholder="-">
@@ -328,22 +345,6 @@
                         class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
                 </div>
                 <div class="border-l pl-4 flex items-center gap-3">
-                    <select class="dinamic-select" name="area">
-                        <option value="0">Todas las areas</option>
-                        @foreach ($areas as $area)
-                            <option {{ request()->query('area') === $area->id ? 'selected' : '' }}
-                                value="{{ $area->id }}">{{ $area->name }}</option>
-                        @endforeach
-                    </select>
-
-                    <select class="dinamic-select" name="department">
-                        <option value="0">Todos los departamentos</option>
-                        @foreach ($departments as $department)
-                            <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
-                                value="{{ $department->id }}">{{ $department->name }}</option>
-                        @endforeach
-                    </select>
-
                     <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                         class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
                         @svg('bx-devices', 'w-5 h-5')
@@ -396,21 +397,20 @@
                 </button>
             </div>
         </div>
-        <div
-            class="overflow-auto flex bg-white flex-col border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl h-full">
+        <div class="overflow-auto flex flex-col h-full">
             <div class="h-full shadow-sm rounded-2xl overflow-auto">
                 @if (count($schedules) === 0)
                     <div class="grid h-full w-full place-content-center">
                         <img src="/empty-meetingList.webp" class="mx-auto" alt="">
                         <p class="text-center text-xs max-w-[40ch] mx-auto">
-                            No se encontraron asistencias para el rango de fechas seleccionado.
+                            No se encontraron horariosy asistencias. por favor seleccione un area o departamento.
                         </p>
                     </div>
                 @else
                     <table id="table-export-assists" class="w-full text-left relative">
                         <thead class="border-b sticky bg-white top-0 z-[1]">
                             <tr class="[&>th]:text-nowrap [&>th]:font-medium [&>th]:p-2">
-                                <th class=" tracking-tight">DNI</th>
+                                <th class=" tracking-tight">DNI/ID</th>
                                 <th class=" tracking-tight">Usuario</th>
                                 <th class=" tracking-tight">Título</th>
                                 <th>Fecha</th>
@@ -452,7 +452,7 @@
                                 @endphp
 
                                 <tr data-dni="{{ $schedule['dni'] }}" data-fullnames ="{{ $schedule['full_name'] }}"
-                                    class="[&>td]:py-2 [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl [&>td]:px-3">
+                                    class="[&>td]:py-2 even:bg-neutral-100 [&>td>p]:text-nowrap relative group first:[&>td]:rounded-l-2xl last:[&>td]:rounded-r-2xl [&>td]:px-3">
                                     <td>
                                         <p class="">
                                             {{ $schedule['dni'] }}
@@ -468,19 +468,10 @@
                                             {{ $schedule['title'] }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD-MM-YYYY') }}"
+                                    <td data-value="{{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD/MM/YYYY') }}"
                                         data-name="date">
                                         <p class="text-nowrap flex items-center gap-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="17" viewBox="0 0 24 24"
-                                                fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-calendar opacity-70">
-                                                <path d="M8 2v4" />
-                                                <path d="M16 2v4" />
-                                                <rect width="18" height="18" x="3" y="4" rx="2" />
-                                                <path d="M3 10h18" />
-                                            </svg>
-                                            {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('LL') }}
+                                            {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD/MM/YYYY') }}
                                         </p>
                                     </td>
                                     <td data-value="{{ $day }}" data-name="day">
@@ -489,9 +480,9 @@
                                         </p>
                                     </td>
                                     <td data-value="{{ $TTorTM }}" data-name="turn">
-                                        <p
-                                            class="text-center  {{ $TTorTM === 'TM' ? 'text-yellow-500' : 'text-violet-500' }}">
-                                            {{ $TTorTM }}
+                                        <p tip="Turno de trabajo: {{ $TTorTM }}"
+                                            class="text-center  {{ $TTorTM === 'TM' ? 'text-yellow-500' : 'text-violet-600' }}">
+                                            @svg($TTorTM === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
                                         </p>
                                     </td>
                                     <td data-value="{{ date('H:i', strtotime($schedule['from'])) }}" data-name="from">
