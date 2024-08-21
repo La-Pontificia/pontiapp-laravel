@@ -6,19 +6,18 @@ use App\Models\Attendance;
 use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Config;
+
 
 class AssistsService
 {
 
-    public static function assistsByUser($id, $terminals, $startDate, $endDate)
+    public static function generateSchedules($id, $startDate, $endDate)
     {
         $user = User::find($id);
         if (!$user) return view('pages.500', ['error' => 'User not found']);
-        $groupSchedules = $user->group_schedule_id ? $user->groupSchedule->schedules : collect();
 
-        $userSchedules = Schedule::where('user_id', $user->id)->get();
+        $userSchedules = Schedule::where('user_id', $user->id)->where('start_date', '<=', $endDate)->where('end_date', '>=', $startDate)->get();
+        $groupSchedules = Schedule::where('group_id', $user->group_schedule_id)->where('start_date', '<=', $endDate)->where('end_date', '>=', $startDate)->get();
 
         $allSchedules = $groupSchedules->merge($userSchedules);
 
@@ -49,6 +48,7 @@ class AssistsService
                 }
             }
         }
+
         $schedules = $schedulesGenerated;
         usort($schedules, function ($a, $b) {
             return strcmp($a['date'], $b['date']);
@@ -59,21 +59,31 @@ class AssistsService
             return $date->between(Carbon::parse($startDate), Carbon::parse($endDate));
         });
 
+        return [
+            'schedules' => $schedules,
+            'user' => $user,
+        ];
+    }
+
+    public static function assistsByUser($id, $terminals, $startDate, $endDate)
+    {
+        $generated = self::generateSchedules($id, $startDate, $endDate);
+
+        $user = $generated['user'];
+        $schedules = $generated['schedules'];
+
         $assistances = collect();
+
         foreach ($terminals ?? ['PL-Alameda'] as $terminal) {
             $match = (new Attendance())
                 ->setConnection($terminal)
                 ->where('emp_code', $user->dni)
                 ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
                 ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
-                ->orderBy('punch_time', 'desc')
+                ->orderBy('punch_time', 'asc')
                 ->get();
             $assistances = $assistances->merge($match);
         }
-        $schedules = array_filter($schedules, function ($schedule) use ($startDate, $endDate) {
-            $date = Carbon::parse($schedule['date']);
-            return $date->between(Carbon::parse($startDate), Carbon::parse($endDate));
-        });
 
         foreach ($schedules as &$schedule) {
             $date = Carbon::parse($schedule['date']);
@@ -93,7 +103,6 @@ class AssistsService
                 $time = Carbon::parse($assistance->punch_time);
                 return $time->between($toStart, $toEnd);
             });
-
 
             $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
             $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
@@ -132,5 +141,28 @@ class AssistsService
             $schedule['owes_time'] = is_numeric($owesTime) ? gmdate('H:i:s', $owesTime * 60) : null;
         }
         return $schedules;
+    }
+
+    public static function assists($query, $terminals, $startDate, $endDate)
+    {
+
+        $assists = collect();
+
+        foreach ($terminals ?? ['PL-Alameda'] as $terminal) {
+            $match = (new Attendance())
+                ->setConnection($terminal)
+                ->whereHas('employee', function ($q) use ($query) {
+                    $q->where('first_name', 'like', '%' . $query . '%')
+                        ->orWhere('last_name', 'like', '%' . $query . '%')
+                        ->orWhere('emp_code', 'like', '%' . $query . '%');
+                })
+                ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
+                ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+                ->orderBy('punch_time', 'desc')
+                ->get();
+            $assists = $assists->merge($match);
+        }
+
+        return $assists;
     }
 }
