@@ -29,7 +29,7 @@
 |        | - Documentación técnica y de usuario         | ✅     |
 | 39     | **Mantenimiento**                            |        |
 |        | - Corrección de errores                      | ✅     |
-|        | - Mejoras y actualizaciones                  | 🔄     |
+|        | - Mejoras y actualizaciones                  | ✅     |
 
 ## VERSION 2
 
@@ -43,7 +43,7 @@
 | 08-15 de mayo            | **Diseño del Sistema**                       | ✅     |
 |                          | - Actualización de diagramas de arquitectura | ✅     |
 |                          | - Diseño de base de datos                    | ✅     |
-| 16 de mayo - 10 de julio | **Desarrollo**                               | 🔄     |
+| 16 de mayo - 10 de julio | **Desarrollo**                               | ✅     |
 |                          | **Gestión de Usuarios**                      | ✅    |
 |                          | - Gestión de Usuarios                        |✅     |
 |                          | - Roles                                      | ✅     |
@@ -51,7 +51,7 @@
 |                          | - Gestión de EDAS                            | ✅     |
 |                          | - Gestión de Asistencias                     | ✅     |
 |                          | - Integración con SQL Server                 | ✅     |
-|                          | - Gestión de Auditoría                       | 🔄     |
+|                          | - Gestión de Auditoría                       | ✅     |
 |                          | - Gestión de Mantenimiento                   | ✅     |
 | 11-16 de julio           | **Pruebas**                                  | ✅     |
 |                          | - Pruebas unitarias                          | ✅     |
@@ -65,7 +65,7 @@
 |                          | - Capacitación a usuarios finales            | 🔄       |
 |                          | - Documentación técnica y de usuario         | 🔄       |
 | 31 de julio              | **Mantenimiento**                            | 🔄     |
-|                          | - Corrección de errores                      | 🔄     |
+|                          | - Corrección de errores                      | ✅     |
 |                          | - Mejoras y actualizaciones                  | 🔄     |
 
 ### Detalles de las Tareas:
