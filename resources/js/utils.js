@@ -2,18 +2,18 @@ import Autocomplete from "@trevoreyre/autocomplete-js";
 import axios from "axios";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $ = document.querySelector.bind(document);
+    const $ = document.querySelector.bind(document);
+    const $$ = document.querySelectorAll.bind(document);
 
-    const queryInputs = document.querySelectorAll(".dinamic-search");
-    const dinamicSelects = document.querySelectorAll(".dinamic-select");
-    const dinamicForms = document.querySelectorAll(".dinamic-form");
-    const $autocompletes = document.querySelectorAll(".autocomplete");
+    const queryInputs = $$(".dinamic-search");
+    const dinamicSelects = $$(".dinamic-select");
+    const dinamicForms = $$(".dinamic-form");
+    const $autocompletes = $$(".autocomplete");
+    const $dinamicFormToParams = $$(".dinamic-form-to-params");
 
-    const dinamicAlerts = document.querySelectorAll(".dinamic-alert");
+    const dinamicAlerts = $$(".dinamic-alert");
 
-    const dinamicFormAcumulate = document.querySelectorAll(
-        ".dinamic-form-acumulate"
-    );
+    const dinamicFormAcumulate = $$(".dinamic-form-acumulate");
 
     dinamicSelects?.forEach((f) => {
         f.addEventListener("change", function (e) {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // PREVENT DEFAULT PASTE IN ELEMENTS WITH CONTENTEDITABLE
-    document.querySelectorAll("[contenteditable]").forEach((element) => {
+    $$("[contenteditable]").forEach((element) => {
         element.addEventListener("paste", (e) => {
             e.preventDefault();
             const text = e.clipboardData.getData("text/plain");
@@ -220,8 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // TOOLTIP
-
-    Array.from(document.querySelectorAll("[tip]")).forEach((el) => {
+    Array.from($$("[tip]")).forEach((el) => {
         let tip = document.createElement("div");
         tip.classList.add("tooltip");
         tip.innerText = el.getAttribute("tip");
@@ -240,5 +239,54 @@ document.addEventListener("DOMContentLoaded", function () {
             tip.style.left = e.clientX + "px";
             tip.style.top = e.clientY + "px";
         };
+    });
+
+    // DINAMIC FORM TO PARAMS
+    $dinamicFormToParams?.forEach((f) => {
+        if (f instanceof HTMLFormElement) {
+            f.onsubmit = (e) => {
+                e.preventDefault();
+                const formData = new FormData(f);
+                const params = new URLSearchParams(window.location.search);
+
+                formData.forEach((value, key) => {
+                    if (key.includes("[]")) {
+                        const array = [];
+                        formData.getAll(key).forEach((v) => {
+                            array.push(v);
+                        });
+                        formData.delete(key);
+                        formData.set(key.replace("[]", ""), array.join(","));
+                    } else {
+                        formData.set(key, value);
+                    }
+                });
+
+                formData.forEach((value, key) => {
+                    if (!value) params.delete(key);
+                    else params.set(key, value);
+                    window.location.search = params.toString();
+                });
+            };
+        }
+    });
+
+    // dinamic date range
+
+    const $inputDateRange = $$("input[name='datefilter']");
+    $inputDateRange.forEach(($dateInput) => {
+        $dateInput.daterangepicker(
+            {
+                opens: "left",
+            },
+            function (start, end, label) {
+                console.log(
+                    "A new date selection was made: " +
+                        start.format("YYYY-MM-DD") +
+                        " to " +
+                        end.format("YYYY-MM-DD")
+                );
+            }
+        );
     });
 });
