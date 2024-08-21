@@ -88,6 +88,8 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     // Assists routes
     Route::get('assists', [AssistsController::class, 'index']);
     Route::get('assists/terminals', [AssistTerminalController::class, 'index']);
+    Route::get('assists/sn-schedules', [AssistsController::class, 'snSchedules']);
+
     Route::post('assists/terminals', [AssistTerminalController::class, 'store']);
     Route::post('assists/terminals/{id}', [AssistTerminalController::class, 'update']);
     Route::post('assists/terminals/delete/{id}', [AssistTerminalController::class, 'delete']);
