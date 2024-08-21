@@ -1,8 +1,8 @@
 @extends('modules.assists.+layout')
 
 @php
-    $start = request()->query('start_date') ? request()->query('start_date') : null;
-    $end = request()->query('end_date') ? request()->query('end_date') : null;
+    $start = request()->query('start') ? request()->query('start') : null;
+    $end = request()->query('end') ? request()->query('end') : null;
 
     $currentTerminals = request()->query('terminals');
     if (!is_array($currentTerminals)) {
@@ -17,19 +17,18 @@
         Gestion de asistencia de usuarios.
     </p>
     <div class="space-y-2 flex flex-col h-full overflow-auto">
-        <div class="p-1 flex items-end">
-            <div class="flex-grow flex items-center flex-wrap gap-4">
-
-                <select class="dinamic-select" name="area">
-                    <option value="0">Todas las areas</option>
+        <div class="flex-grow flex items-center flex-wrap gap-4">
+            <form class="dinamic-form-to-params flex items-center gap-2 flex-wrap">
+                <select name="area">
+                    <option value>Todas las areas</option>
                     @foreach ($areas as $area)
                         <option {{ request()->query('area') === $area->id ? 'selected' : '' }} value="{{ $area->id }}">
                             {{ $area->name }}</option>
                     @endforeach
                 </select>
 
-                <select class="dinamic-select" name="department">
-                    <option value="0">Todos los departamentos</option>
+                <select name="department">
+                    <option value>Todos los departamentos</option>
                     @foreach ($departments as $department)
                         <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
                             value="{{ $department->id }}">{{ $department->name }}</option>
@@ -42,9 +41,8 @@
                     <span>a</span>
                     <input class="w-[100px]" readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end"
                         placeholder="-">
-                    <button id="filter"
-                        class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
                 </div>
+
                 <div class="border-l pl-4 flex items-center gap-3">
                     <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                         class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
@@ -57,8 +55,7 @@
                             <header>
                                 Filtrar resultados de asistencias por bases de datos y/o terminales.
                             </header>
-                            <form method="POST" id="form"
-                                class="p-3 dinamic-form-acumulate gap-4 overflow-y-auto flex flex-col">
+                            <div class="p-3 gap-4 overflow-y-auto flex flex-col">
                                 <p class="opacity-70 font-semibold">Terminales</p>
                                 <div class="grid grid-cols-3 gap-2">
                                     @foreach ($terminals as $terminal)
@@ -71,16 +68,19 @@
                                         </label>
                                     @endforeach
                                 </div>
-                            </form>
-                            <footer>
-                                <button data-modal-hide="dialog" type="button">Cancelar</button>
-                                <button form="form" type="submit" class="primary">Filtrar</button>
-                            </footer>
+                                </dov>
+                                <footer>
+                                    <button data-modal-hide="dialog" type="button" class="primary">Aceptar</button>
+                                </footer>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <button {{ count($schedules) === 0 ? 'disabled' : '' }}}} data-dropdown-toggle="dropdown"
+                <button type="submit"
+                    class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
+            </form>
+
+            <button {{ count($schedules) === 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown"
                 class="secondary ml-auto">
                 @svg('bx-up-arrow-circle', 'w-5 h-5')
                 <span>
