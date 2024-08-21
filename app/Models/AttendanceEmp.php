@@ -15,6 +15,7 @@ class AttendanceEmp extends Model
 
     protected $fillable = [
         'id',
+        'emp_code',
         'first_name',
         'last_name',
         'department_id',
