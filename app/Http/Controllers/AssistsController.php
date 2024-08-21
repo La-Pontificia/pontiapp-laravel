@@ -9,6 +9,7 @@ use App\Models\User;
 use App\services\AssistsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AssistsController extends Controller
 {
@@ -23,8 +24,8 @@ class AssistsController extends Controller
     {
 
         $queryTerminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : null;
-        $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->endOfMonth()->format('Y-m-d'));
 
         $match = User::orderBy('created_at', 'desc');
 
@@ -75,5 +76,40 @@ class AssistsController extends Controller
             'schedules' => $schedules,
             'terminals' => $terminals,
         ]);
+    }
+
+    public function snSchedules(Request $request)
+    {
+        $terminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : null;
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $query = $request->get('query');
+
+        $assists = Collect([]);
+        $perPage = 17;
+        $currentPage = $request->get('page', 1);
+
+        if ($startDate  || $endDate) {
+            $allAssists = $this->assistsService->assists($query, $terminals, $startDate, $endDate);
+            $assists = $allAssists->forPage($currentPage, $perPage);
+        }
+
+        $terminals = AssistTerminal::all();
+
+        $paginatedAssists = new LengthAwarePaginator(
+            $assists,
+            isset($allAssists) ? $allAssists->count() : 0,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view(
+            'modules.assists.sn-schedules.+page',
+            [
+                'terminals' => $terminals,
+                'assists' => $paginatedAssists
+            ]
+        );
     }
 }
