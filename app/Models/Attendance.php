@@ -28,13 +28,14 @@ class Attendance extends Model
         return $this;
     }
 
-    public function getUserFromMysql()
-    {
-        return User::on('mysql')->where('dni', $this->emp_code)->first();
-    }
+
+    protected $casts = [
+        'punch_time' => 'datetime',
+    ];
+
 
     public function employee()
     {
-        return $this->hasOne(AttendanceEmp::class, 'emp_id', 'id');
+        return $this->belongsTo(AttendanceEmp::class, 'emp_code', 'emp_code');
     }
 }
