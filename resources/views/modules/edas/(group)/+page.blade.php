@@ -114,46 +114,47 @@
             @endif
         </div>
         <div class="bg-[#ffffff] rounded-xl m-2 h-full flex flex-col shadow-md overflow-auto border">
-            <div class="flex items-center gap-2 p-3">
+            <form class="flex dinamic-form-to-params items-center gap-2 p-3">
                 <label class="relative w-full">
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
                         @svg('bx-search', 'w-5 h-5')
                     </div>
                     <input value="{{ request()->get('q') }}" placeholder="Filtrar edas..." type="search"
-                        class="w-full pl-9 dinamic-search">
+                        class="w-full pl-9">
                 </label>
-                <select class="dinamic-select w-[140px]" name="department">
-                    <option value="0">Departamento</option>
+                <select class="w-[140px]" name="department">
+                    <option value>Departamento</option>
                     @foreach ($departments as $department)
                         <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
                             value="{{ $department->id }}">{{ $department->name }}</option>
                     @endforeach
                 </select>
-                <select class="dinamic-select w-[100px]" name="job_position">
-                    <option value="0">Puesto</option>
+                <select class="w-[100px]" name="job_position">
+                    <option value>Puesto</option>
                     @foreach ($job_positions as $job)
                         <option {{ request()->query('job_position') === $job->id ? 'selected' : '' }}
                             value="{{ $job->id }}">{{ $job->name }}</option>
                     @endforeach
                 </select>
-
-                <select class="dinamic-select w-[140px]" name="status">
-                    <option value="0">Estado</option>
+                <select class="w-[140px]" name="status">
+                    <option value>Estado</option>
                     @foreach ($status as $item)
                         <option {{ request()->query('status') === $item['value'] ? 'selected' : '' }}
                             value="{{ $item['value'] }}">{{ $item['text'] }}</option>
                     @endforeach
                 </select>
-
-                <select class="dinamic-select w-[100px]" name="year">
-                    <option value="0">Año</option>
+                <select class="w-[100px]" name="year">
+                    <option value>Año</option>
                     @foreach ($years as $year)
                         <option {{ request()->query('year') === $year->id ? 'selected' : '' }}
                             value="{{ $year->id }}">
                             {{ $year->name }}</option>
                     @endforeach
                 </select>
-            </div>
+                <button class="primary">
+                    Filtrar
+                </button>
+            </form>
             <div class="flex flex-col h-full  divide-y overflow-y-auto w-full ">
                 @if ($cuser->has('edas:show') || $cuser->isDev())
                     @if ($edas->isEmpty())
