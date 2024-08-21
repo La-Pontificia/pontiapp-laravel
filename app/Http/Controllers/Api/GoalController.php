@@ -7,6 +7,7 @@ use App\Models\Eda;
 use App\Models\Goal;
 use App\Models\GoalEvaluation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class GoalController extends Controller
 {
@@ -36,7 +37,6 @@ class GoalController extends Controller
 
     public function sent(Request $request, $id)
     {
-
         $eda = Eda::find($id);
 
         if (!$eda) {
@@ -70,6 +70,16 @@ class GoalController extends Controller
         $eda->sent_by = auth()->user()->id;
         $eda->save();
 
+        // send emails
+
+        if ($eda->user->supervisor) {
+            Mail::raw('Hola, ' . $eda->user->supervisor->first_name . ' ' . $eda->user->first_name . ', acaba de enviar sus objetivos', function ($message) use ($eda) {
+                $message->to($eda->user->supervisor->email)
+                    ->subject('Correo de Prueba');
+            });
+        }
+
+
         return response()->json('Objetivos enviados correctamente', 200);
     }
 
@@ -88,6 +98,7 @@ class GoalController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'goals' => ['required', 'array'],
             'goals_to_delete' => ['array'],
@@ -161,6 +172,15 @@ class GoalController extends Controller
                 }
             }
         }
+
+
+        if ($eda->user->supervisor) {
+            Mail::raw('Hola, ' . $eda->user->supervisor->first_name . ', ' . $eda->user->first_name . ' acaba de enviar sus objetivos', function ($message) use ($eda) {
+                $message->to($eda->user->supervisor->email)
+                    ->subject('Envio de objetivos');
+            });
+        }
+
         return response()->json('Objetivos actualizados correctamente.', 201);
     }
 
