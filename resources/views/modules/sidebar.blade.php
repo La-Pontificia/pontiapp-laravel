@@ -138,6 +138,14 @@
                     'active-icon' => 'heroicon-s-clipboard-document-list',
                 ],
                 [
+                    'icon' => 'bx-list-ul',
+                    'text' => 'Asistencias sin horario',
+                    'href' => '/assists/sn-schedules',
+                    'active' => request()->is('assists/sn-schedules*'),
+                    'active-icon' => 'bx-list-ul',
+                ],
+
+                [
                     'icon' => 'heroicon-o-circle-stack',
                     'text' => 'Terminales',
                     'href' => '/assists/terminals',
