@@ -130,13 +130,13 @@
             'active' => request()->is('assists*'),
             'enable' => $cuser->hasGroup('assists') || $cuser->isDev(),
             'subItems' => [
-                [
-                    'icon' => 'heroicon-o-clipboard-document-list',
-                    'text' => 'Asistencias',
-                    'href' => '/assists',
-                    'active' => request()->is('assists'),
-                    'active-icon' => 'heroicon-s-clipboard-document-list',
-                ],
+                // [
+                //     'icon' => 'heroicon-o-clipboard-document-list',
+                //     'text' => 'Asistencias centralizadas',
+                //     'href' => '/assists',
+                //     'active' => request()->is('assists'),
+                //     'active-icon' => 'heroicon-s-clipboard-document-list',
+                // ],
                 [
                     'icon' => 'bx-list-ul',
                     'text' => 'Asistencias sin horario',
@@ -144,7 +144,13 @@
                     'active' => request()->is('assists/sn-schedules*'),
                     'active-icon' => 'bx-list-ul',
                 ],
-
+                [
+                    'icon' => 'bx-list-ul',
+                    'text' => 'Asistencias por horario',
+                    'href' => '/assists/peer-schedule',
+                    'active' => request()->is('assists/peer-schedule*'),
+                    'active-icon' => 'bx-list-ul',
+                ],
                 [
                     'icon' => 'heroicon-o-circle-stack',
                     'text' => 'Terminales',
