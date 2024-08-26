@@ -18,7 +18,7 @@
     </p>
     <div class="space-y-2 flex flex-col h-full overflow-auto">
         <div class="flex-grow flex items-center flex-wrap gap-4">
-            <form class="dinamic-form-to-params flex items-center gap-2 flex-wrap">
+            <form class="dinamic-form-to-params p-1 px-2 flex items-center gap-2 flex-wrap">
                 <select name="area">
                     <option value>Todas las areas</option>
                     @foreach ($areas as $area)
