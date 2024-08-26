@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\UserController as ControllersUserController;
 use App\Http\Controllers\Api\UserRoleController;
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\AssistsController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BusinessUnitController;
 use App\Http\Controllers\DepartmentController;
@@ -119,6 +120,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('questionnaire-templates/{id}/delete', [QuestionnaireTemplateController::class, 'delete']);
     Route::post('questionnaire-templates/{id}/use/{for}', [QuestionnaireTemplateController::class, 'use']);
 
+    // assists routes
+
+    Route::get('assists/export', [AssistsController::class, 'peerScheduleExport']);
 
     // Questions routes
     Route::get('questionnaire-templates/{id}/questions', [QuestionController::class, 'questions']);

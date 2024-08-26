@@ -89,6 +89,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('assists', [AssistsController::class, 'index']);
     Route::get('assists/terminals', [AssistTerminalController::class, 'index']);
     Route::get('assists/sn-schedules', [AssistsController::class, 'snSchedules']);
+    Route::get('assists/peer-schedule', [AssistsController::class, 'peerSchedule']);
 
     Route::post('assists/terminals', [AssistTerminalController::class, 'store']);
     Route::post('assists/terminals/{id}', [AssistTerminalController::class, 'update']);
