@@ -160,9 +160,6 @@
                                     $date = \Carbon\Carbon::parse($schedule['date']);
                                     $weekNumber = $date->weekOfYear;
 
-                                    $TTorTM = $from->hour >= 12 ? 'TT' : 'TM';
-                                    $day = $date->isoFormat('dddd');
-
                                     $isFuture = $date->isFuture();
                                 @endphp
 
@@ -176,8 +173,7 @@
                                     $currentWeek = $weekNumber;
                                 @endphp
 
-                                <tr data-dni="{{ $schedule['dni'] }}" data-fullnames ="{{ $schedule['full_name'] }}"
-                                    class="[&>td]:py-2 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
+                                <tr class="[&>td]:py-2 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
                                     <td>
                                         <p class="">
                                             {{ $schedule['dni'] }}
@@ -188,65 +184,60 @@
                                             {{ $schedule['full_name'] }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ $schedule['title'] }}" data-name="title">
+                                    <td>
                                         <p class="text-nowrap">
                                             {{ $schedule['title'] }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD/MM/YYYY') }}"
-                                        data-name="date">
+                                    <td>
                                         <p class="text-nowrap flex items-center gap-2">
                                             {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD/MM/YYYY') }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ $day }}" data-name="day">
+                                    <td>
                                         <p class="capitalize ">
-                                            {{ $day }}
+                                            {{ $schedule['day'] }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ $TTorTM }}" data-name="turn">
-                                        <p tip="Turno de trabajo: {{ $TTorTM }}"
-                                            class="text-center  {{ $TTorTM === 'TM' ? 'text-yellow-500' : 'text-violet-600' }}">
-                                            @svg($TTorTM === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
+                                    <td>
+                                        <p tip="Turno de trabajo: {{ $schedule['turn'] }}"
+                                            class="text-center  {{ $schedule['turn'] === 'TM' ? 'text-yellow-500' : 'text-violet-600' }}">
+                                            @svg($schedule['turn'] === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
                                         </p>
                                     </td>
-                                    <td data-value="{{ date('H:i', strtotime($schedule['from'])) }}" data-name="from">
+                                    <td>
                                         <p class="">
                                             {{ date('h:i A', strtotime($schedule['from'])) }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ date('H:i', strtotime($schedule['to'])) }}" data-name="to">
+                                    <td>
                                         <p class="">
                                             {{ date('h:i A', strtotime($schedule['to'])) }}
                                         </p>
                                     </td>
-                                    <td class="bg-yellow-100"
-                                        data-value="{{ $schedule['marked_in'] ? date('H:i', strtotime($schedule['marked_in'])) : '-' }}"
-                                        data-name="marked_in">
+                                    <td class="bg-yellow-100">
                                         <p class="text-center">
                                             {{ $schedule['marked_in'] ? date('h:i A', strtotime($schedule['marked_in'])) : '-' }}
                                         </p>
                                     </td>
-                                    <td class="bg-yellow-100"
-                                        data-value="{{ $schedule['marked_out'] ? date('H:i', strtotime($schedule['marked_out'])) : '-' }}"
-                                        data-name="marked_out">
+                                    <td class="bg-yellow-100">
                                         <p class="text-center">
                                             {{ $schedule['marked_out'] ? date('h:i A', strtotime($schedule['marked_out'])) : '-' }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ $schedule['owes_time'] }}" data-name="difference">
+                                    <td>
                                         <p>
                                             {{ $schedule['owes_time'] }}
                                         </p>
                                     </td>
-                                    <td data-value="{{ $schedule['terminal'] }}" data-name="terminal">
+                                    <td>
                                         <p class="flex items-center gap-1 ">
                                             @if ($schedule['terminal'])
                                                 {{ $schedule['terminal'] }}
                                             @endif
                                         </p>
                                     </td>
-                                    <td data-value="{{ $schedule['observations'] }}" data-name="observations">
+                                    <td>
                                         <p
                                             class="{{ $schedule['observations'] == 'Tardanza' ? 'text-yellow-600' : ($schedule['observations'] == 'Completo' ? 'text-green-500' : '') }}">
                                             {{ !$isFuture ? $schedule['observations'] : '' }}
