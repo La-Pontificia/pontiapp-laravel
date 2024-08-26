@@ -128,7 +128,6 @@
                                 $weekNumber = $date->weekOfYear;
 
                                 $TTorTM = $from->hour >= 12 ? 'TT' : 'TM';
-                                $day = $date->isoFormat('dddd');
 
                                 $isFuture = $date->isFuture();
                             @endphp
@@ -161,7 +160,7 @@
                                         {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD-MM-YYYY') }}
                                     </p>
                                 </td>
-                                <td class="hidden" data-value="{{ $day }}" data-name="day">
+                                <td class="hidden" data-value="{{ $schedule['day'] }}" data-name="day">
 
                                 </td>
                                 <td class="hidden" data-value="{{ $TTorTM }}" data-name="turn">
