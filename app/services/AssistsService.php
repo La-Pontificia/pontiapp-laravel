@@ -85,6 +85,8 @@ class AssistsService
                         'user_id' => $schedule->user_id,
                         'title' => $schedule->title,
                         'date' => $date->format('Y-m-d'),
+                        'day' => $date->isoFormat('dddd'),
+                        'turn' => Carbon::parse($schedule->from)->hour >= 12 ? 'TT' : 'TM',
                         'from' => Carbon::parse($schedule->from)->setDateFrom($date)->format('Y-m-d H:i:s'),
                         'from_start' => Carbon::parse($schedule->from_start)->setDateFrom($date)->format('Y-m-d H:i:s'),
                         'from_end' => Carbon::parse($schedule->from_end)->setDateFrom($date)->format('Y-m-d H:i:s'),
