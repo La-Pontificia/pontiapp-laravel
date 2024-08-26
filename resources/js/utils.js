@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.preventDefault();
                 const formData = new FormData(f);
                 const params = new URLSearchParams(window.location.search);
-
+                params.delete("page");
                 formData.forEach((value, key) => {
                     if (key.includes("[]")) {
                         const array = [];
