@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use App\Models\AssistTerminal;
 use App\Models\Department;
+use App\Models\GroupSchedule;
 use App\Models\User;
 use App\services\AssistsService;
 use Carbon\Carbon;
@@ -20,7 +21,7 @@ class AssistsController extends Controller
         $this->assistsService = $assistsService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $isExport = false)
     {
 
         $queryTerminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : null;
@@ -86,7 +87,7 @@ class AssistsController extends Controller
         $query = $request->get('query');
 
         $assists = Collect([]);
-        $perPage = 17;
+        $perPage = 25;
         $currentPage = $request->get('page', 1);
 
         if ($query && ($startDate  || $endDate)) {
@@ -111,5 +112,62 @@ class AssistsController extends Controller
                 'assists' => $paginatedAssists
             ]
         );
+    }
+
+    public function peerSchedule(Request $request, $isExport = false)
+    {
+        $queryTerminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : null;
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $query = $request->get('query');
+        $group = $request->get('group');
+
+        $users = [];
+
+        if ($query) {
+            $users = $this->assistsService->employee($query, $queryTerminals);
+        }
+
+        $allSchedules = collect([]);
+
+        $perPage = 25;
+        $currentPage = $request->get('page', 1);
+
+        if ($group) {
+            foreach ($users as $user) {
+                $allSchedules = $allSchedules->concat($this->assistsService->assistsByEmployee($user, $group, $queryTerminals, $startDate, $endDate));
+            }
+        }
+        $groups = GroupSchedule::all();
+        $terminals = AssistTerminal::all();
+
+        $schedules = $allSchedules->forPage($currentPage, $perPage);
+
+        $paginatedSchedules = new LengthAwarePaginator(
+            $schedules,
+            isset($allSchedules) ? $allSchedules->count() : 0,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        if ($isExport) {
+            return $allSchedules;
+        }
+
+        return view(
+            'modules.assists.peer-schedule.+page',
+            [
+                'terminals' => $terminals,
+                'schedules' => $paginatedSchedules,
+                'groups' => $groups,
+                'users' => $users,
+            ]
+        );
+    }
+
+    public function peerScheduleExport(Request $request)
+    {
+        return $this->peerSchedule($request, true);
     }
 }
