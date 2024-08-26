@@ -13,7 +13,7 @@
         $currentTerminals = $currentTerminals ? explode(',', $currentTerminals) : [];
     }
 
-    $default_terminal = 'PL-Alameda';
+    $default_terminal = $currentTerminals ? '' : 'PL-Alameda';
 @endphp
 
 @section('layout.assists')
