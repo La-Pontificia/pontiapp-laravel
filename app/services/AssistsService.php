@@ -113,25 +113,21 @@ class AssistsService
         return $schedules;
     }
 
-    public static function assistsByUser($id, $terminals, $startDate, $endDate)
+    public static function assistsByUser($id, $terminal, $startDate, $endDate)
     {
         $generated = self::generateSchedules($id, $startDate, $endDate);
 
         $user = $generated['user'];
         $schedules = $generated['schedules'];
 
-        $assists = collect();
 
-        foreach ($terminals ?? ['PL-Alameda'] as $terminal) {
-            $match = (new Attendance())
-                ->setConnection($terminal)
-                ->where('emp_code', $user->dni)
-                ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
-                ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
-                ->orderBy('punch_time', 'asc')
-                ->get();
-            $assists = $assists->merge($match);
-        }
+        $assists = (new Attendance())
+            ->setConnection($terminal ?? 'PL-Alameda')
+            ->where('emp_code', $user->dni)
+            ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
+            ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+            ->orderBy('punch_time', 'asc')
+            ->get();
 
         foreach ($schedules as &$schedule) {
             $date = Carbon::parse($schedule['date']);
@@ -204,22 +200,18 @@ class AssistsService
         return $schedules;
     }
 
-    public static function assistsByEmployee($user, $group_id, $terminals, $startDate, $endDate)
+    public static function assistsByEmployee($user, $group_id, $terminal, $startDate, $endDate)
     {
         $schedules = self::generateSchedulesByGroup($user, $group_id, $startDate, $endDate);
 
-        $assists = collect();
+        $match = (new Attendance())
+            ->setConnection($terminal ?? 'PL-Alameda')
+            ->where('emp_code', $user->emp_code)
+            ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
+            ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+            ->orderBy('punch_time', 'asc');
 
-        foreach ($terminals ?? ['PL-Alameda'] as $terminal) {
-            $match = (new Attendance())
-                ->setConnection($terminal)
-                ->where('emp_code', $user->emp_code)
-                ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
-                ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
-                ->orderBy('punch_time', 'asc')
-                ->get();
-            $assists = $assists->merge($match);
-        }
+        $assists = $match->get();
 
         foreach ($schedules as &$schedule) {
             $date = Carbon::parse($schedule['date']);
@@ -293,41 +285,48 @@ class AssistsService
         return $schedules;
     }
 
-    public static function employee($query, $terminals)
+    public static function employee($query, $terminal)
     {
-        $users = collect();
-        foreach ($terminals ?? ['PL-Alameda'] as $terminal) {
-            $match = (new AttendanceEmp())
-                ->setConnection($terminal)
-                ->where('first_name', 'like', '%' . $query . '%')
-                ->orWhere('last_name', 'like', '%' . $query . '%')
-                ->orWhere('emp_code', 'like', '%' . $query . '%')
-                ->orderBy('id', 'desc')
-                ->get();
-            $users = $users->merge($match);
-        }
+
+        $users = (new AttendanceEmp())
+            ->setConnection($terminal ?? 'PL-Alameda')
+            ->where('first_name', 'like', '%' . $query . '%')
+            ->orWhere('last_name', 'like', '%' . $query . '%')
+            ->orWhere('emp_code', 'like', '%' . $query . '%')
+            ->orderBy('id', 'desc')
+            ->get();
+
         return $users;
     }
 
-    public static function assists($query, $terminals, $startDate, $endDate)
+    public static function assists($query, $terminal, $startDate, $endDate)
     {
 
-        $assists = collect();
+        $assists = (new Attendance())
+            ->setConnection($terminal ?? 'PL-Alameda')
+            ->whereHas('employee', function ($q) use ($query) {
+                $q->where('first_name', 'like', '%' . $query . '%')
+                    ->orWhere('last_name', 'like', '%' . $query . '%')
+                    ->orWhere('emp_code', 'like', '%' . $query . '%');
+            })
+            ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
+            ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+            ->orderBy('punch_time', 'desc')
+            ->get();
 
-        foreach ($terminals ?? ['PL-Alameda'] as $terminal) {
-            $match = (new Attendance())
-                ->setConnection($terminal)
-                ->whereHas('employee', function ($q) use ($query) {
-                    $q->where('first_name', 'like', '%' . $query . '%')
-                        ->orWhere('last_name', 'like', '%' . $query . '%')
-                        ->orWhere('emp_code', 'like', '%' . $query . '%');
-                })
-                ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
-                ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
-                ->orderBy('punch_time', 'desc')
-                ->get();
-            $assists = $assists->merge($match);
-        }
+        return $assists;
+    }
+
+    public static function singleSummary($terminal, $startDate, $endDate)
+    {
+        $assists = (new Attendance())
+            ->setConnection($terminal ?? 'PL-Alameda')
+            ->selectRaw("CAST(punch_time AS DATE) as punch_date, COUNT(*) as count")
+            ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
+            ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+            ->groupByRaw("CAST(punch_time AS DATE)")
+            ->orderByRaw("CAST(punch_time AS DATE) desc")
+            ->get();
 
         return $assists;
     }
