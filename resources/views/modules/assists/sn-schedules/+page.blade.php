@@ -8,12 +8,7 @@
 
     $query = request()->query('query');
 
-    $currentTerminals = request()->query('terminals');
-    if (!is_array($currentTerminals)) {
-        $currentTerminals = $currentTerminals ? explode(',', $currentTerminals) : [];
-    }
-
-    $default_terminal = $currentTerminals ? '' : 'PL-Alameda';
+    $currentTerminal = request()->query('terminal');
 @endphp
 
 @section('layout.assists')
@@ -31,39 +26,14 @@
                     <input class="w-[100px]" readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end"
                         placeholder="-">
                 </div>
-                <div class="border-l pl-4 flex items-center gap-3">
-                    <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
-                        class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
-                        @svg('bx-devices', 'w-5 h-5')
-                        <span class="max-lg:hidden">Terminales</span>
-                    </button>
-
-                    <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
-                        <div class="content lg:max-w-lg max-w-full">
-                            <header>
-                                Filtrar resultados de asistencias por bases de datos y/o terminales.
-                            </header>
-                            <div class="p-3 gap-4 overflow-y-auto flex flex-col">
-                                <p class="opacity-70 font-semibold">Terminales</p>
-                                <div class="grid grid-cols-3 gap-2">
-                                    @foreach ($terminals as $terminal)
-                                        <label class="flex items-center gap-1">
-                                            <input type="checkbox" class="rounded-lg"
-                                                {{ $default_terminal == $terminal->database_name || in_array($terminal->database_name, $currentTerminals) ? 'checked' : '' }}
-                                                name="terminals[]" value="{{ $terminal->database_name }}"
-                                                class="rounded-lg">
-                                            <span>{{ $terminal->name }}</span>
-                                        </label>
-                                    @endforeach
-                                </div>
-                                </dov>
-                                <footer>
-                                    <button data-modal-hide="dialog" type="button" class="primary">Aceptar</button>
-                                </footer>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <select name="terminal">
+                    @foreach ($terminals as $terminal)
+                        <option value="{{ $terminal->database_name }}"
+                            {{ $currentTerminal === $terminal->database_name ? 'selected' : '' }}>
+                            {{ $terminal->name }}
+                        </option>
+                    @endforeach
+                </select>
                 <button type="submit"
                     class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
             </form>
