@@ -152,6 +152,13 @@
                     'active-icon' => 'bx-list-ul',
                 ],
                 [
+                    'icon' => 'bx-list-ul',
+                    'text' => 'Resumen único de fechas',
+                    'href' => '/assists/single-summary',
+                    'active' => request()->is('assists/single-summary*'),
+                    'active-icon' => 'bx-list-ul',
+                ],
+                [
                     'icon' => 'heroicon-o-circle-stack',
                     'text' => 'Terminales',
                     'href' => '/assists/terminals',
