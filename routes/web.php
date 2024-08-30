@@ -90,6 +90,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('assists/terminals', [AssistTerminalController::class, 'index']);
     Route::get('assists/sn-schedules', [AssistsController::class, 'snSchedules']);
     Route::get('assists/peer-schedule', [AssistsController::class, 'peerSchedule']);
+    Route::get('assists/single-summary', [AssistsController::class, 'singleSummary']);
 
     Route::post('assists/terminals', [AssistTerminalController::class, 'store']);
     Route::post('assists/terminals/{id}', [AssistTerminalController::class, 'update']);
