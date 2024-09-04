@@ -61,7 +61,7 @@ class JobPositionController extends Controller
         $new->created_by = auth()->user()->id;
         $new->save();
 
-        return response()->json($new, 200);
+        return response()->json('Puesto de trabajo creado correctamente', 200);
     }
 
     public function update(Request $request, $id)
@@ -85,7 +85,7 @@ class JobPositionController extends Controller
         $update->updated_by = auth()->user()->id;
         $update->save();
 
-        return response()->json($update, 200);
+        return response()->json('Puesto de trabajo actualizado correctamente.', 200);
     }
 
     public function delete($id)
