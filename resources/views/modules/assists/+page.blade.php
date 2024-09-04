@@ -14,41 +14,55 @@
 
 @section('layout.assists')
     <p class="pb-2">
-        Gestion de asistencia de usuarios.
+        Gestion de asistencia de usuarios existentes en el sistema.
     </p>
     <div class="space-y-2 flex flex-col h-full overflow-auto">
         <div class="flex-grow flex items-center flex-wrap gap-4">
             <form class="dinamic-form-to-params p-1 px-2 flex items-center gap-2 flex-wrap">
-                <select name="area">
-                    <option value>Todas las areas</option>
-                    @foreach ($areas as $area)
-                        <option {{ request()->query('area') === $area->id ? 'selected' : '' }} value="{{ $area->id }}">
-                            {{ $area->name }}</option>
-                    @endforeach
-                </select>
-
-                <select name="department">
-                    <option value>Todos los departamentos</option>
-                    @foreach ($departments as $department)
-                        <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
-                            value="{{ $department->id }}">{{ $department->name }}</option>
-                    @endforeach
-                </select>
+                <label>
+                    <span class="block">Area:</span>
+                    <select name="area">
+                        <option value>Todas las areas</option>
+                        @foreach ($areas as $area)
+                            <option {{ request()->query('area') === $area->id ? 'selected' : '' }}
+                                value="{{ $area->id }}">
+                                {{ $area->name }}</option>
+                        @endforeach
+                    </select>
+                </label>
+                <label>
+                    <span class="block">Departamento:</span>
+                    <select name="department">
+                        <option value>Todos los departamentos</option>
+                        @foreach ($departments as $department)
+                            <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
+                                value="{{ $department->id }}">{{ $department->name }}</option>
+                        @endforeach
+                    </select>
+                </label>
 
                 <div id="date-range" class="flex items-center gap-1">
-                    <input class="w-[100px]" readonly {{ $start ? "data-default=$start" : '' }} type="text"
-                        name="start" placeholder="-">
-                    <span>a</span>
-                    <input class="w-[100px]" readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end"
-                        placeholder="-">
+                    <label for="">
+                        <span class="block">Desde:</span>
+                        <input class="w-[100px]" readonly {{ $start ? "data-default=$start" : '' }} type="text"
+                            name="start" placeholder="-">
+                    </label>
+                    <label for="">
+                        <span class="block">Hasta:</span>
+                        <input class="w-[100px]" readonly {{ $end ? "data-default=$end" : '' }} type="text"
+                            name="end" placeholder="-">
+                    </label>
                 </div>
 
                 <div class="border-l pl-4 flex items-center gap-3">
-                    <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
-                        class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
-                        @svg('bx-devices', 'w-5 h-5')
-                        <span class="max-lg:hidden">Terminales</span>
-                    </button>
+                    <label for="">
+                        <span class="block">Terminales:</span>
+                        <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
+                            class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
+                            @svg('bx-devices', 'w-5 h-5')
+                            <span class="max-lg:hidden">Terminales</span>
+                        </button>
+                    </label>
 
                     <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
                         <div class="content lg:max-w-lg max-w-full">
@@ -76,8 +90,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit"
-                    class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
+                <button type="submit" class="primary mt-2">Filtrar</button>
             </form>
 
             <button {{ count($schedules) === 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown"
