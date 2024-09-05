@@ -105,11 +105,9 @@ input,
 textarea,
 select {
     background: #e1e3e1 !important;
-    border-radius: 10px 10px 2px 2px;
+    border-radius: 10px;
     padding: 9px 12px;
-    border-bottom: 1px solid #747775;
     outline: none;
-    transition: all 0.15s ease;
     position: relative;
     font-size: 0.9rem;
     &:focus {
@@ -117,9 +115,8 @@ select {
             [type="text"][type="password"][type="date"][type="datetime"][type="email"][type="number"] {
             border-bottom: 1px solid #167dfa;
         }
-
         background-color: #d1d3d1 !important;
-        border-bottom: 1px solid #3590ff;
+        outline: 4px solid #3590ff;
     }
 
     &:hover {
