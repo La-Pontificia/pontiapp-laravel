@@ -45,7 +45,7 @@
                                 <header>
                                     Editar departamento: {{ $department->name }}
                                 </header>
-                                <form action="/api/department/{{ $department->id }}" method="POST"
+                                <form action="/api/departments/{{ $department->id }}" method="POST"
                                     id="dialog-{{ $department->id }}-form"
                                     class="dinamic-form body grid gap-4 overflow-y-auto">
                                     @include('modules.settings.departments.form', [
@@ -66,7 +66,7 @@
                         <div id="dropdown-{{ $department->id }}" class="dropdown-content hidden">
                             <button data-atitle="¿Estás seguro de eliminar?"
                                 data-adescription="Se eliminarán todos los departamentos asociados y los usuarios asignados a estos departamentos."
-                                data-param="/api/department/delete/{{ $department->id }}"
+                                data-param="/api/departments/delete/{{ $department->id }}"
                                 class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
                                 Eliminar
                             </button>
