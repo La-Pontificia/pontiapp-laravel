@@ -33,7 +33,7 @@ class LoginController extends Controller
         $user = User::where('email', $azureUser->getEmail())->first();
 
         if (!$user) {
-            return redirect('/login')->with('error', 'No se encontró un usuario asociado a este email. Comunícate con un administrador.');
+            return redirect('/login')->with('error', 'Tu cuenta institucional "' . $azureUser->getEmail() . '", no esta disponible en esta aplicación.' .  ' Comunícate con un administrador.');
         }
 
         if (!$user->status) {
