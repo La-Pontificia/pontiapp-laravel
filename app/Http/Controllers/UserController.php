@@ -166,6 +166,12 @@ class UserController extends Controller
         return view('modules.users.slug.organization.+page', compact('user', 'job_positions', 'roles', 'branches'));
     }
 
+    public function slug_contract($id)
+    {
+        $user = User::find($id);
+        if (!$user) return view('+500', ['error' => 'User not found']);
+        return view('modules.users.slug.contract.+page', compact('user'));
+    }
     public function slug_schedules($id)
     {
         $user = User::find($id);
