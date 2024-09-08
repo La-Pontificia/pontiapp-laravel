@@ -1,4 +1,4 @@
-<nav class="bg-white shadow-md shadow-black/20 text-blue-700 h-14 w-full z-30">
+<nav class="bg-[#f2f2f2] shadow-md shadow-black/20 text-blue-700 h-14 w-full z-30">
     <div class="flex w-full gap-5 items-center h-full px-3">
         <div class="flex-grow flex ml-14 max-lg:ml-0 text-neutral-800 items-center gap-3">
             <button class="lg:hidden block" id="sidebar-button">
@@ -21,14 +21,10 @@
         </button>
         <button type="button" class="flex items-center gap-2" id="user-menu-button" aria-expanded="false"
             data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-            <div class="text-sm text-right flex flex-col overflow-hidden max-w-[150px]">
-                <p class="line-clamp-1 leading-4 text-ellipsis max-md:hidden">
-                    {{ $cuser->first_name }}
-                    {{ $cuser->last_name }}</p>
-            </div>
             @include('commons.avatar', [
+                'key' => $cuser->id,
                 'src' => $cuser->profile,
-                'className' => 'w-8',
+                'className' => 'w-10',
                 'alt' => $cuser->first_name . ' ' . $cuser->last_name,
                 'altClass' => 'text-sm',
             ])

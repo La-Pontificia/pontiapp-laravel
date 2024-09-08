@@ -245,9 +245,9 @@
 <nav class="pb-2 transition-all">
     @foreach ($userItems as $item)
         <a title="{{ $item['text'] }}" {{ isset($item['active']) && $item['active'] ? 'data-active' : '' }}
-            class="flex group relative transition-all font-[600] items-center data-[active]:font-bold gap-3 p-2 px-5 data-[active]:text-[#1967da] text-black hover:bg-[#e8eaed] rounded-r-full"
+            class="flex group relative transition-all items-center data-[active]:font-semibold gap-3 p-2 px-5 data-[active]:text-[#1967da] text-black hover:bg-white rounded-lg"
             href="{{ $item['href'] }}">
-            @svg($item['icon'], 'w-6 h-6 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
+            @svg($item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
             <span class="text-nowrap">{{ $item['text'] }}</span>
         </a>
     @endforeach
@@ -264,8 +264,8 @@
             @endphp
             <div class="sidebar-item group" {{ $item['active'] ? 'data-expanded' : '' }}>
                 <a href="{{ $href }}"
-                    class="flex sidebar-item-button font-[600] group-data-[expanded]:bg-blue-50 transition-all w-full text-left relative items-center group-data-[expanded]:font-bold group-data-[expanded]:text-[#1967da] gap-3 p-2 px-5 text-black hover:bg-[#e8eaed] rounded-r-full">
-                    @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-6 h-6 m-0.5 opacity-70 group-data-[expanded]:text-blue-600 group-data-[expanded]:opacity-100')
+                    class="flex sidebar-item-button group-data-[expanded]:bg-white transition-all w-full text-left relative items-center group-data-[expanded]:font-semibold group-data-[expanded]:text-[#1967da] gap-3 p-2 px-5 text-black hover:bg-white rounded-lg">
+                    @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[expanded]:text-blue-600 group-data-[expanded]:opacity-100')
                     <span class="text-nowrap">{{ $item['text'] }}</span>
                     @if (isset($item['subItems']))
                         @svg('bx-chevron-right', 'w-4 h-4 ml-auto group-data-[expanded]:rotate-90 transition-all')
@@ -278,9 +278,9 @@
                                 @continue
                             @endif
                             <a {{ $subItem['active'] ? 'data-active' : '' }}
-                                class="flex group relative font-[600] transition-all items-center data-[active]:font-bold data-[active]:text-[#1967da] gap-3 p-2 px-5 pl-8 text-black hover:bg-[#f4f5f7] rounded-r-full"
+                                class="flex group relative transition-all items-center data-[active]:font-semibold data-[active]:text-[#1967da] gap-3 p-2 px-5 pl-8 text-black hover:bg-white rounded-lg"
                                 href="{{ $subItem['href'] }}">
-                                @svg($subItem['active'] ? $subItem['active-icon'] : $subItem['icon'], 'w-6 h-6 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
+                                @svg($subItem['active'] ? $subItem['active-icon'] : $subItem['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
                                 <span class="text-nowrap">{{ $subItem['text'] }}</span>
                             </a>
                         @endforeach

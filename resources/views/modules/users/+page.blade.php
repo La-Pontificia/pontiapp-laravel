@@ -2,6 +2,24 @@
 
 @section('title', 'Gestión de usuarios')
 
+@php
+    $status = [
+        [
+            'value' => '0',
+            'text' => 'Todos',
+        ],
+        [
+            'value' => 'actives',
+            'text' => 'Activos',
+        ],
+        [
+            'value' => 'inactives',
+            'text' => 'Inactivos',
+        ],
+    ];
+
+@endphp
+
 @section('layout.users')
     <template id="item-supervisor-template">
         <button title="Seleccionar supervisor"
@@ -16,86 +34,82 @@
         </button>
     </template>
 
-    <div class="w-full mx-auto p-2 h-full overflow-y-auto flex flex-col">
-        <header class="py-2">
-            <h2 class="text-base">Gestión de usuarios.</h2>
-            <p class="text-sm">
-                Administracion de los usuarios del sistema, asigna roles, horarios y privilegios.
-            </p>
-        </header>
-        <div class="flex bg-white shadow-md border rounded-xl flex-col w-full overflow-y-auto h-full">
-            <div class="flex items-center p-2">
-                @if ($cuser->has('users:create') || $cuser->isDev())
-                    <a tip="Crear nuevo usuario" href="/users/create" class="primary">
-                        @svg('bx-plus', 'w-5 h-5')
-                        <span>Nuevo</span>
-                    </a>
-                @endif
-                @if ($cuser->has('users:export') || $cuser->isDev())
-                    <button tip="Exportar lista de usuarios" data-dropdown-toggle="dropdown" class="secondary ml-auto">
-                        @svg('bx-up-arrow-circle', 'w-5 h-5')
-                        <span>
-                            Exportar
-                        </span>
-                    </button>
-                    <div id="dropdown" class="dropdown-content hidden">
-                        <button data-type="excel"
-                            class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
-                            Excel (.xlsx)
-                        </button>
-                        <button data-type="json"
-                            class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
-                            JSON (.json)
-                        </button>
-                    </div>
-                @endif
+    <div class="w-full mx-auto h-full overflow-y-auto flex flex-col">
+        <form class="flex dinamic-form-to-params p-1 items-center gap-2">
+            @if ($cuser->has('users:create') || $cuser->isDev())
+                <a tip="Crear nuevo usuario" href="/users/create" class="primary">
+                    @svg('bx-plus', 'w-5 h-5')
+                    <span>Nuevo</span>
+                </a>
+            @endif
+
+            <div class="flex border-r pr-2 items-center gap-2">
+                @foreach ($status as $statu)
+                    <label>
+                        <input {{ request()->query('status') === $statu['value'] ? 'checked' : '' }} type="radio"
+                            id="{{ $statu['value'] }}" name="status" value="{{ $statu['value'] }}" class="peer hidden" />
+                        <div
+                            class="rounded-full peer-checked:outline-blue-600 -outline-offset-2 peer-checked:bg-blue-600/10 peer-checked:border-transparent outline outline-transparent border p-1.5 px-3 border-neutral-300">
+                            {{ $statu['text'] }}
+                        </div>
+                    </label>
+                @endforeach
             </div>
-            <form class="flex dinamic-form-to-params items-center gap-2 p-3 pt-0">
-                <label class="relative w-full">
-                    <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
-                        @svg('bx-search', 'w-5 h-5')
-                    </div>
-                    <input value="{{ request()->get('q') }}" placeholder="Filtrar usuarios..." type="search"
-                        class="w-full pl-9">
-                </label>
 
-                <select class="w-[100px]" name="status">
-                    <option value="0">Estado</option>
-                    <option {{ request()->query('status') === 'actives' ? 'selected' : '' }} value="actives">Activos
-                    </option>
-                    <option {{ request()->query('status') === 'inactives' ? 'selected' : '' }} value="inactives">Inactivos
-                    </option>
-                </select>
+            <select class="w-fit rounded-full" name="role">
+                <option value="">Rol</option>
+                @foreach ($user_roles as $role)
+                    <option {{ request()->query('role') === $role->id ? 'selected' : '' }} value="{{ $role->id }}">
+                        {{ $role->title }}</option>
+                @endforeach
+            </select>
 
-                <select class="w-[70px]" name="role">
-                    <option value="0">Rol</option>
-                    @foreach ($user_roles as $role)
-                        <option {{ request()->query('role') === $role->id ? 'selected' : '' }} value="{{ $role->id }}">
-                            {{ $role->title }}</option>
-                    @endforeach
-                </select>
+            <select class="w-fit rounded-full" name="department">
+                <option value="">Departamento</option>
+                @foreach ($departments as $department)
+                    <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
+                        value="{{ $department->id }}">{{ $department->name }}</option>
+                @endforeach
+            </select>
 
-                <select class="w-[140px]" name="department">
-                    <option value="0">Departamento</option>
-                    @foreach ($departments as $department)
-                        <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
-                            value="{{ $department->id }}">{{ $department->name }}</option>
-                    @endforeach
-                </select>
+            <select class="w-fit rounded-full" name="job_position">
+                <option value="">Puesto</option>
+                @foreach ($job_positions as $job)
+                    <option {{ request()->query('job_position') === $job->id ? 'selected' : '' }}
+                        value="{{ $job->id }}">{{ $job->name }}</option>
+                @endforeach
+            </select>
 
-                <select class="w-[100px]" name="job_position">
-                    <option value="0">Puesto</option>
-                    @foreach ($job_positions as $job)
-                        <option {{ request()->query('job_position') === $job->id ? 'selected' : '' }}
-                            value="{{ $job->id }}">{{ $job->name }}</option>
-                    @endforeach
-                </select>
+            <label class="relative ml-auto w-[200px] max-w-full">
+                <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
+                    @svg('bx-search', 'w-5 h-5')
+                </div>
+                <input value="{{ request()->get('q') }}" placeholder="Filtrar usuarios..." type="search"
+                    class="pl-9 w-full rounded-full">
+            </label>
 
-                <button class="primary">
-                    Filtrar
+            <button class="primary">
+                Filtrar
+            </button>
+
+            @if ($cuser->has('users:export') || $cuser->isDev())
+                <button data-dropdown-toggle="dropdown" class="secondary">
+                    Exportar
                 </button>
-            </form>
-            <div class="flex flex-col h-full divide-y overflow-y-auto">
+                <div id="dropdown" class="dropdown-content hidden">
+                    <button data-type="excel"
+                        class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
+                        Excel (.xlsx)
+                    </button>
+                    <button data-type="json"
+                        class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
+                        JSON (.json)
+                    </button>
+                </div>
+            @endif
+        </form>
+        <div class="flex flex-col pt-2 w-full overflow-y-auto h-full">
+            <div class="flex flex-col h-full overflow-y-auto">
                 @if ($cuser->has('users:show') || $cuser->isDev())
                     @if ($users->isEmpty())
                         <p class="p-20 grid place-content-center text-center">
@@ -108,38 +122,39 @@
                                     <td class="w-full"></td>
                                     <td></td>
                                     <td></td>
-                                    <td class="text-left text-nowrap pb-1.5">Bajo supervisión de </td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y">
+                            <tbody>
                                 @foreach ($users as $user)
-                                    <tr class="relative even:bg-neutral-50 group hover:bg-neutral-50 [&>td]:p-3">
-                                        <td>
+                                    <tr class="relative group border-b [&>td]:hover:bg-white [&>td]:p-3">
+                                        <td class="rounded-l-2xl">
+                                            <a class="absolute inset-0" href="/users/{{ $user->id }}">
+
+                                            </a>
                                             <div class="flex items-center gap-2">
                                                 @include('commons.avatar', [
                                                     'src' => $user->profile,
                                                     'className' => 'w-12',
+                                                    'key' => $user->id,
                                                     'alt' => $user->first_name . ' ' . $user->last_name,
                                                     'altClass' => 'text-xl',
                                                 ])
                                                 <div class="flex-grow">
-                                                    <p class="text-nowrap font-medium">
+                                                    <p class="text-nowrap">
                                                         {{ $user->last_name . ', ' . $user->first_name }}
-                                                    </p>
-                                                    <p
-                                                        class="line-clamp-2 flex text-sm items-center gap-1 text-neutral-600">
-                                                        {{ $user->role_position->name }},
-                                                        {{ $user->role_position->department->name }}
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <span
-                                                class="text-sm text-nowrap {{ $user->status ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} px-2 py-1 rounded-full">
+                                            <div class="flex font-semibold items-center gap-2">
+                                                <span
+                                                    class="{{ $user->status ? 'bg-green-400' : 'bg-red-400' }} w-2 aspect-square rounded-full">
+                                                </span>
                                                 {{ $user->status ? 'Activo' : 'Inactivo' }}
-                                            </span>
+                                            </div>
                                         </td>
                                         <td>
                                             <p class="text-nowrap">
@@ -148,11 +163,22 @@
                                             </p>
                                         </td>
                                         <td>
-                                            @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
+                                            @if ($user->supervisor)
+                                                @includeIf('commons.avatar', [
+                                                    'src' => $user->supervisor->profile,
+                                                    'className' => 'w-12',
+                                                    'key' => $user->supervisor->id,
+                                                    'alt' =>
+                                                        $user->supervisor->first_name .
+                                                        ' ' .
+                                                        $user->supervisor->last_name,
+                                                    'altClass' => 'text-lg',
+                                                ])
+                                            @endif
+                                            {{-- @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
                                                 <button data-modal-target="dialog-{{ $user->id }}"
                                                     data-modal-toggle="dialog-{{ $user->id }}"
-                                                    tip="Asignar o cambiar supervisor"
-                                                    class="bg-neutral-100 relative text-left hover:bg-neutral-200 rounded-xl p-2 flex px-3 items-center gap-2">
+                                                    class="bg-neutral-50 relative text-left hover:bg-neutral-200 rounded-lg p-2 flex px-3 items-center gap-2">
                                                     @if ($user->supervisor_id)
                                                         @include('commons.avatar', [
                                                             'src' => $user->supervisor->profile,
@@ -230,9 +256,9 @@
                                                 </div>
                                             @else
                                                 -
-                                            @endif
+                                            @endif --}}
                                         </td>
-                                        <td>
+                                        <td class="rounded-r-2xl">
                                             <div class="flex items-center gap-2">
                                                 <button
                                                     class="rounded-full relative p-2 hover:bg-neutral-200 transition-colors"
@@ -276,12 +302,6 @@
                                                         </button>
                                                     @endif
                                                 </div>
-                                                <a tip="Ver detalles" href="/users/{{ $user->id }}">
-                                                    <p
-                                                        class="rounded-full p-2 hover:bg-neutral-200 transition-colors block">
-                                                        @svg('bx-chevron-right', 'w-5 h-5')
-                                                    </p>
-                                                </a>
                                             </div>
                                         </td>
                                     </tr>
