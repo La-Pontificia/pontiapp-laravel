@@ -93,13 +93,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             } catch (error) {
                 console.log(error);
+                const content =
+                    typeof error.response.data === "object"
+                        ? error.response.data.message
+                        : error.response.data;
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#3085d6",
-                    text:
-                        error.response.data ?? "Error al enviar el formulario",
+                    text: content ?? "Error al enviar el formulario",
                 });
             } finally {
                 window.enabledFormChildren(f);
@@ -190,13 +193,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.location.reload();
                 });
             } catch (error) {
+                const content =
+                    typeof error.response.data === "object"
+                        ? error.response.data.message
+                        : error.response.data;
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#3085d6",
-                    text:
-                        error.response.data ?? "Error al enviar el formulario",
+                    text: content ?? "Error al enviar el formulario",
                 });
             }
         };

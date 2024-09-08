@@ -40,13 +40,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const $sidebarOverlay = $("#sidebar-overlay");
 
     $sidebarButton?.addEventListener("click", function () {
-        $sidebar.classList.remove("max-lg:-translate-x-full");
-        $sidebarOverlay.classList.remove("hidden");
+        $sidebar.attributes.getNamedItem("data-expanded")
+            ? ($sidebar.removeAttribute("data-expanded"),
+              $sidebarOverlay.removeAttribute("data-expanded"))
+            : ($sidebar.setAttribute("data-expanded", "true"),
+              $sidebarOverlay.setAttribute("data-expanded", "true"));
     });
 
     $sidebarOverlay?.addEventListener("click", function () {
-        $sidebar.classList.add("max-lg:-translate-x-full");
-        $sidebarOverlay.classList.add("hidden");
+        $sidebar.removeAttribute("data-expanded");
+        $sidebarOverlay.removeAttribute("data-expanded");
     });
 
     const $itemsSidebar = $sidebar.querySelectorAll(".sidebar-item");

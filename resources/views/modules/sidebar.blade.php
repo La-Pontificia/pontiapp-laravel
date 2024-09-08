@@ -2,7 +2,7 @@
 
     $userItems = [
         [
-            'icon' => 'bx-home-smile',
+            'icon' => 'bx-home-circle',
             'text' => $cuser->first_name,
             'href' => '/users/' . $cuser->id,
             'active' => request()->is('users/' . $cuser->id . '*'),
@@ -26,22 +26,23 @@
 
     $otherItems = [
         [
-            'icon' => 'bx-group',
+            'icon' => 'bx-user-circle',
             'text' => 'Gestión Usuarios',
-            'href' => null,
+            'href' => '/users',
             'active' => request()->is('users*') && !request()->is('users/' . $cuser->id . '*'),
             'enable' => $cuser->hasGroup('users') || $cuser->isDev(),
+            'active-icon' => 'bxs-user-circle',
             'subItems' => [
-                [
-                    'icon' => 'bx-user-circle',
-                    'text' => 'Usuarios',
-                    'href' => '/users',
-                    'active' =>
-                        (request()->is('users') || request()->is('users/create')) &&
-                        !request()->is('users/' . $cuser->id . '*'),
-                    'active-icon' => 'bxs-user-circle',
-                    'enable' => $cuser->has('users:create') || $cuser->has('users:show') || $cuser->isDev(),
-                ],
+                // [
+                //     'icon' => 'bx-user-circle',
+                //     'text' => 'Usuarios',
+                //     'href' => '/users',
+                //     'active' =>
+                //         (request()->is('users') || request()->is('users/create')) &&
+                //         !request()->is('users/' . $cuser->id . '*'),
+                //     'active-icon' => 'bxs-user-circle',
+                //     'enable' => $cuser->has('users:create') || $cuser->has('users:show') || $cuser->isDev(),
+                // ],
                 [
                     'icon' => 'bx-wrench',
                     'text' => 'Roles y permisos',
@@ -52,15 +53,6 @@
                         $cuser->has('users:user-roles:create') ||
                         $cuser->has('users:user-roles:show') ||
                         $cuser->isDev(),
-                ],
-                [
-                    'icon' => 'bx-calendar',
-                    'text' => 'Horarios',
-                    'href' => '/users/schedules',
-                    'active' => request()->is('users/schedules*'),
-                    'active-icon' => 'bxs-calendar',
-                    'enable' =>
-                        $cuser->has('users:schedules:create') || $cuser->has('users:schedules:show') || $cuser->isDev(),
                 ],
                 [
                     'icon' => 'bx-universal-access',
@@ -76,10 +68,29 @@
             ],
         ],
         [
+            'icon' => 'bx-calendar',
+            'text' => 'Gestión Horarios',
+            'href' => '/schedules',
+            'active' => request()->is('schedules*'),
+            'active-icon' => 'bxs-calendar',
+            'enable' => $cuser->has('schedules:create') || $cuser->has('schedules:show') || $cuser->isDev(),
+            'subItems' => [
+                [
+                    'icon' => 'bx-calendar-alt',
+                    'text' => 'Horarios externos',
+                    'href' => '/schedules/external',
+                    'active' => request()->is('schedules/external*'),
+                    'active-icon' => 'bxs-calendar-alt',
+                    'enable' => true,
+                ],
+            ],
+        ],
+        [
             'icon' => 'bx-folder',
             'text' => 'Gestión Edas',
             'href' => '/edas/collaborators',
             'active' => request()->is('edas*'),
+            'active-icon' => 'bxs-folder',
             'enable' => $cuser->hasGroup('edas') || $cuser->isDev(),
             'subItems' => [
                 [
@@ -90,18 +101,18 @@
                     'active-icon' => 'bxs-folder-open',
                     'enable' => true,
                 ],
-                [
-                    'icon' => 'bx-group',
-                    'text' => 'Colaboradores y edas',
-                    'href' => '/edas/collaborators',
-                    'active' =>
-                        (request()->is('edas/collaborators*') || request()->is('edas*')) &&
-                        !request()->is('edas' . '/' . $cuser->id . '*') &&
-                        !request()->is('edas/years*') &&
-                        !request()->is('edas/questionnaire-templates*'),
-                    'active-icon' => 'bxs-group',
-                    'enable' => true,
-                ],
+                // [
+                //     'icon' => 'bx-group',
+                //     'text' => 'Colaboradores y edas',
+                //     'href' => '/edas/collaborators',
+                //     'active' =>
+                //         (request()->is('edas/collaborators*') || request()->is('edas*')) &&
+                //         !request()->is('edas' . '/' . $cuser->id . '*') &&
+                //         !request()->is('edas/years*') &&
+                //         !request()->is('edas/questionnaire-templates*'),
+                //     'active-icon' => 'bxs-group',
+                //     'enable' => true,
+                // ],
                 [
                     'icon' => 'bx-notification',
                     'text' => 'Años',
@@ -124,19 +135,20 @@
             ],
         ],
         [
-            'icon' => 'bx-calendar',
+            'icon' => 'bx-time-five',
             'text' => 'Gestión Asistencias',
             'href' => '/assists',
             'active' => request()->is('assists*'),
+            'active-icon' => 'bxs-time-five',
             'enable' => $cuser->hasGroup('assists') || $cuser->isDev(),
             'subItems' => [
-                [
-                    'icon' => 'heroicon-o-clipboard-document-list',
-                    'text' => 'Asistencias centralizadas',
-                    'href' => '/assists',
-                    'active' => request()->is('assists'),
-                    'active-icon' => 'heroicon-s-clipboard-document-list',
-                ],
+                // [
+                //     'icon' => 'heroicon-o-clipboard-document-list',
+                //     'text' => 'Asistencias centralizadas',
+                //     'href' => '/assists',
+                //     'active' => request()->is('assists'),
+                //     'active-icon' => 'heroicon-s-clipboard-document-list',
+                // ],
                 [
                     'icon' => 'bx-list-ul',
                     'text' => 'Asistencias sin horario',
@@ -175,9 +187,10 @@
         // ],
         [
             'icon' => 'bx-cog',
-            'text' => 'Ajustes',
+            'text' => 'Ajustes y mantenimiento',
             'href' => '/settings',
             'active' => request()->is('settings*'),
+            'active-icon' => 'bxs-cog',
             'enable' => $cuser->hasGroup('settings') || $cuser->isDev(),
             'subItems' => [
                 [
@@ -232,7 +245,7 @@
 <nav class="pb-2 transition-all">
     @foreach ($userItems as $item)
         <a title="{{ $item['text'] }}" {{ isset($item['active']) && $item['active'] ? 'data-active' : '' }}
-            class="flex group relative transition-all font-semibold items-center data-[active]:font-bold gap-3 p-2 px-5 data-[active]:text-[#1967da] text-black hover:bg-[#e8eaed] rounded-r-full"
+            class="flex group relative transition-all font-[600] items-center data-[active]:font-bold gap-3 p-2 px-5 data-[active]:text-[#1967da] text-black hover:bg-[#e8eaed] rounded-r-full"
             href="{{ $item['href'] }}">
             @svg($item['icon'], 'w-6 h-6 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
             <span class="text-nowrap">{{ $item['text'] }}</span>
@@ -250,14 +263,14 @@
                 $href = $item['href'] ?? null;
             @endphp
             <div class="sidebar-item group" {{ $item['active'] ? 'data-expanded' : '' }}>
-                <button
-                    class="flex sidebar-item-button font-semibold group-data-[expanded]:bg-blue-50 transition-all w-full text-left relative items-center group-data-[expanded]:font-bold group-data-[expanded]:text-[#1967da] gap-3 p-2 px-5 text-black hover:bg-[#e8eaed] rounded-r-full">
-                    @svg($item['icon'], 'w-6 h-6 m-0.5 opacity-70 group-data-[expanded]:text-blue-600 group-data-[expanded]:opacity-100')
+                <a href="{{ $href }}"
+                    class="flex sidebar-item-button font-[600] group-data-[expanded]:bg-blue-50 transition-all w-full text-left relative items-center group-data-[expanded]:font-bold group-data-[expanded]:text-[#1967da] gap-3 p-2 px-5 text-black hover:bg-[#e8eaed] rounded-r-full">
+                    @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-6 h-6 m-0.5 opacity-70 group-data-[expanded]:text-blue-600 group-data-[expanded]:opacity-100')
                     <span class="text-nowrap">{{ $item['text'] }}</span>
                     @if (isset($item['subItems']))
                         @svg('bx-chevron-right', 'w-4 h-4 ml-auto group-data-[expanded]:rotate-90 transition-all')
                     @endif
-                </button>
+                </a>
                 @if (isset($item['subItems']))
                     <div class="sidebar-item-content" {{ $item['active'] ? 'data-expanded' : '' }}>
                         @foreach ($item['subItems'] as $subItem)
@@ -265,7 +278,7 @@
                                 @continue
                             @endif
                             <a {{ $subItem['active'] ? 'data-active' : '' }}
-                                class="flex group relative font-semibold transition-all items-center data-[active]:font-bold data-[active]:text-[#1967da] gap-3 p-2 px-5 pl-8 text-black hover:bg-[#f4f5f7] rounded-r-full"
+                                class="flex group relative font-[600] transition-all items-center data-[active]:font-bold data-[active]:text-[#1967da] gap-3 p-2 px-5 pl-8 text-black hover:bg-[#f4f5f7] rounded-r-full"
                                 href="{{ $subItem['href'] }}">
                                 @svg($subItem['active'] ? $subItem['active-icon'] : $subItem['icon'], 'w-6 h-6 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
                                 <span class="text-nowrap">{{ $subItem['text'] }}</span>

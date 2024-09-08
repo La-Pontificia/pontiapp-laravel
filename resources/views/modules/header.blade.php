@@ -1,12 +1,14 @@
-<nav class="bg-white text-blue-700 h-14 w-full z-30">
+<nav class="bg-white shadow-md shadow-black/20 text-blue-700 h-14 w-full z-30">
     <div class="flex w-full gap-5 items-center h-full px-3">
-        <div class="flex-grow flex text-neutral-800 items-center gap-3">
+        <div class="flex-grow flex ml-14 max-lg:ml-0 text-neutral-800 items-center gap-3">
             <button class="lg:hidden block" id="sidebar-button">
                 @svg('bx-menu', 'w-8 h-8')
             </button>
-            <a href="/" class="px-2 flex items-center gap-2 text-blue-600 font-semibold tracking-tight text-lg">
-                <img src="/lp.webp" class="w-24 lg:w-28" />
-                Edas y Asistencias
+            <a href="/" class="px-2 flex items-center gap-2 text-blue-600 font-semibold tracking-tight text-base">
+                <img src="/elp.webp" class="w-20" />
+                <span class="max-sm:hidden">
+                    Edas y Asistencias
+                </span>
             </a>
         </div>
         <button>
