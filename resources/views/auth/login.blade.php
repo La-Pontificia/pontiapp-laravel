@@ -17,7 +17,7 @@
                                         <img src="/lp-square.webp" class="w-12 drop-shadow-md mx-auto" />
                                     </div>
                                     <div class="w-full">
-                                        <form method="POST" action="/login" class="grid gap-5">
+                                        {{-- <form method="POST" action="/login" class="grid gap-5">
                                             @csrf
                                             <div class="space-y-3 font-semibold text-black">
                                                 <input style="padding: 17px; border-radius: 10px" required autofocus
@@ -44,13 +44,13 @@
                                             <span class="w-full border-b border-neutral-500 block"></span>
                                             <p class="text-nowrap">o tambien</p>
                                             <span class="w-full border-b border-neutral-500 block"></span>
-                                        </div>
+                                        </div> --}}
                                         <a href="/login/azure"
                                             class="w-full shadow-md hover:shadow-lg mt-4 gap-2 rounded-xl justify-center text-gray-900 bg-white hover:border-blue-600 text-sm p-4 text-center inline-flex items-center">
                                             <img src="/RE1Mu3b.png" class="w-24" alt="">
                                         </a>
                                         @if (session('error'))
-                                            <div class="text-base max-w-max p-2 text-red-600">
+                                            <div class="text-sm max-w-max p-2 text-red-600">
                                                 {{ session('error') }}
                                             </div>
                                         @endif
