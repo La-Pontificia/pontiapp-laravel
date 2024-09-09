@@ -30,7 +30,7 @@ class UserController extends Controller
     {
 
         $match = User::orderBy('created_at', 'desc');
-        $query = $request->get('q');
+        $query = $request->get('query');
         $job_position = $request->get('job_position');
         $status = $request->get('status');
         $role = $request->get('role');
@@ -68,8 +68,7 @@ class UserController extends Controller
         if ($query) {
             $match->where('first_name', 'like', '%' . $query . '%')
                 ->orWhere('last_name', 'like', '%' . $query . '%')
-                ->orWhere('dni', 'like', '%' . $query . '%')
-                ->get();
+                ->orWhere('dni', 'like', '%' . $query . '%');
         }
 
         $jobPostions = JobPosition::all();
