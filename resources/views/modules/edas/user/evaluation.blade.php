@@ -7,7 +7,7 @@
     @php
 
         // if current user is supervisor
-        $isSupervisor = $current_user->id === $user->id_supervisor;
+        $isSupervisor = $cuser->id === $user->id_supervisor;
 
         // if has self qualification
         $hasSelfQualification =

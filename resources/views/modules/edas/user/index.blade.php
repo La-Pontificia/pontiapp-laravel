@@ -12,10 +12,8 @@
             $evaluationUltimate = $evaluations->last();
 
             $hasCloseEda =
-                ($cuser->has('closed_edas') &&
-                    $user->id_supervisor == $current_user->id &&
-                    $evaluationUltimate->closed) ||
-                ($current_user->hasDevelperPrivilege() && $evaluationUltimate->closed);
+                ($cuser->has('closed_edas') && $user->id_supervisor == $cuser->id && $evaluationUltimate->closed) ||
+                ($cuser->hasDevelperPrivilege() && $evaluationUltimate->closed);
         @endphp
 
         <div class="h-full flex flex-col">
