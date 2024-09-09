@@ -9,7 +9,7 @@
     @php
 
         // if current user is supervisor
-        $isSupervisor = $current_user->id === $eda->user->supervisor_id;
+        $isSupervisor = $cuser->id === $eda->user->supervisor_id;
 
         // if has self qualification
         $hasSelfQualify =
@@ -54,7 +54,7 @@
                             id="{{ $evaluation->feedback_read_at ? 'feedback-open' : '' }}"
                             {{ $evaluation->feedback_read_at ? 'data-read' : '' }}
                             class="secondary"style="padding-block:3px;" data-modal-target="dialog" data-modal-toggle="dialog">
-                            @svg('bx-wink-smile', 'w-5 h-5')
+                            svg'bx-wink-smile', 'w-5 h-5')
                             Feedback
                         </button>
 
@@ -97,7 +97,7 @@
                                     <div class=" body grid gap-4">
                                         <div>
                                             <p class="font-semibold">Score</p>
-                                            @svg($feebackScore[$evaluation->feedback_score - 1]['icon'], 'w-8 h-8')
+                                            svg$feebackScore[$evaluation->feedback_score - 1]['icon'], 'w-8 h-8')
                                         </div>
                                         <div>
                                             <p class="font-semibold">Feedback</p>
@@ -125,7 +125,7 @@
                                                         id="score-{{ $score['key'] }}" name="feedback_score"
                                                         value="{{ $score['key'] }}" class="peer" required>
                                                     <label for="score-{{ $score['key'] }}" class="p-1 rounded-full block">
-                                                        @svg($score['icon'], 'w-8 h-8')
+                                                        svg$score['icon'], 'w-8 h-8')
                                                     </label>
                                                 </div>
                                             @endforeach
@@ -157,14 +157,14 @@
                     @if ($hasSelfQualify)
                         <button id="evaluation-self-qualify-button" data-id="{{ $evaluation->id }}"
                             class="bg-lime-600 shadow-sm shadow-lime-500/10 hover:bg-lime-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-1 gap-1 text-sm px-3">
-                            @svg('bxs-save', 'w-5 h-5')
+                            svg'bxs-save', 'w-5 h-5')
                             Autocalificar
                         </button>
                     @endif
                     @if ($hasQualify)
                         <button data-id="{{ $evaluation->id }}" id="evaluation-qualify-button"
                             class="bg-violet-700 shadow-sm shadow-violet-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-violet-600 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
-                            @svg('bxs-check-shield', 'w-5 h-5')
+                            svg'bxs-check-shield', 'w-5 h-5')
                             Calificiar
                         </button>
                     @endif
@@ -172,7 +172,7 @@
                     @if ($hasCloseEvaluation)
                         <button data-id="{{ $evaluation->id }}" id="evaluation-close-button"
                             class="bg-red-600 shadow-sm shadow-red-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-red-700 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
-                            @svg('bx-x', 'w-5 h-5')
+                            svg'bx-x', 'w-5 h-5')
                             Cerrar
                         </button>
                     @endif
