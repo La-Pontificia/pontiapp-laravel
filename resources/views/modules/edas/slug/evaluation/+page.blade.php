@@ -56,7 +56,7 @@
                             id="{{ $evaluation->feedback_read_at ? 'feedback-open' : '' }}"
                             {{ $evaluation->feedback_read_at ? 'data-read' : '' }}
                             class="secondary"style="padding-block:3px;" data-modal-target="dialog" data-modal-toggle="dialog">
-                            svg'bx-wink-smile', 'w-5 h-5')
+                            @svg('fluentui-emoji-smile-slight-24-o', 'w-5 h-5')
                             Feedback
                         </button>
 
@@ -64,27 +64,27 @@
                             $feebackScore = [
                                 [
                                     'key' => 1,
-                                    'icon' => 'bx-sad',
+                                    'icon' => 'fluentui-emoji-sad-20-o',
                                     'checked' => false,
                                 ],
                                 [
                                     'key' => 2,
-                                    'icon' => 'bx-meh',
+                                    'icon' => 'fluentui-emoji-meh-20-o',
                                     'checked' => false,
                                 ],
                                 [
                                     'key' => 3,
-                                    'icon' => 'bx-smile',
+                                    'icon' => 'fluentui-emoji-20-o',
                                     'checked' => true,
                                 ],
                                 [
                                     'key' => 4,
-                                    'icon' => 'bx-happy',
+                                    'icon' => 'fluentui-emoji-sparkle-28-o',
                                     'checked' => false,
                                 ],
                                 [
                                     'key' => 5,
-                                    'icon' => 'bx-happy-heart-eyes',
+                                    'icon' => 'fluentui-emoji-laugh-20-o',
                                     'checked' => false,
                                 ],
                             ];
@@ -127,7 +127,7 @@
                                                         id="score-{{ $score['key'] }}" name="feedback_score"
                                                         value="{{ $score['key'] }}" class="peer" required>
                                                     <label for="score-{{ $score['key'] }}" class="p-1 rounded-full block">
-                                                        svg$score['icon'], 'w-8 h-8')
+                                                        @svg($score['icon'], 'w-8 h-8')
                                                     </label>
                                                 </div>
                                             @endforeach
@@ -159,7 +159,7 @@
                     @if ($hasSelfQualify)
                         <button id="evaluation-self-qualify-button" data-id="{{ $evaluation->id }}"
                             class="bg-sky-600 shadow-sm shadow-sky-500/10 hover:bg-sky-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-1 gap-1 text-sm px-3">
-                            svg'bx-plus', 'w-5 h-5')
+                            @svg('fluentui-notebook-section-arrow-right-24-o', 'w-5 h-5')
                             Autocalificar
                         </button>
                     @endif
@@ -167,7 +167,7 @@
                     @if ($hasQualify)
                         <button data-id="{{ $evaluation->id }}" id="evaluation-qualify-button"
                             class="bg-violet-700 shadow-sm shadow-violet-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-violet-600 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
-                            svg'bxs-check-shield', 'w-5 h-5')
+                            @svg('fluentui-notepad-person-20-o', 'w-5 h-5')
                             Calificiar
                         </button>
                     @endif
@@ -175,7 +175,7 @@
                     @if ($hasCloseEvaluation)
                         <button data-id="{{ $evaluation->id }}" id="evaluation-close-button"
                             class="bg-red-600 shadow-sm shadow-red-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-red-700 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
-                            svg'bx-x', 'w-5 h-5')
+                            @svg('fluentui-checkmark-circle-12', 'w-5 h-5')
                             Cerrar
                         </button>
                     @endif
@@ -186,8 +186,7 @@
         @if ($evaluation->closed)
             <span class="text-neutral-400 block text-center w-full p-3">Esta evaluación ha sido cerrada
                 el {{ \Carbon\Carbon::parse($evaluation->closed_at)->isoFormat('LL') }} por
-                {{ $evaluation->closedBy->first_name }}
-                {{ $evaluation->closedBy->last_name }}.
+                {{ $evaluation->closedBy->names() }}
             </span>
         @endif
 
@@ -290,14 +289,13 @@
             @if ($evaluation->selfRatedBy)
                 <span class="text-neutral-400">Autocaficado el
                     {{ \Carbon\Carbon::parse($evaluation->self_rated_at)->isoFormat('LL') }} por
-                    {{ $evaluation->selfRatedBy->last_name }}, {{ $evaluation->selfRatedBy->first_name }}
+                    {{ $evaluation->selfRatedBy->names() }}
                 </span>
             @endif
             @if ($evaluation->qualifiedBy)
                 <span class="text-neutral-400">y Aprobado
                     el {{ \Carbon\Carbon::parse($evaluation->qualified_at)->isoFormat('LL') }} por
-                    {{ $evaluation->qualifiedBy->first_name }}
-                    {{ $evaluation->qualifiedBy->last_name }}.
+                    {{ $evaluation->qualifiedBy->names() }}
                 </span>
             @endif
         </p>
