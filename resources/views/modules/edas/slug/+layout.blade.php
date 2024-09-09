@@ -21,31 +21,30 @@
 
 @section('layout.edas')
     @if ($hassAcces)
-        <div class="text-black h-full max-sm:py-1 w-full flex-grow flex overflow-y-auto gap-2">
-            <aside class="space-y-3 min-w-[300px] max-lg:min-w-max pb-1 bg-neutral-100 border shadow-sm rounded-xl">
+        <div class="text-black p-1 h-full max-sm:py-1 w-full flex-grow flex overflow-y-auto gap-2">
+            <aside class="space-y-3 min-w-[350px] max-lg:min-w-max pb-1 bg-white border shadow-sm rounded-xl">
                 <nav class="flex flex-col overflow-x-auto text-neutral-700">
-                    <div class="p-2 border-b flex items-center gap-2">
+                    <div class="p-3 border-b flex items-center gap-2">
                         @include('commons.avatar', [
                             'src' => $edauser->profile,
                             'key' => $user->id,
-                            'className' => 'w-8 max-lg:mx-auto',
+                            'className' => 'w-10 max-lg:mx-auto',
                             'alt' => $edauser->first_name . ' ' . $edauser->last_name,
-                            'altClass' => 'text-lg',
+                            'altClass' => 'text-base',
                         ])
                         <div class="text-sm max-lg:hidden">
                             <p class="font-semibold tracking-tight  overflow-hidden text-ellipsis text-nowrap">
-                                {{ $edauser->first_name }}
-                                {{ $edauser->last_name }}</p>
+                                {{ $edauser->names() }}</p>
                             <p class="text-neutral-500 text-xs">{{ $edauser->role_position->name }}</p>
                         </div>
                     </div>
-                    <div class="flex flex-col p-1">
-                        <p class="text-xs font-medium opacity-70 p-2 max-lg:hidden">Edas disponibles</p>
+                    <div class="flex flex-col p-2">
+                        <p class="text-sm font-medium p-2 max-lg:hidden">Edas</p>
                         @foreach ($years as $y)
                             <a {{ request()->is('edas/' . $edauser->id . '/eda/' . $y->id . '*') ? 'data-active' : '' }}
                                 href="/edas/{{ $edauser->id }}/eda/{{ $y->id }}"
-                                class="p-2.5 px-3.5 flex max-lg:w-fit w-full text-sm items-center gap-2 hover:bg-white data-[active]:bg-white data-[active]:border data-[active]:text-blue-700 font-medium rounded-lg">
-                                <img src="/sheet.png" class="w-5" alt="">
+                                class="p-2.5 px-3.5 flex max-lg:w-fit w-full text-sm items-center hover:bg-stone-50 gap-2 data-[active]:bg-stone-100 data-[active]:text-blue-700 font-medium rounded-lg">
+                                @svg(request()->is('edas/' . $edauser->id . '/eda/' . $y->id . '*') ? 'fluentui-folder-20' : 'fluentui-folder-20-o', 'w-5 h-5')
                                 {{ $y->name }}
                             </a>
                         @endforeach
@@ -58,14 +57,12 @@
                         <div class="flex items-center flex-grow">
                             <a href="/edas/{{ $edauser->id }}/eda/{{ $current_year->id }}"
                                 class="flex hover:bg-slate-100 p-1 rounded-md items-center gap-1">
-                                <img src="/sheet.png" class="w-5">
+                                @svg('fluentui-folder-20-o', 'w-5 h-5')
                                 {{ $current_year->name }}
                             </a>
                             @if ($title)
                                 <div>
-                                    svg'heroicon-s-chevron-right', [
-                                    'class' => 'w-3 h-3 text-neutral-700',
-                                    ])
+                                    @svg('fluentui-folder-add-20-o', 'w-3 h-3 text-neutral-700')
                                 </div>
                                 <div class="flex items-center gap-1">
                                     <img src="{{ $title === 'Objetivos' ? '/pen.png' : ($title === 'Cuestionario anual' ? '/idea.png' : '/sheet-pen.png') }}"
@@ -76,10 +73,8 @@
                         </div>
                         @if (!$title)
                             <div class="flex items-center gap-2 pr-2">
-                                <button class="opacity-60 relative hover:opacity-100" data-dropdown-toggle="dropdown">
-                                    svg'heroicon-s-ellipsis-horizontal', [
-                                    'class' => 'w-5 h-5',
-                                    ])
+                                <button class="relative" data-dropdown-toggle="dropdown">
+                                    @svg('fluentui-more-horizontal-16-o', 'w-5 h-5')
                                 </button>
 
                                 <div id="dropdown"
@@ -108,17 +103,15 @@
                 @else
                     <div class="grid text-center h-full text-sm w-full place-content-center p-10">
                         <img src="/empty-meetingList.webp" width="140" class="mx-auto" alt="">
-                        <h2 class="tracking-tight font-semibold">Eda no disponible</h2>
-                        <p class="text-xs">Aun no se registró el eda del año {{ $current_year->name }}</p>
+                        <h2 class="tracking-tight font-semibold text-lg">Eda no disponible</h2>
+                        <p class="text-sm opacity-70">Aun no se registró el eda del año {{ $current_year->name }}</p>
                         @if ($hasPosibleCreate)
                             <button data-id-year="{{ $current_year->id }}"
                                 data-param="/api/edas/create/{{ $current_year->id }}/user/{{ $edauser->id }}"
                                 data-atitle="¿Estás seguro de crear el eda?"
                                 data-adescription="Esta acción quedará registrada. No podrás deshacer esta acción."
-                                class="p-1.5 flex items-center gap-2 dinamic-alert shadow-md shadow-blue-500/40 disabled:opacity-50 mt-4 rounded-full w-fit mx-auto px-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm">
-                                svg'heroicon-s-plus-circle', [
-                                'class' => 'w-5 h-5',
-                                ])
+                                class="primary dinamic-alert mx-auto mt-2">
+                                @svg('fluentui-folder-add-20-o', 'w-5 h-5')
                                 Registrar ahora
                             </button>
                         @endif
