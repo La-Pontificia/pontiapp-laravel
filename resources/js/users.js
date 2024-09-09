@@ -279,113 +279,81 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // export data users
 
-    const $exportButtons = document.querySelectorAll(".export-data-users");
+    const $exportButton = $("#export-users");
 
-    $exportButtons?.forEach(($exportButton) => {
-        $exportButton?.addEventListener("click", async () => {
-            const type = $exportButton.getAttribute("data-type");
-            $exportButton.disabled = true;
-            const url = new URL(window.location.href);
-            const searchParams = url.searchParams;
+    $exportButton?.addEventListener("click", async () => {
+        $exportButton.disabled = true;
+        const url = new URL(window.location.href);
+        const searchParams = url.searchParams;
 
-            const users = await window.query(
-                `/api/users/export?${searchParams.toString()}`
+        const users = await window.query(
+            `/api/users/export?${searchParams.toString()}`
+        );
+
+        const date = moment().format("DD-MM-YYYY");
+        const filename = `Usuarios-${date}`;
+
+        const workbook = new ExcelJS.Workbook();
+        const response = await fetch("/templates/users.xlsx");
+        const arrayBuffer = await response.arrayBuffer();
+
+        if (!arrayBuffer) return;
+
+        await workbook.xlsx.load(arrayBuffer);
+        const worksheet = workbook.getWorksheet("Usuarios");
+        const startRow = 6;
+
+        const r = worksheet.getRow(3);
+        r.getCell(2).value = `Total: ${users.length}`;
+
+        users.forEach((user, i) => {
+            const row = worksheet.getRow(startRow + i);
+            const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
+            row.getCell(2).value = index;
+            row.getCell(3).value = user.dni;
+            row.getCell(4).value = `${user.last_name}, ${user.first_name}`;
+            row.getCell(5).value = user.email;
+            row.getCell(6).value = user.role_position.department.area.name;
+            row.getCell(7).value = user.role_position.department.name;
+            row.getCell(8).value = user.role_position.job_position.name;
+            row.getCell(9).value = user.role_position.name;
+            row.getCell(10).value = user.supervisor
+                ? `${user.supervisor.last_name}, ${user.supervisor.first_name}`
+                : "";
+            row.getCell(11).value = user.profile;
+            row.getCell(12).value = user.role.title;
+            row.getCell(13).value = user.status ? "Activo" : "Inactivo";
+            row.getCell(14).value = user.branch.name;
+            row.getCell(15).value = moment(user.created_at).format(
+                "DD-MM-YYYY HH:mm"
             );
-
-            const date = moment().format("DD-MM-YYYY");
-            const filename = `Usuarios-${date}`;
-
-            if (type === "excel") {
-                const workbook = new ExcelJS.Workbook();
-                const worksheet = workbook.addWorksheet("Usuarios");
-
-                worksheet.columns = [
-                    { header: "N°", key: "index" },
-                    { header: "DNI", key: "dni" },
-                    { header: "Apellidos", key: "last_name" },
-                    { header: "Nombres", key: "first_name" },
-                    { header: "Correo", key: "email" },
-                    { header: "Area", key: "area" },
-                    { header: "Departamento", key: "department" },
-                    { header: "Puesto", key: "job_position" },
-                    { header: "Cargo", key: "role_position" },
-                    { header: "Supervisor", key: "supervisor" },
-                    { header: "Perfil", key: "profile" },
-                    { header: "Rol", key: "role" },
-                    { header: "Estado", key: "status" },
-                    { header: "Sede", key: "branch" },
-                    { header: "Grupo de Horario", key: "schedule" },
-                    { header: "Fecha de creación", key: "created_at" },
-                    { header: "Fecha de actualización", key: "updated_at" },
-                    { header: "Creado por", key: "created_by" },
-                    { header: "Actualizado por", key: "updated_by" },
-                ];
-
-                users.forEach((user, i) => {
-                    const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
-                    const row = worksheet.addRow({
-                        index,
-                        dni: user.dni,
-                        last_name: user.last_name,
-                        first_name: user.first_name,
-                        email: user.email,
-                        area: user.role_position.department.area.name,
-                        department: user.role_position.department.name,
-                        job_position: user.role_position.job_position.name,
-                        role_position: user.role_position.name,
-                        supervisor: user.supervisor
-                            ? `${user.supervisor.last_name}, ${user.supervisor.first_name}`
-                            : "",
-                        profile: user.profile,
-                        role: user.role.title,
-                        status: user.status ? "Activo" : "Inactivo",
-                        branch: user.branch.name,
-                        schedule: user.schedule?.name,
-                        created_at: moment(user.created_at).format(
-                            "DD-MM-YYYY HH:mm"
-                        ),
-                        updated_at: moment(user.updated_at).format(
-                            "DD-MM-YYYY HH:mm"
-                        ),
-                        created_by: `${user.created_by.last_name}, ${user.created_by.first_name}`,
-                        updated_by: user.updated_by
-                            ? `${user.updated_by.last_name}, ${user.updated_by.first_name}`
-                            : "",
-                    });
-                    row.getCell("index").alignment = { horizontal: "left" };
-                });
-                worksheet.columns.forEach((column) => {
-                    let maxLength = 0;
-                    column.eachCell({ includeEmpty: true }, (cell) => {
-                        const cellValue = cell.value
-                            ? cell.value.toString()
-                            : "";
-                        maxLength = Math.max(maxLength, cellValue.length);
-                    });
-                    column.width = maxLength < 10 ? 10 : maxLength + 2;
-                });
-
-                workbook.xlsx.writeBuffer().then((buffer) => {
-                    const blob = new Blob([buffer], {
-                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    });
-                    const link = document.createElement("a");
-                    link.href = URL.createObjectURL(blob);
-                    link.download = filename + ".xlsx";
-                    link.click();
-                });
-            }
-            if (type === "json") {
-                const blob = new Blob([JSON.stringify(users)], {
-                    type: "application/json",
-                });
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = filename + ".json";
-                link.click();
-            }
-            $exportButton.disabled = false;
+            row.getCell(16).value = moment(user.updated_at).format(
+                "DD-MM-YYYY HH:mm"
+            );
+            row.commit();
         });
+
+        worksheet.columns.forEach((column) => {
+            let maxLength = 0;
+            column.eachCell({ includeEmpty: true }, (cell) => {
+                const cellValue = cell.value ? cell.value.toString() : "";
+                maxLength = Math.max(maxLength, cellValue.length);
+            });
+            column.width = maxLength < 10 ? 10 : maxLength + 2;
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+
+        const blob = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename + ".xlsx";
+        link.click();
+
+        $exportButton.disabled = false;
     });
 
     const exportEmailAcessButton = $("#export-email-access");
@@ -399,85 +367,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const workbook = new ExcelJS.Workbook();
             const worksheet = workbook.addWorksheet("Usuarios");
-
             console.log(users);
-
-            // worksheet.columns = [
-            //     { header: "N°", key: "index" },
-            //     { header: "DNI", key: "dni" },
-            //     { header: "Apellidos", key: "last_name" },
-            //     { header: "Nombres", key: "first_name" },
-            //     { header: "Correo", key: "email" },
-            //     { header: "Area", key: "area" },
-            //     { header: "Departamento", key: "department" },
-            //     { header: "Puesto", key: "job_position" },
-            //     { header: "Cargo", key: "role_position" },
-            //     { header: "Supervisor", key: "supervisor" },
-            //     { header: "Perfil", key: "profile" },
-            //     { header: "Rol", key: "role" },
-            //     { header: "Estado", key: "status" },
-            //     { header: "Sede", key: "branch" },
-            //     { header: "Grupo de Horario", key: "schedule" },
-            //     { header: "Fecha de creación", key: "created_at" },
-            //     { header: "Fecha de actualización", key: "updated_at" },
-            //     { header: "Creado por", key: "created_by" },
-            //     { header: "Actualizado por", key: "updated_by" },
-            // ];
-
-            // users.forEach((user, i) => {
-            //     const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
-            //     const row = worksheet.addRow({
-            //         index,
-            //         dni: user.dni,
-            //         last_name: user.last_name,
-            //         first_name: user.first_name,
-            //         email: user.email,
-            //         area: user.role_position.department.area.name,
-            //         department: user.role_position.department.name,
-            //         job_position: user.role_position.job_position.name,
-            //         role_position: user.role_position.name,
-            //         supervisor: user.supervisor
-            //             ? `${user.supervisor.last_name}, ${user.supervisor.first_name}`
-            //             : "",
-            //         profile: user.profile,
-            //         role: user.role.title,
-            //         status: user.status ? "Activo" : "Inactivo",
-            //         branch: user.branch.name,
-            //         schedule: user.schedule?.name,
-            //         created_at: moment(user.created_at).format(
-            //             "DD-MM-YYYY HH:mm"
-            //         ),
-            //         updated_at: moment(user.updated_at).format(
-            //             "DD-MM-YYYY HH:mm"
-            //         ),
-            //         created_by: `${user.created_by.last_name}, ${user.created_by.first_name}`,
-            //         updated_by: user.updated_by
-            //             ? `${user.updated_by.last_name}, ${user.updated_by.first_name}`
-            //             : "",
-            //     });
-            //     row.getCell("index").alignment = { horizontal: "left" };
-            // });
-            // worksheet.columns.forEach((column) => {
-            //     let maxLength = 0;
-            //     column.eachCell({ includeEmpty: true }, (cell) => {
-            //         const cellValue = cell.value ? cell.value.toString() : "";
-            //         maxLength = Math.max(maxLength, cellValue.length);
-            //     });
-            //     column.width = maxLength < 10 ? 10 : maxLength + 2;
-            // });
-
-            // const date = moment().format("DD-MM-YYYY");
-            // const name = `Usuarios-${date}.xlsx`;
-
-            // workbook.xlsx.writeBuffer().then((buffer) => {
-            //     const blob = new Blob([buffer], {
-            //         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            //     });
-            //     const link = document.createElement("a");
-            //     link.href = URL.createObjectURL(blob);
-            //     link.download = name;
-            //     link.click();
-            // });
         } catch (error) {
             console.error(error);
             window.toast.fire({

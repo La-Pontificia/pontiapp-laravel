@@ -69,13 +69,10 @@ document.addEventListener("DOMContentLoaded", function () {
         $exportButton.disabled = true;
         $exportButton.classList.add("animation-pulse");
         $exportButton.querySelector("span").innerText = "Exportando...";
-        const form = new FormData($formExport);
-
-        const type = form.get("type");
 
         const url = new URL(window.location.href);
         const searchParams = url.searchParams;
-        searchParams.set("type", type);
+        searchParams.set("type", "basic");
 
         const edas = await window.query(
             `/api/edas/export?${searchParams.toString()}`
