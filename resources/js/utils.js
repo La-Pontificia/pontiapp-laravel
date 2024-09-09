@@ -278,21 +278,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // dinamic date range
-
     const $inputDateRange = $$("input[name='datefilter']");
     $inputDateRange.forEach(($dateInput) => {
-        $dateInput.daterangepicker(
-            {
-                opens: "left",
-            },
-            function (start, end, label) {
-                console.log(
-                    "A new date selection was made: " +
-                        start.format("YYYY-MM-DD") +
-                        " to " +
-                        end.format("YYYY-MM-DD")
-                );
-            }
-        );
+        $dateInput.daterangepicker({
+            opens: "left",
+        });
     });
 });

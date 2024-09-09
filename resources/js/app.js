@@ -12,10 +12,17 @@ import "./email-access.js";
 import "./assists.js";
 import "./ui.js";
 import "./questionnaires.js";
+import "./fluentui.js";
 
-import Cookie from "js-cookie";
+// import {
+//     fluentSwitch,
+//     provideFluentDesignSystem,
+// } from "https://unpkg.com/@fluentui/web-components@2.0.0";
+
+// provideFluentDesignSystem().register(fluentSwitch());
+// videFluentDesignSystem().register(fluentButton(), fluentDialog());
+
 import axios from "axios";
-
 window.onPaste = (e) => {
     e.preventDefault();
     const text = e.clipboardData.getData("text/plain");

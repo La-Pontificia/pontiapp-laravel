@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const $$ = document.querySelectorAll.bind(document);
+    const $ = document.querySelector.bind(document);
 
     // dinamic tabs
     const $parent_tabs = $$(".dinamic-tabs");
@@ -73,6 +74,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
                 $item.setAttribute("data-expanded", "true");
                 $content.setAttribute("data-expanded", "true");
+            }
+        };
+    });
+
+    //dinamic switch preview to form
+
+    const $switchs = $$(".dinamic-switch-form-preview");
+
+    $switchs.forEach(($switch) => {
+        $switch.onclick = () => {
+            // data-preview='user-details'
+            const data = $switch.getAttribute("data-switch");
+            const $preview = document.querySelector(
+                "[data-preview=" + data + "]"
+            );
+            const $form = document.querySelector("[data-form=" + data + "]");
+
+            const hasHiddenForm = $form.classList.contains("hidden");
+
+            if (hasHiddenForm) {
+                $preview.classList.add("hidden");
+                $form.classList.remove("hidden");
+            } else {
+                $preview.classList.remove("hidden");
+                $form.classList.add("hidden");
             }
         };
     });

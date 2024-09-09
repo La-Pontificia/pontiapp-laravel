@@ -63,10 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 await axios.post(`/api/users/${id}/profile`, { profile: uri });
 
-                window.toast.fire({
-                    icon: "info",
-                    title: "Imagen de perfil actualizada",
-                });
+                window.location.reload();
             } catch (error) {
                 console.error(error);
                 window.toast.fire({

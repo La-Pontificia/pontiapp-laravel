@@ -4,6 +4,7 @@ import moment from "moment";
 document.addEventListener("DOMContentLoaded", async () => {
     $ = document.querySelector.bind(document);
     const $perSchedule = $("#button-export-assists-per-schedule");
+    const $peerUser = $("#button-export-assists-peer-user");
 
     async function exportAssists(groupAssists) {
         const workbook = new ExcelJS.Workbook();
@@ -25,8 +26,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 row.getCell(2).value = ii === 0 ? index : "";
                 row.getCell(3).value = ii === 0 ? item.dni : "";
                 row.getCell(4).value = ii === 0 ? item.full_name : "";
-                row.getCell(5).value = assist.role?.name;
-                row.getCell(6).value = assist.job_position?.name;
+                row.getCell(5).value = assist.role;
+                row.getCell(6).value = assist.job_position;
                 row.getCell(7).value = assist.title;
                 row.getCell(8).value = assist.date;
                 row.getCell(9).value = assist.day;
@@ -87,8 +88,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     return acc;
                 }, []);
 
-                console.log(groupAssists);
-
                 await exportAssists(groupAssists);
             } catch (error) {
                 console.error(error);
@@ -100,6 +99,45 @@ document.addEventListener("DOMContentLoaded", async () => {
                 $perSchedule.disabled = false;
                 $perSchedule.classList.remove("animation-pulse");
                 $perSchedule.querySelector("span").innerText = "Exportar";
+            }
+        };
+    }
+
+    if ($peerUser) {
+        $peerUser.onclick = async () => {
+            $peerUser.disabled = true;
+            $peerUser.classList.add("animation-pulse");
+            $peerUser.querySelector("span").innerText = "Espere...";
+            const id = $peerUser.getAttribute("data-id");
+
+            try {
+                const url = new URL(window.location.href);
+                const searchParams = url.searchParams;
+
+                const assists = await window.query(
+                    `/api/assists/peer-user/${id}/export?${searchParams.toString()}`
+                );
+
+                const groupAssists = assists.reverse().reduce((acc, item) => {
+                    const { dni, full_name, ...rest } = item;
+                    const index = acc.findIndex((i) => i.dni === dni);
+                    if (index === -1)
+                        acc.push({ dni, full_name, assists: [rest] });
+                    else acc[index].assists.push(item);
+                    return acc;
+                }, []);
+
+                await exportAssists(groupAssists);
+            } catch (error) {
+                console.error(error);
+                window.alert(
+                    "Error",
+                    "Ocurrió un error al exportar las asistencias"
+                );
+            } finally {
+                $peerUser.disabled = false;
+                $peerUser.classList.remove("animation-pulse");
+                $peerUser.querySelector("span").innerText = "Exportar";
             }
         };
     }
