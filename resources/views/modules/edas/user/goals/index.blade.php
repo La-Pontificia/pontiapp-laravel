@@ -3,14 +3,14 @@
 @section('title', 'Objetivos: ' . $year->name . ' - ' . $user->first_name . ' ' . $user->last_name)
 
 @php
-    $userIsDev = $current_user->role === 'dev';
+    $userIsDev = $cuser->role === 'dev';
     $percentages = range(0, 100);
     $sent = $eda->sent;
     $hasAddGoals = ($cuser->has('add_goals') && !$eda->approved) || $userIsDev;
     $hasSentGoals = ($cuser->has('sent_goals') && !$eda->approved) || $userIsDev;
     $hasEditGoals = ($cuser->has('edit_goals') && !$eda->approved) || $userIsDev;
     $hasDeleteGoals = ($cuser->has('delete_goals') && !$eda->approved) || $userIsDev;
-    $hasApproveGoals = $cuser->has('approve_goals') && $user->id_supervisor === $current_user->id && !$eda->approved;
+    $hasApproveGoals = $cuser->has('approve_goals') && $user->id_supervisor === $cuser->id && !$eda->approved;
 
 @endphp
 
