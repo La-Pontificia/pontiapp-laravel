@@ -46,7 +46,7 @@
             </form>
             {{-- <button {{ count($schedules) === 0 ? 'disabled' : '' }} id="button-export-assists-per-schedule"
                 class="secondary ml-auto">
-                @svg('bx-up-arrow-circle', 'w-5 h-5')
+                svg'bx-up-arrow-circle', 'w-5 h-5')
                 <span>
                     Exportar Excel
                 </span>
@@ -54,7 +54,7 @@
 
             <button {{ count($schedules) == 0 ? 'disabled' : '' }} data-modal-target="dialog-export"
                 data-modal-toggle="dialog-export" class="secondary ml-auto">
-                @svg('bx-up-arrow-circle', 'w-5 h-5')
+                svg'bx-up-arrow-circle', 'w-5 h-5')
                 <span>Exportar</span>
             </button>
             <div id="dialog-export" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -81,7 +81,7 @@
                     <footer>
                         <button data-modal-hide="dialog-export" type="button">Cancelar</button>
                         <button id="button-export-assists-per-schedule" type="button" class="flex items-center gap-1">
-                            @svg('bxs-file-doc', 'w-5 h-5')
+                            svg'bxs-file-doc', 'w-5 h-5')
                             <span>Exportar (.xlsx)</span>
                         </button>
                     </footer>
@@ -172,7 +172,7 @@
                                     <td>
                                         <p tip="Turno de trabajo: {{ $schedule['turn'] }}"
                                             class="text-center  {{ $schedule['turn'] === 'TM' ? 'text-yellow-500' : 'text-violet-600' }}">
-                                            @svg($schedule['turn'] === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
+                                            svg$schedule['turn'] === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
                                         </p>
                                     </td>
                                     <td>
