@@ -37,7 +37,7 @@
     <div class="w-full flex flex-col overflow-y-auto">
         <div class="flex items-center pb-2">
             <button {{ !$hasCreate ? 'disabled' : '' }} data-modal-target="dialog" data-modal-toggle="dialog" class="primary">
-                @svg('bx-plus', 'w-5 h-5')
+                svg'bx-plus', 'w-5 h-5')
                 <span>Registrar</span>
             </button>
             @if ($hasCreate)
@@ -61,14 +61,14 @@
             @endif
             @if ($cuser->has('edas:export') || $cuser->isDev())
                 {{-- <button {{ count($edas) == 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown" class="secondary ml-auto">
-                    @svg('bx-up-arrow-circle', 'w-5 h-5')
+                    svg'bx-up-arrow-circle', 'w-5 h-5')
                     <span>
                         Exportar
                     </span>
                 </button> --}}
                 <button {{ count($edas) == 0 ? 'disabled' : '' }} data-modal-target="dialog-export"
                     data-modal-toggle="dialog-export" class="secondary ml-auto">
-                    @svg('bx-up-arrow-circle', 'w-5 h-5')
+                    svg'bx-up-arrow-circle', 'w-5 h-5')
                     <span>Exportar</span>
                 </button>
                 <div id="dialog-export" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -105,7 +105,7 @@
                             <button data-modal-hide="dialog-export" type="button">Cancelar</button>
                             <button form="form-export-edas" id="button-export-edas" type="submit"
                                 class="flex items-center gap-1">
-                                @svg('bxs-file-doc', 'w-5 h-5')
+                                svg'bxs-file-doc', 'w-5 h-5')
                                 <span>Exportar (.xlsx)</span>
                             </button>
                         </footer>
@@ -117,7 +117,7 @@
             <form class="flex dinamic-form-to-params items-center gap-2 p-3">
                 <label class="relative w-full">
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
-                        @svg('bx-search', 'w-5 h-5')
+                        svg'bx-search', 'w-5 h-5')
                     </div>
                     <input value="{{ request()->get('q') }}" placeholder="Filtrar edas..." type="search"
                         class="w-full pl-9">
@@ -186,6 +186,7 @@
                                         <td>
                                             <div class="flex items-center gap-2">
                                                 @include('commons.avatar', [
+                                                    'key' => $eda->user->id,
                                                     'src' => $eda->user->profile,
                                                     'className' => 'w-8',
                                                     'alt' => $eda->user->first_name . ' ' . $eda->user->last_name,
