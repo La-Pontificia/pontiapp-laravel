@@ -25,8 +25,9 @@ class AssistsController extends Controller
     {
 
         $queryTerminal = $request->get('terminal');
+        // current date
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
         $match = User::orderBy('created_at', 'desc');
 
@@ -83,7 +84,7 @@ class AssistsController extends Controller
     {
         $terminal = $request->get('terminal');
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
         $query = $request->get('query');
 
         $assists = Collect([]);
@@ -118,7 +119,7 @@ class AssistsController extends Controller
     {
         $terminal = $request->get('terminal');
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
         $query = $request->get('query');
         $group = $request->get('group');
 
@@ -171,11 +172,25 @@ class AssistsController extends Controller
         return $this->peerSchedule($request, true);
     }
 
+    public function peerUserExport(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) return view('+500', ['error' => 'User not found']);
+        $queryTerminal = $request->get('terminal');
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+
+        $schedules = $this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate);
+
+        return $schedules;
+    }
+
+
     public function singleSummary(Request $request)
     {
         $terminal = $request->get('terminal');
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
         $assists = collect([]);
         if ($startDate && $endDate) {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\GroupSchedule;
-use App\Models\Schedule;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
@@ -12,7 +11,13 @@ class ScheduleController extends Controller
     {
 
         $group_schedules = GroupSchedule::orderBy('created_at', 'asc')->get();
-        return view('modules.users.schedules.+page', compact('group_schedules'));
+        return view('modules.schedules.+page', compact('group_schedules'));
+    }
+
+    public function external(Request $request)
+    {
+        $group_schedules = GroupSchedule::orderBy('created_at', 'asc')->get();
+        return view('modules.schedules.external.+page', compact('group_schedules'));
     }
 
     public function create()
@@ -20,11 +25,11 @@ class ScheduleController extends Controller
         return view('modules.users.schedules.create.+page');
     }
 
-    public function schedule($id)
+    public function slug($id)
     {
         $group_schedule = GroupSchedule::find($id);
         $schedules = $group_schedule->schedules()->orderBy('from', 'asc')->get();
 
-        return view('modules.users.schedules.slug.+page', compact('group_schedule', 'schedules'));
+        return view('modules.schedules.slug.+page', compact('group_schedule', 'schedules'));
     }
 }

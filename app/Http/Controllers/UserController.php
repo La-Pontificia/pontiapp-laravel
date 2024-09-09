@@ -133,8 +133,13 @@ class UserController extends Controller
     public function slug($id)
     {
         $user = User::find($id);
+        $user_roles = UserRole::all();
+        $group_schedules = GroupSchedule::all();
+        $job_positions = JobPosition::all();
+        $roles = Role::all();
+        $branches = Branch::all();
         if (!$user) return view('+500', ['error' => 'User not found']);
-        return view('modules.users.slug.+page', compact('user'));
+        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'job_positions', 'roles', 'branches'));
     }
 
     public function slug_details($id)
@@ -159,11 +164,7 @@ class UserController extends Controller
         $user = User::find($id);
         if (!$user) return view('+500', ['error' => 'User not found']);
 
-        $job_positions = JobPosition::all();
-        $roles = Role::all();
-        $branches = Branch::all();
-
-        return view('modules.users.slug.organization.+page', compact('user', 'job_positions', 'roles', 'branches'));
+        return view('modules.users.slug.organization.+page', compact('user'));
     }
 
     public function slug_contract($id)
@@ -191,13 +192,11 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) return view('+500', ['error' => 'User not found']);
+        $queryTerminal = $request->get('terminal');
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
-        $qterminals = $request->get('terminals') ? explode(',', $request->get('terminals')) : null;
-        $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
-
-
-        $schedules = $this->assistsService->assistsByUser($user->id, $qterminals, $startDate, $endDate);
+        $schedules = $this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate);
 
         $terminals = AssistTerminal::all();
         return view('modules.users.slug.assists.+page', compact('user', 'schedules', 'terminals'));
