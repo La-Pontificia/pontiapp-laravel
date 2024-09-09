@@ -32,13 +32,13 @@
                                         </div>
                                         <form method="POST" action="/login" class="grid gap-5">
                                             @csrf
-                                            <div class="space-y-3 font-semibold text-black">
+                                            <div class="space-y-3 text-black">
                                                 <input style="padding: 17px; border-radius: 10px" required autofocus
                                                     name="email" type="email" value="{{ old('email') }}"
-                                                    class="h-12 w-full font-semibold" placeholder="Correo electrónico" />
+                                                    class="h-12 bg-white w-full" placeholder="Correo electrónico" />
                                                 <input type="password" style="padding: 17px; border-radius: 10px" required
                                                     name="password" value="{{ old('password') }}"
-                                                    class="h-12 font-semibold w-full" placeholder="Contraseña" />
+                                                    class="h-12 bg-white w-full" placeholder="Contraseña" />
                                             </div>
                                             <button type="submit"
                                                 class="p-4 rounded-xl font-semibold bg-black text-white w-full hover:text-neutral-300">
