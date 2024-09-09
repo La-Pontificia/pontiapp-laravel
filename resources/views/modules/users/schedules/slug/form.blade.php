@@ -1,8 +1,8 @@
 @php
 
     $daysJson = isset($schedule) ? $schedule->days : ['1'];
-    $startDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->start_date)) : null;
-    $endDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->end_date)) : null;
+    $startDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->start_date)) : '2020-01-01';
+    $endDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->end_date)) : '2030-01-01';
 
     $from = isset($schedule) ? date('H:i', strtotime($schedule->from)) : null;
     $from_start = isset($schedule) ? date('H:i', strtotime($schedule->from_start)) : null;
@@ -16,28 +16,173 @@
 
     $background = isset($schedule) ? $schedule->background : '#52525b';
 
+    $times = [
+        [
+            'value' => '05:00',
+            'label' => '05:00 AM',
+        ],
+        [
+            'value' => '05:30',
+            'label' => '05:30 AM',
+        ],
+        [
+            'value' => '06:00',
+            'label' => '06:00 AM',
+        ],
+        [
+            'value' => '06:30',
+            'label' => '06:30 AM',
+        ],
+        [
+            'value' => '07:00',
+            'label' => '07:00 AM',
+        ],
+        [
+            'value' => '07:30',
+            'label' => '07:30 AM',
+        ],
+        [
+            'value' => '08:00',
+            'label' => '08:00 AM',
+        ],
+        [
+            'value' => '08:30',
+            'label' => '08:30 AM',
+        ],
+        [
+            'value' => '09:00',
+            'label' => '09:00 AM',
+        ],
+        [
+            'value' => '09:30',
+            'label' => '09:30 AM',
+        ],
+        [
+            'value' => '10:00',
+            'label' => '10:00 AM',
+        ],
+        [
+            'value' => '10:30',
+            'label' => '10:30 AM',
+        ],
+        [
+            'value' => '11:00',
+            'label' => '11:00 AM',
+        ],
+        [
+            'value' => '11:30',
+            'label' => '11:30 AM',
+        ],
+        [
+            'value' => '12:00',
+            'label' => '12:00 PM',
+        ],
+        [
+            'value' => '12:30',
+            'label' => '12:30 PM',
+        ],
+        [
+            'value' => '13:00',
+            'label' => '01:00 PM',
+        ],
+        [
+            'value' => '13:30',
+            'label' => '01:30 PM',
+        ],
+        [
+            'value' => '14:00',
+            'label' => '02:00 PM',
+        ],
+        [
+            'value' => '14:30',
+            'label' => '02:30 PM',
+        ],
+        [
+            'value' => '15:00',
+            'label' => '03:00 PM',
+        ],
+        [
+            'value' => '15:30',
+            'label' => '03:30 PM',
+        ],
+        [
+            'value' => '16:00',
+            'label' => '04:00 PM',
+        ],
+        [
+            'value' => '16:30',
+            'label' => '04:30 PM',
+        ],
+        [
+            'value' => '17:00',
+            'label' => '05:00 PM',
+        ],
+        [
+            'value' => '17:30',
+            'label' => '05:30 PM',
+        ],
+        [
+            'value' => '18:00',
+            'label' => '06:00 PM',
+        ],
+        [
+            'value' => '18:30',
+            'label' => '06:30 PM',
+        ],
+        [
+            'value' => '19:00',
+            'label' => '07:00 PM',
+        ],
+        [
+            'value' => '19:30',
+            'label' => '07:30 PM',
+        ],
+        [
+            'value' => '20:00',
+            'label' => '08:00 PM',
+        ],
+        [
+            'value' => '20:30',
+            'label' => '08:30 PM',
+        ],
+        [
+            'value' => '21:00',
+            'label' => '09:00 PM',
+        ],
+        [
+            'value' => '21:30',
+            'label' => '09:30 PM',
+        ],
+        [
+            'value' => '22:00',
+            'label' => '10:00 PM',
+        ],
+        [
+            'value' => '22:30',
+            'label' => '10:30 PM',
+        ],
+        [
+            'value' => '23:00',
+            'label' => '11:00 PM',
+        ],
+    ];
+
 @endphp
 
 
 
 <div class="flex items-center gap-2">
-    <label class="label">
-        <span>Nombre</span>
-        <input value="{{ $schedule->title ?? 'Horario laboral' }}" autofocus value="Horario laboral" type="text"
-            placeholder="Título (Opcional)" name="title">
-    </label>
-
-    <label class="label">
-        <span>Color</span>
-        <input type="color" value="{{ $background }}" name="background" class="w-9 h-9 p-0 aspect-square rounded-lg">
-    </label>
-
+    @if ($user_id)
+        <input type="hidden" name="user_id" value="{{ $user_id }}">
+    @endif
+    <fluent-text-field name="title" value="{{ $schedule->title ?? 'Horario laboral' }}" placeholder="Título (Opcional)"
+        class="outline-none">Título: </fluent-text-field>
 </div>
 
-<div class="grid grid-cols-2 gap-5">
+<div class="grid-cols-2 hidden gap-5">
     <label class="label">
         <span>Inicia a partir de la fecha:</span>
-        <input value="{{ $startDate }}" required type="date" placeholder="Nombre" name="start_date">
+        <input value="{{ $startDate }}" type="date" placeholder="Nombre" name="start_date">
     </label>
     <label class="label">
         <span>Finaliza en la fecha:</span>
@@ -65,19 +210,31 @@
 <div class="grid border-y grid-cols-2 py-3 gap-4">
     <label class="label">
         <span>Entrada:</span>
-        <input value="{{ $from }}" min="05:00" max="23:00" required type="time"
-            value="05:00"name="from" class="w-full">
+        <select name="from">
+            @foreach ($times as $time)
+                <option {{ $from === $time['value'] ? 'selected' : '' }} value="{{ $time['value'] }}">
+                    {{ $time['label'] }}</option>
+            @endforeach
+        </select>
     </label>
     <div class="w-full">
         <label class="label">
             <span>Permite marcar entrada desde:</span>
-            <input value="{{ $from_start }}" min="04:00" max="24:00" required type="time" name="from_start"
-                class="w-full">
+            <select name="from_start">
+                @foreach ($times as $time)
+                    <option {{ $from_start === $time['value'] ? 'selected' : '' }} value="{{ $time['value'] }}">
+                        {{ $time['label'] }}</option>
+                @endforeach
+            </select>
         </label>
         <label class="label">
             <span>Permite marcar entrada hasta:</span>
-            <input value="{{ $from_end }}" min="04:00" max="24:00" required type="time" name="from_end"
-                class="w-full">
+            <select name="from_end">
+                @foreach ($times as $time)
+                    <option {{ $from_end === $time['value'] ? 'selected' : '' }} value="{{ $time['value'] }}">
+                        {{ $time['label'] }}</option>
+                @endforeach
+            </select>
         </label>
     </div>
 </div>
@@ -85,19 +242,31 @@
 <div class="grid grid-cols-2 py-3 gap-4">
     <label class="label">
         <span>Salida:</span>
-        <input value="{{ $to }}" min="05:00" max="23:00" required type="time" name="to"
-            class="w-full">
+        <select name="to">
+            @foreach ($times as $time)
+                <option {{ $to === $time['value'] ? 'selected' : '' }} value="{{ $time['value'] }}">
+                    {{ $time['label'] }}</option>
+            @endforeach
+        </select>
     </label>
     <div class="w-full">
         <label class="label">
             <span>Permite marcar salida desde:</span>
-            <input value="{{ $to_start }}" min="04:00" max="24:00" required type="time" name="to_start"
-                class="w-full">
+            <select name="to_start">
+                @foreach ($times as $time)
+                    <option {{ $to_start === $time['value'] ? 'selected' : '' }} value="{{ $time['value'] }}">
+                        {{ $time['label'] }}</option>
+                @endforeach
+            </select>
         </label>
         <label class="label">
             <span>Permite marcar salida hasta:</span>
-            <input value="{{ $to_end }}" min="04:00" max="24:00" required type="time" name="to_end"
-                class="w-full">
+            <select name="to_end">
+                @foreach ($times as $time)
+                    <option {{ $to_end === $time['value'] ? 'selected' : '' }} value="{{ $time['value'] }}">
+                        {{ $time['label'] }}</option>
+                @endforeach
+            </select>
         </label>
     </div>
 </div>

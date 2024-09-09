@@ -54,20 +54,18 @@
         <input type="hidden" id="group-id" value="{{ $group_schedule->id }}">
 
         <div class="border-b pb-3">
-            <a href="/users/schedules" class="flex items-center gap-2 group">
-                @svg('bx-arrow-back', [
-                    'class' => 'w-7 h-7 rounded-full p-1 group-hover:bg-neutral-200',
-                ])
-                <span class="opacity-80">
+            <div class="flex items-center border-b justify-between p-2">
+                <button onclick="window.history.back()" class="flex gap-2 items-center text-gray-900 ">
+                    @svg('fluentui-arrow-left-20', 'w-5 h-5')
                     Horario: {{ $group_schedule->name }}
-                </span>
-            </a>
+                </button>
+            </div>
         </div>
 
         <div class="py-2 space-y-1 flex flex-col">
-            @if ($cuser->has('users:schedules:create') || $cuser->isDev())
+            @if ($cuser->has('schedules:create') || $cuser->isDev())
                 <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary">
-                    @svg('bx-plus', 'w-5 h-5')
+                    svg'bx-plus', 'w-5 h-5')
                     <span>Agregar horario</span>
                 </button>
                 <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -107,12 +105,12 @@
                                     </p>
                                 </div>
                                 <p class="text-sm flex items-center gap-1">
-                                    @svg('bxs-time-five', 'w-4 h-4 opacity-60')
+                                    svg'bxs-time-five', 'w-4 h-4 opacity-60')
                                     {{ $from }} - {{ $to }}
                                 </p>
 
                                 <p class="text-sm flex items-center gap-1">
-                                    @svg('bxs-calendar', 'w-4 h-4 opacity-60')
+                                    svg'bxs-calendar', 'w-4 h-4 opacity-60')
                                     {{ date('d-m-Y', strtotime($schedule->start_date)) }} -
                                     {{ date('d-m-Y', strtotime($schedule->end_date)) }}
                                 </p>
@@ -133,18 +131,18 @@
 
                         <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors absolute top-3 right-3"
                             data-dropdown-toggle="dropdown-{{ $schedule->id }}">
-                            @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                            svg'bx-dots-vertical-rounded', 'w-4 h-4')
                         </button>
 
                         <div id="dropdown-{{ $schedule->id }}" class="dropdown-content hidden">
-                            @if ($cuser->has('users:schedules:edit') || $cuser->isDev())
+                            @if ($cuser->has('schedules:edit') || $cuser->isDev())
                                 <button data-modal-target="dialog-{{ $schedule->id }}"
                                     data-modal-toggle="dialog-{{ $schedule->id }}"
                                     class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
                                     Editar
                                 </button>
                             @endif
-                            @if ($cuser->has('users:schedules:delete') || $cuser->isDev())
+                            @if ($cuser->has('schedules:delete') || $cuser->isDev())
                                 <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el horario?"
                                     data-adescription="Se aliminará completamente el horario y no se podrá recuperar."
                                     data-param="/api/schedules/delete/{{ $schedule->id }}"
@@ -152,7 +150,7 @@
                                     Eliminar
                                 </button>
                             @endif
-                            @if ($cuser->has('users:schedules:archive') || $cuser->isDev())
+                            @if ($cuser->has('schedules:archive') || $cuser->isDev())
                                 <button data-alertvariant="warning" data-atitle="¿Estás seguro de archivar el horario?"
                                     data-adescription="Este proceso cambiara el rango de fechas del horario y no se podrá visualizar en ningun lado solo en los reportes de horarios."
                                     data-param="/api/schedules/archive/{{ $schedule->id }}"
