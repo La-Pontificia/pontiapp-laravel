@@ -37,8 +37,8 @@
             <div class="border-b py-4 flex items-center">
                 <h2 class="font-semibold flex-grow">Objetivo</h2>
                 <button id="goal-sheet-close" class="bg-neutral-200 rounded-full aspect-square p-1">
-                    @svg('heroicon-o-x-mark', [
-                        'class' => 'w-5 h-5',
+                    svg'heroicon-o-x-mark', [
+                    'class' => 'w-5 h-5',
                     ])
                 </button>
             </div>
@@ -108,7 +108,7 @@
                         <button data-atitle="Aprobar objetivos" data-param="/api/edas/{{ $eda->id }}/goals/approve"
                             data-adescription="¿Estás seguro de aprobar los objetivos?. Este paso habilitará el acceso a las evaluaciones del EDA."
                             class="bg-violet-600 shadow-sm shadow-orange-500/10 dinamic-alert hover:bg-violet-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-1 gap-1 text-sm px-3">
-                            @svg('bxs-right-top-arrow-circle', 'w-5 h-5')
+                            svg'bxs-right-top-arrow-circle', 'w-5 h-5')
                             Aprobar
                         </button>
                     @endif
@@ -141,7 +141,7 @@
             @if ($hasAddGoals)
                 <div class="flex gap-2 justify-center max-md:justify-between max-md:pl-3 items-center w-full">
                     <button class="secondary open-goal-button">
-                        @svg('bx-plus', 'w-5 h-5')
+                        svg'bx-plus', 'w-5 h-5')
                         <span>Agregar objetivo</span>
                     </button>
                 </div>
