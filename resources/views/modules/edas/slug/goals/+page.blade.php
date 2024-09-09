@@ -37,9 +37,7 @@
             <div class="border-b py-4 flex items-center">
                 <h2 class="font-semibold flex-grow">Objetivo</h2>
                 <button id="goal-sheet-close" class="bg-neutral-200 rounded-full aspect-square p-1">
-                    svg'heroicon-o-x-mark', [
-                    'class' => 'w-5 h-5',
-                    ])
+                    @svg('fluentui-add-16-o', 'w-5 h-5 -rotate-45')
                 </button>
             </div>
             <div class="flex flex-col gap-2 px-1 py-3 w-full overflow-y-auto flex-grow">
@@ -108,13 +106,13 @@
                         <button data-atitle="Aprobar objetivos" data-param="/api/edas/{{ $eda->id }}/goals/approve"
                             data-adescription="¿Estás seguro de aprobar los objetivos?. Este paso habilitará el acceso a las evaluaciones del EDA."
                             class="bg-violet-600 shadow-sm shadow-orange-500/10 dinamic-alert hover:bg-violet-700 data-[hidden]:hidden text-white font-semibold justify-center min-w-max flex items-center rounded-full p-1 gap-1 text-sm px-3">
-                            svg'bxs-right-top-arrow-circle', 'w-5 h-5')
+                            @svg('fluentui-flash-checkmark-24-o', 'w-5 h-5')
                             Aprobar
                         </button>
                     @endif
                     @if ($hasSentGoals)
-                        <button data-id-eda="{{ $eda->id }}" id="sent-goals-button"
-                            class="bg-blue-700 shadow-sm shadow-blue-500/10 data-[hidden]:hidden font-semibold justify-center hover:bg-blue-600 min-w-max flex items-center rounded-full p-1 gap-1 text-white text-sm px-3">
+                        <button data-id-eda="{{ $eda->id }}" id="sent-goals-button" class="primary">
+                            @svg('fluentui-send-20', 'w-4 h-4 -rotate-12')
                             {{ $eda->sent ? 'Reenviar' : 'Enviar' }} objetivos
                         </button>
                     @endif
@@ -123,10 +121,9 @@
         @endif
 
         @if ($eda->approved)
-            <span class="text-neutral-400 text-lg text-center pb-5">Aprobado
+            <span class="text-neutral-400 text-sm text-center pb-5">Aprobado
                 el {{ \Carbon\Carbon::parse($eda->approved)->isoFormat('LL') }} por
-                {{ $eda->approvedBy->last_name }},
-                {{ $eda->approvedBy->first_name }}
+                {{ $eda->approvedBy->names() }}
             </span>
         @endif
 
@@ -134,14 +131,14 @@
             class=" group data-[hidden]:h-auto peer h-full grid text-sm place-content-center data-[hidden]:place-content-stretch text-center">
             <div class="max-w-sm group-data-[hidden]:hidden pb-2">
                 <img src="/sheet-pen.png" class="mx-auto" alt="">
-                <p class="pt-2 text-xs">
+                <p class="pt-2 text-sm">
                     Una vez llegue al 100% de total de porcentaje, podrá enviar los objetivos.
                 </p>
             </div>
             @if ($hasAddGoals)
                 <div class="flex gap-2 justify-center max-md:justify-between max-md:pl-3 items-center w-full">
                     <button class="secondary open-goal-button">
-                        svg'bx-plus', 'w-5 h-5')
+                        @svg('fluentui-collections-add-24-o', 'w-5 h-5')
                         <span>Agregar objetivo</span>
                     </button>
                 </div>
@@ -205,8 +202,7 @@
             @if ($eda->sent)
                 <span class="text-neutral-400">Enviados
                     el {{ \Carbon\Carbon::parse($eda->sent)->isoFormat('LL') }} por
-                    {{ $eda->createdBy->last_name }},
-                    {{ $eda->createdBy->first_name }}
+                    {{ $eda->createdBy->names() }}
                 </span>
             @endif
         </p>
