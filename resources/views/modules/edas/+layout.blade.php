@@ -1,6 +1,6 @@
 @extends('modules.+layout')
 
-@section('title', 'Gestión de usuarios')
+@section('title', 'Gestión de edas')
 
 @section('content')
     @if ($cuser->hasGroup('edas') || $cuser->isDev())
