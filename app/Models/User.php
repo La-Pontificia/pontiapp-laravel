@@ -38,6 +38,8 @@ class User extends Authenticatable
         'username',
         'created_by',
         'updated_by',
+        'entry_date',
+        'exit_date',
     ];
 
     protected $keyType = 'string';
@@ -68,6 +70,10 @@ class User extends Authenticatable
         'first_name' => 'required',
         'last_name' => 'required',
         'group_schedule_id' => 'uuid|nullable',
+        'id_role' => 'uuid|required',
+        'id_role_user' => 'uuid|required',
+        'id_branch' => 'uuid|required',
+        'group_schedule_id' => 'uuid',
     ];
 
     static $organizationRules = [
@@ -83,6 +89,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'email_access' => 'array',
+        'entry_date' => 'date',
+        'exit_date' => 'date',
     ];
 
 
@@ -148,6 +156,31 @@ class User extends Authenticatable
         return $this->hasMany(Eda::class, 'id_user', 'id');
     }
 
+    public function names()
+    {
+        $names = explode(' ', $this->first_name)[0] . ' ' . explode(' ', $this->last_name)[0];
+        return $names;
+    }
+
+    public function people()
+    {
+        return $this->hasMany(User::class, 'supervisor_id', 'id');
+    }
+
+    public function companions()
+    {
+        $level = $this->role_position->job_position->level;
+        $companions = User::whereHas('role_position', function ($query) use ($level) {
+            $query->whereHas('job_position', function ($query) use ($level) {
+                $query->where('level', $level);
+            });
+        })
+            ->where('id', '!=', $this->id)
+            ->get();
+
+        return $companions;
+    }
+
     public function schedules()
     {
         $schedulesMatched = $this->groupSchedule->schedules;
@@ -175,5 +208,17 @@ class User extends Authenticatable
         }
 
         return $schedulesGenerated;
+    }
+
+    public function summarySchedules()
+    {
+        $schedules = null;
+
+        $schedules = $this->groupSchedule->schedules;
+        $customSchedules = Schedule::where('user_id', $this->id)->get();
+
+        $schedules = $schedules->merge($customSchedules);
+
+        return $schedules;
     }
 }
