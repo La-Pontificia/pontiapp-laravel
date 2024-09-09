@@ -9,7 +9,7 @@
             <div class="w-full flex gap-2 p-2">
                 <label class="relative w-full">
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
-                        @svg('bx-search', 'w-5 h-5')
+                        svg'bx-search', 'w-5 h-5')
                     </div>
                     <input value="{{ request()->get('q') }}" placeholder="Filtrar usuarios..." type="search"
                         class="w-full pl-9 dinamic-search">
@@ -28,6 +28,7 @@
                             @include('commons.avatar', [
                                 'src' => $user->profile,
                                 'className' => 'w-8',
+                                'key' => $user->id,
                                 'alt' => $user->first_name . ' ' . $user->last_name,
                                 'altClass' => 'text-base',
                             ])
@@ -36,20 +37,20 @@
                                     {{ $user->last_name . ', ' . $user->first_name }}
                                 </p>
                                 <p class="line-clamp-2 flex text-sm items-center gap-1 text-neutral-600">
-                                    @svg('bx-envelope', 'w-3 h-3')
+                                    svg'bx-envelope', 'w-3 h-3')
                                     {{ $user->email }}
                                 </p>
                             </div>
                             <div>
                                 <p class="flex items-center gap-2 text-sm text-neutral-700">
-                                    @svg('bx-user-circle', 'w-5 h-5')
+                                    svg'bx-user-circle', 'w-5 h-5')
                                     {{ explode('@', $user->email)[0] }}
                                 </p>
                             </div>
                             <button type="button" data-modal-target="dialog-{{ $user->id }}"
                                 data-modal-toggle="dialog-{{ $user->id }}"
                                 class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
-                                @svg('bx-pencil', 'w-4 h-4')
+                                svg'bx-pencil', 'w-4 h-4')
                             </button>
                             {{-- <form action="/api/users/email-access/{{ $user->id }}"
                                 method="POST" id="dialog-{{ $user->id }}-form"

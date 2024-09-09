@@ -13,7 +13,7 @@
         <div class="rounded-lg">
             <div class="flex items-center gap-2 access-button">
                 <button type="button" class="flex items-center gap-2 toggle-access">
-                    @svg('bxs-buildings', 'h-5 w-5')
+                    svg'bxs-buildings', 'h-5 w-5')
                     <span>{{ $business->name }}</span>
                     <span class="opacity-50">{{ '@' . $business->domain }}</span>
                 </button>
