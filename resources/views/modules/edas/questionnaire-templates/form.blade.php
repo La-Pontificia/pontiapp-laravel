@@ -24,9 +24,7 @@
         <tr class="[&>td]:py-3 font-normal item [&>td]:align-top hover:[&>td]shadow-md relative group [&>td]:px-2">
             <td>
                 <button class="inner-handle p-2" type="button">
-                    svg'heroicon-o-equals', [
-                    'class' => 'w-5 h-5',
-                    ])
+                    @svg('fluentui-re-order-dots-vertical-24-o', 'w-5 h-5')
                 </button>
             </td>
             <td>
@@ -37,7 +35,7 @@
             <td>
                 <button type="button" title="Eliminar pregunta"
                     class="p-1 flex delete items-center gap-2 text-white bg-orange-600 text-sm rounded-lg px-2">
-                    svg'bx-x', 'w-5 h-5')
+                    @svg('fluentui-delete-20-o', 'w-5 h-5')
                 </button>
             </td>
         </tr>
@@ -60,7 +58,7 @@
 
 <div class="relative p-4 py-2">
     <button type="button" id="add-question-button" class="secondary" style="padding-block: 2px">
-        svg'bx-plus', 'w-5 h-5')
+        @svg('fluentui-add-20', 'w-5 h-5')
         Agregar pregunta
     </button>
 </div>
