@@ -25,6 +25,8 @@ class AssistsController extends Controller
     {
 
         $queryTerminal = $request->get('terminal');
+        $query = $request->get('query');
+
         // current date
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
@@ -48,9 +50,17 @@ class AssistsController extends Controller
             });
         }
 
+        if ($query) {
+            $match->where('first_name', 'like', '%' . $query . '%')
+                ->orWhere('last_name', 'like', '%' . $query . '%')
+                ->orWhere('dni', 'like', '%' . $query . '%')
+                ->get();
+        }
+
 
         $areas = Area::all();
         $departments = Department::all();
+        $terminals = AssistTerminal::all();
 
         if ($area_id) {
             $departments = Department::where('id_area', $area_id)->get();
@@ -58,24 +68,35 @@ class AssistsController extends Controller
 
         $users = [];
 
-        if ($department_id || $area_id) {
-
+        if ($department_id || $area_id || $query) {
             $users =  $match->get();
         }
 
-        $schedules = [];
+        $allSchedules = collect([]);
 
         foreach ($users as $user) {
-            $schedules = array_merge($schedules, $this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate));
+            $allSchedules =  $allSchedules->concat($this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate));
         }
 
-        $terminals = AssistTerminal::all();
+
+        $perPage = 25;
+        $currentPage = $request->get('page', 1);
+
+        $schedules = $allSchedules->forPage($currentPage, $perPage);
+
+        $paginatedSchedules = new LengthAwarePaginator(
+            $schedules,
+            isset($allSchedules) ? $allSchedules->count() : 0,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
         return view('modules.assists.+page', [
             'areas' => $areas,
             'departments' => $departments,
             'users' => $users,
-            'schedules' => $schedules,
+            'schedules' => $paginatedSchedules,
             'terminals' => $terminals,
         ]);
     }
