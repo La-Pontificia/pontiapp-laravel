@@ -11,6 +11,7 @@
     <link rel="icon" href="{{ asset('/lp-square.webp') }}" type="image/x-icon">
     {{-- <link rel="manifest" href="/manifest.json"> --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- <script type="module" src="."></script> --}}
 </head>
 
 <body class="bg-[#f5f5f5] text-[15px]">

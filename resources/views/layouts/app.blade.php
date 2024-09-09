@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('app')
-    <div id="app" class="h-svh flex flex-col overflow-y-auto ">
+    <div id="app" class="h-svh flex flex-col overflow-y-auto">
         @guest
             @if (Route::has('login'))
                 <main class="min-h-screen ">
