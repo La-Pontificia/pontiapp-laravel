@@ -14,24 +14,33 @@
     </p>
     <div class="space-y-2 flex flex-col h-full overflow-auto">
         <div class="flex-grow dinamic-form-to-params flex items-center flex-wrap gap-4">
-            <form class="dinamic-form-to-params flex p-1 px-2 items-center gap-2 flex-wrap">
+            <form class="dinamic-form-to-params p-1 px-2 flex items-end flex-grow gap-2 flex-wrap">
                 <div id="date-range" class="flex items-center gap-1">
-                    <input class="w-[100px]" readonly {{ $start ? "data-default=$start" : '' }} type="text" name="start"
-                        placeholder="-">
-                    <span>a</span>
-                    <input class="w-[100px]" readonly {{ $end ? "data-default=$end" : '' }} type="text" name="end"
-                        placeholder="-">
+                    <label for="">
+                        <span class="block">Desde:</span>
+                        <input class="w-[100px] bg-white" readonly {{ $start ? "data-default=$start" : '' }} type="text"
+                            name="start" placeholder="-">
+                    </label>
+                    <label for="">
+                        <span class="block">Hasta:</span>
+                        <input class="w-[100px] bg-white" readonly {{ $end ? "data-default=$end" : '' }} type="text"
+                            name="end" placeholder="-">
+                    </label>
                 </div>
-                <select name="terminal">
-                    @foreach ($terminals as $terminal)
-                        <option value="{{ $terminal->database_name }}"
-                            {{ $currentTerminal === $terminal->database_name ? 'selected' : '' }}>
-                            {{ $terminal->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <button type="submit"
-                    class="p-2 rounded-xl bg-green-600 px-2 text-sm text-white shadow-sm font-semibold">Filtrar</button>
+                <div class="label">
+                    <span>
+                        Terminal
+                    </span>
+                    <select name="terminal" class="bg-white">
+                        @foreach ($terminals as $terminal)
+                            <option value="{{ $terminal->database_name }}"
+                                {{ $currentTerminal === $terminal->database_name ? 'selected' : '' }}>
+                                {{ $terminal->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="primary mt-2 ml-auto">Filtrar</button>
             </form>
         </div>
         <div class="overflow-auto flex flex-col h-full">
@@ -45,8 +54,8 @@
                     </div>
                 @else
                     <table id="table-export-assists" class="w-full text-left relative">
-                        <thead class="border-b sticky bg-white top-0 z-[1]">
-                            <tr class="[&>th]:text-nowrap [&>th]:font-normal [&>th]:p-2 [&>th]:px-3">
+                        <thead class="border-b sticky top-0 z-[1]">
+                            <tr class="[&>th]:text-nowrap [&>th]:font-semibold [&>th]:p-2 [&>th]:px-3">
                                 <th>Fecha</th>
                                 <th>
                                     Dia
@@ -75,9 +84,9 @@
                                     </td>
                                     <td>
                                         @if ($assist->count > 0)
-                                            svg'bx-check-circle', 'h-6 w-6 text-green-500')
+                                            @svg('fluentui-checkmark-circle-24', 'h-6 w-6 text-green-500')
                                         @else
-                                            svg'bx-error', 'h-6 w-6 text-red-500')
+                                            @svg('fluentui-error-circle-12', 'h-6 w-6 text-red-500')
                                         @endif
                                     </td>
                                 </tr>
