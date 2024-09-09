@@ -32,7 +32,7 @@
                     </div>
                     @if ($eda->approved)
                         <div class="absolute top-2 right-2">
-                            @svg('bxs-check-circle', 'w-5 h-5 text-blue-700')
+                            svg'bxs-check-circle', 'w-5 h-5 text-blue-700')
                         </div>
                     @endif
                 </a>
@@ -55,7 +55,7 @@
 
                         @if ($evaluation->closed)
                             <div class="absolute top-2 right-2">
-                                @svg('bxs-check-circle', 'w-5 h-5 text-blue-700')
+                                svg'bxs-check-circle', 'w-5 h-5 text-blue-700')
                             </div>
                         @endif
                     </a>
@@ -78,7 +78,7 @@
 
                     @if ($eda->closed)
                         <div class="absolute top-2 right-2">
-                            @svg('bxs-check-circle', 'w-5 h-5 text-blue-700')
+                            svg'bxs-check-circle', 'w-5 h-5 text-blue-700')
                         </div>
                     @endif
                 </a>
@@ -97,7 +97,7 @@
 
                     @if ($eda->supervisorQuestionnaire && $eda->collaboratorQuestionnaire)
                         <div class="absolute top-2 right-2">
-                            @svg('bxs-check-circle', 'w-5 h-5 text-blue-700')
+                            svg'bxs-check-circle', 'w-5 h-5 text-blue-700')
                         </div>
                     @endif
 
@@ -107,8 +107,8 @@
 
             @if ($eda->closed)
                 <p class="text-xs text-neutral-400 mt-5">
-                    @svg('heroicon-o-information-circle', [
-                        'class' => 'w-5 h-5 inline-block',
+                    svg'heroicon-o-information-circle', [
+                    'class' => 'w-5 h-5 inline-block',
                     ])
                     EDA cerrado el {{ \Carbon\Carbon::parse($eda->closed)->isoFormat('LL') }} por
                     {{ $eda->closedBy->last_name }},

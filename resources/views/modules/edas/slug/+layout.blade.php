@@ -27,6 +27,7 @@
                     <div class="p-2 border-b flex items-center gap-2">
                         @include('commons.avatar', [
                             'src' => $edauser->profile,
+                            'key' => $user->id,
                             'className' => 'w-8 max-lg:mx-auto',
                             'alt' => $edauser->first_name . ' ' . $edauser->last_name,
                             'altClass' => 'text-lg',
@@ -62,8 +63,8 @@
                             </a>
                             @if ($title)
                                 <div>
-                                    @svg('heroicon-s-chevron-right', [
-                                        'class' => 'w-3 h-3 text-neutral-700',
+                                    svg'heroicon-s-chevron-right', [
+                                    'class' => 'w-3 h-3 text-neutral-700',
                                     ])
                                 </div>
                                 <div class="flex items-center gap-1">
@@ -76,8 +77,8 @@
                         @if (!$title)
                             <div class="flex items-center gap-2 pr-2">
                                 <button class="opacity-60 relative hover:opacity-100" data-dropdown-toggle="dropdown">
-                                    @svg('heroicon-s-ellipsis-horizontal', [
-                                        'class' => 'w-5 h-5',
+                                    svg'heroicon-s-ellipsis-horizontal', [
+                                    'class' => 'w-5 h-5',
                                     ])
                                 </button>
 
@@ -115,8 +116,8 @@
                                 data-atitle="¿Estás seguro de crear el eda?"
                                 data-adescription="Esta acción quedará registrada. No podrás deshacer esta acción."
                                 class="p-1.5 flex items-center gap-2 dinamic-alert shadow-md shadow-blue-500/40 disabled:opacity-50 mt-4 rounded-full w-fit mx-auto px-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm">
-                                @svg('heroicon-s-plus-circle', [
-                                    'class' => 'w-5 h-5',
+                                svg'heroicon-s-plus-circle', [
+                                'class' => 'w-5 h-5',
                                 ])
                                 Registrar ahora
                             </button>
