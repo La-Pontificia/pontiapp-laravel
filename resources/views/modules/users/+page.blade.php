@@ -37,8 +37,8 @@
     <div class="w-full mx-auto h-full overflow-y-auto flex flex-col">
         <form class="flex dinamic-form-to-params p-1 items-center gap-2">
             @if ($cuser->has('users:create') || $cuser->isDev())
-                <a tip="Crear nuevo usuario" href="/users/create" class="primary">
-                    @svg('bx-plus', 'w-5 h-5')
+                <a href="/users/create" class="primary">
+                    @svg('fluentui-person-add-20-o', 'w-5 h-5')
                     <span>Nuevo</span>
                 </a>
             @endif
@@ -56,7 +56,7 @@
                 @endforeach
             </div>
 
-            <select class="w-fit rounded-full" name="role">
+            <select class="w-fit bg-white" name="role">
                 <option value="">Rol</option>
                 @foreach ($user_roles as $role)
                     <option {{ request()->query('role') === $role->id ? 'selected' : '' }} value="{{ $role->id }}">
@@ -64,7 +64,7 @@
                 @endforeach
             </select>
 
-            <select class="w-fit rounded-full" name="department">
+            <select class="w-fit bg-white" name="department">
                 <option value="">Departamento</option>
                 @foreach ($departments as $department)
                     <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
@@ -72,7 +72,7 @@
                 @endforeach
             </select>
 
-            <select class="w-fit rounded-full" name="job_position">
+            <select class="w-fit bg-white" name="job_position">
                 <option value="">Puesto</option>
                 @foreach ($job_positions as $job)
                     <option {{ request()->query('job_position') === $job->id ? 'selected' : '' }}
@@ -82,10 +82,10 @@
 
             <label class="relative ml-auto w-[200px] max-w-full">
                 <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
-                    @svg('bx-search', 'w-5 h-5')
+                    @svg('fluentui-search-28-o', 'w-5 h-5')
                 </div>
                 <input value="{{ request()->get('q') }}" placeholder="Filtrar usuarios..." type="search"
-                    class="pl-9 w-full rounded-full">
+                    class="pl-9 w-full bg-white">
             </label>
 
             <button class="primary">
@@ -93,19 +93,10 @@
             </button>
 
             @if ($cuser->has('users:export') || $cuser->isDev())
-                <button data-dropdown-toggle="dropdown" class="secondary">
+                <button type="button" id="export-users" class="secondary">
+                    @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
                     Exportar
                 </button>
-                <div id="dropdown" class="dropdown-content hidden">
-                    <button data-type="excel"
-                        class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
-                        Excel (.xlsx)
-                    </button>
-                    <button data-type="json"
-                        class="p-2 hover:bg-neutral-100 export-data-users text-left w-full block rounded-md hover:bg-gray-10">
-                        JSON (.json)
-                    </button>
-                </div>
             @endif
         </form>
         <div class="flex flex-col pt-2 w-full overflow-y-auto h-full">
@@ -149,7 +140,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="flex font-semibold items-center gap-2">
+                                            <div class="flex items-center gap-2">
                                                 <span
                                                     class="{{ $user->status ? 'bg-green-400' : 'bg-red-400' }} w-2 aspect-square rounded-full">
                                                 </span>
@@ -157,125 +148,48 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <p class="text-nowrap">
-                                                @svg('bx-envelope', 'w-4 h-4 inline-block mr-1')
+                                            <p
+                                                class="text-nowrap bg-white w-fit shadow-sm group-hover:shadow-lg p-3 rounded-lg flex items-center">
                                                 {{ $user->email }}
                                             </p>
                                         </td>
                                         <td>
                                             @if ($user->supervisor)
-                                                @includeIf('commons.avatar', [
-                                                    'src' => $user->supervisor->profile,
-                                                    'className' => 'w-12',
-                                                    'key' => $user->supervisor->id,
-                                                    'alt' =>
-                                                        $user->supervisor->first_name .
-                                                        ' ' .
-                                                        $user->supervisor->last_name,
-                                                    'altClass' => 'text-lg',
-                                                ])
-                                            @endif
-                                            {{-- @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
-                                                <button data-modal-target="dialog-{{ $user->id }}"
-                                                    data-modal-toggle="dialog-{{ $user->id }}"
-                                                    class="bg-neutral-50 relative text-left hover:bg-neutral-200 rounded-lg p-2 flex px-3 items-center gap-2">
-                                                    @if ($user->supervisor_id)
-                                                        @include('commons.avatar', [
-                                                            'src' => $user->supervisor->profile,
-                                                            'className' => 'w-8',
-                                                            'alt' =>
-                                                                $user->supervisor->first_name .
-                                                                ' ' .
-                                                                $user->supervisor->last_name,
-                                                            'altClass' => 'text-md',
-                                                        ])
-                                                        <div>
-                                                            <p class="text-nowrap">
-                                                                {{ $user->supervisor->first_name }}
-                                                            </p>
-                                                            <p class="text-xs font-normal text-nowrap">
-                                                                {{ $user->supervisor->role_position->name }}
-                                                            </p>
-                                                        </div>
-                                                    @else
-                                                        @svg('bx-plus', 'w-5 h-5')
-                                                        Asignar
-                                                    @endif
-                                                </button>
-
-                                                <div id="dialog-{{ $user->id }}" tabindex="-1" aria-hidden="true"
-                                                    class="dialog hidden">
-                                                    <div class="content lg:max-w-lg max-w-full">
-                                                        <header>
-                                                            Asignar o cambiar supervisor
-                                                        </header>
-
-                                                        <div class="p-3 gap-4 overflow-y-auto flex flex-col">
-                                                            @php
-                                                                $defaultvalue = $user->supervisor_id
-                                                                    ? $user->supervisor->first_name .
-                                                                        ' ' .
-                                                                        $user->supervisor->last_name
-                                                                    : null;
-                                                            @endphp
-                                                            <div class="grid gap-2">
-                                                                <label class="relative">
-                                                                    <div
-                                                                        class="absolute z-[1] inset-y-0 px-2 flex items-center">
-                                                                        @svg('bx-search-alt-2', 'w-5 h-5 opacity-60')
-                                                                    </div>
-                                                                    <input value="{{ $defaultvalue }}"
-                                                                        data-id="{{ $user->id }}" type="search"
-                                                                        class="supervisor-input w-full"
-                                                                        style="padding-left: 30px"
-                                                                        placeholder="Correo, DNI, nombres...">
-                                                                </label>
-                                                                <div id="result-{{ $user->id }}"
-                                                                    class="p-1 grid gap-2 text-center">
-                                                                    <p class="p-10 text-neutral-500">
-                                                                        No se encontraron resultados o no se ha realizado
-                                                                        una
-                                                                        búsqueda.
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        @if ($user->supervisor_id)
-                                                            <footer>
-                                                                <button data-alertvariant="warning"
-                                                                    data-param='/api/users/supervisor/remove/{{ $user->id }}'
-                                                                    data-atitle='Remover supervisor'
-                                                                    data-adescription='¿Estás seguro de que deseas remover el supervisor de este usuario?'
-                                                                    type="button" class="secondary dinamic-alert">
-                                                                    @svg('bx-user-minus', 'w-5 h-5')
-                                                                    Remover
-                                                                    supervisor</button>
-                                                            </footer>
-                                                        @endif
+                                                <div class="flex items-center gap-2">
+                                                    @includeIf('commons.avatar', [
+                                                        'src' => $user->supervisor->profile,
+                                                        'className' => 'w-12',
+                                                        'key' => $user->supervisor->id,
+                                                        'alt' =>
+                                                            $user->supervisor->first_name .
+                                                            ' ' .
+                                                            $user->supervisor->last_name,
+                                                        'altClass' => 'text-lg',
+                                                    ])
+                                                    <div>
+                                                        <p class="text-xs opacity-60">
+                                                            Bajo la supervisión de
+                                                        </p>
+                                                        <p class="text-nowrap">
+                                                            {{ $user->supervisor->first_name }}
+                                                            {{ $user->supervisor->last_name }}
+                                                        </p>
                                                     </div>
                                                 </div>
-                                            @else
-                                                -
-                                            @endif --}}
+                                            @endif
                                         </td>
                                         <td class="rounded-r-2xl">
                                             <div class="flex items-center gap-2">
                                                 <button
                                                     class="rounded-full relative p-2 hover:bg-neutral-200 transition-colors"
                                                     data-dropdown-toggle="dropdown-{{ $user->id }}">
-                                                    @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                                                    @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                                                 </button>
                                                 <div id="dropdown-{{ $user->id }}" class="dropdown-content hidden">
                                                     <a href="/users/{{ $user->id }}"
                                                         class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver perfil
                                                     </a>
-                                                    @if ($cuser->has('users:edit') || $cuser->isDev())
-                                                        <a href="/users/{{ $user->id }}?view=edit"
-                                                            class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
-                                                            Editar perfil
-                                                        </a>
-                                                    @endif
                                                     <a href="/users/{{ $user->id }}/schedules"
                                                         class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver Horarios

@@ -33,7 +33,7 @@
     @endif
 
     <div class="max-w-[500px]">
-        <p class="text-xs">
+        <p class="text-sm">
             Selecciona el rol que tendrá el usuario. Los permisos se asignarán una vez que el usuario haya sido
             registrado. Si este usuario necesita privilegios especifícos, <a href="/users/user-roles"
                 class="text-blue-600 hover:underline">crea uno aquí.</a>
@@ -43,7 +43,7 @@
     <div class="max-w-[300px]">
         <label class="label">
             <span>Rol y privilegios</span>
-            <select required name="id_role_user">
+            <select required name="id_role_user" class="bg-white">
                 @foreach ($user_roles as $role)
                     <option {{ $user && $user->id_role_user === $role->id ? 'selected' : '' }}
                         value="{{ $role->id }}">
@@ -66,18 +66,18 @@
             <label class="label w-[200px]">
                 <span>Documento de Identidad</span>
                 <input name="dni" id="dni-input" autocomplete="off" value="{{ $user ? $user->dni : '' }}" required
-                    type="number">
+                    class="bg-white" type="number">
             </label>
             <div class="grid grid-cols-2 gap-4">
                 <label class="label">
                     <span>Apellidos</span>
-                    <input autocomplete="off" value="{{ $user ? $user->last_name : '' }}" name="last_name"
-                        id="last_name-input" required type="text">
+                    <input autocomplete="off" class="bg-white" value="{{ $user ? $user->last_name : '' }}"
+                        name="last_name" id="last_name-input" required type="text">
                 </label>
                 <label class="label">
                     <span>Nombres</span>
-                    <input autocomplete="off" value="{{ $user ? $user->first_name : '' }}" name="first_name"
-                        id="first_name-input" required type="text">
+                    <input autocomplete="off" class="bg-white" value="{{ $user ? $user->first_name : '' }}"
+                        name="first_name" id="first_name-input" required type="text">
                 </label>
             </div>
             <div class="grid grid-cols-2 gap-4">
@@ -85,7 +85,7 @@
                     <span>
                         Puesto de Trabajo
                     </span>
-                    <select name="id_job_position" id="job-position-select" required>
+                    <select name="id_job_position" id="job-position-select" required class="bg-white">
                         @foreach ($job_positions as $item)
                             <option
                                 {{ $user && $user->role_position->job_position->id === $item->id ? 'selected' : '' }}
@@ -99,7 +99,7 @@
                     <span>
                         Cargo
                     </span>
-                    <select name="id_role" id="role-select" required>
+                    <select class="bg-white" name="id_role" id="role-select" required>
                         @foreach ($roles as $role)
                             <option {{ $user && $user->role_position->id === $role->id ? 'selected' : '' }}
                                 value="{{ $role->id }}">
@@ -113,7 +113,7 @@
                 <span>
                     Sede
                 </span>
-                <select name="id_branch" required>
+                <select class="bg-white" name="id_branch" required>
                     @foreach ($branches as $branch)
                         <option {{ $user && $user->id_branch === $branch->id ? 'selected' : '' }}
                             value="{{ $branch->id }}">
@@ -127,9 +127,9 @@
     <div class="label pt-6">
         <span>Email</span>
         <div class="flex gap-4">
-            <input value="{{ $username }}" required type="text" name="username" class="w-full"
-                placeholder="Nombre de usuario">
-            <select style="width: 170px" required name="domain">
+            <input class="bg-white" pattern="^[a-zA-Z]*$" value="{{ $username }}" required type="text"
+                name="username" class="w-full" placeholder="Nombre de usuario">
+            <select class="bg-white" style="width: 170px" required name="domain">
                 @foreach ($domains as $domain)
                     <option {{ $userDomain === $domain ? 'selected' : '' }} value="{{ $domain }}">
                         {{ '@' . $domain }}</option>
@@ -151,7 +151,7 @@
         </div>
         <div class="max-w-[500px]">
             <div class="flex items-center gap-1">
-                <input autocomplete="off" type="password" name="password" class="w-full">
+                <input type="password" name="password" class="w-full bg-white">
             </div>
         </div>
     @endif
@@ -161,8 +161,10 @@
     <label class="label pt-3">
         <span>Grupo de horario</span>
         <div class="relative">
-            @svg('bx-calendar', 'absolute z-10 w-4 text-stone-500 top-0 left-3')
-            <select style="padding-left: 35px" name="group_schedule_id">
+            <div class="absolute top-0 inset-y-0 grid place-content-center left-3">
+                @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
+            </div>
+            <select style="padding-left: 35px" name="group_schedule_id" class="bg-white">
                 <option disabled selected>Grupo de horario</option>
                 @foreach ($group_schedules as $scheldule)
                     <option {{ $user && $user->group_schedule_id === $scheldule->id ? 'selected' : '' }}
