@@ -197,6 +197,10 @@ class UserController extends Controller
 
         $schedules = $this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate);
 
+        usort($schedules, function ($a, $b) {
+            return strcmp($b['date'], $a['date']);
+        });
+
         $terminals = AssistTerminal::all();
         return view('modules.users.slug.assists.+page', compact('user', 'schedules', 'terminals'));
     }
