@@ -13,11 +13,11 @@
             <div class="content">
                 <div class="flex items-center gap-2">
                     <button type="button" class="toggle-group">
-                        @svg('heroicon-o-chevron-right', 'w-5 h-5')
+                        @svg('fluentui-chevron-right-24', 'w-5 h-5')
                     </button>
                     <label class="flex items-center gap-2 ">
                         <input type="checkbox" class="select-all-group rounded-md p-2.5 border-neutral-400">
-                        @svg('heroicon-o-folder', 'w-5 h-5')
+                        @svg('fluentui-folder-16-o', 'w-5 h-5')
                         <span>{{ $system_privilege['name'] }}</span>
                     </label>
                 </div>
@@ -26,12 +26,12 @@
                         <div class="content">
                             <div class="flex items-center gap-2">
                                 <button type="button" class="toggle-subgroup">
-                                    @svg('heroicon-o-chevron-right', 'w-5 h-5')
+                                    @svg('fluentui-chevron-right-24', 'w-5 h-5')
                                 </button>
                                 <label class="flex items-center gap-2 ">
                                     <input type="checkbox"
                                         class="select-all-subgroup rounded-md p-2.5 border-neutral-400">
-                                    @svg('heroicon-o-folder', 'w-5 h-5')
+                                    @svg('fluentui-folder-16-o', 'w-5 h-5')
                                     <span>{{ $item['name'] }}</span>
                                 </label>
                                 <span class="privilege-count text-sm text-gray-500">(0/0)</span>
@@ -42,7 +42,7 @@
                                         <input {{ in_array($privilege, $privileges) ? 'checked' : '' }} type="checkbox"
                                             name="privileges[]" value="{{ $privilege }}"
                                             class="privilege-checkbox rounded-md p-2.5 border-neutral-400">
-                                        @svg('heroicon-o-folder', 'w-5 h-5')
+                                        @svg('fluentui-folder-16-o', 'w-5 h-5')
                                         <span>{{ $privilege_name }}</span>
                                     </label>
                                 @endforeach
