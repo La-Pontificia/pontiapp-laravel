@@ -22,12 +22,12 @@
 @section('layout.edas')
     @if ($hassAcces)
         <div class="text-black p-1 h-full max-sm:py-1 w-full flex-grow flex overflow-y-auto gap-2">
-            <aside class="space-y-3 min-w-[350px] max-lg:min-w-max pb-1 bg-white border shadow-sm rounded-xl">
+            <aside class="space-y-3 min-w-[330px] max-lg:min-w-max pb-1 bg-white border shadow-sm rounded-xl">
                 <nav class="flex flex-col overflow-x-auto text-neutral-700">
                     <div class="p-3 border-b flex items-center gap-2">
                         @include('commons.avatar', [
                             'src' => $edauser->profile,
-                            'key' => $user->id,
+                            'key' => $edauser->id,
                             'className' => 'w-10 max-lg:mx-auto',
                             'alt' => $edauser->first_name . ' ' . $edauser->last_name,
                             'altClass' => 'text-base',
@@ -61,12 +61,11 @@
                                 {{ $current_year->name }}
                             </a>
                             @if ($title)
-                                <div>
-                                    @svg('fluentui-folder-add-20-o', 'w-3 h-3 text-neutral-700')
+                                <div class="mx-1">
+                                    @svg('fluentui-chevron-right-28', 'w-3 h-3 text-neutral-700 opacity-50')
                                 </div>
                                 <div class="flex items-center gap-1">
-                                    <img src="{{ $title === 'Objetivos' ? '/pen.png' : ($title === 'Cuestionario anual' ? '/idea.png' : '/sheet-pen.png') }}"
-                                        class="w-4">
+                                    @svg($title === 'Objetivos' ? 'fluentui-text-bullet-list-square-edit-20-o' : 'fluentui-text-bullet-list-square-edit-20-o', 'w-5 h-5')
                                     @yield('title_eda')
                                 </div>
                             @endif
