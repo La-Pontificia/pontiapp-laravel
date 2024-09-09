@@ -126,48 +126,6 @@
                                 @endif
 
                             </div>
-                            {{-- <td data-value="{{ date('H:i', strtotime($schedule['from'])) }}" data-name="from">
-                                <p class="">
-                                    {{ date('h:i A', strtotime($schedule['from'])) }}
-                                </p>
-                            </td>
-                            <td data-value="{{ date('H:i', strtotime($schedule['to'])) }}" data-name="to">
-                                <p class="">
-                                    {{ date('h:i A', strtotime($schedule['to'])) }}
-                                </p>
-                            </td>
-                            <td class="bg-yellow-100"
-                                data-value="{{ $schedule['marked_in'] ? date('H:i', strtotime($schedule['marked_in'])) : '-' }}"
-                                data-name="marked_in">
-                                <p class="text-center">
-                                    {{ $schedule['marked_in'] ? date('h:i A', strtotime($schedule['marked_in'])) : '-' }}
-                                </p>
-                            </td>
-                            <td class="bg-yellow-100"
-                                data-value="{{ $schedule['marked_out'] ? date('H:i', strtotime($schedule['marked_out'])) : '-' }}"
-                                data-name="marked_out">
-                                <p class="text-center">
-                                    {{ $schedule['marked_out'] ? date('h:i A', strtotime($schedule['marked_out'])) : '-' }}
-                                </p>
-                            </td>
-                            <td data-value="{{ $schedule['owes_time'] }}" data-name="difference">
-                                <p>
-                                    {{ $schedule['owes_time'] }}
-                                </p>
-                            </td>
-                            <td data-value="{{ $schedule['terminal'] }}" data-name="terminal">
-                                <p class="flex items-center gap-1 ">
-                                    @if ($schedule['terminal'])
-                                        {{ $schedule['terminal'] }}
-                                    @endif
-                                </p>
-                            </td>
-                            <td data-value="{{ $schedule['observations'] }}" data-name="observations">
-                                <p
-                                    class="{{ $schedule['observations'] == 'Tardanza' ? 'text-yellow-600' : ($schedule['observations'] == 'Completo' ? 'text-green-500' : '') }}">
-                                    {{ !$isFuture ? $schedule['observations'] : '' }}
-                                </p>
-                            </td> --}}
                         </div>
                     @endforeach
                 </div>
