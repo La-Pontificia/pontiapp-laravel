@@ -6,7 +6,7 @@
     <div class="w-full max-w-2xl mx-auto">
         <h2 class="py-5">
             <a href="/edas/questionnaire-templates" class="flex items-center gap-2">
-                @svg('bx-left-arrow-alt', 'w-5 h-5')
+                svg'bx-left-arrow-alt', 'w-5 h-5')
                 Crear nueva plantilla de cuestionarios.
             </a>
         </h2>
