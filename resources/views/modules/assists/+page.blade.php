@@ -59,7 +59,7 @@
                         <span class="block">Terminales:</span>
                         <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
                             class=" w-fit bg-white border font-semibold min-w-max flex items-center rounded-lg p-2 gap-1 text-sm px-3">
-                            @svg('bx-devices', 'w-5 h-5')
+                            svg'bx-devices', 'w-5 h-5')
                             <span class="max-lg:hidden">Terminales</span>
                         </button>
                     </label>
@@ -95,7 +95,7 @@
 
             <button {{ count($schedules) === 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown"
                 class="secondary ml-auto">
-                @svg('bx-up-arrow-circle', 'w-5 h-5')
+                svg'bx-up-arrow-circle', 'w-5 h-5')
                 <span>
                     Exportar
                 </span>
@@ -196,7 +196,7 @@
                                     <td data-value="{{ $TTorTM }}" data-name="turn">
                                         <p tip="Turno de trabajo: {{ $TTorTM }}"
                                             class="text-center  {{ $TTorTM === 'TM' ? 'text-yellow-500' : 'text-violet-600' }}">
-                                            @svg($TTorTM === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
+                                            svg$TTorTM === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
                                         </p>
                                     </td>
                                     <td data-value="{{ date('H:i', strtotime($schedule['from'])) }}" data-name="from">
