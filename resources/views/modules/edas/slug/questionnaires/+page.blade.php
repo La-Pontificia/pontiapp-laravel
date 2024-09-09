@@ -42,9 +42,6 @@
                     @endforeach
                 </div>
                 <p class="text-xs flex items-center pt-2 gap-1 text-wrap text-neutral-400 mt-2">
-                    svg'heroicon-o-information-circle', [
-                    'class' => 'w-5 h-5 inline-block',
-                    ])
                     Cuestionario enviada el
                     {{ \Carbon\Carbon::parse($eda->collaboratorQuestionnaire->created_at)->isoFormat('LL') }} por
                     {{ $eda->collaboratorQuestionnaire->answeredBy->last_name }},
@@ -111,9 +108,6 @@
                     @endforeach
                 </div>
                 <p class="text-xs flex items-center pt-2 gap-1 text-wrap text-neutral-400 mt-2">
-                    svg'heroicon-o-information-circle', [
-                    'class' => 'w-5 h-5 inline-block',
-                    ])
                     Cuestionario enviada el
                     {{ \Carbon\Carbon::parse($eda->supervisorQuestionnaire->created_at)->isoFormat('LL') }} por
                     {{ $eda->supervisorQuestionnaire->answeredBy->last_name }},
