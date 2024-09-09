@@ -5,39 +5,86 @@
 @php
     $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
     $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
+    $names = explode(' ', $user->first_name)[0] . ' ' . explode(' ', $user->last_name)[0];
+
+    $items = [
+        [
+            'title' => 'Descripción general',
+            'href' => '/users/' . $user->id,
+            'active' => request()->is('users/' . $user->id),
+        ],
+        [
+            'title' => 'Organización',
+            'href' => '/users/' . $user->id . '/organization',
+            'active' => request()->is('users/' . $user->id . '/organization'),
+        ],
+        [
+            'title' => 'Horarios',
+            'href' => '/users/' . $user->id . '/schedules',
+            'active' => request()->is('users/' . $user->id . '/schedules'),
+        ],
+        [
+            'title' => 'Asistencias',
+            'href' => '/users/' . $user->id . '/assists',
+            'active' => request()->is('users/' . $user->id . '/assists'),
+        ],
+        [
+            'title' => 'Seguridad y acceso',
+            'href' => '/users/' . $user->id . '/segurity-access',
+            'active' => request()->is('users/' . $user->id . '/segurity-access'),
+        ],
+    ];
+
+    $hasChangePhoto = $cuser->has('users:edit') || $cuser->id === $user->id || $cuser->isDev();
 @endphp
 
 @section('layout.users')
-    <div class="text-black px-5 pb-5 max-w-3xl max-lg:max-w-full mx-auto w-full flex-col flex-grow flex overflow-y-auto">
-        <header class="mb-5">
-            <div class="pb-2 flex gap-4 items-center overflow-hidden">
-                <div class="relative w-fit">
-                    <div class="flex items-center gap-4">
-                        <div class="relative rounded-full overflow-hidden w-24 border aspect-square">
-                            <input data-notoutline-styles data-userid="{{ $user->id }}" class="hidden" type="file"
-                                name="profile" id="input-profile" accept="image/*">
-                            <img id="preview-profile" class="w-full h-full object-cover" src={{ $profile }}
-                                alt="{{ $profile }}">
+    <div class="text-black pt-4 pb-2 w-full flex-col flex-grow flex overflow-y-auto">
+        <div class="w-full h-full flex-grow flex flex-col">
+            <header class="mb-2 bg-white p-3 rounded-xl shadow-md max-w-2xl w-full mx-auto">
+                <div class="flex gap-4 items-center overflow-hidden">
+                    <div class="relative group w-fit overflow-hidden rounded-full">
+                        <div class="flex items-center gap-4">
+                            <div class="relative rounded-full overflow-hidden w-28 aspect-square">
+                                <input data-notoutline-styles data-userid="{{ $user->id }}" class="hidden" type="file"
+                                    name="profile" id="input-profile" accept="image/*">
+                                <img id="preview-profile" class="w-full h-full object-cover" src={{ $profile }}
+                                    alt="{{ $profile }}">
+                            </div>
                         </div>
+                        @if ($hasChangePhoto)
+                            <button onclick="document.getElementById('input-profile').click()"
+                                class="bg-white/80 hidden z-10 group-hover:grid place-content-center absolute inset-0">
+                                @svg('fluentui-image-edit-24-o', 'w-6 h-6')
+                            </button>
+                        @endif
                     </div>
-                    <button onclick="document.getElementById('input-profile').click()" tip="Cambiar foto de perfil"
-                        class="bg-[#ffffff] text-blue-500 shadow-md absolute bottom-2 right-2 rounded-full">
-                        @svg('bx-refresh', 'h-6 w-6')
-                    </button>
+                    <div class="flex flex-col gap-0.5">
+                        <h2 class="text-2xl font-medium tracking-tight text-nowrap text-ellipsis">
+                            {{ $names }}
+                        </h2>
+                        <p class="text-sm opacity-70">
+                            {{ $user->role_position->name }}
+                            • {{ $user->role_position->department->name }}
+                        </p>
+
+                        <a href="mailto:{{ $user->email }}" class="flex text-xs font-semibold items-center gap-2 w-fit">
+                            @svg('fluentui-mail-20-o', 'w-5 h-5')
+                        </a>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-lg tracking-tight text-nowrap text-ellipsis font-medium">
-                        {{ $user->last_name }}, {{ $user->first_name }}
-                    </h2>
-                    <p class="text-sm">
-                        {{ $user->role_position->name }}, {{ $user->role_position->department->name }}
-                    </p>
-                </div>
+                <nav class="border-b mt-2 text-sm flex items-center text-stone-700">
+                    @foreach ($items as $item)
+                        <a href="{{ $item['href'] }}" {{ $item['active'] ? 'data-current="true"' : '' }}
+                            class="p-2 hover:bg-neutral-100 hover:text-stone-800 data-[current]:font-semibold border-b-2 border-transparent data-[current]:border-blue-500">
+                            {{ $item['title'] }}
+                        </a>
+                    @endforeach
+                </nav>
+            </header>
+            <div class="flex h-full flex-grow flex-col rounded-xl">
+                @yield('layout.users.slug')
             </div>
-        </header>
-        <div
-            class="bg-white flex flex-col overflow-auto border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
-            @yield('layout.users.slug')
         </div>
     </div>
 @endsection

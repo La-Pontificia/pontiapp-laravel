@@ -9,7 +9,7 @@
 @section('layout.users.slug')
     <div class="flex items-center gap-3 font-medium p-2">
         <a href="/users/{{ $user->id }}" class="text-neutral-800 flex p-1 hover:bg-neutral-200 rounded-full">
-            @svg('bx-left-arrow-alt', 'w-6 h-6 opacity-70')
+            svg'bx-left-arrow-alt', 'w-6 h-6 opacity-70')
         </a>
         Información personal
     </div>
@@ -72,7 +72,7 @@
             <span>Grupo de horario</span>
             @if ($hasEdit)
                 <div class="relative">
-                    @svg('bx-calendar', 'absolute z-10 w-4 text-stone-500 top-0 left-3')
+                    svg'bx-calendar', 'absolute z-10 w-4 text-stone-500 top-0 left-3')
                     <select form="form-user" style="padding-left: 35px" name="group_schedule_id">
                         <option disabled selected>Grupo de horario</option>
                         @foreach ($group_schedules as $scheldule)
@@ -119,7 +119,7 @@
                 <form method="POST" action="/api/users/update-details/{{ $user->id }}" id="form-user"
                     class="dinamic-form">
                     <button type="submit" form="form-user" class="primary">
-                        @svg('bxs-save', 'w-4 h-4')
+                        svg'bxs-save', 'w-4 h-4')
                         Guardar cambios
                     </button>
                 </form>

@@ -7,171 +7,100 @@
 @endphp
 
 @section('layout.users.slug')
-    <div class="flex items-center gap-3 font-medium p-2">
-        <a href="/users/{{ $user->id }}" class="text-neutral-800 flex p-1 hover:bg-neutral-200 rounded-full">
-            @svg('bx-left-arrow-alt', 'w-6 h-6 opacity-70')
-        </a>
-        Organización
-    </div>
-    <div class="p-4 grid gap-7">
-        <div class="grid grid-cols-2 gap-4">
-            <label class="label">
-                <span>
-                    Puesto de Trabajo
-                </span>
-                @if ($hasEdit)
-                    <select form="form-user" name="id_job_position" id="job-position-select" required>
-                        @foreach ($job_positions as $item)
-                            <option {{ $user && $user->role_position->job_position->id === $item->id ? 'selected' : '' }}
-                                value="{{ $item->id }}">
-                                {{ $item->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                @else
-                    <p class="font-semibold">
-                        {{ $user->role_position->job_position->name }}
-                    </p>
-                @endif
-            </label>
-            <label class="label">
-                <span>
-                    Cargo
-                </span>
-                @if ($hasEdit)
-                    <select form="form-user" name="id_role" id="role-select" required>
-                        @foreach ($roles as $role)
-                            <option {{ $user && $user->role_position->id === $role->id ? 'selected' : '' }}
-                                value="{{ $role->id }}">
-                                {{ $role->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                @else
-                    <p class="font-semibold">
-                        {{ $user->role_position->name }}
-                    </p>
-                @endif
-            </label>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-            <label class="label">
-                <span>
-                    Sede
-                </span>
-
-                @if ($hasEdit)
-                    <select name="id_branch" required form="form-user">
-                        @foreach ($branches as $branch)
-                            <option {{ $user && $user->id_branch === $branch->id ? 'selected' : '' }}
-                                value="{{ $branch->id }}">
-                                {{ $branch->name }}</option>
-                        @endforeach
-                    </select>
-                @else
-                    <p class="font-semibold">
-                        {{ $user->branch->name }}
-                    </p>
-                @endif
-            </label>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="label">
-                <span>
-                    Bajo supervision de
-                </span>
-                @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
-                    <button data-modal-target="dialog" data-modal-toggle="dialog" tip="Asignar o Editar supervisor"
-                        class="text-left p-2 px-3 flex items-center gap-2 text-sm border bg-neutral-200 border-neutral-400 hover:border-neutral-500 rounded-lg">
-                        @svg('bx-user-pin', 'w-6 h-6')
-                        @if ($user->supervisor)
-                            <div>
-                                <p>
-                                    {{ $user->supervisor->last_name }}, {{ $user->supervisor->first_name }}
-                                </p>
-                                <p class="text-xs text-neutral-700">
-                                    {{ $user->supervisor->role_position->name }},
-                                    {{ $user->supervisor->role_position->department->name }}
-                                </p>
-                            </div>
-                        @else
-                            Sin supervisor
-                        @endif
-                    </button>
-
-                    <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
-                        <div class="content lg:max-w-lg max-w-full">
-                            <header>
-                                Asignar o cambiar supervisor
-                            </header>
-                            <div class="p-3 gap-4 overflow-y-auto flex flex-col">
-                                @php
-                                    $defaultvalue = $user->supervisor_id
-                                        ? $user->supervisor->first_name . ' ' . $user->supervisor->last_name
-                                        : null;
-                                @endphp
-                                <div class="grid gap-2">
-                                    <label class="relative">
-                                        <div class="absolute z-[1] inset-y-0 px-2 flex items-center">
-                                            @svg('bx-search-alt-2', 'w-5 h-5 opacity-60')
-                                        </div>
-                                        <input value="{{ $defaultvalue }}" data-id="{{ $user->id }}" type="search"
-                                            class="supervisor-input w-full" style="padding-left: 30px"
-                                            placeholder="Correo, DNI, nombres...">
-                                    </label>
-                                    <div id="result-{{ $user->id }}" class="p-1 grid gap-2 text-center">
-                                        <p class="p-10 text-neutral-500">
-                                            No se encontraron resultados o no se ha realizado
-                                            una
-                                            búsqueda.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <footer>
-                                <button data-modal-hide="dialog" type="button">Cancelar</button>
-                                @if ($user->supervisor_id)
-                                    <button data-alertvariant="warning"
-                                        data-param='/api/users/supervisor/remove/{{ $user->id }}'
-                                        data-atitle='Remover supervisor'
-                                        data-adescription='¿Estás seguro de que deseas remover el supervisor de este usuario?'
-                                        type="button" class="secondary dinamic-alert">
-                                        @svg('bx-user-minus', 'w-5 h-5')
-                                        Remover supervisor
-                                    </button>
-                                @endif
-                            </footer>
-                        </div>
-                    </div>
-                @else
-                    <p class="font-semibold">
-                        {{ $user->supervisor ? $user->supervisor->last_name . ', ' . $user->supervisor->first_name : 'Sin supervisor' }}
-                    </p>
-                @endif
-            </div>
-        </div>
-        <div class="text-sm">
-            <p>
-                Registrado el {{ \Carbon\Carbon::parse($user->created_at)->isoFormat('LL') }} por
-                {{ $user->createdBy->last_name }}, {{ $user->createdBy->first_name }}
-            </p>
-            @if ($user->updatedBy)
-                <p>
-                    Ultima actualización el {{ \Carbon\Carbon::parse($user->updated_at)->isoFormat('LL') }} por
-                    {{ $user->updatedBy->last_name }}, {{ $user->updatedBy->first_name }}
-                </p>
+    <div class="p-2 flex-grow max-w-4xl w-full flex flex-col mx-auto">
+        <div class="flex flex-col max-w-sm mx-auto w-full items-center">
+            @include('modules.users.slug.organization.person', [
+                'person' => $user,
+            ])
+            @if ($user->people->count() !== 0)
+                <div class="w-[1px] h-5 bg-stone-400 mx-auto ">
+                </div>
             @endif
         </div>
+        @if ($user->people->count() !== 0)
+            <div class="label bg-stone-200/40 border p-2 rounded-md">
+                <span>
+                    {{ $user->names() }} supervisa a ({{ $user->people->count() }})
+                    {{ $user->people->count() > 1 ? 'personas' : 'persona' }}
+                </span>
+                <div class="grid grid-cols-3 gap-3">
+                    @foreach ($user->people as $person)
+                        <a {{ $user->id === $person->id ? 'data-current="true"' : '' }}
+                            class="hover:bg-white/10 w-full flex items-center gap-2 rounded-lg p-2 text-left hover:shadow-lg"
+                            href="/users/{{ $person->id }}/organization">
+                            <div class="">
+                                @include('commons.avatar', [
+                                    'src' => $person->profile,
+                                    'className' => 'w-10 mx-auto',
+                                    'key' => $person->id,
+                                    'alt' => $person->first_name . ' ' . $person->last_name,
+                                    'altClass' => 'text-xl',
+                                ])
+                            </div>
+                            <div class="overflow-hidden">
+                                <p class="font-semibold text-sm">
+                                    {{ $person->names() }}
+                                </p>
+                                <p class="text-xs opacity-70 text-nowrap text-ellipsis">
+                                    {{ $person->role_position->name }}
+                                </p>
+                                <p class="text-xs text-nowrap overflow-ellipsis">
+                                    {{ $person->role_position->department->name }}
+                                </p>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+        @if (count($user->companions()) !== 0)
+            <div class="label p-2">
+                <span>
+                    {{ $user->names() }} trabaja con
+                </span>
+                <div class="grid grid-cols-3 gap-3">
+                    @foreach ($user->companions() as $person)
+                        <a {{ $user->id === $person->id ? 'data-current="true"' : '' }}
+                            class="hover:bg-white/10 w-full flex items-center gap-2 rounded-lg p-2 text-left hover:shadow-lg"
+                            href="/users/{{ $person->id }}/organization">
+                            <div class="">
+                                @include('commons.avatar', [
+                                    'src' => $person->profile,
+                                    'className' => 'w-10 mx-auto',
+                                    'key' => $person->id,
+                                    'alt' => $person->first_name . ' ' . $person->last_name,
+                                    'altClass' => 'text-lg',
+                                ])
+                            </div>
+                            <div class="overflow-hidden">
+                                <p class="font-semibold text-sm">
+                                    {{ $person->names() }}
+                                </p>
+                                <p class="text-xs opacity-70 text-nowrap text-ellipsis">
+                                    {{ $person->role_position->name }}
+                                </p>
+                                <p class="text-xs text-nowrap overflow-ellipsis">
+                                    {{ $person->role_position->department->name }}
+                                </p>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+        {{--         
         @if ($hasEdit)
-            <div class="flex items-center gap-2 border-t pt-4">
+            <div class="flex items-center gap-2 pt-2 border-t">
                 <form method="POST" action="/api/users/organization/{{ $user->id }}" id="form-user"
                     class="dinamic-form">
-                    <button type="submit" form="form-user" class="primary">
-                        @svg('bxs-save', 'w-4 h-4')
-                        Guardar cambios
+                    <button type="submit" form="form-user" class="primary gap-2 flex">
+                        @svg('fluentui-people-edit-20-o', 'w-5 h-5')
+                        <span>
+                            Guardar cambios
+                        </span>
                     </button>
                 </form>
             </div>
-        @endif
+        @endif --}}
     </div>
 @endsection

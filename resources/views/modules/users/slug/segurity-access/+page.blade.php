@@ -7,18 +7,12 @@
 @endphp
 
 @section('layout.users.slug')
-    <div class="flex items-center gap-3 font-medium p-2">
-        <a href="/users/{{ $user->id }}" class="text-neutral-800 flex p-1 hover:bg-neutral-200 rounded-full">
-            @svg('bx-left-arrow-alt', 'w-6 h-6 opacity-70')
-        </a>
-        Seguridad y acceso
-    </div>
-    <div class="p-4 grid gap-7">
+    <div class="p-2 grid max-w-2xl mx-auto w-full gap-7">
         <div class="grid grid-cols-2 gap-3">
             <label class="label">
                 <span>Correo institucional</span>
                 @if ($hasEdit)
-                    <input type="email" form="form-user" required name="email" value="{{ $user->email }}"
+                    <input class="bg-white" type="email" form="form-user" required name="email" value="{{ $user->email }}"
                         placeholder="Correo institucional">
                 @else
                     <p class="font-semibold">
@@ -31,8 +25,8 @@
                     <form method="POST" action="/api/users/update-segurity-access/{{ $user->id }}" id="form-user"
                         class="dinamic-form">
                         <button type="submit" form="form-user" class="primary">
-                            @svg('bxs-save', 'w-4 h-4')
-                            Guardar cambios
+                            @svg('fluentui-person-mail-24-o', 'w-4 h-4')
+                            Actualizar email
                         </button>
                     </form>
                 </div>
@@ -41,19 +35,21 @@
         <div class="grid gap-2">
             <div class="label">
                 <span>Contraseña</span>
-                <div class="grid gap-2">
+                <div class="grid w-full gap-2">
                     @if (($cuser->has('users:reset-password') && !$user->has('development')) || $cuser->isDev())
-                        <button data-atitle="Restablecer contraseña"
+                        <button data-atitle="Restablecer contraseña" style="width: 100%; border-radius: 0.5rem;"
                             data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
                             data-param="/api/users/reset-password/{{ $user->id }}"
-                            class="p-1.5 px-3 dinamic-alert bg-neutral-200 hover:bg-neutral-300 rounded-md">
+                            class="dinamic-alert justify-center secondary ">
+                            @svg('fluentui-person-key-20-o', 'w-4 h-4')
                             Restablecer contraseña
                         </button>
                     @endif
 
                     @if ($cuser->has('users:reset-password') || $cuser->id === $user->id || $cuser->isDev())
-                        <button data-modal-target="dialog" data-modal-toggle="dialog"
-                            class="p-1.5 px-3 bg-neutral-200 hover:bg-neutral-300 rounded-md">
+                        <button style="width: 100%; border-radius: 0.5rem;" data-modal-target="dialog"
+                            data-modal-toggle="dialog" class="secondary justify-center">
+                            @svg('fluentui-person-key-20-o', 'w-4 h-4')
                             Cambiar contraseña
                         </button>
 
@@ -133,6 +129,17 @@
                 </div>
             </div>
         </div>
-
+        <div>
+            <label class="label w-fit">
+                <span>Estado de la cuenta.</span>
+                <div>
+                    <button data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
+                        data-adescription="No podrás deshacer esta acción."
+                        data-param="/api/users/toggle-status/{{ $user->id }}" class="secondary dinamic-alert">
+                        Cuenta: {{ $user->status ? 'Activo' : 'Inactivo' }}
+                    </button>
+                </div>
+            </label>
+        </div>
     </div>
 @endsection
