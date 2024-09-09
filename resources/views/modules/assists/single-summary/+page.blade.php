@@ -75,9 +75,9 @@
                                     </td>
                                     <td>
                                         @if ($assist->count > 0)
-                                            @svg('bx-check-circle', 'h-6 w-6 text-green-500')
+                                            svg'bx-check-circle', 'h-6 w-6 text-green-500')
                                         @else
-                                            @svg('bx-error', 'h-6 w-6 text-red-500')
+                                            svg'bx-error', 'h-6 w-6 text-red-500')
                                         @endif
                                     </td>
                                 </tr>
