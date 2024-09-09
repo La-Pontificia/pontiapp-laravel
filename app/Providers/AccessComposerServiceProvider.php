@@ -29,7 +29,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                     ],
                 ],
                 [
-                    'name' => 'Gestión de Usuarios',
+                    'name' => 'Gestión Usuarios',
                     'items' => [
                         [
                             'name' => 'Usuarios',
@@ -51,15 +51,6 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'users:user-roles:create' => 'Agregar roles',
                                 'users:user-roles:edit' => 'Actualizar roles',
                                 'users:user-roles:delete' => 'Eliminar roles',
-                            ],
-                        ],
-                        [
-                            'name' => 'Horarios',
-                            'privileges' => [
-                                'users:schedules:show' => 'Ver horarios',
-                                'users:schedules:create' => 'Agregar horarios',
-                                'users:schedules:edit' => 'Actualizar horarios',
-                                'users:schedules:delete' => 'Eliminar horarios',
                             ],
                         ],
                         [
@@ -88,23 +79,35 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'users:roles:delete' => 'Eliminar cargos',
                             ],
                         ],
-                        // [
-                        //     'name' => 'Importar',
-                        //     'privileges' => [
-                        //         'users:import' => 'Importar usuarios',
-                        //     ],
-                        // ],
-                        // [
-                        //     'name' => 'Exportar',
-                        //     'privileges' => [
-                        //         'users:export' => 'Exportar usuarios',
-                        //     ],
-                        // ],
-
                     ],
                 ],
                 [
-                    'name' => 'Gestión de asistencias',
+                    'name' => 'Gestión Horarios',
+                    'items' => [
+                        [
+                            'name' => 'Horarios',
+                            'privileges' => [
+                                'schedules:show' => 'Ver horarios',
+                                'schedules:create' => 'Agregar horarios',
+                                'schedules:create_unique' => 'Agregar horarios únicos',
+                                'schedules:edit' => 'Actualizar horarios',
+                                'schedules:delete' => 'Eliminar horarios',
+                            ],
+                        ],
+                        [
+                            'name' => 'Horarios externos',
+                            'privileges' => [
+                                'schedules:external:show' => 'Ver horarios externos',
+                                'schedules:external:create' => 'Agregar horarios externos',
+                                'schedules:external:create_unique' => 'Agregar horarios únicos externos',
+                                'schedules:external:edit' => 'Actualizar horarios externos',
+                                'schedules:external:delete' => 'Eliminar horarios externos',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Gestión Asistencias',
                     'items' => [
                         [
                             'name' => 'Asistencias',
