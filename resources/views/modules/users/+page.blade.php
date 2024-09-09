@@ -115,6 +115,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,6 +154,13 @@
                                                 {{ $user->email }}
                                             </p>
                                         </td>
+                                        <td>
+                                            <p class="text-nowrap text-sm font-medium flex items-center gap-1">
+                                                @svg('fluentui-person-circle-24-o', 'w-5 h-5')
+                                                {{ $user->role->title }}
+                                            </p>
+                                        </td>
+
                                         <td>
                                             @if ($user->supervisor)
                                                 <div class="flex items-center gap-2">
