@@ -6,15 +6,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "andreiio/blade-iconoir": "^4.4",
-        "blade-ui-kit/blade-heroicons": "^2.4",
+        "codeat3/blade-fluentui-system-icons": "^1.33",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.10",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
-        "mallardduck/blade-boxicons": "^2.4",
         "ramsey/uuid": "^4.7",
         "socialiteproviders/azureadb2c": "^4.3",
         "socialiteproviders/microsoft-azure": "^5.1"
