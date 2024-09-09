@@ -42,7 +42,7 @@
                             </a>
                         </footer>
                     </aside>
-                    <div class="overflow-auto w-full p-2 pl-0 flex-grow flex flex-col h-full">
+                    <div class="overflow-auto w-full p-2 flex-grow flex flex-col h-full">
                         @yield('content')
                     </div>
                 </main>

@@ -2,7 +2,7 @@
     <div class="flex w-full gap-5 items-center h-full px-3">
         <div class="flex-grow flex ml-14 max-lg:ml-0 text-neutral-800 items-center gap-3">
             <button class="lg:hidden block" id="sidebar-button">
-                @svg('bx-menu', 'w-8 h-8')
+                @svg('fluentui-line-horizontal-3-20', 'w-6 h-6')
             </button>
             <a href="/" class="px-2 flex items-center gap-2 text-blue-600 font-semibold tracking-tight text-base">
                 <img src="/elp.webp" class="w-20" />
@@ -12,12 +12,10 @@
             </a>
         </div>
         <button>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-bell">
-                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-            </svg>
+            @svg('fluentui-settings-20-o', 'w-6 h-6')
+        </button>
+        <button>
+            @svg('fluentui-alert-28-o', 'w-6 h-6')
         </button>
         <button type="button" class="flex items-center gap-2" id="user-menu-button" aria-expanded="false"
             data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
@@ -33,7 +31,7 @@
             id="user-dropdown">
             <div class="flex p-3 pb-0 items-center ">
                 <div class="flex items-center flex-grow gap-2">
-                    <img src="/lp.webp" class="w-20 " />
+                    <img src="/elp.webp" class="w-20 " />
                 </div>
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault();document.getElementById('logout-form').submit();"
