@@ -9,7 +9,7 @@
         <div class="flex flex-col w-full bg-white border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
             @if ($cuser->has('edas:years:create') || $cuser->isDev())
                 <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary m-2">
-                    @svg('bx-plus', 'w-5 h-5')
+                    svg'bx-plus', 'w-5 h-5')
                     <span>Nuevo</span>
                 </button>
                 <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -32,7 +32,7 @@
                 @if ($cuser->has('edas:years:show') || $cuser->isDev())
                     @forelse ($years as $year)
                         <div class="flex relative items-center hover:bg-neutral-100 p-3 gap-2">
-                            @svg('bx-file-blank', 'w-5 h-5 mr-2')
+                            svg'bx-file-blank', 'w-5 h-5 mr-2')
                             <div class="flex-grow">
                                 <p>{{ $year->name }}</p>
                             </div>
@@ -46,7 +46,7 @@
                             <button type="button" data-modal-target="dialog-{{ $year->id }}"
                                 data-modal-toggle="dialog-{{ $year->id }}"
                                 class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
-                                @svg('bx-pencil', 'w-4 h-4')
+                                svg'bx-pencil', 'w-4 h-4')
                             </button>
 
                             <div id="dialog-{{ $year->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -70,7 +70,7 @@
                             </div>
                             <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $year->id }}">
-                                @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                                svg'bx-dots-vertical-rounded', 'w-4 h-4')
                             </button>
                             <div id="dropdown-{{ $year->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())
@@ -102,7 +102,7 @@
                             </p>
                             <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $template->id }}">
-                                @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                                svg'bx-dots-vertical-rounded', 'w-4 h-4')
                             </button>
                             <div id="dropdown-{{ $template->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())
