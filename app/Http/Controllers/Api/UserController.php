@@ -89,6 +89,7 @@ class UserController extends Controller
     {
 
         request()->validate(User::$detailsRules);
+        $cuser = auth()->user();
 
         $user = User::find($id);
 
@@ -99,7 +100,11 @@ class UserController extends Controller
         $user->dni = $request->dni;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
+        $user->id_role = $request->id_role;
+        $user->id_role_user = $request->id_role_user;
+        $user->id_branch = $request->id_branch;
         $user->group_schedule_id = $request->group_schedule_id;
+        $user->updated_by = $cuser->id;
         $user->save();
 
         return response()->json('Detalles actualizados correctamente.', 200);
