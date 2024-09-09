@@ -35,6 +35,7 @@ class AssistsService
                         'full_name' => $user->last_name . ', ' . $user->first_name,
                         'group_id' => $schedule->group_id,
                         'user_id' => $schedule->user_id,
+                        'user' => $user,
                         'job_position' => $user->role_position->job_position->name,
                         'role' => $user->role_position->name,
                         'day' => $date->isoFormat('dddd'),
@@ -60,7 +61,7 @@ class AssistsService
         });
 
         usort($schedules, function ($a, $b) {
-            return strcmp($b['date'], $a['date']);
+            return strcmp($a['date'], $b['date']);
         });
 
         return [
