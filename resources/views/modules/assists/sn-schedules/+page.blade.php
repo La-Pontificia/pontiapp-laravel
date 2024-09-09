@@ -40,7 +40,7 @@
 
             {{-- <button {{ count($schedules) === 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown"
                 class="secondary ml-auto">
-                @svg('bx-up-arrow-circle', 'w-5 h-5')
+                svg'bx-up-arrow-circle', 'w-5 h-5')
                 <span>
                     Exportar
                 </span>
