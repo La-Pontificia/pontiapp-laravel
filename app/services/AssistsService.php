@@ -35,6 +35,10 @@ class AssistsService
                         'full_name' => $user->last_name . ', ' . $user->first_name,
                         'group_id' => $schedule->group_id,
                         'user_id' => $schedule->user_id,
+                        'job_position' => $user->role_position->job_position->name,
+                        'role' => $user->role_position->name,
+                        'day' => $date->isoFormat('dddd'),
+                        'turn' => Carbon::parse($schedule->from)->hour >= 12 ? 'TT' : 'TM',
                         'title' => $schedule->title,
                         'date' => $date->format('Y-m-d'),
                         'from' => Carbon::parse($schedule->from)->setDateFrom($date)->format('Y-m-d H:i:s'),
@@ -50,14 +54,13 @@ class AssistsService
             }
         }
 
-        $schedules = $schedulesGenerated;
-        usort($schedules, function ($a, $b) {
-            return strcmp($a['date'], $b['date']);
-        });
-
-        $schedules = array_filter($schedules, function ($schedule) use ($startDate, $endDate) {
+        $schedules = array_filter($schedulesGenerated, function ($schedule) use ($startDate, $endDate) {
             $date = Carbon::parse($schedule['date']);
             return $date->between(Carbon::parse($startDate), Carbon::parse($endDate));
+        });
+
+        usort($schedules, function ($a, $b) {
+            return strcmp($b['date'], $a['date']);
         });
 
         return [
