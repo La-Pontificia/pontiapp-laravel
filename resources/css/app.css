@@ -99,31 +99,26 @@ button[disabled] {
     display: flex;
     flex-direction: column;
     > span {
-        color: #787878;
-        font-size: 0.75rem;
-        font-weight: 500;
-        margin-bottom: 5px;
+        color: #323232;
+        font-size: 0.8rem;
+        margin-bottom: 3px;
     }
 }
 
 input,
 textarea,
 select {
-    border-radius: 10px;
+    border-radius: 9px;
     padding: 6px 12px;
     background-color: transparent;
     outline: none;
     position: relative;
     font-size: 0.9rem;
-    border: 1px solid rgb(212, 212, 212);
+    border: 1px solid #e1e1e1;
+    border-bottom-color: #a4a4a4;
     &:focus {
-        /* &
-                [type="text"][type="password"][type="date"][type="datetime"][type="email"][type="number"] {
-                border-bottom: 1px solid #167dfa;
-            } */
-        background-color: rgba(28, 100, 242, 0.2);
-        outline: 3px solid rgb(28 100 242);
-        outline-offset: -2px;
+        /* background-color: rgba(28, 100, 242, 0.2); */
+        border-bottom-color: #1c64f2;
     }
 
     &:disabled {
@@ -157,7 +152,7 @@ a.primary {
     border: none;
     border-radius: 999px;
     padding-inline: 15px;
-    padding-block: 8px;
+    padding-block: 5px;
     font-weight: 600;
     &:hover {
         background-color: #2468d5;
@@ -177,7 +172,7 @@ a.secondary {
     border: none;
     border-radius: 999px;
     padding-inline: 20px;
-    padding-block: 8px;
+    padding-block: 5px;
     font-weight: 500;
     border: 1px solid #82828259;
     &:hover {
