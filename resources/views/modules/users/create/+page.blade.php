@@ -5,18 +5,13 @@
 @section('layout.users')
     @if ($cuser->has('users:create') || $cuser->isDev())
         <div class="text-black w-full flex-grow flex flex-col overflow-y-auto">
-            <div class="flex items-center justify-between p-4">
-                <button onclick="window.history.back()" class="text-lg flex gap-2 items-center font-semibold text-gray-900 ">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-arrow-left">
-                        <path d="m12 19-7-7 7-7" />
-                        <path d="M19 12H5" />
-                    </svg>
-                    Regitrar nuevo usuario
+            <div class="flex items-center border-b justify-between p-2">
+                <button onclick="window.history.back()" class="flex gap-2 items-center text-gray-900 ">
+                    @svg('fluentui-arrow-left-20', 'w-5 h-5')
+                    Registrar nuevo usuario
                 </button>
             </div>
-            <div class="p-5 flex-grow w-full overflow-y-auto ">
+            <div class="p-5 flex-grow mt-2 w-full overflow-y-auto ">
                 <form class="grid gap-4 w-full" role="form" id="reate-user-form">
                     @include('modules.users.form', [
                         'user' => null,
