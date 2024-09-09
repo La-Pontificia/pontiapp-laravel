@@ -46,9 +46,8 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     // Users routes
     Route::get('users', [UserController::class, 'index']);
 
-    Route::get('users/schedules', [ScheduleController::class, 'index']);
-    Route::get('users/schedules/create', [ScheduleController::class, 'create']);
-    Route::get('users/schedules/{id}', [ScheduleController::class, 'schedule']);
+    // Route::get('users/schedules/create', [ScheduleController::class, 'create']);
+    // Route::get('users/schedules/{id}', [ScheduleController::class, 'schedule']);
 
     Route::get('users/emails-access', [UserController::class, 'emails_access']);
 
@@ -62,9 +61,17 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('users/{id}/organization', [UserController::class, 'slug_organization']);
     Route::get('users/{id}/schedules', [UserController::class, 'slug_schedules']);
     Route::get('users/{id}/assists', [UserController::class, 'slug_assists']);
+    Route::get('users/{id}/contract', [UserController::class, 'slug_contract']);
 
 
     Route::get('users/{id}', [UserController::class, 'slug']);
+
+
+    // schedules routes
+
+    Route::get('schedules', [ScheduleController::class, 'index']);
+    Route::get('schedules/{id}', [ScheduleController::class, 'slug']);
+    Route::get('schedules/external', [ScheduleController::class, 'external']);
 
 
     // Edas routes

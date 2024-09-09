@@ -123,6 +123,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // assists routes
 
     Route::get('assists/export', [AssistsController::class, 'peerScheduleExport']);
+    Route::get('assists/peer-user/{id}/export', [AssistsController::class, 'peerUserExport']);
 
     // Questions routes
     Route::get('questionnaire-templates/{id}/questions', [QuestionController::class, 'questions']);
