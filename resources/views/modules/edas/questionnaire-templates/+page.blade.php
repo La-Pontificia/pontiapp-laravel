@@ -9,7 +9,7 @@
         <div class="flex flex-col w-full bg-white border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
             @if ($cuser->has('edas:questionnaire-templates:create') || $cuser->isDev())
                 <a href="/edas/questionnaire-templates/create" class="primary m-2">
-                    @svg('bx-plus', 'w-5 h-5')
+                    svg'bx-plus', 'w-5 h-5')
                     <span>Nuevo</span>
                 </a>
             @endif
@@ -17,7 +17,7 @@
                 @if ($cuser->has('edas:questionnaire-templates:show') || $cuser->isDev())
                     @forelse ($templates as $template)
                         <div class="flex relative items-center hover:bg-neutral-100 p-3 gap-2">
-                            @svg('bx-file-blank', 'w-5 h-5 mr-2')
+                            svg'bx-file-blank', 'w-5 h-5 mr-2')
                             <div class="flex-grow">
                                 <p>{{ $template->title }}</p>
                             </div>
@@ -32,7 +32,7 @@
                             </p>
                             <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $template->id }}">
-                                @svg('bx-dots-vertical-rounded', 'w-4 h-4')
+                                svg'bx-dots-vertical-rounded', 'w-4 h-4')
                             </button>
                             <div id="dropdown-{{ $template->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())
