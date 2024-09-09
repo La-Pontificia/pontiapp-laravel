@@ -7,7 +7,7 @@
     <div class="w-full max-w-2xl mx-auto">
         <h2 class="py-5">
             <a href="/edas/questionnaire-templates" class="flex items-center gap-2">
-                @svg('bx-left-arrow-alt', 'w-5 h-5')
+                svg'bx-left-arrow-alt', 'w-5 h-5')
                 Editar plantilla de cuestionarios: {{ $template->name }}
             </a>
         </h2>
@@ -30,7 +30,7 @@
         <nav class="border-b p-1 flex gap-3">
             <button onclick="window.history.back()"
                 class="text-blue-500 hover:bg-white font-semibold justify-center min-w-max flex items-center rounded-md p-2 gap-1 text-sm px-2">
-                @svg('heroicon-o-chevron-left', [
+                svg'heroicon-o-chevron-left', [
                     'class' => 'w-5 h-5',
                 ])
                 <span class="max-lg:hidden">Editar plantilla</span>
