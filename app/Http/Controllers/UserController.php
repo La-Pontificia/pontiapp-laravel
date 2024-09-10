@@ -196,10 +196,15 @@ class UserController extends Controller
         if (!$user) return view('+500', ['error' => 'User not found']);
         $terminals = AssistTerminal::all();
 
-        $queryTerminal =
-            $request->get('terminal') ?? $user->defaultTerminal
-            ? $user->defaultTerminal->database_name
-            : $terminals[0]->database_name;
+        $queryTerminal = null;
+
+        if ($request->get('terminal')) {
+            $queryTerminal = $request->get('terminal');
+        } elseif ($user->defaultTerminal) {
+            $queryTerminal = $user->defaultTerminal->database_name;
+        } else {
+            $queryTerminal = $terminals[0]->database_name;
+        }
 
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
