@@ -38,7 +38,7 @@
                         <button type="button" data-modal-target="dialog-{{ $department->id }}"
                             data-modal-toggle="dialog-{{ $department->id }}"
                             class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
-                            @svg('fluentui-edit-20', 'w-4 h-4')
+                            @svg('fluentui-edit-20', 'w-5 h-5')
                         </button>
                         <div id="dialog-{{ $department->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
                             <div class="content lg:max-w-lg max-w-full">
@@ -61,7 +61,7 @@
                         </div>
                         <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                             data-dropdown-toggle="dropdown-{{ $department->id }}">
-                            @svg('fluentui-more-horizontal-20-o', 'w-4 h-4')
+                            @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                         </button>
                         <div id="dropdown-{{ $department->id }}" class="dropdown-content hidden">
                             <button data-atitle="¿Estás seguro de eliminar?"
