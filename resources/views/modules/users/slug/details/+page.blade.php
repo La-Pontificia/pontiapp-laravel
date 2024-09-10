@@ -119,7 +119,7 @@
                 <form method="POST" action="/api/users/update-details/{{ $user->id }}" id="form-user"
                     class="dinamic-form">
                     <button type="submit" form="form-user" class="primary">
-                        svg'bxs-save', 'w-4 h-4')
+                        svg'bxs-save', 'w-5 h-5')
                         Guardar cambios
                     </button>
                 </form>
