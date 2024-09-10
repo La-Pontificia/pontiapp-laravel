@@ -47,13 +47,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // FORMS
+    // Dinamic forms
     dinamicForms?.forEach((f) => {
         f.addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(f);
             const url = f.action;
-            const method = f.method;
+            const method = f.method ?? "POST";
             const redirect = f.getAttribute("data-redirect");
 
             const formComponents = f.querySelectorAll(
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             try {
                 const { data } = await axios({
-                    method: method,
+                    method,
                     url: url,
                     data: formData,
                     headers: {
@@ -158,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Dinamic alerts
-
     dinamicAlerts?.forEach((f) => {
         f.onclick = async () => {
             const param = f.getAttribute("data-param");

@@ -24,18 +24,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const JobPositionSelect = $("#job-position-select");
     const RoleSelect = $("#role-select");
 
-    const inputProfile = $("#input-profile");
+    const $inputProfile = $("#input-profile");
     const previewProfile = $("#preview-profile");
 
     // SET PROFILE
-    inputProfile?.addEventListener("change", async (e) => {
+    $inputProfile?.addEventListener("change", async (e) => {
         const file = e.target.files[0];
-        const isUpdated = inputProfile.getAttribute("data-userid");
+        const isUpdated = $inputProfile.getAttribute("data-userid");
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
             previewProfile.src = reader.result;
         };
+        $inputProfile.setAttribute("data-fill", true);
 
         if (isUpdated) {
             try {
