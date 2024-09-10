@@ -32,7 +32,7 @@
                         <div class="flex-grow">
                             <p>{{ $role->code }}-{{ $role->name }}</p>
                             <p class="flex text-nowrap text-sm items-center flex-wrap gap-1 text-neutral-600">
-                                @svg('fluentui-people-28-o', 'w-4 h-4') {{ $role->users->count() }} usuarios asociados.
+                                @svg('fluentui-people-28-o', 'w-5 h-5') {{ $role->users->count() }} usuarios asociados.
                             </p>
                             <p class="text-sm">
                                 Dapartamento: {{ $role->department->name }}
@@ -41,7 +41,7 @@
                         <button type="button" data-modal-target="dialog-{{ $role->id }}"
                             data-modal-toggle="dialog-{{ $role->id }}"
                             class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
-                            @svg('fluentui-edit-20', 'w-4 h-4')
+                            @svg('fluentui-edit-20', 'w-5 h-5')
                         </button>
                         <div id="dialog-{{ $role->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
                             <div class="content lg:max-w-lg max-w-full">
@@ -64,7 +64,7 @@
                         </div>
                         <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                             data-dropdown-toggle="dropdown-{{ $role->id }}">
-                            @svg('fluentui-more-horizontal-20-o', 'w-4 h-4')
+                            @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                         </button>
                         <div id="dropdown-{{ $role->id }}" class="dropdown-content hidden">
                             <button data-atitle="¿Estás seguro de eliminar?"
