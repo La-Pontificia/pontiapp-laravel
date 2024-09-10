@@ -37,8 +37,8 @@
                             <div class="flex-grow">
                                 <p>{{ $group->name }}</p>
                                 <p class="flex text-nowrap text-sm items-center flex-wrap gap-1 text-neutral-600">
-                                    svg'bx-calendar-week', 'w-4 h-4')
-                                    {{ count($group->schedules) }} horarios y usados por svg'bx-group', 'w-4 h-4')
+                                    svg'bx-calendar-week', 'w-5 h-5')
+                                    {{ count($group->schedules) }} horarios y usados por svg'bx-group', 'w-5 h-5')
                                     {{ count($group->users) }}
                                     usuarios.
                                 </p>
@@ -52,7 +52,7 @@
                             <button type="button" data-modal-target="dialog-{{ $group->id }}"
                                 data-modal-toggle="dialog-{{ $group->id }}"
                                 class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
-                                svg'bx-pencil', 'w-4 h-4')
+                                svg'bx-pencil', 'w-5 h-5')
                             </button>
                             <div id="dialog-{{ $group->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
                                 <div class="content lg:max-w-lg max-w-full">
@@ -75,7 +75,7 @@
                             </div>
                             <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $group->id }}">
-                                svg'bx-dots-vertical-rounded', 'w-4 h-4')
+                                svg'bx-dots-vertical-rounded', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $group->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('schedules:edit') || $cuser->isDev())
