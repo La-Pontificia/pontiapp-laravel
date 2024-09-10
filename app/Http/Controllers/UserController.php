@@ -124,8 +124,9 @@ class UserController extends Controller
         $user_roles = UserRole::all();
         $branches = Branch::all();
         $group_schedules = GroupSchedule::all();
+        $terminals = AssistTerminal::all();
 
-        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules'));
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules', 'terminals'));
     }
 
     // slugs
@@ -136,9 +137,10 @@ class UserController extends Controller
         $group_schedules = GroupSchedule::all();
         $job_positions = JobPosition::all();
         $roles = Role::all();
+        $terminals = AssistTerminal::all();
         $branches = Branch::all();
         if (!$user) return view('+500', ['error' => 'User not found']);
-        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'job_positions', 'roles', 'branches'));
+        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'job_positions', 'roles', 'branches', 'terminals'));
     }
 
     public function slug_details($id)
@@ -172,6 +174,7 @@ class UserController extends Controller
         if (!$user) return view('+500', ['error' => 'User not found']);
         return view('modules.users.slug.contract.+page', compact('user'));
     }
+
     public function slug_schedules($id)
     {
         $user = User::find($id);
@@ -191,7 +194,13 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) return view('+500', ['error' => 'User not found']);
-        $queryTerminal = $request->get('terminal');
+        $terminals = AssistTerminal::all();
+
+        $queryTerminal =
+            $request->get('terminal') ?? $user->defaultTerminal
+            ? $user->defaultTerminal->database_name
+            : $terminals[0]->database_name;
+
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 

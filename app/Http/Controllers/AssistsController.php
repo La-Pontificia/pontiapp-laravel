@@ -24,7 +24,9 @@ class AssistsController extends Controller
     public function index(Request $request, $isExport = false)
     {
 
-        $queryTerminal = $request->get('terminal');
+        $terminals = AssistTerminal::all();
+        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+
         $query = $request->get('query');
 
         // current date
@@ -75,9 +77,12 @@ class AssistsController extends Controller
         $allSchedules = collect([]);
 
         foreach ($users as $user) {
-            $allSchedules =  $allSchedules->concat($this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate));
+            $allSchedules =  $allSchedules->concat($this->assistsService->assistsByUser($user->id, $terminal, $startDate, $endDate));
         }
 
+        if ($isExport) {
+            return $allSchedules;
+        }
 
         $perPage = 25;
         $currentPage = $request->get('page', 1);
@@ -103,7 +108,10 @@ class AssistsController extends Controller
 
     public function snSchedules(Request $request)
     {
-        $terminal = $request->get('terminal');
+
+        $terminals = AssistTerminal::all();
+        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
         $query = $request->get('query');
@@ -138,7 +146,9 @@ class AssistsController extends Controller
 
     public function peerSchedule(Request $request, $isExport = false)
     {
-        $terminal = $request->get('terminal');
+        $terminals = AssistTerminal::all();
+        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
         $query = $request->get('query');
@@ -193,15 +203,22 @@ class AssistsController extends Controller
         return $this->peerSchedule($request, true);
     }
 
+    public function centralizedExport(Request $request)
+    {
+        return $this->index($request, true);
+    }
+
     public function peerUserExport(Request $request, $id)
     {
         $user = User::find($id);
         if (!$user) return view('+500', ['error' => 'User not found']);
-        $queryTerminal = $request->get('terminal');
+        $terminals = AssistTerminal::all();
+        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
-        $schedules = $this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate);
+        $schedules = $this->assistsService->assistsByUser($user->id, $terminal, $startDate, $endDate);
 
         return $schedules;
     }
@@ -209,7 +226,10 @@ class AssistsController extends Controller
 
     public function singleSummary(Request $request)
     {
-        $terminal = $request->get('terminal');
+
+        $terminals = AssistTerminal::all();
+        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
