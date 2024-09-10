@@ -16,7 +16,7 @@
                 <div id="sidebar-overlay" class="fixed data-[expanded]:block z-40 inset-0 bg-black/40 hidden">
                 </div>
                 <main class="flex h-full relative overflow-auto">
-                    <div class="fixed inset-0 pointer-events-none -z-[1] opacity-10 select-none" aria-hidden="true">
+                    <div class="fixed inset-0 pointer-events-none -z-[1] opacity-5 select-none" aria-hidden="true">
                         <img aria-hidden="true" src="/gradient-bg.webp" class="w-full select-none pointer-events-none h-full"
                             alt="bg">
                     </div>
