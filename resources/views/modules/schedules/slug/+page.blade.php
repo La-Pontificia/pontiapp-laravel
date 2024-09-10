@@ -122,7 +122,7 @@
                         <div class="px-2">
                             <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $schedule->id }}">
-                                @svg('fluentui-more-vertical-16-o', 'w-4 h-4')
+                                @svg('fluentui-more-vertical-16-o', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $schedule->id }}" class="dropdown-content hidden">
                                 @if (($cuser->has('schedules:edit') && $schedule->user_id === $cuser->id) || $cuser->isDev())
