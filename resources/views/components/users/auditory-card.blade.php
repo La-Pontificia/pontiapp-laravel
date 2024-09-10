@@ -3,7 +3,7 @@
         'key' => $cuser->id,
         'src' => $cuser->profile,
         'className' => 'w-12',
-        'alt' => $cuser->first_name . ' ' . $cuser->last_name,
+        'alt' => $cuser->names(),
         'altClass' => 'text-lg',
     ])
     <div>
