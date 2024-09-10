@@ -15,7 +15,7 @@
                         class="w-full pl-9 dinamic-search">
                 </label>
                 <button class="secondary">
-                    <img src="/excel.webp" class="w-4 h-4" alt="">
+                    <img src="/excel.webp" class="w-5 h-5" alt="">
                     <span>
                         Exportar
                     </span>
@@ -29,7 +29,7 @@
                                 'src' => $user->profile,
                                 'className' => 'w-8',
                                 'key' => $user->id,
-                                'alt' => $user->first_name . ' ' . $user->last_name,
+                                'alt' => $user->names(),
                                 'altClass' => 'text-base',
                             ])
                             <div class="flex-grow">
@@ -50,7 +50,7 @@
                             <button type="button" data-modal-target="dialog-{{ $user->id }}"
                                 data-modal-toggle="dialog-{{ $user->id }}"
                                 class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
-                                svg'bx-pencil', 'w-4 h-4')
+                                svg'bx-pencil', 'w-5 h-5')
                             </button>
                             {{-- <form action="/api/users/email-access/{{ $user->id }}"
                                 method="POST" id="dialog-{{ $user->id }}-form"
