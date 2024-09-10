@@ -313,22 +313,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             row.getCell(2).value = index;
             row.getCell(3).value = user.dni;
             row.getCell(4).value = `${user.last_name}, ${user.first_name}`;
-            row.getCell(5).value = user.email;
-            row.getCell(6).value = user.role_position.department.area.name;
-            row.getCell(7).value = user.role_position.department.name;
-            row.getCell(8).value = user.role_position.job_position.name;
-            row.getCell(9).value = user.role_position.name;
-            row.getCell(10).value = user.supervisor
+            row.getCell(5).value = user.date_of_birth
+                ? moment(user.date_of_birth).format("DD-MM-YYYY")
+                : "";
+            row.getCell(6).value = user.email;
+            row.getCell(7).value = user.role_position.department.area.name;
+            row.getCell(8).value = user.role_position.department.name;
+            row.getCell(9).value = user.role_position.job_position.name;
+            row.getCell(10).value = user.role_position.name;
+            row.getCell(11).value = user.supervisor
                 ? `${user.supervisor.last_name}, ${user.supervisor.first_name}`
                 : "";
-            row.getCell(11).value = user.profile;
-            row.getCell(12).value = user.role.title;
-            row.getCell(13).value = user.status ? "Activo" : "Inactivo";
-            row.getCell(14).value = user.branch.name;
-            row.getCell(15).value = moment(user.created_at).format(
+            row.getCell(12).value = user.profile;
+            row.getCell(13).value = user.role.title;
+            row.getCell(14).value = user.status ? "Activo" : "Inactivo";
+            row.getCell(15).value = user.branch.name;
+            row.getCell(16).value = moment(user.created_at).format(
                 "DD-MM-YYYY HH:mm"
             );
-            row.getCell(16).value = moment(user.updated_at).format(
+            row.getCell(17).value = moment(user.updated_at).format(
                 "DD-MM-YYYY HH:mm"
             );
             row.commit();
