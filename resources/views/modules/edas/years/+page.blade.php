@@ -70,7 +70,7 @@
                             </div>
                             <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $year->id }}">
-                                @svg('fluentui-more-horizontal-20-o', 'w-4 h-4')
+                                @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $year->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())
@@ -102,7 +102,7 @@
                             </p>
                             <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $template->id }}">
-                                svg'bx-dots-vertical-rounded', 'w-4 h-4')
+                                svg'bx-dots-vertical-rounded', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $template->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('users:questionnaire-templates:edit') || $cuser->isDev())

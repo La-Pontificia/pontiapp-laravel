@@ -63,7 +63,7 @@
                                                 'src' => $user->profile,
                                                 'className' => 'w-12',
                                                 'key' => $user->id,
-                                                'alt' => $user->first_name . ' ' . $user->last_name,
+                                                'alt' => $user->names(),
                                                 'altClass' => 'text-xl',
                                             ])
                                             <div class="flex-grow">

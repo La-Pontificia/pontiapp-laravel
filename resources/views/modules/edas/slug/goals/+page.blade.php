@@ -112,7 +112,7 @@
                     @endif
                     @if ($hasSentGoals)
                         <button data-id-eda="{{ $eda->id }}" id="sent-goals-button" class="primary">
-                            @svg('fluentui-send-20', 'w-4 h-4 -rotate-12')
+                            @svg('fluentui-send-20', 'w-5 h-5 -rotate-12')
                             {{ $eda->sent ? 'Reenviar' : 'Enviar' }} objetivos
                         </button>
                     @endif
