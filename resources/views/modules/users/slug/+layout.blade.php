@@ -5,34 +5,38 @@
 @php
     $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
     $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
-    $names = explode(' ', $user->first_name)[0] . ' ' . explode(' ', $user->last_name)[0];
 
     $items = [
         [
             'title' => 'Descripción general',
             'href' => '/users/' . $user->id,
             'active' => request()->is('users/' . $user->id),
+            'enabled' => true,
         ],
         [
             'title' => 'Organización',
             'href' => '/users/' . $user->id . '/organization',
             'active' => request()->is('users/' . $user->id . '/organization'),
+            'enabled' => true,
         ],
         [
             'title' => 'Horarios',
             'href' => '/users/' . $user->id . '/schedules',
             'active' => request()->is('users/' . $user->id . '/schedules'),
+            'enabled' => true,
         ],
         [
             'title' => 'Asistencias',
             'href' => '/users/' . $user->id . '/assists',
             'active' => request()->is('users/' . $user->id . '/assists'),
+            'enabled' => $cuser->has('assists:show') || $cuser->id === $user->id || $cuser->isDev(),
         ],
-        [
-            'title' => 'Seguridad y acceso',
-            'href' => '/users/' . $user->id . '/segurity-access',
-            'active' => request()->is('users/' . $user->id . '/segurity-access'),
-        ],
+        // [
+        //     'title' => 'Seguridad y acceso',
+        //     'href' => '/users/' . $user->id . '/segurity-access',
+        //     'active' => request()->is('users/' . $user->id . '/segurity-access'),
+        //     'enabled' => true,
+        // ],
     ];
 
     $hasChangePhoto = $cuser->has('users:edit') || $cuser->id === $user->id || $cuser->isDev();
@@ -61,7 +65,7 @@
                     </div>
                     <div class="flex flex-col gap-0.5">
                         <h2 class="text-2xl font-medium tracking-tight text-nowrap text-ellipsis">
-                            {{ $names }}
+                            {{ $user->names() }}
                         </h2>
                         <p class="text-sm opacity-70">
                             {{ $user->role_position->name }}
@@ -75,6 +79,9 @@
                 </div>
                 <nav class="border-b mt-2 text-sm flex items-center text-stone-700">
                     @foreach ($items as $item)
+                        @if (!$item['enabled'])
+                            @continue
+                        @endif
                         <a href="{{ $item['href'] }}" {{ $item['active'] ? 'data-current="true"' : '' }}
                             class="p-2 hover:bg-neutral-100 hover:text-stone-800 data-[current]:font-semibold border-b-2 border-transparent data-[current]:border-blue-500">
                             {{ $item['title'] }}

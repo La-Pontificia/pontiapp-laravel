@@ -7,7 +7,7 @@
     $hasChangePassword = $myaccount || $cuser->has('users:reset-password');
     $hasEdit = $cuser->has('users:edit') || $cuser->isDev();
 
-    $days = [
+    $daysMatch = [
         [
             'name' => 'Lu',
             'value' => 'monday',
@@ -52,12 +52,37 @@
         ],
     ];
 
+    $days = range(1, 31);
+    $months = [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre',
+    ];
+    $years = range(date('Y'), date('Y') - 100);
+
+    $userYear = $user->date_of_birth ? date('Y', strtotime($user->date_of_birth)) : null;
+    $userMonth = $user->date_of_birth ? date('m', strtotime($user->date_of_birth)) : null;
+    $userDay = $user->date_of_birth ? date('d', strtotime($user->date_of_birth)) : null;
+
+    $domains = ['lapontificia.edu.pe', 'ilp.edu.pe', 'elp.edu.pe', 'ec.edu.pe', 'idiomas.edu.pe'];
+
+    $isEdit = request()->query('view') === 'edit';
 @endphp
 
 
 @section('layout.users.slug')
-    <div class="max-w-2xl text-stone-700 h-full flex flex-col flex-grow mx-auto w-full">
-        <div data-preview='user-details'>
+
+    <div class="max-w-2xl p-2 text-stone-700 h-full flex flex-col flex-grow mx-auto w-full">
+        @if (!$isEdit)
             <div class="p-1 pt-2 flex flex-grow flex-col gap-4">
                 @if (count($user->summarySchedules()) !== 0)
                     <div>
@@ -74,7 +99,7 @@
                                             {{ $from }} - {{ $to }}
                                         </p>
                                         <div class="flex ">
-                                            @foreach ($days as $key => $day)
+                                            @foreach ($daysMatch as $key => $day)
                                                 @if (in_array($day['key'], $schedule->days))
                                                     <span class="text-xs text-stone-500">
                                                         {{ $day['name'] }}
@@ -210,233 +235,308 @@
                 </div>
                 <div class="border-t pt-2 border-neutral-200">
                     @if ($hasEdit)
-                        <button data-switch='user-details'
-                            class="gap-2 dinamic-switch-form-preview font-semibold text-blue-600 hover:underline flex">
+                        <a href="/users/{{ $user->id }}?view=edit" class="secondary">
                             @svg('fluentui-person-edit-20-o', 'w-5 h-5')
                             <span>
                                 Editar usuario
                             </span>
+                        </a>
+                    @endif
+                    @if ($cuser->id === $user->id || $cuser->isDev())
+                        <button data-modal-target="dialog" data-modal-toggle="dialog"
+                            class="secondary w-fit mt-3 justify-center">
+                            @svg('fluentui-person-key-20-o', 'w-5 h-5')
+                            Cambiar contraseña
                         </button>
+
+                        <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                            <div class="content lg:max-w-md max-w-full">
+                                <header>
+                                    Cambiar contraseña
+                                </header>
+                                <form method="POST" id="form-change-password"
+                                    action="/api/users/change-password/{{ $user->id }}"
+                                    class="grid p-2 px-4 gap-3 max-w-md">
+                                    <label class="label">
+                                        <span class="font-semibold">Contraseña actual</span>
+                                        <input autofocus type="password" required name="old_password">
+                                    </label>
+                                    <label class="label">
+                                        <span class="font-semibold">Nueva contraseña</span>
+                                        <input type="password" required name="new_password">
+                                    </label>
+                                    <label class="label">
+                                        <span class="font-semibold">Confirmar contraseña</span>
+                                        <input type="password" required name="new_password_confirmation">
+                                    </label>
+                                </form>
+                                <footer>
+                                    <button data-modal-hide="dialog" type="button">Cancelar</button>
+                                    <button form="form-change-password" type="submit" class="primary">Filtrar</button>
+                                </footer>
+                            </div>
+                        </div>
                     @endif
                 </div>
             </div>
-        </div>
-        @if ($hasEdit)
-            <div data-form='user-details' class="hidden">
-                <div class="grid gap-4">
+        @endif
+        @if ($hasEdit && $isEdit)
+            <div class="grid gap-4">
+                <button onclick="window.history.back()" class="flex gap-2 items-center text-gray-900 ">
+                    @svg('fluentui-arrow-left-20', 'w-5 h-5')
+                    Atras
+                </button>
+                <div class="grid gap-4 w-full">
                     <div class="border-t pt-2 text-lg">
                         <p>
                             Detalles del usuario
                         </p>
                     </div>
-                    <div class="grid gap-2">
-                        <label class="label w-[200px]">
-                            <span>Documento de Identidad</span>
-                            <input form="form-user" class="bg-white" name="dni" id="dni-input" autocomplete="off"
-                                value="{{ $user ? $user->dni : '' }}" required type="number">
+                    <form method="POST" action="/api/users/{{ $user->id }}/details"
+                        class="grid dinamic-form grid-cols-2 gap-4">
+                        <div class="col-span-2 grid grid-cols-2">
+                            <label class="label">
+                                <span>Documento de Identidad</span>
+                                <input pattern="[0-9]{8}" name="dni" id="dni-input" autocomplete="off"
+                                    value="{{ $user->dni }}" required type="number">
+                            </label>
+                        </div>
+                        <label class="label">
+                            <span>Apellidos</span>
+                            <input value="{{ $user->last_name }}" autocomplete="off" name="last_name"
+                                id="last_name-input" required type="text">
                         </label>
-                        <div class="grid grid-cols-2 gap-4">
-                            <label class="label">
-                                <span>Apellidos</span>
-                                <input form="form-user" autocomplete="off" value="{{ $user ? $user->last_name : '' }}"
-                                    name="last_name" class="bg-white" id="last_name-input" required type="text">
-                            </label>
-                            <label class="label">
-                                <span>Nombres</span>
-                                <input form="form-user" class="bg-white" autocomplete="off"
-                                    value="{{ $user ? $user->first_name : '' }}" name="first_name" id="first_name-input"
-                                    required type="text">
-                            </label>
-                        </div>
-                    </div>
-                    <label class="label w-[300px]">
-                        <span>Grupo de horario</span>
-                        <div class="relative">
-                            <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
-                                @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
+                        <label class="label">
+                            <span>Nombres</span>
+                            <input value="{{ $user->first_name }}" autocomplete="off" value="" name="first_name"
+                                id="first_name-input" required type="text">
+                        </label>
+                        <label class="label">
+                            <span>Fecha de nacimiento</span>
+                            <div class="w-full">
+                                <select required name="date_of_birth_day">
+                                    <option value="" selected disabled>
+                                        Día
+                                    </option>
+                                    @foreach ($days as $day)
+                                        <option {{ $userDay == $day ? 'selected' : '' }} value="{{ $day }}">
+                                            {{ $day }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <select required name="date_of_birth_month">
+                                    <option value="" selected disabled>
+                                        Mes
+                                    </option>
+                                    @foreach ($months as $key => $month)
+                                        <option {{ $userMonth == $key + 1 ? 'selected' : '' }}
+                                            value="{{ $key + 1 }}">
+                                            {{ $month }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <select required name="date_of_birth_year">
+                                    <option value="" selected disabled>
+                                        Año
+                                    </option>
+                                    @foreach ($years as $year)
+                                        <option {{ $userYear == $year ? 'selected' : '' }} value="{{ $year }}">
+                                            {{ $year }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <select form="form-user" class="bg-white w-full" style="padding-left: 35px"
-                                name="group_schedule_id">
-                                <option disabled selected>Grupo de horario</option>
-                                @foreach ($group_schedules as $scheldule)
-                                    <option {{ $user && $user->group_schedule_id === $scheldule->id ? 'selected' : '' }}
-                                        value="{{ $scheldule->id }}">{{ $scheldule->name }}</option>
-                                @endforeach
-                            </select>
+                        </label>
+                        <div class="col-span-2">
+                            <button class="secondary gap-2 mt-1 flex">
+                                <span>
+                                    Guardar detalles
+                                </span>
+                            </button>
                         </div>
-                    </label>
+                    </form>
                     <div class="border-t pt-2 text-lg">
                         <p>
-                            Organización
+                            Organización y horarios
                         </p>
                     </div>
-                    <label class="label">
-                        <span>
-                            Puesto de Trabajo
-                        </span>
-                        <select form="form-user" name="id_job_position" id="job-position-select" class="bg-white" required>
-                            @foreach ($job_positions as $item)
-                                <option
-                                    {{ $user && $user->role_position->job_position->id === $item->id ? 'selected' : '' }}
-                                    value="{{ $item->id }}">
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </label>
-                    <label class="label">
-                        <span>
-                            Cargo
-                        </span>
-                        <select class="bg-white" form="form-user" name="id_role" id="role-select" required>
-                            @foreach ($roles as $role)
-                                <option {{ $user && $user->role_position->id === $role->id ? 'selected' : '' }}
-                                    value="{{ $role->id }}">
-                                    {{ $role->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </label>
-                    <label class="label">
-                        <span>
-                            Sede
-                        </span>
-
-                        @if ($hasEdit)
-                            <select class="bg-white" name="id_branch" required form="form-user">
+                    <form method="POST" action="/api/users/{{ $user->id }}/organization"
+                        class="grid dinamic-form grid-cols-2 gap-4">
+                        <label class="label">
+                            <span>
+                                Puesto de Trabajo
+                            </span>
+                            <select name="id_job_position" id="job-position-select" required>
+                                @foreach ($job_positions as $item)
+                                    <option {{ $user->role_position->id_job_position === $item->id ? 'selected' : '' }}
+                                        value="{{ $item->id }}">
+                                        {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </label>
+                        <label class="label">
+                            <span>
+                                Cargo
+                            </span>
+                            <select name="id_role" id="role-select" required>
+                                @foreach ($roles as $role)
+                                    <option {{ $user->id_role === $role->id ? 'selected' : '' }}
+                                        value="{{ $role->id }}">
+                                        {{ $role->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </label>
+                        <label class="label">
+                            <span>
+                                Sede
+                            </span>
+                            <select name="id_branch" required>
                                 @foreach ($branches as $branch)
-                                    <option {{ $user && $user->id_branch === $branch->id ? 'selected' : '' }}
+                                    <option {{ $user->id_branch === $branch->id ? 'selected' : '' }}
                                         value="{{ $branch->id }}">
                                         {{ $branch->name }}</option>
                                 @endforeach
                             </select>
-                        @else
-                            <p class="font-semibold">
-                                {{ $user->branch->name }}
-                            </p>
-                        @endif
-                    </label>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="label">
-                            <span>
-                                Bajo supervision de
-                            </span>
-                            @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
-                                @if ($user->supervisor)
-                                    <a class="hover:underline" href="/users/{{ $user->supervisor->id }}">
-                                        {{ $user->supervisor->names() }}
-                                    </a>
-                                @else
-                                    Sin supervisor
-                                @endif
-                                <button data-modal-target="dialog" data-modal-toggle="dialog"
-                                    class="hover:underline mt-2 flex flex-col items-center w-fit font-medium text-sm text-blue-600">
-                                    @svg('fluentui-person-edit-20-o', 'w-5 h-5')
-                                    Editar</button>
-
-                                <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
-                                    <div class="content lg:max-w-lg max-w-full">
-                                        <header>
-                                            Asignar o cambiar supervisor
-                                        </header>
-                                        <div class="p-3 gap-4 overflow-y-auto flex flex-col">
-                                            @php
-                                                $defaultvalue = $user->supervisor_id
-                                                    ? $user->supervisor->first_name . ' ' . $user->supervisor->last_name
-                                                    : null;
-                                            @endphp
-                                            <div class="grid gap-2">
-                                                <label class="relative">
-                                                    <div class="absolute z-[1] inset-y-0 px-2 flex items-center">
-                                                        @svg('fluentui-search-28-o', 'w-5 h-5 opacity-60')
-                                                    </div>
-                                                    <input value="{{ $defaultvalue }}" data-id="{{ $user->id }}"
-                                                        type="search" class="supervisor-input w-full"
-                                                        style="padding-left: 30px" placeholder="Correo, DNI, nombres...">
-                                                </label>
-                                                <div id="result-{{ $user->id }}" class="p-1 grid gap-2 text-center">
-                                                    <p class="p-10 text-neutral-500">
-                                                        No se encontraron resultados o no se ha realizado
-                                                        una
-                                                        búsqueda.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <footer>
-                                            <button data-modal-hide="dialog" type="button">Cancelar</button>
-                                            @if ($user->supervisor_id)
-                                                <button data-alertvariant="warning"
-                                                    data-param='/api/users/supervisor/remove/{{ $user->id }}'
-                                                    data-atitle='Remover supervisor'
-                                                    data-adescription='¿Estás seguro de que deseas remover el supervisor de este usuario?'
-                                                    type="button" class="secondary dinamic-alert">
-                                                    @svg('fluentui-person-delete-24-o', 'w-5 h-5')
-                                                    Remover supervisor
-                                                </button>
-                                            @endif
-                                        </footer>
-                                    </div>
+                        </label>
+                        <label class="label">
+                            <span>Grupo de horario</span>
+                            <div class="relative">
+                                <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
+                                    @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
                                 </div>
-                            @else
-                                <p class="font-semibold">
-                                    {{ $user->supervisor ? $user->supervisor->last_name . ', ' . $user->supervisor->first_name : 'Sin supervisor' }}
-                                </p>
-                            @endif
+                                <select class="w-full" style="padding-left: 35px" name="group_schedule_id">
+                                    <option selected value="" disabled>Grupo de horario</option>
+                                    @foreach ($group_schedules as $scheldule)
+                                        <option {{ $user->group_schedule_id === $scheldule->id ? 'selected' : '' }}
+                                            value="{{ $scheldule->id }}">{{ $scheldule->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </label>
+                        <label class="label">
+                            <span>Terminal por defecto</span>
+                            <div class="relative">
+                                <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
+                                    @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
+                                </div>
+                                <select class="w-full" style="padding-left: 35px" name="default_assist_terminal">
+                                    <option selected value="" disabled selected>Terminal de asistencias por
+                                        defecto</option>
+                                    @foreach ($terminals as $terminal)
+                                        <option {{ $user->default_assist_terminal_id === $terminal->id ? 'selected' : '' }}
+                                            value="{{ $terminal->id }}">{{ $terminal->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </label>
+                        <div class="col-span-2">
+                            <button class="secondary gap-2 mt-1 flex">
+                                <span>
+                                    Guardar organización
+                                </span>
+                            </button>
                         </div>
-                    </div>
+                    </form>
                     <div class="border-t pt-2 text-lg">
                         <p>
                             Rol y privilegios
                         </p>
                     </div>
-                    <label class="label w-[200px]">
-                        <span>Rol</span>
-                        @if ($hasEdit)
-                            <select form="form-user" required name="id_role_user" class="bg-white">
+                    <form method="POST" action="/api/users/{{ $user->id }}/rol-privileges"
+                        class="grid dinamic-form grid-cols-2 gap-4">
+                        <label class="label w-[200px]">
+                            <span>Rol</span>
+                            <select required name="id_role_user">
                                 @foreach ($user_roles as $role)
-                                    <option {{ $user && $user->id_role_user === $role->id ? 'selected' : '' }}
+                                    <option {{ $user->id_role_user === $role->id ? 'selected' : '' }}
                                         value="{{ $role->id }}">
                                         {{ $role->title }}
                                     </option>
                                 @endforeach
                             </select>
-                        @else
-                            <p class="">
-                                {{ $user->role->title }}
-                            </p>
-                        @endif
-                    </label>
-                    <div class="text-sm">
+                        </label>
+                        <div class="col-span-2">
+                            <button class="secondary gap-2 mt-1 flex">
+                                <span>
+                                    Guardar rol
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="border-t pt-2 text-lg">
                         <p>
-                            Registrado el {{ \Carbon\Carbon::parse($user->created_at)->isoFormat('LL') }} por
-                            {{ $user->createdBy->last_name }}, {{ $user->createdBy->first_name }}
+                            Seguridad y acceso
                         </p>
-                        @if ($user->updatedBy)
-                            <p>
-                                Ultima actualización el {{ \Carbon\Carbon::parse($user->updated_at)->isoFormat('LL') }} por
-                                {{ $user->updatedBy->last_name }}, {{ $user->updatedBy->first_name }}
-                            </p>
+                    </div>
+                    <form method="POST" action="/api/users/{{ $user->id }}/segurity-access"
+                        class="grid w-full dinamic-form gap-3">
+                        <div class="label w-full col-span-2">
+                            <span>Nombre de usuario</span>
+                            <div class="relative w-full">
+                                <div class="absolute z-10 inset-y-0 flex items-center left-3">
+                                    @svg('fluentui-mail-20-o', 'w-5 h-5 opacity-50')
+                                </div>
+                                <input pattern="^[a-zA-Z0-9_]*$" value="{{ explode('@', $user->email)[0] }}" required
+                                    type="text" name="username" class="w-full pl-10" placeholder="Nombre de usuario">
+                                <div class="absolute inset-y-0 flex gap-1 items-center right-2">
+                                    <div class="opacity-50">
+                                        @
+                                    </div>
+                                    <div class="label">
+                                        <select style="background-color: transparent; border: 0px; padding: 0px;" required
+                                            name="domain">
+                                            @foreach ($domains as $domain)
+                                                <option {{ explode('@', $user->email)[1] === $domain ? 'selected' : '' }}
+                                                    value="{{ $domain }}">
+                                                    {{ $domain }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-2">
+                            <button class="secondary gap-2 mt-1 flex">
+                                Guardar correo
+                            </button>
+                        </div>
+                        @if (($cuser->has('users:reset-password') && !$user->has('development')) || $cuser->isDev())
+                            <div class="col-span-2 label">
+                                <span>
+                                    Restablecer contraseña
+                                </span>
+                                <button type="button" data-atitle="Restablecer contraseña"
+                                    data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
+                                    data-param="/api/users/reset-password/{{ $user->id }}"
+                                    class="dinamic-alert secondary">
+                                    @svg('fluentui-person-key-20-o', 'w-5 h-5')
+                                    Restablecer contraseña
+                                </button>
+                            </div>
                         @endif
-                    </div>
-                    <div class="flex items-center gap-2 border-t pt-2">
-                        <form method="POST" action="/api/users/update-details/{{ $user->id }}" id="form-user"
-                            class="dinamic-form flex items-center gap-2">
-                            <button form="form-user" class="primary gap-2 flex">
-                                @svg('fluentui-person-edit-20-o', 'w-5 h-5')
-                                <span>
-                                    Guardar cambios
-                                </span>
-                            </button>
-                            <button type="button" data-switch='user-details'
-                                class="gap-2 dinamic-switch-form-preview font-semibold text-blue-600 hover:underline flex">
-                                @svg('fluentui-person-edit-20-o', 'w-5 h-5')
-                                <span>
-                                    Cancelar
-                                </span>
-                            </button>
-                        </form>
-                    </div>
+                        @if ($cuser->has('users:toggle-disable') || $cuser->isDev())
+                            <div class="col-span-2">
+                                <label class="label w-fit">
+                                    <span>Estado de la cuenta: {{ $user->status ? 'Activo' : 'Inactivo' }}</span>
+                                    <div>
+                                        <button type="button"
+                                            data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
+                                            data-adescription="No podrás deshacer esta acción."
+                                            data-param="/api/users/toggle-status/{{ $user->id }}"
+                                            class="secondary dinamic-alert">
+                                            @svg('fluentui-person-circle-20-o', 'w-5 h-5')
+                                            {{ $user->status ? 'Desactivar' : 'Activar' }} usuario
+                                        </button>
+                                    </div>
+                                </label>
+                            </div>
+                        @endif
+                    </form>
                 </div>
             </div>
         @endif

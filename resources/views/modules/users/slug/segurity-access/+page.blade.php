@@ -25,7 +25,7 @@
                     <form method="POST" action="/api/users/update-segurity-access/{{ $user->id }}" id="form-user"
                         class="dinamic-form">
                         <button type="submit" form="form-user" class="primary">
-                            @svg('fluentui-person-mail-24-o', 'w-4 h-4')
+                            @svg('fluentui-person-mail-24-o', 'w-5 h-5')
                             Actualizar email
                         </button>
                     </form>
@@ -41,7 +41,7 @@
                             data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
                             data-param="/api/users/reset-password/{{ $user->id }}"
                             class="dinamic-alert justify-center secondary ">
-                            @svg('fluentui-person-key-20-o', 'w-4 h-4')
+                            @svg('fluentui-person-key-20-o', 'w-5 h-5')
                             Restablecer contraseña
                         </button>
                     @endif
@@ -49,7 +49,7 @@
                     @if ($cuser->has('users:reset-password') || $cuser->id === $user->id || $cuser->isDev())
                         <button style="width: 100%; border-radius: 0.5rem;" data-modal-target="dialog"
                             data-modal-toggle="dialog" class="secondary justify-center">
-                            @svg('fluentui-person-key-20-o', 'w-4 h-4')
+                            @svg('fluentui-person-key-20-o', 'w-5 h-5')
                             Cambiar contraseña
                         </button>
 
@@ -129,17 +129,19 @@
                 </div>
             </div>
         </div>
-        <div>
-            <label class="label w-fit">
-                <span>Estado de la cuenta.</span>
-                <div>
-                    <button data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
-                        data-adescription="No podrás deshacer esta acción."
-                        data-param="/api/users/toggle-status/{{ $user->id }}" class="secondary dinamic-alert">
-                        Cuenta: {{ $user->status ? 'Activo' : 'Inactivo' }}
-                    </button>
-                </div>
-            </label>
-        </div>
+        @if ($cuser->has('users:toggle-disable') || $cuser->isDev())
+            <div>
+                <label class="label w-fit">
+                    <span>Estado de la cuenta.</span>
+                    <div>
+                        <button data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
+                            data-adescription="No podrás deshacer esta acción."
+                            data-param="/api/users/toggle-status/{{ $user->id }}" class="secondary dinamic-alert">
+                            Cuenta: {{ $user->status ? 'Activo' : 'Inactivo' }}
+                        </button>
+                    </div>
+                </label>
+            </div>
+        @endif
     </div>
 @endsection

@@ -118,7 +118,7 @@
                         <div class="px-2">
                             <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $schedule->id }}">
-                                @svg('fluentui-more-vertical-16-o', 'w-4 h-4')
+                                @svg('fluentui-more-vertical-16-o', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $schedule->id }}" class="dropdown-content hidden">
                                 @if (($cuser->has('schedules:edit') && $schedule->user_id === $cuser->id) || $cuser->isDev())
@@ -186,12 +186,12 @@
                                     </p>
                                 </div>
                                 <p class="text-sm flex items-center gap-1">
-                                    svg'bxs-time-five', 'w-4 h-4 opacity-60')
+                                    svg'bxs-time-five', 'w-5 h-5 opacity-60')
                                     {{ $from }} - {{ $to }}
                                 </p>
 
                                 <p class="text-sm flex items-center gap-1">
-                                    svg'bxs-calendar', 'w-4 h-4 opacity-60')
+                                    svg'bxs-calendar', 'w-5 h-5 opacity-60')
                                     {{ date('d-m-Y', strtotime($schedule->start_date)) }} -
                                     {{ date('d-m-Y', strtotime($schedule->end_date)) }}
                                 </p>
@@ -213,7 +213,7 @@
                         @if ($cuser->has('users:edit') || $cuser->isDev())
                             <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors absolute top-3 right-3"
                                 data-dropdown-toggle="dropdown-{{ $schedule->id }}">
-                                svg'bx-dots-vertical-rounded', 'w-4 h-4')
+                                svg'bx-dots-vertical-rounded', 'w-5 h-5')
                             </button>
 
                             <div id="dropdown-{{ $schedule->id }}" class="dropdown-content hidden">
@@ -314,12 +314,12 @@
                                 </p>
                             </div>
                             <p class="text-sm flex items-center gap-1">
-                                svg'bxs-time-five', 'w-4 h-4 opacity-60')
+                                svg'bxs-time-five', 'w-5 h-5 opacity-60')
                                 {{ $from }} - {{ $to }}
                             </p>
 
                             <p class="text-sm flex items-center gap-1">
-                                svg'bxs-calendar', 'w-4 h-4 opacity-60')
+                                svg'bxs-calendar', 'w-5 h-5 opacity-60')
                                 {{ date('d-m-Y', strtotime($schedule->start_date)) }} -
                                 {{ date('d-m-Y', strtotime($schedule->end_date)) }}
                             </p>
@@ -341,7 +341,7 @@
                     @if ($cuser->has('users:edit') || $cuser->isDev())
                         <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors absolute top-3 right-3"
                             data-dropdown-toggle="dropdown-{{ $schedule->id }}">
-                            svg'bx-dots-vertical-rounded', 'w-4 h-4')
+                            svg'bx-dots-vertical-rounded', 'w-5 h-5')
                         </button>
 
                         <div id="dropdown-{{ $schedule->id }}" class="dropdown-content hidden">
