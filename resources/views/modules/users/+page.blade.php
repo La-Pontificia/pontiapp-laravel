@@ -5,7 +5,7 @@
 @php
     $status = [
         [
-            'value' => '0',
+            'value' => '',
             'text' => 'Todos',
         ],
         [
@@ -37,50 +37,60 @@
     <div class="w-full mx-auto h-full overflow-y-auto flex flex-col">
         <form class="flex dinamic-form-to-params p-1 items-center gap-2">
             @if ($cuser->has('users:create') || $cuser->isDev())
-                <a href="/users/create" class="primary">
+                <a href="/users/create" class="primary mt-6">
                     @svg('fluentui-person-add-20-o', 'w-5 h-5')
                     <span>Nuevo</span>
                 </a>
             @endif
 
-            <div class="flex border-r pr-2 items-center gap-2">
-                @foreach ($status as $statu)
-                    <label>
-                        <input {{ request()->query('status') === $statu['value'] ? 'checked' : '' }} type="radio"
-                            id="{{ $statu['value'] }}" name="status" value="{{ $statu['value'] }}" class="peer hidden" />
-                        <div
-                            class="rounded-full peer-checked:outline-blue-600 -outline-offset-2 peer-checked:bg-blue-600/10 peer-checked:border-transparent outline outline-transparent border p-1.5 px-3 border-neutral-300">
-                            {{ $statu['text'] }}
-                        </div>
-                    </label>
-                @endforeach
-            </div>
+            <label class="label">
+                <span>Estado:</span>
+                <select class="bg-white" name="status">
+                    @foreach ($status as $item)
+                        <option {{ request()->query('status') === $item['value'] ? 'selected' : '' }}
+                            value="{{ $item['value'] }}">{{ $item['text'] }}</option>
+                    @endforeach
+                </select>
+            </label>
 
-            <select class="w-fit bg-white" name="role">
-                <option value="">Rol</option>
-                @foreach ($user_roles as $role)
-                    <option {{ request()->query('role') === $role->id ? 'selected' : '' }} value="{{ $role->id }}">
-                        {{ $role->title }}</option>
-                @endforeach
-            </select>
+            <label class="label">
+                <span>Rol</span>
+                <select class="w-fit bg-white" name="role">
+                    <option value="" selected disabled>Todos</option>
+                    @foreach ($user_roles as $role)
+                        <option {{ request()->query('role') === $role->id ? 'selected' : '' }} value="{{ $role->id }}">
+                            {{ $role->title }}</option>
+                    @endforeach
+                </select>
+            </label>
 
-            <select class="w-fit bg-white" name="department">
-                <option value="">Departamento</option>
-                @foreach ($departments as $department)
-                    <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
-                        value="{{ $department->id }}">{{ $department->name }}</option>
-                @endforeach
-            </select>
+            <label class="label">
+                <span>
+                    Departamento
+                </span>
+                <select class="w-fit bg-white" name="department">
+                    <option value="" disabled selected>Todos</option>
+                    @foreach ($departments as $department)
+                        <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
+                            value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </label>
 
-            <select class="w-fit bg-white" name="job_position">
-                <option value="">Puesto</option>
-                @foreach ($job_positions as $job)
-                    <option {{ request()->query('job_position') === $job->id ? 'selected' : '' }}
-                        value="{{ $job->id }}">{{ $job->name }}</option>
-                @endforeach
-            </select>
+            <label class="label">
+                <span>
+                    Puesto
+                </span>
+                <select class="w-fit bg-white" name="job_position">
+                    <option value="" disabled selected>Todos</option>
+                    @foreach ($job_positions as $job)
+                        <option {{ request()->query('job_position') === $job->id ? 'selected' : '' }}
+                            value="{{ $job->id }}">{{ $job->name }}</option>
+                    @endforeach
+                </select>
+            </label>
 
-            <label class="relative ml-auto w-[200px] max-w-full">
+            <label class="relative mt-6 ml-auto w-[200px] max-w-full">
                 <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
                     @svg('fluentui-search-28-o', 'w-5 h-5')
                 </div>
@@ -88,12 +98,12 @@
                     type="search" class="pl-9 w-full bg-white">
             </label>
 
-            <button class="primary">
+            <button class="primary mt-6">
                 Filtrar
             </button>
 
             @if ($cuser->has('users:export') || $cuser->isDev())
-                <button type="button" id="export-users" class="secondary">
+                <button type="button" id="export-users" class="secondary mt-6">
                     @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
                     Exportar
                 </button>
@@ -130,7 +140,7 @@
                                                     'src' => $user->profile,
                                                     'className' => 'w-12',
                                                     'key' => $user->id,
-                                                    'alt' => $user->first_name . ' ' . $user->last_name,
+                                                    'alt' => $user->names(),
                                                     'altClass' => 'text-xl',
                                                 ])
                                                 <div class="flex-grow">
