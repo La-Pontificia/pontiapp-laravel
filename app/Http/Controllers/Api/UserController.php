@@ -48,14 +48,11 @@ class UserController extends Controller
         return response()->json($user, 200);
     }
 
-    public function update(Request $request, $id)
+    public function updateDetails(Request $request, $id)
     {
         $user = User::find($id);
 
-        if (!$user)
-            return response()->json('El usuario no existe', 400);
-
-        request()->validate(User::$rules);
+        request()->validate(User::$details);
 
         $already = User::where('dni', $request->dni)->first();
 
@@ -64,46 +61,25 @@ class UserController extends Controller
 
         $cuser = auth()->user();
 
-        $constructEmail = $request->username . '@' . $request->domain;
-        $alreadyByEmail = User::where('email', $constructEmail)->get();
+        // construct and validate date of birth
+        $year = $request->date_of_birth_year;
+        $month = $request->date_of_birth_month;
+        $day = $request->date_of_birth_day;
+        if (!checkdate($month, $day, $year))
+            return response()->json('La fecha de nacimiento no es valida', 400);
+        $dateOfBirth = $year . '-' . $month . '-' . $day;
+        $date = new \DateTime($dateOfBirth);
+        $now = new \DateTime();
+        $interval = $now->diff($date);
+        $age = $interval->y;
 
-        if ($alreadyByEmail->count() > 0 && $alreadyByEmail->first()->id !== $id)
-            return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
+        if ($age < 13)
+            return response()->json('El usuario debe ser mayor de 13 años', 400);
 
+        $user->date_of_birth = $dateOfBirth;
         $user->dni = $request->dni;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-        $user->email = $constructEmail;
-        $user->id_role = $request->id_role;
-        $user->id_role_user = $request->id_role_user;
-        $user->id_branch = $request->id_branch;
-        $user->group_schedule_id = $request->group_schedule_id;
-        $user->updated_by = $cuser->id;
-
-        $user->save();
-
-        return response()->json('Usuario actualizado correctamente.', 200);
-    }
-
-    public function updateDetails(Request $request, $id)
-    {
-
-        request()->validate(User::$detailsRules);
-        $cuser = auth()->user();
-
-        $user = User::find($id);
-
-        if (!$user)
-            return response()->json('El usuario no existe', 400);
-
-        $user->id_role_user = $request->id_role_user;
-        $user->dni = $request->dni;
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->id_role = $request->id_role;
-        $user->id_role_user = $request->id_role_user;
-        $user->id_branch = $request->id_branch;
-        $user->group_schedule_id = $request->group_schedule_id;
         $user->updated_by = $cuser->id;
         $user->save();
 
@@ -112,38 +88,50 @@ class UserController extends Controller
 
     public function updateOrganization(Request $request, $id)
     {
+
         $user = User::find($id);
+        request()->validate(User::$organization);
+        $cuser = auth()->user();
 
-        request()->validate(User::$organizationRules);
-
-        if (!$user)
-            return response()->json('El usuario no existe', 400);
-
+        $user->default_assist_terminal_id = $request->default_assist_terminal;
         $user->id_role = $request->id_role;
         $user->id_branch = $request->id_branch;
+        $user->group_schedule_id = $request->group_schedule_id;
+        $user->updated_by = $cuser->id;
+        $user->save();
+        return response()->json('Detalles actualizados correctamente.', 200);
+    }
+
+    public function updateRolPrivileges(Request $request, $id)
+    {
+        $user = User::find($id);
+        request()->validate(User::$rol);
+
+        $user->id_role_user = $request->id_role_user;
         $user->save();
 
-        return response()->json('Organización actualizada correctamente.', 200);
+        return response()->json('Privilegios actualizados correctamente.', 200);
     }
+
 
     public function updateSegurityAccess(Request $request, $id)
     {
         $user = User::find($id);
 
-        request()->validate(User::$segurityAccessRules);
+        request()->validate(User::$segurityAccess);
 
-        if (!$user)
-            return response()->json('El usuario no existe', 400);
+        $constructEmail = $request->username . '@' . $request->domain;
+        $alreadyByEmail = User::where('email', $constructEmail)->get();
 
-        $username = explode('@', $user->email)[0];
-
-        $alreadyByEmail = User::where('email', $request->email)->get();
-
-        if ($alreadyByEmail->count() > 0 && $alreadyByEmail->first()->id !== $id)
+        if ($alreadyByEmail->count() > 0)
             return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
 
-        $user->username = $username;
-        $user->email = $request->email;
+        // validate email with regex
+        if (!filter_var($constructEmail, FILTER_VALIDATE_EMAIL))
+            return response()->json('El correo ingresado no es valido', 400);
+
+        $user->username = $request->username;
+        $user->email = $constructEmail;
         $user->save();
 
         return response()->json('Acceso de seguridad actualizado correctamente.', 200);
