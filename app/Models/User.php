@@ -40,6 +40,8 @@ class User extends Authenticatable
         'updated_by',
         'entry_date',
         'exit_date',
+        'date_of_birth',
+        'default_assist_terminal_id'
     ];
 
     protected $keyType = 'string';
@@ -64,16 +66,24 @@ class User extends Authenticatable
         'group_schedule_id' => 'uuid',
     ];
 
-    static $detailsRules = [
-        'id_role_user' => 'uuid',
+    static $organization = [
+        'default_assist_terminal' => 'uuid|nullable',
+        'id_role' => 'uuid|required',
+        'id_branch' => 'uuid|required',
+        'group_schedule_id' => 'uuid|nullable',
+    ];
+
+    static $rol = [
+        'id_role_user' => 'uuid|required',
+    ];
+
+    static $details = [
         'dni' => 'required|numeric|digits:8',
+        'date_of_birth_day' => 'required|numeric',
+        'date_of_birth_month' => 'required|numeric',
+        'date_of_birth_year' => 'required|numeric',
         'first_name' => 'required',
         'last_name' => 'required',
-        'group_schedule_id' => 'uuid|nullable',
-        'id_role' => 'uuid|required',
-        'id_role_user' => 'uuid|required',
-        'id_branch' => 'uuid|required',
-        'group_schedule_id' => 'uuid',
     ];
 
     static $organizationRules = [
@@ -81,8 +91,9 @@ class User extends Authenticatable
         'id_role' => 'uuid|required',
     ];
 
-    static $segurityAccessRules = [
-        'email' => 'email|required',
+    static $segurityAccess = [
+        'username' => 'required',
+        'domain' => 'required',
     ];
 
     protected $casts = [
@@ -91,8 +102,13 @@ class User extends Authenticatable
         'email_access' => 'array',
         'entry_date' => 'date',
         'exit_date' => 'date',
+        'date_of_birth' => 'date',
     ];
 
+    public function defaultTerminal()
+    {
+        return $this->hasOne(AssistTerminal::class, 'id', 'default_assist_terminal_id');
+    }
 
     public function role_position()
     {
@@ -158,8 +174,16 @@ class User extends Authenticatable
 
     public function names()
     {
-        $names = explode(' ', $this->first_name)[0] . ' ' . explode(' ', $this->last_name)[0];
-        return $names;
+        $firstNameParts = explode(' ', trim($this->first_name));
+        $firstName = $firstNameParts[0];
+
+        $lastNameParts = explode(' ', trim($this->last_name));
+
+        $lastName = $lastNameParts[0];
+        if (count($lastNameParts) > 1) {
+            $lastName = implode(' ', array_slice($lastNameParts, 0, -1));
+        }
+        return $firstName . ' ' . $lastName;
     }
 
     public function people()
