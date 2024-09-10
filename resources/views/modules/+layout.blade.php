@@ -16,6 +16,10 @@
                 <div id="sidebar-overlay" class="fixed data-[expanded]:block z-40 inset-0 bg-black/40 hidden">
                 </div>
                 <main class="flex h-full relative overflow-auto">
+                    <div class="fixed inset-0 pointer-events-none -z-[1] opacity-10 select-none" aria-hidden="true">
+                        <img aria-hidden="true" src="/gradient-bg.webp" class="w-full select-none pointer-events-none h-full"
+                            alt="bg">
+                    </div>
                     <aside id="sidebar"
                         class="flex peer flex-col max-lg:bg-[#fcfcfc] pt-2 max-lg:top-0 max-lg:pt-0 min-w-[300px] text-sm font-medium max-lg:-translate-x-full data-[expanded]:translate-x-0 max-lg:shadow-lg max-lg:fixed z-40 transition-all h-full overflow-y-auto">
                         <div class="p-5 pb-3 lg:hidden block">

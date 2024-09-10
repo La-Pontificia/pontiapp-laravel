@@ -29,7 +29,7 @@
                                     'src' => $user->profile,
                                     'key' => $user->id,
                                     'className' => 'w-full h-[90px] border-none rounded-none',
-                                    'alt' => $user->first_name . ' ' . $user->last_name,
+                                    'alt' => $user->names(),
                                     'altClass' => 'text-3xl',
                                 ])
                             </div>

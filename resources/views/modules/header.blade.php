@@ -23,7 +23,7 @@
                 'key' => $cuser->id,
                 'src' => $cuser->profile,
                 'className' => 'w-10',
-                'alt' => $cuser->first_name . ' ' . $cuser->last_name,
+                'alt' => $cuser->names(),
                 'altClass' => 'text-sm',
             ])
         </button>
@@ -45,7 +45,7 @@
                 @include('commons.avatar', [
                     'src' => $cuser->profile,
                     'className' => 'w-28',
-                    'alt' => $cuser->first_name . ' ' . $cuser->last_name,
+                    'alt' => $cuser->names(),
                     'altClass' => 'text-3xl',
                 ])
                 <div>
