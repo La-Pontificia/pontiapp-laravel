@@ -3,17 +3,26 @@
 @section('title', 'Asistencias: ' . $user->first_name . ', ' . $user->last_name)
 
 @php
-
     $start = request()->query('start') ? request()->query('start') : null;
     $end = request()->query('end') ? request()->query('end') : null;
-    $currentTerminal =
-        request()->query('terminal') ?? $user->defaultTerminal
-            ? $user->defaultTerminal->database_name
-            : $terminals[0]->database_name;
+    $currentTerminal = null;
+
+    if (request()->query('terminal')) {
+        $currentTerminal = request()->query('terminal');
+    } elseif ($user->defaultTerminal) {
+        $currentTerminal = $user->defaultTerminal->database_name;
+    } else {
+        $currentTerminal = $terminals[0]->database_name;
+    }
 
 @endphp
 
 @section('layout.users.slug')
+    @if ($user->defaultTerminal)
+        <div>
+            adbadv
+        </div>
+    @endif
     @if ($cuser->has('assists:show') || $cuser->id === $user->id || $cuser->isDev())
         <div class="space-y-2 flex max-w-2xl mx-auto w-full flex-col h-full">
             <div class="border-t pt-2 w-full border-neutral-200">
