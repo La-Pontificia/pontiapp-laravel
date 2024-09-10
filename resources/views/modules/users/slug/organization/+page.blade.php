@@ -18,7 +18,7 @@
             @endif
         </div>
         @if ($user->people->count() !== 0)
-            <div class="label bg-stone-200/40 border p-2 rounded-md">
+            <div class="label bg-stone-200/10 border border-neutral-400 p-2 rounded-md">
                 <span>
                     {{ $user->names() }} supervisa a ({{ $user->people->count() }})
                     {{ $user->people->count() > 1 ? 'personas' : 'persona' }}
