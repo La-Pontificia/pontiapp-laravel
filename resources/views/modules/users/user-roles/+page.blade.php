@@ -36,7 +36,7 @@
                             <div class="flex-grow">
                                 <p class="font-semibold">{{ $role->title }}</p>
                                 <p class="flex text-nowrap text-xs items-center flex-wrap gap-1 text-neutral-600">
-                                    {{ count($role->privileges) }} privilegios. @svg('fluentui-people-28-o', 'w-4 h-4')
+                                    {{ count($role->privileges) }} privilegios. @svg('fluentui-people-28-o', 'w-5 h-5')
                                     {{ count($role->users) }}
                                 </p>
                             </div>
@@ -67,7 +67,7 @@
                             </div>
                             <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $role->id }}">
-                                @svg('fluentui-more-horizontal-16-o', 'w-4 h-4')
+                                @svg('fluentui-more-horizontal-16-o', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $role->id }}" class="dropdown-content hidden">
                                 <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
