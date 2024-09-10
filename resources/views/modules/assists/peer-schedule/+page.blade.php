@@ -8,7 +8,8 @@
     $group = request()->query('group');
     $query = request()->query('query');
 
-    $currentTerminal = request()->query('terminal');
+    $currentTerminal = request()->query('terminal') ?? $terminals[0]->database_name;
+
 @endphp
 
 @section('layout.assists')
@@ -172,7 +173,7 @@
                                     <td>
                                         <p tip="Turno de trabajo: {{ $schedule['turn'] }}"
                                             class="text-center  {{ $schedule['turn'] === 'TM' ? 'text-yellow-500' : 'text-violet-600' }}">
-                                            svg$schedule['turn'] === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-4 h-4')
+                                            svg$schedule['turn'] === 'TM' ? 'bxs-sun' : 'bxs-moon', 'w-5 h-5')
                                         </p>
                                     </td>
                                     <td>

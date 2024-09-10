@@ -8,7 +8,8 @@
 
     $query = request()->query('query');
 
-    $currentTerminal = request()->query('terminal');
+    $currentTerminal = request()->query('terminal') ?? $terminals[0]->database_name;
+
 @endphp
 
 @section('layout.assists')

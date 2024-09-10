@@ -4,9 +4,8 @@
     $start = request()->query('start') ? request()->query('start') : null;
     $end = request()->query('end') ? request()->query('end') : null;
 
-    $currentTerminal = request()->query('terminal');
+    $currentTerminal = request()->query('terminal') ?? $terminals[0]->database_name;
 
-    $default_terminal = 'PL-Alameda';
 @endphp
 
 @section('layout.assists')
@@ -54,7 +53,7 @@
                     <select name="terminal" class="bg-white">
                         @foreach ($terminals as $terminal)
                             <option value="{{ $terminal->database_name }}"
-                                {{ $currentTerminal === $terminal->database_name ? 'selected' : '' }}>
+                                {{ $currentTerminal == $terminal->database_name ? 'selected' : '' }}>
                                 {{ $terminal->name }}
                             </option>
                         @endforeach
@@ -70,10 +69,9 @@
                 <button type="submit" class="primary mt-2">Filtrar</button>
             </form>
             @if (count($schedules) !== 0)
-                <button type="button" id="export-centralied-assists" data-dropdown-toggle="dropdown"
-                    class="secondary mt-7">
+                <button type="button" id="button-export-assists-centralized" class="secondary mt-7">
                     @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
-                    Exportar
+                    <span>Exportar</span>
                 </button>
             @endif
         </div>
@@ -136,14 +134,11 @@
                                                 'src' => $schedule['user']->profile,
                                                 'className' => 'w-10',
                                                 'key' => $schedule['user']->id,
-                                                'alt' =>
-                                                    $schedule['user']->first_name .
-                                                    ' ' .
-                                                    $schedule['user']->last_name,
+                                                'alt' => $schedule['user']->names(),
                                                 'altClass' => 'text-md',
                                             ])
                                             <div>
-                                                <p class="">
+                                                <p class="text-nowrap">
                                                     {{ $schedule['user']->names() }}
                                                 </p>
                                             </div>

@@ -43,7 +43,7 @@
                                 <button type="button" data-modal-target="dialog-{{ $terminal->id }}"
                                     data-modal-toggle="dialog-{{ $terminal->id }}"
                                     class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
-                                    @svg('fluentui-edit-20', 'w-4 h-4')
+                                    @svg('fluentui-edit-20', 'w-5 h-5')
                                 </button>
                             @endif
                             <div id="dialog-{{ $terminal->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -68,7 +68,7 @@
                             </div>
                             <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $terminal->id }}">
-                                @svg('fluentui-more-horizontal-20-o', 'w-4 h-4')
+                                @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $terminal->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('assists:terminals:delete') || $cuser->isDev())

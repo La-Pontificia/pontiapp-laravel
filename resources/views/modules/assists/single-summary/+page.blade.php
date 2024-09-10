@@ -5,7 +5,8 @@
 @php
     $start = request()->query('start') ? request()->query('start') : null;
     $end = request()->query('end') ? request()->query('end') : null;
-    $currentTerminal = request()->query('terminal');
+    $currentTerminal = request()->query('terminal') ?? $terminals[0]->database_name;
+
 @endphp
 
 @section('layout.assists')
