@@ -37,7 +37,7 @@
                             <div class="flex-grow">
                                 <p class="group-hover:underline">{{ $group->name }}</p>
                                 <p class="flex text-nowrap text-sm items-center flex-wrap gap-1 text-neutral-600">
-                                    {{ count($group->schedules) }} horarios y usados por @svg('fluentui-people-28-o', 'w-4 h-4')
+                                    {{ count($group->schedules) }} horarios y usados por @svg('fluentui-people-28-o', 'w-5 h-5')
                                     {{ count($group->users) }}
                                     usuarios.
                                 </p>
@@ -52,7 +52,7 @@
                             <button type="button" data-modal-target="dialog-{{ $group->id }}"
                                 data-modal-toggle="dialog-{{ $group->id }}"
                                 class="rounded-full p-2 text-sm relative flex items-center gap-2 hover:bg-neutral-200 transition-colors">
-                                @svg('fluentui-pen-48-o', 'w-4 h-4') Editar nombre
+                                @svg('fluentui-pen-48-o', 'w-5 h-5') Editar nombre
                             </button>
                             <div id="dialog-{{ $group->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
                                 <div class="content lg:max-w-lg max-w-full">
@@ -75,7 +75,7 @@
                             </div>
                             <button class="rounded-full relative p-2 hover:bg-neutral-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $group->id }}">
-                                @svg('fluentui-more-vertical-16-o', 'w-4 h-4')
+                                @svg('fluentui-more-vertical-16-o', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $group->id }}" class="dropdown-content hidden">
                                 @if ($cuser->has('schedules:edit') || $cuser->isDev())
