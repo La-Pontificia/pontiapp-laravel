@@ -69,7 +69,7 @@
                         </h2>
                         <p class="text-sm opacity-70">
                             {{ $user->role_position->name }}
-                            • {{ $user->role_position->department->name }}
+                            • {{ $user->department()->name }}
                         </p>
 
                         <a href="mailto:{{ $user->email }}" class="flex text-xs font-semibold items-center gap-2 w-fit">

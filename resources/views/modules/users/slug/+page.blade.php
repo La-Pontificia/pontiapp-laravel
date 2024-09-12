@@ -149,7 +149,7 @@
                             <div class="label flex flex-col gap-0">
                                 <span style="margin-bottom: 0px;">Departamento</span>
                                 <p class="leading-4">
-                                    {{ $user->role_position->department->name }}
+                                    {{ $user->department()->name }}
                                 </p>
                             </div>
                         </div>
@@ -182,8 +182,7 @@
                                             'src' => $user->supervisor->profile,
                                             'className' => 'w-16 mx-auto',
                                             'key' => $user->supervisor->id,
-                                            'alt' =>
-                                                $user->supervisor->first_name . ' ' . $user->supervisor->last_name,
+                                            'alt' => $user->supervisor->names(),
                                             'altClass' => 'text-xl',
                                         ])
                                     </div>
@@ -210,7 +209,7 @@
                                                     'src' => $person->profile,
                                                     'className' => 'w-16 mx-auto',
                                                     'key' => $person->id,
-                                                    'alt' => $person->first_name . ' ' . $person->last_name,
+                                                    'alt' => $person->names(),
                                                     'altClass' => 'text-xl',
                                                 ])
                                             </div>
