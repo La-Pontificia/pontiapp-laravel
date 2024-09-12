@@ -146,6 +146,11 @@
                                                 <div class="flex-grow">
                                                     <p class="text-nowrap">
                                                         {{ $user->last_name . ', ' . $user->first_name }}
+                                                        @if ($user->isDev())
+                                                            <span class="text-blue-500">
+                                                                (Developer)
+                                                            </span>
+                                                        @endif
                                                     </p>
                                                 </div>
                                             </div>
