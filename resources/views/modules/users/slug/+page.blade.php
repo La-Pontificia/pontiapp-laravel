@@ -369,6 +369,9 @@
                             </span>
                             <select name="id_job_position" id="job-position-select" required>
                                 @foreach ($job_positions as $item)
+                                    @if ($item->isDev() && !$cuser->isDev())
+                                        @continue
+                                    @endif
                                     <option {{ $user->role_position->id_job_position === $item->id ? 'selected' : '' }}
                                         value="{{ $item->id }}">
                                         {{ $item->name }}
@@ -382,6 +385,9 @@
                             </span>
                             <select name="id_role" id="role-select" required>
                                 @foreach ($roles as $role)
+                                    @if ($role->isDev() && !$cuser->isDev())
+                                        @continue
+                                    @endif
                                     <option {{ $user->id_role === $role->id ? 'selected' : '' }}
                                         value="{{ $role->id }}">
                                         {{ $role->name }}
@@ -451,6 +457,9 @@
                             <span>Rol</span>
                             <select required name="id_role_user">
                                 @foreach ($user_roles as $role)
+                                    @if ($role->isDev() && !$cuser->isDev())
+                                        @continue
+                                    @endif
                                     <option {{ $user->id_role_user === $role->id ? 'selected' : '' }}
                                         value="{{ $role->id }}">
                                         {{ $role->title }}
