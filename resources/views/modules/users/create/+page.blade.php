@@ -33,7 +33,7 @@
                 </button>
             </div>
             <div class="p-5 flex-grow mt-2 w-full overflow-y-auto ">
-                <form class="grid gap-4 w-full" role="form">
+                <form id="create-user-form" class="grid gap-4 w-full" role="form">
                     <div class="flex items-center gap-4">
                         <div class="relative rounded-full overflow-hidden w-24 aspect-square">
                             <input type="file" name="profile" id="input-profile"
