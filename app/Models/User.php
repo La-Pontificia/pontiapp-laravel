@@ -57,10 +57,14 @@ class User extends Authenticatable
     static $rules = [
         'dni' => 'required|numeric|digits:8',
         'first_name' => 'required',
+        'immediate_boss' => 'uuid|nullable',
         'username' => 'required',
         'domain' => 'required',
         'last_name' => 'required',
         'id_role' => 'uuid|required',
+        'date_of_birth_day' => 'numeric|nullable',
+        'date_of_birth_month' => 'numeric|nullable',
+        'date_of_birth_year' => 'numeric|nullable',
         'id_role_user' => 'uuid|required',
         'id_branch' => 'uuid|required',
         'group_schedule_id' => 'uuid',
@@ -113,6 +117,21 @@ class User extends Authenticatable
     public function role_position()
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
+    }
+
+    public function job_position()
+    {
+        return $this->role_position->job_position;
+    }
+
+    public function department()
+    {
+        return $this->role_position->department;
+    }
+
+    public function area()
+    {
+        return $this->role_position->department->area;
     }
 
     public function branch()
