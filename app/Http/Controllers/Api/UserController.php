@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\GroupSchedule;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -28,6 +29,38 @@ class UserController extends Controller
 
         $defaultSchedule = GroupSchedule::where('default', true)->first();
 
+        // construct and validate date of birth
+        $year = $request->date_of_birth_year;
+        $month = $request->date_of_birth_month;
+        $day = $request->date_of_birth_day;
+
+        if ($year || $month || $day) {
+            if (!checkdate($month, $day, $year))
+                return response()->json('La fecha de nacimiento no es valida', 400);
+            $dateOfBirth = $year . '-' . $month . '-' . $day;
+            $date = new \DateTime($dateOfBirth);
+            $now = new \DateTime();
+            $interval = $now->diff($date);
+            $age = $interval->y;
+
+            if ($age < 13)
+                return response()->json('El usuario debe ser mayor de 13 años', 400);
+        }
+
+        // validate immediate_boss
+        if ($request->immediate_boss) {
+            $role_position = Role::find($request->id_role);
+            $supervisor = User::find($request->immediate_boss);
+
+            if (!$supervisor)
+                return response()->json('El supervisor no existe', 400);
+
+            //verify level of supervisor
+            if ($supervisor->role_position->job_position->level > $role_position->job_position->level)
+                return response()->json('El jefe inmediato no puede ser de un nivel inferior al usuario', 400);
+        }
+
+        // supervisor
         $user = User::create([
             'profile' => $request->profile ?? null,
             'dni' => $request->dni,
@@ -41,6 +74,7 @@ class UserController extends Controller
             'id_role_user' => $request->id_role_user,
             'group_schedule_id' => $request->group_schedule_id ?? $defaultSchedule->id,
             'id_branch' => $request->id_branch,
+            'supervisor_id' => $request->immediate_boss,
             'username' => $request->username,
             'created_by' => auth()->user()->id,
         ]);
