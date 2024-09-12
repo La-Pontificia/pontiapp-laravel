@@ -31,6 +31,9 @@
             <div class="flex flex-col divide-y">
                 @if ($cuser->has('users:user-roles:show') || $cuser->isDev())
                     @forelse ($roles as $role)
+                        @if ($role->isDev() && !$cuser->isDev())
+                            @continue
+                        @endif
                         <div class="flex relative items-center p-3 gap-2">
                             @svg('fluentui-note-20-o', 'w-6 h-6')
                             <div class="flex-grow">

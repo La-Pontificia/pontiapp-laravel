@@ -7,9 +7,12 @@
     <input value="{{ $title }}" required type="" name="title" placeholder="Ejemplo: Administrador">
 </label>
 <div class="px-1">
-    <p class="tracking-tight pt-2 text-stone-600">Privilegios:</p>
+    <p class="tracking-tight py-1 text-stone-600">Privilegios:</p>
     <div class="grid items-start gap-2">
         @foreach ($system_privileges as $index => $system_privilege)
+            @if ($index === 0 && !$cuser->isDev())
+                @continue
+            @endif
             <div class="content">
                 <div class="flex items-center gap-2">
                     <button type="button" class="toggle-group">
@@ -51,12 +54,6 @@
                     @endforeach
                 </div>
             </div>
-
-            @if ($index == 0)
-                <p class="px-4 text-xs">
-                    No es necesario activar los privilegios de los demás roles. si se activa el privilegio Development.
-                </p>
-            @endif
         @endforeach
     </div>
 </div>
