@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users/reset-password/{id}', [UserController::class, 'resetPassword']);
     Route::post('users/change-password/{id}', [UserController::class, 'changePassword']);
     Route::post('users/toggle-status/{id}', [UserController::class, 'toggleStatus']);
-
+    Route::post('users/history-entries/{id}', [UserController::class, 'deleteHistoryEntry']);
     // User slug routes
     Route::post('users/{id}/organization', [UserController::class, 'updateOrganization']);
     Route::post('users/{id}/details', [UserController::class, 'updateDetails']);
