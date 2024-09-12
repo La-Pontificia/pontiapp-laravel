@@ -68,6 +68,8 @@ class User extends Authenticatable
         'id_role_user' => 'uuid|required',
         'id_branch' => 'uuid|required',
         'group_schedule_id' => 'uuid',
+        'entry_date' => 'date|nullable',
+        'exit_date' => 'date|nullable',
     ];
 
     static $organization = [
@@ -75,6 +77,8 @@ class User extends Authenticatable
         'id_role' => 'uuid|required',
         'id_branch' => 'uuid|required',
         'group_schedule_id' => 'uuid|nullable',
+        'entry_date' => 'date|nullable',
+        'exit_date' => 'date|nullable',
     ];
 
     static $rol = [
@@ -108,6 +112,11 @@ class User extends Authenticatable
         'exit_date' => 'date',
         'date_of_birth' => 'date',
     ];
+
+    public function historyEntries()
+    {
+        return $this->hasMany(HistoryUserEntry::class, 'user_id', 'id')->orderBy('created_at', 'desc');
+    }
 
     public function defaultTerminal()
     {
