@@ -122,11 +122,12 @@ class UserController extends Controller
         $job_positions = JobPosition::all();
         $roles = Role::all();
         $user_roles = UserRole::all();
+        $users = User::all();
         $branches = Branch::all();
         $group_schedules = GroupSchedule::all();
         $terminals = AssistTerminal::all();
 
-        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules', 'terminals'));
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules', 'terminals', 'users'));
     }
 
     // slugs
