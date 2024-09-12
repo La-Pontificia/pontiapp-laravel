@@ -33,6 +33,12 @@ class JobPosition extends Model
         return $this->hasMany(Role::class, 'id_job_position', 'id');
     }
 
+
+    public function isDev()
+    {
+        return $this->id === '9b342044-7a95-4b10-b19f-cc968516b81e';
+    }
+
     public function createdBy()
     {
         return $this->hasOne(User::class, 'id', 'created_by');

@@ -30,6 +30,11 @@ class Role extends Model
         return $this->hasMany(User::class, 'id_role', 'id');
     }
 
+    public function isDev()
+    {
+        return $this->id === '9b342044-7a95-4b10-b19f-cc968516b81e';
+    }
+
     public function department()
     {
         return $this->hasOne(Department::class, 'id', 'id_department');
