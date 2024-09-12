@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     $ = document.querySelector.bind(document);
 
-    const UserForm = $("#reate-user-form");
+    const $userForm = $("#create-user-form");
     const InputDni = $("#dni-input");
     const InputFirstName = $("#first_name-input");
     const InputLastName = $("#last_name-input");
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // CREATE/UPDATE USER
-    UserForm?.addEventListener("submit", async (e) => {
+    $userForm?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const form = new FormData(e.target);
 
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return window.alert("El DNI debe tener 8 caracteres");
         }
 
-        window.disabledFormChildren(UserForm);
+        window.disabledFormChildren($userForm);
 
         const image = form.get("profile");
 
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             } catch (error) {
                 console.error(error);
             } finally {
-                window.enabledFormChildren(UserForm);
+                window.enabledFormChildren($userForm);
             }
         }
         form.delete("profile");
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 text: error.response.data ?? "Error al registrar el usuario",
             });
         } finally {
-            window.enabledFormChildren(UserForm);
+            window.enabledFormChildren($userForm);
         }
     });
 
