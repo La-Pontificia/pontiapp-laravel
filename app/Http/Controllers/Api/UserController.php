@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\GroupSchedule;
+use App\Models\HistoryUserEntry;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -75,6 +76,8 @@ class UserController extends Controller
             'group_schedule_id' => $request->group_schedule_id ?? $defaultSchedule->id,
             'id_branch' => $request->id_branch,
             'supervisor_id' => $request->immediate_boss,
+            'entry_date' => $request->entry_date,
+            'exit_date' => $request->exit_date,
             'username' => $request->username,
             'created_by' => auth()->user()->id,
         ]);
@@ -127,10 +130,24 @@ class UserController extends Controller
         request()->validate(User::$organization);
         $cuser = auth()->user();
 
+        if ($request->entry_date !== $user->entry_date && $request->exit_date !== $user->exit_date) {
+            if ($user->entry_date && $user->exit_date) {
+                HistoryUserEntry::create([
+                    'user_id' => $user->id,
+                    'entry_date' => $user->entry_date,
+                    'exit_date' => $user->exit_date,
+                    'created_by' => $cuser->id,
+                ]);
+            }
+        }
+
+
         $user->default_assist_terminal_id = $request->default_assist_terminal;
         $user->id_role = $request->id_role;
         $user->id_branch = $request->id_branch;
         $user->group_schedule_id = $request->group_schedule_id;
+        $user->entry_date =  $request->entry_date;
+        $user->exit_date =  $request->exit_date;
         $user->updated_by = $cuser->id;
         $user->save();
         return response()->json('Detalles actualizados correctamente.', 200);
@@ -337,5 +354,17 @@ class UserController extends Controller
         $user->save();
 
         return response()->json('Estado actualizado correctamente', 200);
+    }
+
+    public function deleteHistoryEntry($id)
+    {
+        $entry = HistoryUserEntry::find($id);
+
+        if (!$entry)
+            return response()->json('El registro no existe', 400);
+
+        $entry->delete();
+
+        return response()->json('Registro eliminado correctamente', 200);
     }
 }
