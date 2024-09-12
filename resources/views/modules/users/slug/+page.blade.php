@@ -349,14 +349,12 @@
                             </div>
                         </label>
                         <div class="col-span-2">
-                            <button class="secondary gap-2 mt-1 flex">
-                                <span>
-                                    Guardar detalles
-                                </span>
+                            <button class="primary gap-2 mt-1 flex">
+                                Actualizar detalles
                             </button>
                         </div>
                     </form>
-                    <div class="border-t pt-2 text-lg">
+                    <div class="border-t pt-4 mt-7 text-lg">
                         <p>
                             Organización y horarios
                         </p>
@@ -439,14 +437,78 @@
                             </div>
                         </label>
                         <div class="col-span-2">
-                            <button class="secondary gap-2 mt-1 flex">
-                                <span>
-                                    Guardar organización
-                                </span>
+                            <div class="grid grid-cols-2 gap-4">
+                                <label class="label">
+                                    <span>Fecha de ingreso</span>
+                                    <input value="{{ $user->entry_date ? $user->entry_date->format('Y-m-d') : '' }}"
+                                        autocomplete="off" type="date" name="entry_date">
+                                </label>
+                                <label class="label">
+                                    <span>Fecha de Cese</span>
+                                    <input value="{{ $user->exit_date ? $user->exit_date->format('Y-m-d') : '' }}"
+                                        autocomplete="off" type="date" name="exit_date">
+                                </label>
+                            </div>
+
+                            @if ($user->historyEntries->count() > 0)
+                                <div class="label mt-3 p-2 bg-white shadow-md rounded-lg">
+                                    <span>
+                                        Historial de fechas de ingreso y Cese
+                                    </span>
+                                    <table class="w-full">
+                                        <thead class="border-y">
+                                            <tr class="[&>th]:text-sm [&>th]:p-2 [&>th]:font-normal text-left">
+                                                <th>
+                                                    Ingreso
+                                                </th>
+                                                <th>
+                                                    Cese
+                                                </th>
+                                                <th>
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y">
+                                            @foreach ($user->historyEntries as $index => $history)
+                                                <tr class="text-sm font-semibold [&>td]:p-2">
+                                                    <td>
+                                                        {{ $history->entry_date->format('d-m-Y') }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $history->exit_date ? $history->exit_date->format('d-m-Y') : 'Actualidad' }}
+                                                    </td>
+                                                    <td>
+                                                        <button type="button"
+                                                            class="rounded-full relative p-2 hover:bg-neutral-200 transition-colors"
+                                                            data-dropdown-toggle="dropdown-{{ $history->id }}">
+                                                            @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
+                                                        </button>
+                                                        <div id="dropdown-{{ $history->id }}"
+                                                            class="dropdown-content hidden">
+                                                            <button type="button"
+                                                                data-atitle="Eliminar fecha de ingreso y cese"
+                                                                data-adescription="No podrás deshacer esta acción."
+                                                                data-param="/api/users/history-entries/{{ $history->id }}"
+                                                                class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10 {{ $user->status ? 'text-red-600' : 'text-green-600' }}">
+                                                                Eliminar
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="col-span-2">
+                            <button class="primary gap-2 mt-1 flex">
+                                Actualizar organización, horarios y fechas.
                             </button>
                         </div>
                     </form>
-                    <div class="border-t pt-2 text-lg">
+                    <div class="border-t pt-4 mt-7 text-lg">
                         <p>
                             Rol y privilegios
                         </p>
@@ -468,14 +530,12 @@
                             </select>
                         </label>
                         <div class="col-span-2">
-                            <button class="secondary gap-2 mt-1 flex">
-                                <span>
-                                    Guardar rol
-                                </span>
+                            <button class="primary gap-2 mt-1 flex">
+                                Actualizar rol y privilegios
                             </button>
                         </div>
                     </form>
-                    <div class="border-t pt-2 text-lg">
+                    <div class="border-t pt-4 mt-7 text-lg">
                         <p>
                             Seguridad y acceso
                         </p>
@@ -509,8 +569,8 @@
                             </div>
                         </div>
                         <div class="col-span-2">
-                            <button class="secondary gap-2 mt-1 flex">
-                                Guardar correo
+                            <button class="primary gap-2 mt-1 flex">
+                                Actualizar correo
                             </button>
                         </div>
                         @if (($cuser->has('users:reset-password') && !$user->has('development')) || $cuser->isDev())
