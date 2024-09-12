@@ -186,6 +186,16 @@
                                     </select>
                                 </div>
                             </label>
+                            <div class="col-span-2 grid grid-cols-2 gap-4">
+                                <label class="label">
+                                    <span>Fecha de ingreso</span>
+                                    <input autocomplete="off" type="date" name="entry_date">
+                                </label>
+                                <label class="label">
+                                    <span>Fecha de Cese</span>
+                                    <input autocomplete="off" type="date" name="exit_date">
+                                </label>
+                            </div>
                             <div class="col-span-2 grid label grid-cols-2">
                                 <span>
                                     Jefe inmediato
