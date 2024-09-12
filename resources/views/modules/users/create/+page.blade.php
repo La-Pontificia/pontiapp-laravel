@@ -54,7 +54,7 @@
                                 Detalles del usuario
                             </p>
                         </div>
-                        <div class="grid dinamic-form grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2 grid grid-cols-2">
                                 <label class="label">
                                     <span>Documento de Identidad</span>
@@ -75,7 +75,7 @@
                             <label class="label">
                                 <span>Fecha de nacimiento</span>
                                 <div class="w-full">
-                                    <select required name="date_of_birth_day">
+                                    <select name="date_of_birth_day">
                                         <option value="" selected disabled>
                                             Día
                                         </option>
@@ -86,7 +86,7 @@
                                         @endforeach
                                     </select>
 
-                                    <select required name="date_of_birth_month">
+                                    <select name="date_of_birth_month">
                                         <option value="" selected disabled>
                                             Mes
                                         </option>
@@ -97,7 +97,7 @@
                                         @endforeach
                                     </select>
 
-                                    <select required name="date_of_birth_year">
+                                    <select name="date_of_birth_year">
                                         <option value="" selected disabled>
                                             Año
                                         </option>
@@ -115,7 +115,7 @@
                                 Organización y horarios
                             </p>
                         </div>
-                        <div class="grid dinamic-form grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <label class="label">
                                 <span>
                                     Puesto de Trabajo
@@ -179,13 +179,27 @@
                                     </select>
                                 </div>
                             </label>
+                            <div class="col-span-2 grid label grid-cols-2">
+                                <span>
+                                    Jefe inmediato
+                                </span>
+                                <select name="immediate_boss" id="">
+                                    <option value="" selected>--</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">
+                                            {{ $user->first_name }} {{ $user->last_name }} •
+                                            {{ $user->role_position->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <div class="border-t pt-2 text-lg">
                             <p>
                                 Rol y privilegios
                             </p>
                         </div>
-                        <div class="grid dinamic-form grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <label class="label w-[200px]">
                                 <span>Rol</span>
                                 <select required name="id_role_user">
@@ -209,8 +223,8 @@
                                     <div class="absolute z-10 inset-y-0 flex items-center left-3">
                                         @svg('fluentui-mail-20-o', 'w-5 h-5 opacity-50')
                                     </div>
-                                    <input pattern="^[a-zA-Z0-9_]*$" value="" required type="text" name="username"
-                                        class="w-full pl-10" placeholder="Nombre de usuario">
+                                    <input pattern="^[a-zA-Z0-9_]*$" value="" required type="text"
+                                        name="username" class="w-full pl-10" placeholder="Nombre de usuario">
                                     <div class="absolute inset-y-0 flex gap-1 items-center right-2">
                                         <div class="opacity-50">
                                             @
