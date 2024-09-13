@@ -437,22 +437,30 @@
                             </div>
                         </label>
                         <div class="col-span-2">
-                            <div class="grid grid-cols-2 gap-4">
-                                <label class="label">
-                                    <span>Fecha de ingreso</span>
-                                    <input value="{{ $user->entry_date ? $user->entry_date->format('Y-m-d') : '' }}"
-                                        autocomplete="off" type="date" name="entry_date">
-                                </label>
-                                <label class="label">
-                                    <span>Fecha de Cese</span>
-                                    <input value="{{ $user->exit_date ? $user->exit_date->format('Y-m-d') : '' }}"
-                                        autocomplete="off" type="date" name="exit_date">
-                                </label>
+                            <div class="flex gap-2 items-end">
+                                <div class="grid grid-cols-2 gap-4 w-full">
+                                    <label class="label">
+                                        <span>Fecha de ingreso</span>
+                                        <input value="{{ $user->entry_date ? $user->entry_date->format('Y-m-d') : '' }}"
+                                            autocomplete="off" type="date" name="entry_date">
+                                    </label>
+                                    <label class="label">
+                                        <span>Fecha de Cese</span>
+                                        <input value="{{ $user->exit_date ? $user->exit_date->format('Y-m-d') : '' }}"
+                                            autocomplete="off" type="date" name="exit_date">
+                                    </label>
+                                </div>
+                                <button {{ !$user->entry_date || !$user->exit_date ? 'disabled=true' : '' }}
+                                    type="button" class="dinamic-alert secondary"
+                                    data-atitle="Pasar las fechas actuales a historial"
+                                    data-adescription="Al confirmar las fechas actuales se quitarán y pasarán a historial."
+                                    data-param="/api/users/{{ $user->id }}/passed-entry-to-history">
+                                    Historial
+                                </button>
                             </div>
-
                             @if ($user->historyEntries->count() > 0)
-                                <div class="label mt-3 p-2 bg-white shadow-md rounded-lg">
-                                    <span>
+                                <div class="label mt-3 bg-white shadow-md rounded-lg">
+                                    <span class="p-2 block">
                                         Historial de fechas de ingreso y Cese
                                     </span>
                                     <table class="w-full">
@@ -486,8 +494,7 @@
                                                         </button>
                                                         <div id="dropdown-{{ $history->id }}"
                                                             class="dropdown-content hidden">
-                                                            <button type="button"
-                                                                data-atitle="Eliminar fecha de ingreso y cese"
+                                                            <button type="button" data-atitle="Eliminar historial"
                                                                 data-adescription="No podrás deshacer esta acción."
                                                                 data-param="/api/users/history-entries/{{ $history->id }}"
                                                                 class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10 {{ $user->status ? 'text-red-600' : 'text-green-600' }}">
