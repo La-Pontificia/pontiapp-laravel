@@ -9,8 +9,10 @@ use App\Models\GroupSchedule;
 use App\Models\User;
 use App\services\AssistsService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class AssistsController extends Controller
 {
@@ -244,5 +246,33 @@ class AssistsController extends Controller
             'assists' => $assists,
             'terminals' => $terminals,
         ]);
+    }
+
+
+
+    public function checkStatusServer()
+    {
+        try {
+            $startTime = microtime(true);
+            DB::connection('PL-Alameda')->getPdo();
+            $executionTime = microtime(true) - $startTime;
+            if ($executionTime > 5) {
+                return response()->json([
+                    'status' => 'timeout',
+                    'message' => 'El servidor respondió, pero tomó más de 7 segundos.',
+                ]);
+            }
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Servidor activo.',
+                'execution_time' => $executionTime . ' seconds',
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error al conectar con el servidor de asistencias.',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }
