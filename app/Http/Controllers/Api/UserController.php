@@ -130,18 +130,6 @@ class UserController extends Controller
         request()->validate(User::$organization);
         $cuser = auth()->user();
 
-        if ($request->entry_date !== $user->entry_date && $request->exit_date !== $user->exit_date) {
-            if ($user->entry_date && $user->exit_date) {
-                HistoryUserEntry::create([
-                    'user_id' => $user->id,
-                    'entry_date' => $user->entry_date,
-                    'exit_date' => $user->exit_date,
-                    'created_by' => $cuser->id,
-                ]);
-            }
-        }
-
-
         $user->default_assist_terminal_id = $request->default_assist_terminal;
         $user->id_role = $request->id_role;
         $user->id_branch = $request->id_branch;
@@ -151,6 +139,27 @@ class UserController extends Controller
         $user->updated_by = $cuser->id;
         $user->save();
         return response()->json('Detalles actualizados correctamente.', 200);
+    }
+
+    public function passedEntriesToHistory($id)
+    {
+
+        $user = User::find($id);
+        $cuser = auth()->user();
+
+        if ($user->entry_date && $user->exit_date) {
+            HistoryUserEntry::create([
+                'user_id' => $user->id,
+                'entry_date' => $user->entry_date,
+                'exit_date' => $user->exit_date,
+                'created_by' => $cuser->id,
+            ]);
+        }
+
+        $user->entry_date =  null;
+        $user->exit_date =  null;
+        $user->save();
+        return response()->json('Fechas actualizadas actualizadas correctamente.', 200);
     }
 
     public function updateRolPrivileges(Request $request, $id)
