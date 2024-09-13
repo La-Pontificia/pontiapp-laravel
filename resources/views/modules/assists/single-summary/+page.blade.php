@@ -68,12 +68,12 @@
                         <tbody class="divide-y z-[0]">
                             @foreach ($assists as $assist)
                                 @php
-                                    $date = \Carbon\Carbon::parse($assist->punch_date);
+                                    $date = \Carbon\Carbon::parse($assist['punch_date']);
                                     $day = $date->isoFormat('dddd');
                                 @endphp
                                 <tr class="[&>td]:p-3">
                                     <td>
-                                        {{ $assist->punch_date }}
+                                        {{ $assist['punch_date'] }}
                                     </td>
                                     <td>
                                         <p class="capitalize">
@@ -81,10 +81,10 @@
                                         </p>
                                     </td>
                                     <td class="text-center">
-                                        {{ $assist->count }} asistencias
+                                        {{ $assist['count'] }} asistencias
                                     </td>
                                     <td>
-                                        @if ($assist->count > 0)
+                                        @if ($assist['count'] > 0)
                                             @svg('fluentui-checkmark-circle-24', 'h-6 w-6 text-green-500')
                                         @else
                                             @svg('fluentui-error-circle-12', 'h-6 w-6 text-red-500')
