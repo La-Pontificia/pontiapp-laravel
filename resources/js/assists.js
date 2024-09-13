@@ -1,3 +1,4 @@
+import axios from "axios";
 import ExcelJS from "exceljs";
 import moment from "moment";
 
@@ -6,6 +7,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $perSchedule = $("#button-export-assists-per-schedule");
     const $peerUser = $("#button-export-assists-peer-user");
     const $centralized = $("#button-export-assists-centralized");
+    const $checkServer = $("#check-server");
+    const $errorServer = $("#error-server");
+
+    if ($checkServer) {
+        $checkServer.innerHTML = "Verificando...";
+        const { data } = await axios.get("/api/assists/check-server");
+        if (data.status == "error") {
+            $checkServer.innerHTML = data.message;
+            $errorServer.innerHTML = data.error;
+            $checkServer.classList.add("text-red-500");
+        } else {
+            $checkServer.innerHTML = data.message;
+            $checkServer.classList.add("text-green-500");
+        }
+    }
 
     async function exportAssists(groupAssists) {
         const workbook = new ExcelJS.Workbook();
