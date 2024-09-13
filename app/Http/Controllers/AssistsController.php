@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AssistsController extends Controller
@@ -249,30 +250,41 @@ class AssistsController extends Controller
     }
 
 
-
     public function checkStatusServer()
     {
+        $cacheKey = 'status_server_PL_Alameda';
+        $cachedResponse = Cache::get($cacheKey);
+
+        if ($cachedResponse) {
+            return response()->json($cachedResponse);
+        }
+
         try {
             $startTime = microtime(true);
+
             DB::connection('PL-Alameda')->getPdo();
+
             $executionTime = microtime(true) - $startTime;
-            if ($executionTime > 5) {
-                return response()->json([
-                    'status' => 'timeout',
-                    'message' => 'El servidor respondió, pero tomó más de 7 segundos.',
-                ]);
-            }
-            return response()->json([
+
+            $response = [
                 'status' => 'success',
                 'message' => 'Servidor activo.',
                 'execution_time' => $executionTime . ' seconds',
-            ]);
+            ];
+
+            Cache::put($cacheKey, $response, 240);
+
+            return response()->json($response);
         } catch (Exception $e) {
-            return response()->json([
+            $response = [
                 'status' => 'error',
-                'message' => 'Error al conectar con el servidor de asistencias.',
+                'message' => 'Error al conectar con el servidor.',
                 'error' => $e->getMessage(),
-            ]);
+            ];
+
+            Cache::put($cacheKey, $response, 240);
+
+            return response()->json($response);
         }
     }
 }
