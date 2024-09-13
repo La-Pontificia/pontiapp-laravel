@@ -123,10 +123,8 @@ class AssistsController extends Controller
         $perPage = 25;
         $currentPage = $request->get('page', 1);
 
-        if ($query && ($startDate  || $endDate)) {
-            $allAssists = $this->assistsService->assists($query, $terminal, $startDate, $endDate);
-            $assists = $allAssists->forPage($currentPage, $perPage);
-        }
+        $allAssists = $this->assistsService->assists($query, $terminal, $startDate, $endDate);
+        $assists = $allAssists->forPage($currentPage, $perPage);
 
         $terminals = AssistTerminal::all();
 
