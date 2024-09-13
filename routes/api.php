@@ -47,12 +47,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users/change-password/{id}', [UserController::class, 'changePassword']);
     Route::post('users/toggle-status/{id}', [UserController::class, 'toggleStatus']);
     Route::post('users/history-entries/{id}', [UserController::class, 'deleteHistoryEntry']);
+
     // User slug routes
     Route::post('users/{id}/organization', [UserController::class, 'updateOrganization']);
     Route::post('users/{id}/details', [UserController::class, 'updateDetails']);
     Route::post('users/{id}/segurity-access', [UserController::class, 'updateSegurityAccess']);
     Route::post('users/{id}/rol-privileges', [UserController::class, 'updateRolPrivileges']);
     Route::post('users/{id}/profile', [UserController::class, 'profile']);
+    Route::post('users/{id}/passed-entry-to-history', [UserController::class, 'passedEntriesToHistory']);
 
     // User user roles routes 
     Route::post('user-roles', [UserRoleController::class, 'create']);
@@ -129,6 +131,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('assists/export', [AssistsController::class, 'peerScheduleExport']);
     Route::get('assists/peer-user/{id}/export', [AssistsController::class, 'peerUserExport']);
     Route::get('assists/centralized/export', [AssistsController::class, 'centralizedExport']);
+    Route::get('assists/check-server', [AssistsController::class, 'checkStatusServer']);
 
     // Questions routes
     Route::get('questionnaire-templates/{id}/questions', [QuestionController::class, 'questions']);
