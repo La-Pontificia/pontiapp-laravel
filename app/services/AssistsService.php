@@ -7,7 +7,7 @@ use App\Models\AttendanceEmp;
 use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
-
+use Illuminate\Database\Eloquent\Collection;
 
 class AssistsService
 {
@@ -323,6 +323,8 @@ class AssistsService
 
     public static function singleSummary($terminal, $startDate, $endDate)
     {
+        $dates = self::generateDateRange($startDate, $endDate);
+
         $assists = (new Attendance())
             ->setConnection($terminal ?? 'PL-Alameda')
             ->selectRaw("CAST(punch_time AS DATE) as punch_date, COUNT(*) as count")
@@ -330,8 +332,32 @@ class AssistsService
             ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
             ->groupByRaw("CAST(punch_time AS DATE)")
             ->orderByRaw("CAST(punch_time AS DATE) desc")
-            ->get();
+            ->get()
+            ->keyBy('punch_date');
 
-        return $assists;
+        $summary = new Collection();
+
+        foreach ($dates as $date) {
+            $summary->push([
+                'punch_date' => $date,
+                'count' => $assists->has($date) ? $assists->get($date)->count : 0
+            ]);
+        }
+
+        return $summary;
+    }
+
+    private static function generateDateRange($startDate, $endDate)
+    {
+        $dates = [];
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        // Decrementar el día en cada iteración para generar las fechas en orden descendente
+        for ($date = $end; $date->gte($start); $date->subDay()) {
+            $dates[] = $date->toDateString();
+        }
+
+        return $dates;
     }
 }
