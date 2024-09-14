@@ -18,11 +18,6 @@
 @endphp
 
 @section('layout.users.slug')
-    @if ($user->defaultTerminal)
-        <div>
-            adbadv
-        </div>
-    @endif
     @if ($cuser->has('assists:show') || $cuser->id === $user->id || $cuser->isDev())
         <div class="space-y-2 flex max-w-2xl mx-auto w-full flex-col h-full">
             <div class="border-t pt-2 w-full border-neutral-200">
