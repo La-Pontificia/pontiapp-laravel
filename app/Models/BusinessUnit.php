@@ -16,6 +16,7 @@ class BusinessUnit extends Model
 
     protected $fillable = [
         'name',
+        'acronym',
         'domain',
         'services',
         'created_by',

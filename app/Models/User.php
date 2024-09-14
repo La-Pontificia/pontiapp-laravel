@@ -79,6 +79,7 @@ class User extends Authenticatable
         'group_schedule_id' => 'uuid|nullable',
         'entry_date' => 'date|nullable',
         'exit_date' => 'date|nullable',
+        'supervisor_id' => 'uuid|nullable',
     ];
 
     static $rol = [
@@ -112,6 +113,12 @@ class User extends Authenticatable
         'exit_date' => 'date',
         'date_of_birth' => 'date',
     ];
+
+    public function businessUnits()
+    {
+        return $this->hasMany(UserBusinessUnit::class, 'user_id', 'id');
+    }
+
 
     public function historyEntries()
     {
