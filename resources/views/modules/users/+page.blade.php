@@ -105,7 +105,9 @@
             @if ($cuser->has('users:export') || $cuser->isDev())
                 <button type="button" id="export-users" class="secondary mt-6">
                     @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
-                    Exportar
+                    <span>
+                        Exportar
+                    </span>
                 </button>
             @endif
         </form>
