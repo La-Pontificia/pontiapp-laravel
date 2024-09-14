@@ -91,7 +91,7 @@ class UserController extends Controller
     public function export(Request $request)
     {
         $users =  $this->index($request, true);
-
+        $business_units = BusinessUnit::all();
         foreach ($users as $user) {
             $user->role = $user->role;
             $user->area = $user->role_position->department->area;
@@ -101,10 +101,14 @@ class UserController extends Controller
             $user->branch = $user->branch;
             $user->supervisor = $user->supervisor;
             $user->schedule = $user->groupSchedule;
+            $user->business_units = $user->businessUnits->pluck('business_unit_id');
             $user->created_by = $user->createdBy;
             $user->updated_by = $user->updatedBy;
         }
-        return response()->json($users);
+        return response()->json([
+            'users' => $users,
+            'business_units' => $business_units
+        ]);
     }
 
     public function exportEmailAccess(Request $request)
@@ -126,11 +130,12 @@ class UserController extends Controller
         $branches = Branch::all();
         $group_schedules = GroupSchedule::all();
         $terminals = AssistTerminal::all();
+        $business_units = BusinessUnit::all();
 
-        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules', 'terminals', 'users'));
+
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules', 'terminals', 'users', 'business_units'));
     }
 
-    // slugs
     public function slug($id)
     {
         $user = User::find($id);
@@ -139,9 +144,18 @@ class UserController extends Controller
         $job_positions = JobPosition::all();
         $roles = Role::all();
         $terminals = AssistTerminal::all();
+        $business_units = BusinessUnit::all();
+
+        $users = User::whereHas('role_position', function ($q) use ($user) {
+            $q->whereHas('job_position', function ($qq) use ($user) {
+                $qq->where('level', '>', $user->job_position()->level);
+            });
+        })->get();
+
         $branches = Branch::all();
+
         if (!$user) return view('+500', ['error' => 'User not found']);
-        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'job_positions', 'roles', 'branches', 'terminals'));
+        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'job_positions', 'roles', 'branches', 'terminals', 'users', 'business_units'));
     }
 
     public function slug_details($id)

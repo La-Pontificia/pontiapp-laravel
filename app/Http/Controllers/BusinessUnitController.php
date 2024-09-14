@@ -20,6 +20,7 @@ class BusinessUnitController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'acronym' => 'string|nullable',
             'domain' => 'required',
         ]);
 
@@ -28,6 +29,7 @@ class BusinessUnitController extends Controller
         BusinessUnit::create([
             'name' => $request->name,
             'domain' => $request->domain,
+            'acronym' => $request->acronym,
             'services' => $services,
             'created_by' => auth()->id(),
         ]);
@@ -45,6 +47,7 @@ class BusinessUnitController extends Controller
 
         $request->validate([
             'name' => 'required',
+            'acronym' => 'string|nullable',
             'domain' => 'required',
         ]);
 
@@ -52,6 +55,7 @@ class BusinessUnitController extends Controller
 
         $businessUnit->update([
             'name' => $request->name,
+            'acronym' => $request->acronym,
             'domain' => $request->domain,
             'services' => $services,
             'updated_by' => auth()->id(),
