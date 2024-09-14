@@ -62,6 +62,13 @@ class AssistsController extends Controller
                 ->get();
         }
 
+        $users = [];
+
+        if (!$department_id || !$area_id || !$query) {
+            $users =  $match->limit(2)->get();
+        } else {
+            $users =  $match->get();
+        }
 
         $areas = Area::all();
         $departments = Department::all();
@@ -69,12 +76,6 @@ class AssistsController extends Controller
 
         if ($area_id) {
             $departments = Department::where('id_area', $area_id)->get();
-        }
-
-        $users = [];
-
-        if ($department_id || $area_id || $query) {
-            $users =  $match->get();
         }
 
         $allSchedules = collect([]);
