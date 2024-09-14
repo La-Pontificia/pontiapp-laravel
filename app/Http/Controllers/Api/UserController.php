@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusinessUnit;
 use App\Models\GroupSchedule;
 use App\Models\HistoryUserEntry;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserBusinessUnit;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -132,13 +134,14 @@ class UserController extends Controller
 
         $user->default_assist_terminal_id = $request->default_assist_terminal;
         $user->id_role = $request->id_role;
+        $user->supervisor_id = $request->supervisor_id;
         $user->id_branch = $request->id_branch;
         $user->group_schedule_id = $request->group_schedule_id;
         $user->entry_date =  $request->entry_date;
         $user->exit_date =  $request->exit_date;
         $user->updated_by = $cuser->id;
         $user->save();
-        return response()->json('Detalles actualizados correctamente.', 200);
+        return response()->json('Detalles de la organización actualizados correctamente.', 200);
     }
 
     public function passedEntriesToHistory($id)
@@ -182,19 +185,32 @@ class UserController extends Controller
 
         $constructEmail = $request->username . '@' . $request->domain;
         $alreadyByEmail = User::where('email', $constructEmail)->get();
+        $first = $alreadyByEmail->first();
 
-        if ($alreadyByEmail->count() > 0)
+        if ($first && $first->id !== $id)
             return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
 
         // validate email with regex
         if (!filter_var($constructEmail, FILTER_VALIDATE_EMAIL))
             return response()->json('El correo ingresado no es valido', 400);
 
+        $business_units = $request->input('business_units', []);
+        // delete all business units user
+        $user->businessUnits()->delete();
+
+        // add new business units
+        foreach ($business_units as $business_unit) {
+            UserBusinessUnit::create([
+                'user_id' => $user->id,
+                'business_unit_id' => $business_unit,
+            ]);
+        }
+
         $user->username = $request->username;
         $user->email = $constructEmail;
         $user->save();
 
-        return response()->json('Acceso de seguridad actualizado correctamente.', 200);
+        return response()->json('Correo y accesos actualizado correctamente.', 200);
     }
 
     public function profile(Request $request, $id)
