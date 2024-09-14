@@ -350,7 +350,7 @@
                         </label>
                         <div class="col-span-2">
                             <button class="primary gap-2 mt-1 flex">
-                                Actualizar detalles
+                                Guardar
                             </button>
                         </div>
                     </form>
@@ -510,9 +510,24 @@
                                 </div>
                             @endif
                         </div>
+                        <div class="col-span-2 grid label grid-cols-2">
+                            <span>
+                                Jefe inmediato (Supervisor)
+                            </span>
+                            <select name="supervisor_id" id="">
+                                <option value="" selected>--</option>
+                                @foreach ($users as $u)
+                                    <option {{ $u->id === $user->supervisor_id ? 'selected' : '' }}
+                                        value="{{ $u->id }}">
+                                        {{ $u->first_name }} {{ $u->last_name }} •
+                                        {{ $u->role_position->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-span-2">
                             <button class="primary gap-2 mt-1 flex">
-                                Actualizar organización, horarios y fechas.
+                                Guardar
                             </button>
                         </div>
                     </form>
@@ -539,19 +554,42 @@
                         </label>
                         <div class="col-span-2">
                             <button class="primary gap-2 mt-1 flex">
-                                Actualizar rol y privilegios
+                                Guardar
                             </button>
                         </div>
                     </form>
                     <div class="border-t pt-4 mt-7 text-lg">
                         <p>
-                            Seguridad y acceso
+                            Seguridad y accesos
                         </p>
                     </div>
                     <form method="POST" action="/api/users/{{ $user->id }}/segurity-access"
-                        class="grid w-full dinamic-form gap-3">
+                        class="grid w-full dinamic-form pb-5 gap-3">
+                        <div class="label col-span-2">
+                            <span>
+                                Unidad de negocio
+                            </span>
+                            <div class="grid grid-cols-2 text-sm font-medium">
+                                @foreach ($business_units as $business)
+                                    @php
+                                        $checked = $user->businessUnits->pluck('business_unit_id')->contains($business->id);
+                                    @endphp
+                                    <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
+                                        <input {{ $checked ? 'checked' : '' }} type="checkbox" name="business_units[]"
+                                            value="{{ $business->id }}">
+                                        <div>
+                                            <span class="block"> {{ $business->name }} </span>
+                                            <p class="flex items-center gap-2">
+                                                @svg('fluentui-globe-20-o', 'w-5 h-5 opacity-70')
+                                                <span class="text-sm font-normal"> {{ $business->domain }} </span>
+                                            </p>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
                         <div class="label w-full col-span-2">
-                            <span>Nombre de usuario</span>
+                            <span>Correo institucional</span>
                             <div class="relative w-full">
                                 <div class="absolute z-10 inset-y-0 flex items-center left-3">
                                     @svg('fluentui-mail-20-o', 'w-5 h-5 opacity-50')
@@ -578,40 +616,38 @@
                         </div>
                         <div class="col-span-2">
                             <button class="primary gap-2 mt-1 flex">
-                                Actualizar correo
+                                Guardar
                             </button>
                         </div>
-                        @if (($cuser->has('users:reset-password') && !$user->has('development')) || $cuser->isDev())
-                            <div class="col-span-2 label">
-                                <span>
-                                    Restablecer contraseña
-                                </span>
-                                <button type="button" data-atitle="Restablecer contraseña"
-                                    data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
-                                    data-param="/api/users/reset-password/{{ $user->id }}"
-                                    class="dinamic-alert secondary">
-                                    @svg('fluentui-person-key-20-o', 'w-5 h-5')
-                                    Restablecer contraseña
-                                </button>
-                            </div>
-                        @endif
-                        @if ($cuser->has('users:toggle-disable') || $cuser->isDev())
-                            <div class="col-span-2">
-                                <label class="label w-fit">
-                                    <span>Estado de la cuenta: {{ $user->status ? 'Activo' : 'Inactivo' }}</span>
-                                    <div>
-                                        <button type="button"
-                                            data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
-                                            data-adescription="No podrás deshacer esta acción."
-                                            data-param="/api/users/toggle-status/{{ $user->id }}"
-                                            class="secondary dinamic-alert">
-                                            @svg('fluentui-person-circle-20-o', 'w-5 h-5')
-                                            {{ $user->status ? 'Desactivar' : 'Activar' }} usuario
-                                        </button>
-                                    </div>
+                        <div class="grid grid-cols-2 col-span-2 gap-4">
+                            @if (($cuser->has('users:reset-password') && !$user->has('development')) || $cuser->isDev())
+                                <label class="label w-full">
+                                    <span>
+                                        Restablecer contraseña
+                                    </span>
+                                    <button type="button" data-atitle="Restablecer contraseña"
+                                        data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
+                                        data-param="/api/users/reset-password/{{ $user->id }}" style="width: 100%;"
+                                        class="dinamic-alert secondary justify-center">
+                                        @svg('fluentui-person-key-20-o', 'w-5 h-5')
+                                        Restablecer contraseña
+                                    </button>
                                 </label>
-                            </div>
-                        @endif
+                            @endif
+                            @if ($cuser->has('users:toggle-disable') || $cuser->isDev())
+                                <label class="label w-full">
+                                    <span>Estado de la cuenta: {{ $user->status ? 'Activo' : 'Inactivo' }}</span>
+                                    <button type="button" style="width: 100%;"
+                                        data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
+                                        data-adescription="No podrás deshacer esta acción."
+                                        data-param="/api/users/toggle-status/{{ $user->id }}"
+                                        class="secondary dinamic-alert w-full justify-center">
+                                        @svg('fluentui-person-circle-20-o', 'w-5 h-5')
+                                        {{ $user->status ? 'Desactivar' : 'Activar' }} usuario
+                                    </button>
+                                </label>
+                            @endif
+                        </div>
                     </form>
                 </div>
             </div>
