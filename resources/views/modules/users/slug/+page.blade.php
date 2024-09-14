@@ -5,7 +5,7 @@
 @php
     $myaccount = $cuser->id == $user->id;
     $hasChangePassword = $myaccount || $cuser->has('users:reset-password');
-    $hasEdit = $cuser->has('users:edit') || $cuser->isDev();
+    $hasEdit = ($cuser->has('users:edit') && !$user->isDev()) || $cuser->isDev();
 
     $daysMatch = [
         [
