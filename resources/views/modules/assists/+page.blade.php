@@ -9,7 +9,7 @@
 @endphp
 
 @section('layout.assists')
-    <div class="space-y-2 flex flex-col h-full">
+    <div class="space-y-2 flex flex-col flex-grow">
         <div class="flex-grow flex items-center flex-wrap">
             <form class="dinamic-form-to-params p-1 px-2 flex items-end flex-grow gap-2 flex-wrap">
                 <label>
@@ -75,7 +75,7 @@
                 </button>
             @endif
         </div>
-        <div class="overflow-auto flex flex-col h-full">
+        <div class="flex flex-col h-full">
             <div class="h-full shadow-sm rounded-2xl overflow-auto">
                 @if (count($schedules) === 0)
                     <div class="grid h-full w-full place-content-center">
