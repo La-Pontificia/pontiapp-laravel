@@ -455,6 +455,7 @@
                                     data-atitle="Pasar las fechas actuales a historial"
                                     data-adescription="Al confirmar las fechas actuales se quitarán y pasarán a historial."
                                     data-param="/api/users/{{ $user->id }}/passed-entry-to-history">
+                                    @svg('fluentui-arrow-circle-down-20-o', 'w-5 h-5')
                                     Historial
                                 </button>
                             </div>
