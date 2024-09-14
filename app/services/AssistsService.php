@@ -292,7 +292,7 @@ class AssistsService
     public static function employee($query, $terminal)
     {
 
-        $users = (new AttendanceEmp())
+        $match = (new AttendanceEmp())
             ->setConnection($terminal ?? 'PL-Alameda')
             ->where('first_name', 'like', '%' . $query . '%')
             ->orWhere('last_name', 'like', '%' . $query . '%')
@@ -300,13 +300,21 @@ class AssistsService
             ->orderBy('id', 'desc')
             ->get();
 
+        $users = [];
+
+        if (!$query) {
+            $users = $match->limit(25)->get();
+        } else {
+            $users = $match->get();
+        }
+
         return $users;
     }
 
     public static function assists($query, $terminal, $startDate, $endDate)
     {
 
-        $assists = (new Attendance())
+        $match = (new Attendance())
             ->setConnection($terminal ?? 'PL-Alameda')
             ->whereHas('employee', function ($q) use ($query) {
                 $q->where('first_name', 'like', '%' . $query . '%')
@@ -315,8 +323,15 @@ class AssistsService
             })
             ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
             ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
-            ->orderBy('punch_time', 'desc')
-            ->get();
+            ->orderBy('punch_time', 'desc');
+
+        $assists = [];
+
+        if (!$query) {
+            $assists = $match->limit(25)->get();
+        } else {
+            $assists = $match->get();
+        }
 
         return $assists;
     }
