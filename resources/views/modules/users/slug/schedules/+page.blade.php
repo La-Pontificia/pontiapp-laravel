@@ -55,7 +55,7 @@
             <p class="pb-3 text-lg">
                 Horarios de {{ $user->names() }}
             </p>
-            @if (($cuser->has('schedules:create') && $cuser->id !== $user->id) || $cuser->isDev())
+            @if (($cuser->has('schedules:create') && $cuser->id !== $user->id && !$user->isDev()) || $cuser->isDev())
                 <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary mb-2">
                     @svg('fluentui-calendar-person-20-o', 'w-5 h-5')
                     <span>Agregar horario único</span>
