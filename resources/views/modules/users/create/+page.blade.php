@@ -233,12 +233,12 @@
                         </div>
                         <div class="border-t pt-2 text-lg">
                             <p>
-                                Seguridad y acceso
+                                Seguridad y accesos
                             </p>
                         </div>
                         <div class="grid gap-3">
                             <div class="label w-full">
-                                <span>Nombre de usuario</span>
+                                <span>Correo institucional</span>
                                 <div class="relative">
                                     <div class="absolute z-10 inset-y-0 flex items-center left-3">
                                         @svg('fluentui-mail-20-o', 'w-5 h-5 opacity-50')
