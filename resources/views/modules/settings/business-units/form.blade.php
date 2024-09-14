@@ -1,5 +1,6 @@
 @php
     $name = isset($business) ? $business->name : null;
+    $acronym = isset($business) ? $business->acronym : null;
     $domain = isset($business) ? $business->domain : null;
     $services = isset($business) ? $business->services : [];
     $business_services = [
@@ -26,6 +27,11 @@
 <label class="label">
     <span>Nombre</span>
     <input required value="{{ $name }}" type="text" name="name" placeholder="Nombre de la unidad de negocio">
+</label>
+
+<label class="label">
+    <span>Siglas (Nombre corto)</span>
+    <input required value="{{ $acronym }}" type="text" name="acronym" placeholder="Siglas">
 </label>
 
 <label class="label">
