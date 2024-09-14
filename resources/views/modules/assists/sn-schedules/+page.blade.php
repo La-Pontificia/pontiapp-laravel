@@ -92,7 +92,7 @@
                                 <th class="bg-yellow-100 text-center">Hora</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y z-[0]">
+                        <tbody class="divide-y divide-neutral-300 z-[0]">
                             @foreach ($assists as $assist)
                                 <tr data-dni="{{ $assist->emp_code }}"
                                     class="[&>td]:py-3 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
