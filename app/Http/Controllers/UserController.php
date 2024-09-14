@@ -74,7 +74,6 @@ class UserController extends Controller
         $jobPostions = JobPosition::all();
         $departments = Department::all();
 
-        $users = $match->paginate();
 
         if ($isExport) {
             return $match->get();
@@ -84,13 +83,18 @@ class UserController extends Controller
             return $match;
         }
 
+        $users = $match->paginate();
+
         return view('modules.users.+page', compact('users', 'job_positions', 'user_roles', 'departments'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
     public function export(Request $request)
     {
-        $users =  $this->index($request, true);
+        $match =  $this->index($request, false, true);
+
+        $users = $match->get();
+
         $business_units = BusinessUnit::all();
         foreach ($users as $user) {
             $user->role = $user->role;
