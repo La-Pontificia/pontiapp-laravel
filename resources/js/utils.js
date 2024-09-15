@@ -52,6 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
         f.addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(f);
+            const redirectToResponse = f.hasAttribute(
+                "data-redirect-to-response"
+            );
             const url = f.action;
             const method = f.method ?? "POST";
             const redirect = f.getAttribute("data-redirect");
@@ -80,17 +83,22 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Content-Type": "multipart/form-data",
                     },
                 });
-                Swal.fire({
-                    icon: "success",
-                    title: "¡Hecho!",
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
-                    text: data ?? "Operación exitosa",
-                }).then(() => {
-                    redirect
-                        ? (window.location.href = redirect)
-                        : window.location.reload();
-                });
+
+                if (redirectToResponse) {
+                    window.location.href = data;
+                } else {
+                    Swal.fire({
+                        icon: "success",
+                        title: "¡Hecho!",
+                        confirmButtonColor: "#d33",
+                        cancelButtonColor: "#3085d6",
+                        text: data ?? "Operación exitosa",
+                    }).then(() => {
+                        redirect
+                            ? (window.location.href = redirect)
+                            : window.location.reload();
+                    });
+                }
             } catch (error) {
                 console.log(error);
                 const content =

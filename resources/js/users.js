@@ -127,13 +127,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         e.preventDefault();
         const form = new FormData(e.target);
 
-        const dni = form.get("dni");
-
-        // validate dni
-        if (!regexDni.test(dni)) {
-            return window.alert("El DNI debe tener 8 caracteres");
-        }
-
         window.disabledFormChildren($userForm);
 
         const image = form.get("profile");
@@ -159,20 +152,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                         },
                     }
                 );
-                form.set("profile", res.data.secure_url);
+
+                const uri = res.data.secure_url;
             } catch (error) {
                 console.error(error);
-            } finally {
-                window.enabledFormChildren($userForm);
             }
         }
-        form.delete("profile");
 
         try {
-            const { data } = await axios.post(
-                "/api/users",
-                Object.fromEntries(form)
-            );
+            const formData = new FormData($userForm);
+            const { data } = await axios.post("/api/users", formData);
             window.location.href = `/users/${data.id}`;
         } catch (error) {
             Swal.fire({
