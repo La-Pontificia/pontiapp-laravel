@@ -33,10 +33,11 @@
                 </button>
             </div>
             <div class="p-5 flex-grow mt-2 w-full overflow-y-auto ">
-                <form id="create-user-form" class="grid gap-4 w-full" role="form">
+                <form data-redirect-to-response action="/api/users" method="POST" class="grid dinamic-form gap-4 w-full"
+                    role="form">
                     <div class="flex items-center gap-4">
                         <div class="relative rounded-full overflow-hidden w-24 aspect-square">
-                            <input type="file" name="profile" id="input-profile"
+                            <input type="file" id="input-profile" name="profile"
                                 class="opacity-0 absolute peer inset-0 w-full h-full cursor-pointer" accept="image/*">
                             <img id="preview-profile" class="w-full peer-data-[fill]:block hidden h-full object-cover"
                                 src="https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg"
@@ -237,6 +238,25 @@
                             </p>
                         </div>
                         <div class="grid gap-3">
+                            <div class="label">
+                                <span>
+                                    Unidad de negocio
+                                </span>
+                                <div class="grid grid-cols-2 text-sm font-medium">
+                                    @foreach ($business_units as $business)
+                                        <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
+                                            <input type="checkbox" name="business_units[]" value="{{ $business->id }}">
+                                            <div>
+                                                <span class="block"> {{ $business->name }} </span>
+                                                <p class="flex items-center gap-2">
+                                                    @svg('fluentui-globe-20-o', 'w-5 h-5 opacity-70')
+                                                    <span class="text-sm font-normal"> {{ $business->domain }} </span>
+                                                </p>
+                                            </div>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
                             <div class="label w-full">
                                 <span>Correo institucional</span>
                                 <div class="relative">
