@@ -135,8 +135,6 @@ class UserController extends Controller
         $group_schedules = GroupSchedule::all();
         $terminals = AssistTerminal::all();
         $business_units = BusinessUnit::all();
-
-
         return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules', 'terminals', 'users', 'business_units'));
     }
 
