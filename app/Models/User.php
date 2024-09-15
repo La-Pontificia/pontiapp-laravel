@@ -119,7 +119,6 @@ class User extends Authenticatable
         return $this->hasMany(UserBusinessUnit::class, 'user_id', 'id');
     }
 
-
     public function historyEntries()
     {
         return $this->hasMany(HistoryUserEntry::class, 'user_id', 'id')->orderBy('created_at', 'desc');
