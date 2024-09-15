@@ -233,6 +233,18 @@
                     </div>
                 </div>
                 <div class="border-t pt-2 border-neutral-200">
+                    <div class="flex gap-2 pb-4 pt-2 flex-wrap">
+                        @foreach ($user->businessUnits as $unit)
+                            @php
+                                $hasHttps = strpos($unit->business->domain, 'https://') !== false;
+                                $link = $hasHttps ? $unit->business->domain : 'https://' . $unit->business->domain;
+                            @endphp
+                            <a href="{{ $link }}" target="_blank" noreferrer
+                                class="p-1 px-2 rounded-full bg-white border hover:underline hover:text-blue-500 text-sm font-medium">
+                                {{ $unit->business->name }}
+                            </a>
+                        @endforeach
+                    </div>
                     @if ($hasEdit)
                         <a href="/users/{{ $user->id }}?view=edit" class="secondary">
                             @svg('fluentui-person-edit-20-o', 'w-5 h-5')
@@ -572,7 +584,9 @@
                             <div class="grid grid-cols-2 text-sm font-medium">
                                 @foreach ($business_units as $business)
                                     @php
-                                        $checked = $user->businessUnits->pluck('business_unit_id')->contains($business->id);
+                                        $checked = $user->businessUnits
+                                            ->pluck('business_unit_id')
+                                            ->contains($business->id);
                                     @endphp
                                     <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
                                         <input {{ $checked ? 'checked' : '' }} type="checkbox" name="business_units[]"
