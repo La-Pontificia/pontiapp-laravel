@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ImageUploadController;
 use App\Models\BusinessUnit;
 use App\Models\GroupSchedule;
 use App\Models\HistoryUserEntry;
@@ -13,6 +14,13 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    protected $imageUploadService;
+
+    public function __construct()
+    {
+        $this->imageUploadService = new ImageUploadController();
+    }
 
 
     public function create(Request $request)
@@ -63,9 +71,10 @@ class UserController extends Controller
                 return response()->json('El jefe inmediato no puede ser de un nivel inferior al usuario', 400);
         }
 
-        // supervisor
+        $url = $this->imageUploadService->upload($request->file('profile'));
+
         $user = User::create([
-            'profile' => $request->profile ?? null,
+            'profile' => $url,
             'dni' => $request->dni,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -84,7 +93,19 @@ class UserController extends Controller
             'created_by' => auth()->user()->id,
         ]);
 
-        return response()->json($user, 200);
+        // business_units
+        $business_units = $request->input('business_units', []);
+        foreach ($business_units as $business_unit) {
+            UserBusinessUnit::create([
+                'user_id' => $user->id,
+                'business_unit_id' => $business_unit,
+            ]);
+        }
+
+        return response()->json(
+            '/users/' . $user->id,
+            200
+        );
     }
 
     public function updateDetails(Request $request, $id)
@@ -194,11 +215,9 @@ class UserController extends Controller
         if (!filter_var($constructEmail, FILTER_VALIDATE_EMAIL))
             return response()->json('El correo ingresado no es valido', 400);
 
+        // business_units
         $business_units = $request->input('business_units', []);
-        // delete all business units user
         $user->businessUnits()->delete();
-
-        // add new business units
         foreach ($business_units as $business_unit) {
             UserBusinessUnit::create([
                 'user_id' => $user->id,
