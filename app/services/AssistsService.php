@@ -311,7 +311,7 @@ class AssistsService
         return $users;
     }
 
-    public static function assists($query, $terminal, $startDate, $endDate)
+    public static function assists($query, $terminal, $startDate, $endDate, $isExport = false)
     {
 
         $match = (new Attendance())
@@ -327,7 +327,7 @@ class AssistsService
 
         $assists = [];
 
-        if (!$query) {
+        if (!$query && !$startDate && $endDate && !$isExport) {
             $assists = $match->limit(25)->get();
         } else {
             $assists = $match->get();
