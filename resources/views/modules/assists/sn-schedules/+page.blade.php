@@ -54,23 +54,15 @@
                 <button type="submit" class="primary mt-2">Filtrar</button>
             </form>
 
-            {{-- <button {{ count($schedules) === 0 ? 'disabled' : '' }} data-dropdown-toggle="dropdown"
-                class="secondary ml-auto">
-                svg'bx-up-arrow-circle', 'w-5 h-5')
+
+            <button {{ $assists->count() === 0 ? 'disabled' : '' }} type="button" id="export-assists-sn-schedules"
+                class="secondary mt-6">
+                @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
                 <span>
                     Exportar
                 </span>
             </button>
-            <div id="dropdown" class="dropdown-content hidden">
-                <button data-type="excel"
-                    class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
-                    Excel (.xlsx)
-                </button>
-                <button data-type="json"
-                    class="p-2 hover:bg-neutral-100 button-export-assists text-left w-full block rounded-md hover:bg-gray-10">
-                    JSON (.json)
-                </button>
-            </div> --}}
+
         </div>
         <div class="overflow-auto flex flex-col h-full">
             <div class="h-full shadow-sm overflow-auto">
