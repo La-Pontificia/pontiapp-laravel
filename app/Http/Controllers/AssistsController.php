@@ -19,6 +19,8 @@ class AssistsController extends Controller
 {
     protected $assistsService;
 
+    public $timeout = 1200;
+
     public function __construct(AssistsService $assistsService)
     {
         $this->assistsService = $assistsService;
@@ -110,7 +112,7 @@ class AssistsController extends Controller
         ]);
     }
 
-    public function snSchedules(Request $request)
+    public function snSchedules(Request $request, $isExport = false)
     {
 
         $terminals = AssistTerminal::all();
@@ -124,10 +126,14 @@ class AssistsController extends Controller
         $perPage = 25;
         $currentPage = $request->get('page', 1);
 
-        $allAssists = $this->assistsService->assists($query, $terminal, $startDate, $endDate);
+        $allAssists = $this->assistsService->assists($query, $terminal, $startDate, $endDate, $isExport);
         $assists = $allAssists->forPage($currentPage, $perPage);
 
         $terminals = AssistTerminal::all();
+
+        if ($isExport) {
+            return $allAssists;
+        }
 
         $paginatedAssists = new LengthAwarePaginator(
             $assists,
@@ -144,6 +150,17 @@ class AssistsController extends Controller
                 'assists' => $paginatedAssists
             ]
         );
+    }
+
+    public function snSchedulesExport(Request $request)
+    {
+        $all = $this->snSchedules($request, true);
+
+        foreach ($all as $assist) {
+            $assist->date = $assist->punch_time->format('Y-m-d');
+            $assist->day = $assist->punch_time->isoFormat('dddd');
+        }
+        return $all;
     }
 
     public function peerSchedule(Request $request, $isExport = false)
