@@ -1,12 +1,15 @@
 import axios from "axios";
 import ExcelJS from "exceljs";
 import moment from "moment";
+moment.locale("es");
+import "moment/locale/es";
 
 document.addEventListener("DOMContentLoaded", async () => {
     $ = document.querySelector.bind(document);
     const $perSchedule = $("#button-export-assists-per-schedule");
     const $peerUser = $("#button-export-assists-peer-user");
     const $centralized = $("#button-export-assists-centralized");
+    const $snSchedules = $("#export-assists-sn-schedules");
     const $checkServer = $("#check-server");
     const $errorServer = $("#error-server");
 
@@ -193,6 +196,97 @@ document.addEventListener("DOMContentLoaded", async () => {
                 $peerUser.disabled = false;
                 $peerUser.classList.remove("animation-pulse");
                 $peerUser.querySelector("span").innerText = "Exportar";
+            }
+        };
+    }
+    if ($snSchedules) {
+        $snSchedules.onclick = async () => {
+            $snSchedules.disabled = true;
+            $snSchedules.classList.add("animation-pulse");
+            $snSchedules.querySelector("span").innerText = "Espere...";
+
+            try {
+                const url = new URL(window.location.href);
+                const searchParams = url.searchParams;
+
+                const assists = await window.query(
+                    `/api/assists/sn-schedules/export?${searchParams.toString()}`
+                );
+
+                const workbook = new ExcelJS.Workbook();
+                const response = await fetch(
+                    "/templates/assists-sn-schedules.xlsx"
+                );
+                const arrayBuffer = await response.arrayBuffer();
+
+                if (!arrayBuffer) return;
+
+                await workbook.xlsx.load(arrayBuffer);
+                const worksheet = workbook.getWorksheet("Asistencias");
+
+                let rr = 4;
+
+                const groupAssists = assists.reduce((acc, item) => {
+                    const { emp_code, ...rest } = item;
+                    const index = acc.findIndex((i) => i.emp_code === emp_code);
+                    if (index === -1) acc.push({ emp_code, assists: [rest] });
+                    else acc[index].assists.push(item);
+                    return acc;
+                }, []);
+
+                groupAssists.forEach((item, i) => {
+                    item.assists.forEach((assist, ii) => {
+                        const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
+                        const row = worksheet.getRow(rr);
+                        rr++;
+                        row.getCell(2).value = ii === 0 ? index : "";
+                        row.getCell(3).value = item.emp_code ?? "";
+                        row.getCell(4).value = item?.full_name ?? "-";
+                        row.getCell(5).value = assist.id;
+                        row.getCell(6).value = assist.date;
+                        row.getCell(7).value = assist.day;
+                        row.getCell(8).value = assist.terminal_alias;
+                        row.getCell(9).value = moment(assist.punch_time).format(
+                            "HH:mm"
+                        );
+                    });
+                });
+
+                worksheet.columns.forEach((column) => {
+                    let maxLength = 0;
+                    column.eachCell({ includeEmpty: true }, (cell) => {
+                        const cellValue = cell.value
+                            ? cell.value.toString()
+                            : "";
+                        maxLength = Math.max(maxLength, cellValue.length);
+                    });
+                    column.width = maxLength < 10 ? 10 : maxLength + 2;
+                });
+
+                const filename = `Asistencias sin calcular ${moment().format(
+                    "YYYY-MM-DD"
+                )}`;
+
+                const buffer = await workbook.xlsx.writeBuffer();
+
+                const blob = new Blob([buffer], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = filename + ".xlsx";
+                link.click();
+            } catch (error) {
+                console.error(error);
+                window.alert(
+                    "Error",
+                    "Ocurrió un error al exportar las asistencias"
+                );
+            } finally {
+                $snSchedules.disabled = false;
+                $snSchedules.classList.remove("animation-pulse");
+                $snSchedules.querySelector("span").innerText = "Exportar";
             }
         };
     }
