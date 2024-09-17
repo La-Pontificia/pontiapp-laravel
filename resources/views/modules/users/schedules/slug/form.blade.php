@@ -1,8 +1,8 @@
 @php
 
     $daysJson = isset($schedule) ? $schedule->days : ['1'];
-    $startDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->start_date)) : '2020-01-01';
-    $endDate = isset($schedule) ? date('Y-m-d', strtotime($schedule->end_date)) : '2030-01-01';
+    $startDate = isset($schedule) ? date('d/m/Y', strtotime($schedule->start_date)) : '2020-01-01';
+    $endDate = isset($schedule) ? date('d/m/Y', strtotime($schedule->end_date)) : '2030-01-01';
 
     $from = isset($schedule) ? date('H:i', strtotime($schedule->from)) : null;
     $from_start = isset($schedule) ? date('H:i', strtotime($schedule->from_start)) : null;

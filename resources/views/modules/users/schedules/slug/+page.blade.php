@@ -111,8 +111,8 @@
 
                                 <p class="text-sm flex items-center gap-1">
                                     svg'bxs-calendar', 'w-5 h-5 opacity-60')
-                                    {{ date('d-m-Y', strtotime($schedule->start_date)) }} -
-                                    {{ date('d-m-Y', strtotime($schedule->end_date)) }}
+                                    {{ date('d/m/Y', strtotime($schedule->start_date)) }} -
+                                    {{ date('d/m/Y', strtotime($schedule->end_date)) }}
                                 </p>
                                 <div>
                                     <span class="text-xs font-semibold text-neutral-600">Se repite cada:</span>
