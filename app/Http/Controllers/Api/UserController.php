@@ -10,6 +10,7 @@ use App\Models\HistoryUserEntry;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserBusinessUnit;
+use App\Models\UserTerminal;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -102,6 +103,15 @@ class UserController extends Controller
             ]);
         }
 
+        // terminals
+        $assist_terminals = $request->input('assist_terminals', []);
+        foreach ($assist_terminals as $terminal) {
+            UserTerminal::create([
+                'user_id' => $user->id,
+                'terminal_id' => $terminal,
+            ]);
+        }
+
         return response()->json(
             '/users/' . $user->id,
             200
@@ -153,7 +163,17 @@ class UserController extends Controller
         request()->validate(User::$organization);
         $cuser = auth()->user();
 
-        $user->default_assist_terminal_id = $request->default_assist_terminal;
+        // terminals
+        $user->assistTerminals()->delete();
+        $assist_terminals = $request->input('assist_terminals', []);
+        foreach ($assist_terminals as $terminal) {
+            UserTerminal::create([
+                'user_id' => $user->id,
+                'assist_terminal_id' => $terminal,
+            ]);
+        }
+
+
         $user->id_role = $request->id_role;
         $user->supervisor_id = $request->supervisor_id;
         $user->id_branch = $request->id_branch;
