@@ -112,24 +112,31 @@ class AssistsService
         return $schedules;
     }
 
-    public static function assistsByUser($user, $terminalsIds, $startDate, $endDate)
+    public static function assistsByUser($user, $terminalsIds, $startDate, $endDate, $force_calculation)
     {
 
-        $terminals = $user->assistTerminals;
+        $terminals = [];
 
         if (count($terminalsIds) > 0) {
             $terminals = [];
             foreach ($terminalsIds as $terminalId) {
                 $terminals[] = AssistTerminal::find($terminalId);
             }
+        } else if ($user->assistTerminals->count() > 0) {
+            foreach ($user->assistTerminals as $terminal) {
+                $terminals[] = $terminal->assistTerminal;
+            }
+        } else if ($force_calculation) {
+            $terminals = AssistTerminal::limit(1)->get();
         }
 
         $schedules = self::generateSchedules($user, $startDate, $endDate);
+
         $assists = [];
         foreach ($terminals as $terminal) {
             // conection to the terminal
             $data = (new Attendance())
-                ->setConnection($terminal->assistTerminal->database_name)
+                ->setConnection($terminal->database_name)
                 ->where('emp_code', $user->dni)
                 ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
                 ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
@@ -172,7 +179,7 @@ class AssistsService
 
                 $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
                 $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
-                $schedule['terminal'] = $terminal->assistTerminal->name;
+                $schedule['terminal'] = $terminal->name;
 
                 // Observations & Owes Time
                 $observations = [];
