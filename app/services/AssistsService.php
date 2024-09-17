@@ -119,10 +119,8 @@ class AssistsService
 
         if (count($terminalsIds) > 0) {
             $terminals = [];
-            foreach ($user->assistTerminals as $userTerminal) {
-                if (in_array($userTerminal->assist_terminal_id, $terminalsIds)) {
-                    $terminals[] = $userTerminal;
-                }
+            foreach ($terminalsIds as $terminalId) {
+                $terminals[] = AssistTerminal::find($terminalId);
             }
         }
 
