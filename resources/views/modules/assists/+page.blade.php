@@ -129,7 +129,7 @@
                                 <th class="text-center bg-yellow-100">Entró</th>
                                 <th class="text-center bg-yellow-100">Salió</th>
                                 <th>Diferencia</th>
-                                <th class="text-center">Terminal</th>
+                                <th class="text-left">Terminal</th>
                                 <th>Observaciones</th>
                             </tr>
                         </thead>
@@ -220,11 +220,14 @@
                                         </p>
                                     </td>
                                     <td>
-                                        <p class="flex items-center gap-1 ">
-                                            @if ($assist['terminal'])
-                                                {{ $assist['terminal'] }}
-                                            @endif
-                                        </p>
+                                        <div>
+                                            <span class="block"> {{ $assist['terminal']->name }} </span>
+                                            <p class="flex items-center gap-2">
+                                                @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
+                                                <span class="text-sm font-normal"> {{ $assist['terminal']->database_name }}
+                                                </span>
+                                            </p>
+                                        </div>
                                     </td>
                                     <td>
                                         <p
