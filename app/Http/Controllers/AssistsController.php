@@ -35,9 +35,11 @@ class AssistsController extends Controller
 
         $query = $request->get('query');
 
+        $force_calculation = $request->get('force_calculation');
+
         // current date
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
-        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
         $match = User::orderBy('created_at', 'desc');
 
@@ -74,7 +76,7 @@ class AssistsController extends Controller
         $users = [];
 
         if (!$request->get('start') || !$request->get('end')) {
-            $users = $match->limit(20)->get();
+            $users = $match->limit(2)->get();
         } else {
             $users = $match->get();
         }
@@ -90,7 +92,7 @@ class AssistsController extends Controller
         $allAssists = collect([]);
 
         foreach ($users as $user) {
-            $allAssists =  $allAssists->concat($this->assistsService->assistsByUser($user, $terminalsIds, $startDate, $endDate));
+            $allAssists =  $allAssists->concat($this->assistsService->assistsByUser($user, $terminalsIds, $startDate, $endDate, $force_calculation));
         }
 
 
@@ -255,7 +257,7 @@ class AssistsController extends Controller
         $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
         $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
 
-        $schedules = $this->assistsService->assistsByUser($user->id, $terminal, $startDate, $endDate);
+        $schedules = $this->assistsService->assistsByUser($user->id, $terminal, $startDate, $endDate, false);
 
         return $schedules;
     }
