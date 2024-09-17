@@ -178,7 +178,7 @@ class AssistsService
 
                 $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
                 $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
-                $schedule['terminal'] = $terminal->name;
+                $schedule['terminal'] = $terminal;
 
                 // Observations & Owes Time
                 $observations = [];
