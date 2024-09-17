@@ -200,8 +200,8 @@
                                 <span>
                                     Personas bajo supervisión de {{ $user->names() }}
                                 </span>
-                                <div class="grid {{ $user->supervisor ? 'grid-cols-4' : 'grid-cols-5' }} gap-2">
-                                    @foreach ($user->people as $person)
+                                <div class="grid {{ $user->supervisor ? 'grid-cols-3' : 'grid-cols-4' }} gap-2">
+                                    @foreach ($user->people->take($user->supervisor ? 3 : 4) as $person)
                                         <a class="hover:bg-white rounded-lg p-2 text-center shadow-md hover:shadow-lg]"
                                             href="/users/{{ $person->id }}">
                                             <div class="py-2">
