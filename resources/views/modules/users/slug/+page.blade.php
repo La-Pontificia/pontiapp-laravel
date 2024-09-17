@@ -432,33 +432,43 @@
                                 </select>
                             </div>
                         </label>
-                        <label class="label">
-                            <span>Terminal por defecto</span>
-                            <div class="relative">
-                                <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
-                                    @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
-                                </div>
-                                <select class="w-full" style="padding-left: 35px" name="default_assist_terminal">
-                                    <option selected value="" disabled selected>Terminal de asistencias por
-                                        defecto</option>
-                                    @foreach ($terminals as $terminal)
-                                        <option {{ $user->default_assist_terminal_id === $terminal->id ? 'selected' : '' }}
-                                            value="{{ $terminal->id }}">{{ $terminal->name }}</option>
-                                    @endforeach
-                                </select>
+                        <div class="label">
+                            <span>
+                                Terminales de asistencia
+                            </span>
+                            <div class="grid grid-cols-2 text-sm font-medium">
+                                @foreach ($terminals as $terminal)
+                                    @php
+                                        $checked = $user->assistTerminals
+                                            ->pluck('assist_terminal_id')
+                                            ->contains($terminal->id);
+                                    @endphp
+                                    <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
+                                        <input {{ $checked ? 'checked' : '' }} type="checkbox" name="assist_terminals[]"
+                                            value="{{ $terminal->id }}">
+                                        <div>
+                                            <span class="block"> {{ $terminal->name }} </span>
+                                            <p class="flex items-center gap-2">
+                                                @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
+                                                <span class="text-sm font-normal"> {{ $terminal->database_name }}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </label>
+                                @endforeach
                             </div>
-                        </label>
+                        </div>
                         <div class="col-span-2">
                             <div class="flex gap-2 items-end">
                                 <div class="grid grid-cols-2 gap-4 w-full">
                                     <label class="label">
                                         <span>Fecha de ingreso</span>
-                                        <input value="{{ $user->entry_date ? $user->entry_date->format('Y-m-d') : '' }}"
+                                        <input value="{{ $user->entry_date ? $user->entry_date->format('d/m/Y') : '' }}"
                                             autocomplete="off" type="date" name="entry_date">
                                     </label>
                                     <label class="label">
                                         <span>Fecha de Cese</span>
-                                        <input value="{{ $user->exit_date ? $user->exit_date->format('Y-m-d') : '' }}"
+                                        <input value="{{ $user->exit_date ? $user->exit_date->format('d/m/Y') : '' }}"
                                             autocomplete="off" type="date" name="exit_date">
                                     </label>
                                 </div>
@@ -494,10 +504,10 @@
                                             @foreach ($user->historyEntries as $index => $history)
                                                 <tr class="text-sm font-semibold [&>td]:p-2">
                                                     <td>
-                                                        {{ $history->entry_date->format('d-m-Y') }}
+                                                        {{ $history->entry_date->format('d/m/Y') }}
                                                     </td>
                                                     <td>
-                                                        {{ $history->exit_date ? $history->exit_date->format('d-m-Y') : 'Actualidad' }}
+                                                        {{ $history->exit_date ? $history->exit_date->format('d/m/Y') : 'Actualidad' }}
                                                     </td>
                                                     <td>
                                                         <button type="button"
