@@ -275,6 +275,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
 
+                console.log(Object.fromEntries(formData));
+
+                // delete all params
+                params.forEach((_, key) => {
+                    params.delete(key);
+                });
+
                 formData.forEach((value, key) => {
                     if (!value) params.delete(key);
                     else params.set(key, value);

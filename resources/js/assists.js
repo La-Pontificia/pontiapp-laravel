@@ -50,10 +50,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 row.getCell(6).value = ii === 0 ? assist.job_position : "";
                 row.getCell(7).value = assist.title;
                 row.getCell(8).value = assist.date;
+                if (assist.date) {
+                    row.getCell(8).numFmt = "dd/mm/yyyy";
+                }
+
                 row.getCell(9).value = assist.day;
                 row.getCell(10).value = assist.turn;
-                row.getCell(11).value = moment(assist.from).format("HH:mm");
-                row.getCell(12).value = moment(assist.to).format("HH:mm");
+                row.getCell(11).value = moment(assist.from).format("HH:mm:ss");
+                row.getCell(11).numFmt = "hh:mm:ss"; // Excel time format
+                row.getCell(12).value = moment(assist.to).format("HH:mm:ss");
+                row.getCell(12).numFmt = "hh:mm:ss"; // Excel time format
                 row.getCell(13).value = assist.marked_in;
                 row.getCell(14).value = assist.marked_out;
                 row.getCell(15).value = assist.owes_time;
@@ -226,30 +232,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 let rr = 4;
 
-                const groupAssists = assists.reduce((acc, item) => {
-                    const { emp_code, ...rest } = item;
-                    const index = acc.findIndex((i) => i.emp_code === emp_code);
-                    if (index === -1) acc.push({ emp_code, assists: [rest] });
-                    else acc[index].assists.push(item);
-                    return acc;
-                }, []);
+                assists.forEach((assist, ii) => {
+                    const index = ii + 1 < 10 ? `0${ii + 1}` : ii + 1;
+                    const row = worksheet.getRow(rr);
+                    rr++;
 
-                groupAssists.forEach((item, i) => {
-                    item.assists.forEach((assist, ii) => {
-                        const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
-                        const row = worksheet.getRow(rr);
-                        rr++;
-                        row.getCell(2).value = ii === 0 ? index : "";
-                        row.getCell(3).value = item.emp_code ?? "";
-                        row.getCell(4).value = item?.full_name ?? "-";
-                        row.getCell(5).value = assist.id;
-                        row.getCell(6).value = assist.date;
-                        row.getCell(7).value = assist.day;
-                        row.getCell(8).value = assist.terminal_alias;
-                        row.getCell(9).value = moment(assist.punch_time).format(
-                            "HH:mm"
-                        );
-                    });
+                    row.getCell(2).value = index;
+                    row.getCell(3).value = assist.user.dni ?? "";
+                    row.getCell(4).value =
+                        assist.user.first_name + " " + assist.user.last_name;
+                    row.getCell(5).value = assist.user.role_position.name;
+                    row.getCell(6).value =
+                        assist.user.role_position.job_position.name;
+                    row.getCell(7).value = assist.date;
+
+                    if (assist.date) {
+                        row.getCell(7).numFmt = "dd/mm/yyyy";
+                    }
+
+                    row.getCell(8).value = assist.day;
+                    row.getCell(9).value = assist.terminal.name;
+                    row.getCell(10).value = assist.time;
+                    row.getCell(10).numFmt = "hh:mm:ss";
+                    row.getCell(11).value = assist.sync_date;
                 });
 
                 worksheet.columns.forEach((column) => {

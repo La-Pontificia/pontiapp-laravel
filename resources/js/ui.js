@@ -2,6 +2,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const $$ = document.querySelectorAll.bind(document);
     const $ = document.querySelector.bind(document);
 
+    const $filterButtons = $$(".filter-button");
+    const $feedbackLoading = $("#loading-feedback");
+
+    $filterButtons?.forEach(($button) => {
+        $button.onclick = () => {
+            $feedbackLoading.setAttribute("data-open", "true");
+        };
+    });
+
     // dinamic tabs
     const $parent_tabs = $$(".dinamic-tabs");
     $parent_tabs?.forEach(($parent_tab) => {
