@@ -73,7 +73,6 @@ class User extends Authenticatable
     ];
 
     static $organization = [
-        'default_assist_terminal' => 'uuid|nullable',
         'id_role' => 'uuid|required',
         'id_branch' => 'uuid|required',
         'group_schedule_id' => 'uuid|nullable',
@@ -117,6 +116,11 @@ class User extends Authenticatable
     public function businessUnits()
     {
         return $this->hasMany(UserBusinessUnit::class, 'user_id', 'id');
+    }
+
+    public function assistTerminals()
+    {
+        return $this->hasMany(UserTerminal::class, 'user_id', 'id');
     }
 
     public function historyEntries()
@@ -258,8 +262,8 @@ class User extends Authenticatable
 
                     $schedulesGenerated[] = [
                         'title' => $schedule->title,
-                        'from' => Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day)->format('Y-m-d H:i:s'),
-                        'to' => Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day)->format('Y-m-d H:i:s'),
+                        'from' => Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day)->format('d/m/Y H:i:s'),
+                        'to' => Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day)->format('d/m/Y H:i:s'),
                     ];
                 }
             }
