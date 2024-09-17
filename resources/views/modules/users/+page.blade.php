@@ -178,30 +178,94 @@
                                             </p>
                                         </td>
 
-                                        <td>
-                                            @if ($user->supervisor)
-                                                <div class="flex items-center gap-2">
-                                                    @includeIf('commons.avatar', [
-                                                        'src' => $user->supervisor->profile,
-                                                        'className' => 'w-12',
-                                                        'key' => $user->supervisor->id,
-                                                        'alt' =>
-                                                            $user->supervisor->first_name .
-                                                            ' ' .
-                                                            $user->supervisor->last_name,
-                                                        'altClass' => 'text-lg',
-                                                    ])
-                                                    <div>
-                                                        <p class="text-xs opacity-60">
-                                                            Bajo la supervisión de
-                                                        </p>
-                                                        <p class="text-nowrap">
-                                                            {{ $user->supervisor->first_name }}
-                                                            {{ $user->supervisor->last_name }}
-                                                        </p>
+                                        <td class="relative">
+                                            <button data-modal-target="dialog-{{ $user->id }}"
+                                                data-modal-toggle="dialog-{{ $user->id }}"
+                                                tip="Asignar o Editar supervisor" class="secondary justify-start">
+                                                @if ($user->supervisor)
+                                                    <div class="flex items-center text-left gap-2">
+                                                        @includeIf('commons.avatar', [
+                                                            'src' => $user->supervisor->profile,
+                                                            'className' => 'w-10',
+                                                            'key' => $user->supervisor->id,
+                                                            'alt' =>
+                                                                $user->supervisor->first_name .
+                                                                ' ' .
+                                                                $user->supervisor->last_name,
+                                                            'altClass' => 'text-lg',
+                                                        ])
+                                                        <div>
+                                                            <p class="text-xs opacity-60">
+                                                                Bajo la supervisión de
+                                                            </p>
+                                                            <p class="text-nowrap">
+                                                                {{ $user->supervisor->first_name }}
+                                                                {{ $user->supervisor->last_name }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    @svg('fluentui-person-add-20-o', 'w-6 h-6')
+                                                    Asignar supervisor
+                                                @endif
+                                            </button>
+                                            @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
+                                                <div id="dialog-{{ $user->id }}" tabindex="-1" aria-hidden="true"
+                                                    class="dialog hidden">
+                                                    <div class="content lg:max-w-lg max-w-full">
+                                                        <header>
+                                                            Asignar o cambiar supervisor
+                                                        </header>
+                                                        <div class="p-3 gap-4 overflow-y-auto flex flex-col">
+                                                            @php
+                                                                $defaultvalue = $user->supervisor_id
+                                                                    ? $user->supervisor->first_name .
+                                                                        ' ' .
+                                                                        $user->supervisor->last_name
+                                                                    : null;
+                                                            @endphp
+                                                            <div class="grid gap-2">
+                                                                <label class="relative">
+                                                                    <div
+                                                                        class="absolute z-[1] inset-y-0 px-2 flex items-center">
+                                                                        @svg('fluentui-search-24-o', 'w-5 h-5 opacity-60')
+                                                                    </div>
+                                                                    <input value="{{ $defaultvalue }}"
+                                                                        data-id="{{ $user->id }}" type="search"
+                                                                        class="supervisor-input w-full"
+                                                                        style="padding-left: 30px"
+                                                                        placeholder="Correo, DNI, nombres...">
+                                                                </label>
+                                                                <div id="result-{{ $user->id }}"
+                                                                    class="p-1 grid gap-2 text-center">
+                                                                    <p class="p-10 text-neutral-500">
+                                                                        No se encontraron resultados o no se ha realizado
+                                                                        una
+                                                                        búsqueda.
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <footer>
+                                                            <button data-modal-hide="dialog-{{ $user->id }}"
+                                                                type="button">Cancelar</button>
+                                                            @if ($user->supervisor_id)
+                                                                <button data-alertvariant="warning"
+                                                                    data-param='/api/users/supervisor/remove/{{ $user->id }}'
+                                                                    data-atitle='Remover supervisor'
+                                                                    data-adescription='¿Estás seguro de que deseas remover el supervisor de este usuario?'
+                                                                    type="button" class="secondary dinamic-alert">
+                                                                    @svg('fluentui-person-delete-20-o', 'w-5 h-5')
+                                                                    Remover supervisor
+                                                                </button>
+                                                            @endif
+                                                        </footer>
                                                     </div>
                                                 </div>
+                                            @else
+                                                --
                                             @endif
+
                                         </td>
                                         <td class="rounded-r-2xl">
                                             <div class="flex items-center gap-2">
