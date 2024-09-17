@@ -432,7 +432,7 @@
                                 </select>
                             </div>
                         </label>
-                        <div class="label">
+                        <div class="label col-span-2">
                             <span>
                                 Terminales de asistencia
                             </span>
