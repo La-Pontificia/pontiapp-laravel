@@ -77,13 +77,13 @@
                         </div>
                     </div>
                 </div>
-                <label class="flex p-2 rounded-lg hover:bg-stone-100 items-center gap-2">
+                {{-- <label class="flex p-2 rounded-lg hover:bg-stone-100 items-center gap-2">
                     <input {{ request()->query('force_calculation') ? 'checked' : '' }} type="checkbox"
                         name="force_calculation" value="true">
                     <div>
                         Forzar calculo
                     </div>
-                </label>
+                </label> --}}
                 <label class="relative w-[200px] max-w-full">
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
                         @svg('fluentui-search-28-o', 'w-5 h-5')
