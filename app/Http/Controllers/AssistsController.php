@@ -30,13 +30,14 @@ class AssistsController extends Controller
     {
 
         $terminals = AssistTerminal::all();
-        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+
+        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
 
         $query = $request->get('query');
 
         // current date
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
+        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
 
         $match = User::orderBy('created_at', 'desc');
 
@@ -64,12 +65,18 @@ class AssistsController extends Controller
                 ->get();
         }
 
+        if (count($terminalsIds) > 0) {
+            $match->whereHas('assistTerminals', function ($q) use ($terminalsIds) {
+                $q->whereIn('assist_terminal_id', $terminalsIds);
+            });
+        }
+
         $users = [];
 
-        if (!$department_id || !$area_id || !$query) {
-            $users =  $match->limit(2)->get();
+        if (!$request->get('start') || !$request->get('end')) {
+            $users = $match->limit(20)->get();
         } else {
-            $users =  $match->get();
+            $users = $match->get();
         }
 
         $areas = Area::all();
@@ -80,24 +87,25 @@ class AssistsController extends Controller
             $departments = Department::where('id_area', $area_id)->get();
         }
 
-        $allSchedules = collect([]);
+        $allAssists = collect([]);
 
         foreach ($users as $user) {
-            $allSchedules =  $allSchedules->concat($this->assistsService->assistsByUser($user->id, $terminal, $startDate, $endDate));
+            $allAssists =  $allAssists->concat($this->assistsService->assistsByUser($user, $terminalsIds, $startDate, $endDate));
         }
 
+
         if ($isExport) {
-            return $allSchedules;
+            return $allAssists;
         }
 
         $perPage = 25;
         $currentPage = $request->get('page', 1);
 
-        $schedules = $allSchedules->forPage($currentPage, $perPage);
+        $assists = $allAssists->forPage($currentPage, $perPage);
 
-        $paginatedSchedules = new LengthAwarePaginator(
-            $schedules,
-            isset($allSchedules) ? $allSchedules->count() : 0,
+        $paginatedAssists = new LengthAwarePaginator(
+            $assists,
+            isset($allAssists) ? $allAssists->count() : 0,
             $perPage,
             $currentPage,
             ['path' => $request->url(), 'query' => $request->query()]
@@ -107,7 +115,7 @@ class AssistsController extends Controller
             'areas' => $areas,
             'departments' => $departments,
             'users' => $users,
-            'schedules' => $paginatedSchedules,
+            'assists' => $paginatedAssists,
             'terminals' => $terminals,
         ]);
     }
@@ -116,17 +124,17 @@ class AssistsController extends Controller
     {
 
         $terminals = AssistTerminal::all();
-        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
+        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
         $query = $request->get('query');
 
         $assists = Collect([]);
         $perPage = 25;
         $currentPage = $request->get('page', 1);
 
-        $allAssists = $this->assistsService->assists($query, $terminal, $startDate, $endDate, $isExport);
+        $allAssists = $this->assistsService->assists($query, $terminalsIds, $startDate, $endDate, $isExport);
         $assists = $allAssists->forPage($currentPage, $perPage);
 
         $terminals = AssistTerminal::all();
@@ -154,13 +162,18 @@ class AssistsController extends Controller
 
     public function snSchedulesExport(Request $request)
     {
-        $all = $this->snSchedules($request, true);
+        $assists = $this->snSchedules($request, true);
 
-        foreach ($all as $assist) {
-            $assist->date = $assist->punch_time->format('Y-m-d');
-            $assist->day = $assist->punch_time->isoFormat('dddd');
+        foreach ($assists as $assist) {
+            $assist['user'] = [
+                'first_name' => $assist['user']['first_name'],
+                'last_name' => $assist['user']['last_name'],
+                'dni' => $assist['user']['dni'],
+                'job' => $assist['user']->role_position->job_position->name,
+                'role' => $assist['user']->role_position->name,
+            ];
         }
-        return $all;
+        return $assists;
     }
 
     public function peerSchedule(Request $request, $isExport = false)
@@ -168,8 +181,8 @@ class AssistsController extends Controller
         $terminals = AssistTerminal::all();
         $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
+        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
         $query = $request->get('query');
         $group = $request->get('group');
 
@@ -224,7 +237,12 @@ class AssistsController extends Controller
 
     public function centralizedExport(Request $request)
     {
-        return $this->index($request, true);
+        $assists = $this->index($request, true);
+        foreach ($assists as $assist) {
+            $assist['date'] = Carbon::parse($assist['date'])->format('d/m/Y');
+        }
+
+        return $assists;
     }
 
     public function peerUserExport(Request $request, $id)
@@ -234,14 +252,13 @@ class AssistsController extends Controller
         $terminals = AssistTerminal::all();
         $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
+        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
 
         $schedules = $this->assistsService->assistsByUser($user->id, $terminal, $startDate, $endDate);
 
         return $schedules;
     }
-
 
     public function singleSummary(Request $request)
     {
@@ -249,8 +266,8 @@ class AssistsController extends Controller
         $terminals = AssistTerminal::all();
         $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d-m-Y'));
+        $endDate = $request->get('end', Carbon::now()->format('d-m-Y'));
 
         $assists = collect([]);
         if ($startDate && $endDate) {
@@ -264,7 +281,6 @@ class AssistsController extends Controller
             'terminals' => $terminals,
         ]);
     }
-
 
     public function checkStatusServer()
     {

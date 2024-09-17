@@ -223,8 +223,8 @@ class UserController extends Controller
             $queryTerminal = $terminals[0]->database_name;
         }
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
+        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
 
         $schedules = $this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate);
 
