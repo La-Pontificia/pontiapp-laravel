@@ -20,8 +20,16 @@
                         <img aria-hidden="true" src="/gradient-bg.webp" class="w-full select-none pointer-events-none h-full"
                             alt="bg">
                     </div>
+                    <div class="fixed data-[open]:flex hidden flex-col z-20 inset-0 bg-white/95" id="loading-feedback">
+                        <div class="w-full h-full grid place-content-center">
+                            <span class="loader"></span>
+                        </div>
+                        <div class="flex justify-center pb-10">
+                            <img src="/elp.webp" class="w-[80px]" alt="">
+                        </div>
+                    </div>
                     <aside id="sidebar"
-                        class="flex peer flex-col max-lg:bg-[#fcfcfc] pt-2 max-lg:top-0 max-lg:pt-0 min-w-[300px] text-sm font-medium max-lg:-translate-x-full data-[expanded]:translate-x-0 max-lg:shadow-lg max-lg:fixed z-40 transition-all h-full overflow-y-auto">
+                        class="flex peer flex-col max-lg:bg-[#fcfcfc] pt-2 max-lg:top-0 max-lg:pt-0 min-w-[300px] text-sm font-medium max-lg:-translate-x-full data-[expanded]:translate-x-0 max-lg:shadow-lg max-lg:fixed data-[expanded]:z-40 transition-all h-full overflow-y-auto">
                         <div class="p-5 pb-3 lg:hidden block">
                             <a href="/"><img src="/lp.webp" class="w-24" /></a>
                         </div>
