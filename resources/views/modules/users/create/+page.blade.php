@@ -173,20 +173,26 @@
                                     </select>
                                 </div>
                             </label>
-                            <label class="label">
-                                <span>Terminal por defecto</span>
-                                <div class="relative">
-                                    <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
-                                        @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
-                                    </div>
-                                    <select class="w-full" style="padding-left: 35px" name="default_assist_terminal">
-                                        <option disabled selected>Terminal de asistencias por defecto</option>
-                                        @foreach ($terminals as $terminal)
-                                            <option value="{{ $terminal->id }}">{{ $terminal->name }}</option>
-                                        @endforeach
-                                    </select>
+                            <div class="label">
+                                <span>
+                                    Terminales de asistencia
+                                </span>
+                                <div class="grid grid-cols-2 text-sm font-medium">
+                                    @foreach ($terminals as $terminal)
+                                        <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
+                                            <input type="checkbox" name="assist_terminals[]" value="{{ $terminal->id }}">
+                                            <div>
+                                                <span class="block"> {{ $terminal->name }} </span>
+                                                <p class="flex items-center gap-2">
+                                                    @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
+                                                    <span class="text-sm font-normal"> {{ $terminal->database_name }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </label>
+                                    @endforeach
                                 </div>
-                            </label>
+                            </div>
                             <div class="col-span-2 grid grid-cols-2 gap-4">
                                 <label class="label">
                                     <span>Fecha de ingreso</span>
