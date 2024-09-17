@@ -8,7 +8,11 @@
 
     $query = request()->query('query');
 
-    $currentTerminal = request()->query('terminal') ?? $terminals[0]->database_name;
+    $queryTerminals = request()->query('assist_terminals')
+        ? explode(',', request()->query('assist_terminals'))
+        : [$terminals->first()->id];
+
+    $terminalsInQuery = count($queryTerminals) > 0 ? $terminals->whereIn('id', $queryTerminals) : [$terminals->first()];
 
 @endphp
 
@@ -35,14 +39,33 @@
                     <span>
                         Terminal
                     </span>
-                    <select name="terminal" class="bg-white">
-                        @foreach ($terminals as $terminal)
-                            <option value="{{ $terminal->database_name }}"
-                                {{ $currentTerminal === $terminal->database_name ? 'selected' : '' }}>
-                                {{ $terminal->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <button aria-hidden="true" id="terminal_button" data-dropdown-toggle="terminals"
+                        class="form-control flex items-center gap-2" type="button">
+                        Terminales
+                        @svg('fluentui-chevron-down-20-o', 'w-5 h-5')
+                    </button>
+
+                    <div id="terminals" class="z-10 hidden w-48 bg-white rounded-lg shadow">
+                        <div class="flex flex-col p-1">
+                            @foreach ($terminals as $terminal)
+                                @php
+                                    $checked = in_array($terminal->id, $queryTerminals);
+                                @endphp
+                                <label class="flex p-2 rounded-lg hover:bg-stone-100 items-center gap-2">
+                                    <input {{ $checked ? 'checked' : '' }} type="checkbox" name="assist_terminals[]"
+                                        value="{{ $terminal->id }}">
+                                    <div>
+                                        <span class="block"> {{ $terminal->name }} </span>
+                                        <p class="flex items-center gap-2">
+                                            @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
+                                            <span class="text-sm font-normal"> {{ $terminal->database_name }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
                 <label class="relative ml-auto w-[200px] max-w-full">
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
@@ -51,9 +74,8 @@
                     <input value="{{ request()->get('query') }}" name="query" placeholder="Filtrar usuarios..."
                         type="search" class="pl-9 w-full bg-white">
                 </label>
-                <button type="submit" class="primary mt-2">Filtrar</button>
+                <button type="submit" class="primary mt-2 filter-button">Filtrar</button>
             </form>
-
 
             <button {{ $assists->count() === 0 ? 'disabled' : '' }} type="button" id="export-assists-sn-schedules"
                 class="secondary mt-6">
@@ -62,8 +84,14 @@
                     Exportar
                 </span>
             </button>
-
         </div>
+        <nav class="flex items-center gap-2 px-2">
+            @foreach ($terminalsInQuery as $term)
+                <div class="text-sm py-1 px-2 rounded-full bg-orange-500/10 text-orange-500">
+                    {{ $term->name }}
+                </div>
+            @endforeach
+        </nav>
         <div class="overflow-auto flex flex-col h-full">
             <div class="h-full shadow-sm overflow-auto">
                 @if (count($assists) === 0)
@@ -82,41 +110,59 @@
                                 <th>Dia</th>
                                 <th>Terminal</th>
                                 <th class="bg-yellow-100 text-center">Hora</th>
+                                <th>Fecha sincronización</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-neutral-300 z-[0]">
                             @foreach ($assists as $assist)
-                                <tr data-dni="{{ $assist->emp_code }}"
-                                    class="[&>td]:py-3 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
+                                <tr class="[&>td]:py-3 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
                                     <td>
-                                        <div>
-                                            <p class="text-nowrap">
-                                                {{ $assist->employee->first_name }} {{ $assist->employee->last_name }}
-                                            </p>
-                                            <p class="text-xs">
-                                                {{ $assist->emp_code }}
-                                            </p>
+                                        <div class="flex items-center gap-2">
+                                            @include('commons.avatar', [
+                                                'src' => $assist['user']->profile,
+                                                'className' => 'w-10',
+                                                'key' => $assist['user']->id,
+                                                'alt' => $assist['user']->names(),
+                                                'altClass' => 'text-md',
+                                            ])
+                                            <div>
+                                                <a class="text-nowrap text-blue-500 hover:underline"
+                                                    href="/users/{{ $assist['user']->id }}">
+                                                    {{ $assist['user']->names() }}
+                                                </a>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>
                                         <p class="text-nowrap flex items-center gap-2">
                                             @svg('fluentui-calendar-ltr-20-o', 'w-5 h-5')
-                                            {{ $assist->punch_time->format('Y-m-d') }}
+                                            {{ $assist['date'] }}
                                         </p>
                                     </td>
                                     <td>
                                         <p class="text-nowrap capitalize">
-                                            {{ $assist->punch_time->isoFormat('dddd') }}
+                                            {{ $assist['day'] }}
                                         </p>
                                     </td>
                                     <td>
-                                        <p class="text-nowrap">
-                                            {{ $assist->terminal_alias }}
-                                        </p>
+                                        <div>
+                                            <span class="block"> {{ $assist['terminal']->name }} </span>
+                                            <p class="flex items-center gap-2">
+                                                @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
+                                                <span class="text-sm font-normal"> {{ $assist['terminal']->database_name }}
+                                                </span>
+                                            </p>
+                                        </div>
                                     </td>
                                     <td class="bg-yellow-100">
                                         <p class="text-nowrap text-center">
-                                            {{ $assist->punch_time->format('H:i:s') }}
+                                            {{ $assist['time'] }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="text-nowrap flex items-center gap-2">
+                                            @svg('fluentui-calendar-sync-20-o', 'w-5 h-5')
+                                            {{ $assist['sync_date'] }}
                                         </p>
                                     </td>
                                 </tr>
