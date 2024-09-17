@@ -41,7 +41,7 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="primary mt-2 ml-auto">Filtrar</button>
+                <button type="submit" class="primary mt-2 filter-button">Filtrar</button>
             </form>
         </div>
         <div class="overflow-auto flex flex-col h-full">
@@ -108,7 +108,7 @@
                                     </td>
                                     <td>
                                         <p class="text-nowrap">
-                                            {{ $assist->punch_time->format('Y-m-d') }}
+                                            {{ $assist->punch_time->format('d/m/Y') }}
                                         </p>
                                     </td>
                                     <td class="bg-yellow-100">
