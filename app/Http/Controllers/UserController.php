@@ -213,27 +213,19 @@ class UserController extends Controller
         if (!$user) return view('+500', ['error' => 'User not found']);
         $terminals = AssistTerminal::all();
 
-        $queryTerminal = null;
+        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
 
-        if ($request->get('terminal')) {
-            $queryTerminal = $request->get('terminal');
-        } elseif ($user->defaultTerminal) {
-            $queryTerminal = $user->defaultTerminal->database_name;
-        } else {
-            $queryTerminal = $terminals[0]->database_name;
-        }
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
-        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
+        $assists = $this->assistsService->assistsByUser($user, $terminalsIds, $startDate, $endDate, false);
 
-        $schedules = $this->assistsService->assistsByUser($user->id, $queryTerminal, $startDate, $endDate);
-
-        usort($schedules, function ($a, $b) {
+        usort($assists, function ($a, $b) {
             return strcmp($b['date'], $a['date']);
         });
 
         $terminals = AssistTerminal::all();
-        return view('modules.users.slug.assists.+page', compact('user', 'schedules', 'terminals'));
+        return view('modules.users.slug.assists.+page', compact('user', 'assists', 'terminals'));
     }
 
     // schedules
