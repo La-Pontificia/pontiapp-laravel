@@ -170,7 +170,7 @@
                     </p>
                     <div class="flex gap-5">
                         @if ($user->supervisor)
-                            <div class="label">
+                            <div class="label min-w-[130px]">
                                 <span>
                                     Supervisor
                                 </span>
