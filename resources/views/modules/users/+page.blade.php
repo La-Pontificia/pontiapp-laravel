@@ -35,7 +35,7 @@
     </template>
 
     <div class="w-full mx-auto h-full overflow-y-auto flex flex-col">
-        <form class="flex dinamic-form-to-params p-1 items-center gap-2">
+        <form class="flex dinamic-form-to-params p-1 items-center flex-wrap gap-2">
             @if ($cuser->has('users:create') || $cuser->isDev())
                 <a href="/users/create" class="primary mt-6">
                     @svg('fluentui-person-add-20-o', 'w-5 h-5')
