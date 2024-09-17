@@ -115,10 +115,9 @@ class AssistsService
     public static function assistsByUser($user, $terminalsIds, $startDate, $endDate, $force_calculation)
     {
 
-        $terminals = [];
+        $terminals = collect([]);
 
         if (count($terminalsIds) > 0) {
-            $terminals = [];
             foreach ($terminalsIds as $terminalId) {
                 $terminals[] = AssistTerminal::find($terminalId);
             }
