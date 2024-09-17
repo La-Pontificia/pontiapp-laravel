@@ -3,9 +3,8 @@
 @php
     $start = request()->query('start') ? request()->query('start') : null;
     $end = request()->query('end') ? request()->query('end') : null;
-
-    $currentTerminal = request()->query('terminal') ?? $terminals[0]->database_name;
-
+    $queryTerminals = explode(',', request()->query('assist_terminals'));
+    $terminalsInQuery = $queryTerminals ? $terminals->whereIn('id', $queryTerminals) : [];
 @endphp
 
 @section('layout.assists')
@@ -50,34 +49,60 @@
                     <span>
                         Terminal
                     </span>
-                    <select name="terminal" class="bg-white">
-                        @foreach ($terminals as $terminal)
-                            <option value="{{ $terminal->database_name }}"
-                                {{ $currentTerminal == $terminal->database_name ? 'selected' : '' }}>
-                                {{ $terminal->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <button aria-hidden="true" id="terminal_button" data-dropdown-toggle="terminals"
+                        class="form-control flex items-center gap-2" type="button">
+                        Terminales
+                        @svg('fluentui-chevron-down-20-o', 'w-5 h-5')
+                    </button>
+
+                    <div id="terminals" class="z-10 hidden w-48 bg-white rounded-lg shadow">
+                        <div class="flex flex-col p-1">
+                            @foreach ($terminals as $terminal)
+                                @php
+                                    $checked = in_array($terminal->id, $queryTerminals);
+                                @endphp
+                                <label class="flex p-2 rounded-lg hover:bg-stone-100 items-center gap-2">
+                                    <input {{ $checked ? 'checked' : '' }} type="checkbox" name="assist_terminals[]"
+                                        value="{{ $terminal->id }}">
+                                    <div>
+                                        <span class="block"> {{ $terminal->name }} </span>
+                                        <p class="flex items-center gap-2">
+                                            @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
+                                            <span class="text-sm font-normal"> {{ $terminal->database_name }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
-                <label class="relative ml-auto w-[200px] max-w-full">
+                <label class="relative w-[200px] max-w-full">
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
                         @svg('fluentui-search-28-o', 'w-5 h-5')
                     </div>
                     <input value="{{ request()->get('query') }}" name="query" placeholder="Filtrar usuarios..."
                         type="search" class="pl-9 w-full bg-white">
                 </label>
-                <button type="submit" class="primary mt-2">Filtrar</button>
+                <button type="submit" class="primary mt-2 filter-button">Filtrar</button>
             </form>
-            @if (count($schedules) !== 0)
+            @if (count($assists) !== 0)
                 <button type="button" id="button-export-assists-centralized" class="secondary mt-7">
                     @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
                     <span>Exportar</span>
                 </button>
             @endif
         </div>
+        <nav class="flex items-center gap-2 px-2">
+            @foreach ($terminalsInQuery as $term)
+                <div class="text-sm py-1 px-2 rounded-full bg-orange-500/10 text-orange-500">
+                    {{ $term->name }}
+                </div>
+            @endforeach
+        </nav>
         <div class="flex flex-col h-full">
-            <div class="h-full shadow-sm rounded-2xl overflow-auto">
-                @if (count($schedules) === 0)
+            <div class="h-full overflow-auto">
+                @if (count($assists) === 0)
                     <div class="grid h-full w-full place-content-center">
                         <img src="/empty-meetingList.webp" class="mx-auto" alt="">
                         <p class="text-center text-xs max-w-[40ch] mx-auto">
@@ -105,10 +130,10 @@
                             @php
                                 $currentWeek = null;
                             @endphp
-                            @foreach ($schedules as $schedule)
+                            @foreach ($assists as $assist)
                                 @php
-                                    $from = \Carbon\Carbon::parse($schedule['from']);
-                                    $date = \Carbon\Carbon::parse($schedule['date']);
+                                    $from = \Carbon\Carbon::parse($assist['from']);
+                                    $date = \Carbon\Carbon::parse($assist['date']);
                                     $weekNumber = $date->weekOfYear;
 
                                     $TTorTM = $from->hour >= 12 ? 'TT' : 'TM';
@@ -131,23 +156,24 @@
                                     <td>
                                         <div class="flex items-center gap-2">
                                             @include('commons.avatar', [
-                                                'src' => $schedule['user']->profile,
+                                                'src' => $assist['user']->profile,
                                                 'className' => 'w-10',
-                                                'key' => $schedule['user']->id,
-                                                'alt' => $schedule['user']->names(),
+                                                'key' => $assist['user']->id,
+                                                'alt' => $assist['user']->names(),
                                                 'altClass' => 'text-md',
                                             ])
                                             <div>
-                                                <p class="text-nowrap">
-                                                    {{ $schedule['user']->names() }}
-                                                </p>
+                                                <a class="text-nowrap text-blue-500 hover:underline"
+                                                    href="/users/{{ $assist['user']->id }}">
+                                                    {{ $assist['user']->names() }}
+                                                </a>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <p class="text-nowrap flex items-center gap-2">
                                             @svg('fluentui-calendar-ltr-20-o', 'w-5 h-5')
-                                            {{ \Carbon\Carbon::parse($schedule['date'])->isoFormat('DD/MM/YYYY') }}
+                                            {{ \Carbon\Carbon::parse($assist['date'])->isoFormat('DD/MM/YYYY') }}
                                         </p>
                                     </td>
                                     <td>
@@ -163,40 +189,44 @@
                                     </td>
                                     <td>
                                         <p class="">
-                                            {{ date('h:i A', strtotime($schedule['from'])) }}
+                                            {{ date('h:i A', strtotime($assist['from'])) }}
                                         </p>
                                     </td>
                                     <td>
                                         <p class="">
-                                            {{ date('h:i A', strtotime($schedule['to'])) }}
+                                            {{ date('h:i A', strtotime($assist['to'])) }}
                                         </p>
                                     </td>
                                     <td class="bg-yellow-100">
                                         <p class="text-center">
-                                            {{ $schedule['marked_in'] ? date('h:i A', strtotime($schedule['marked_in'])) : '-' }}
+                                            {{ $assist['marked_in'] ? date('h:i A', strtotime($assist['marked_in'])) : '-' }}
                                         </p>
                                     </td>
                                     <td class="bg-yellow-100">
                                         <p class="text-center">
-                                            {{ $schedule['marked_out'] ? date('h:i A', strtotime($schedule['marked_out'])) : '-' }}
+                                            {{ $assist['marked_out'] ? date('h:i A', strtotime($assist['marked_out'])) : '-' }}
                                         </p>
                                     </td>
                                     <td>
                                         <p>
-                                            {{ $schedule['owes_time'] }}
+                                            {{ $assist['owes_time'] }}
                                         </p>
                                     </td>
                                     <td>
                                         <p class="flex items-center gap-1 ">
-                                            @if ($schedule['terminal'])
-                                                {{ $schedule['terminal'] }}
+                                            @if ($assist['terminal'])
+                                                {{ $assist['terminal'] }}
                                             @endif
                                         </p>
                                     </td>
                                     <td>
                                         <p
-                                            class="{{ $schedule['observations'] == 'Tardanza' ? 'text-yellow-600' : ($schedule['observations'] == 'Completo' ? 'text-green-500' : '') }}">
-                                            {{ !$isFuture ? $schedule['observations'] : '' }}
+                                            class="{{ $assist['observations'] == 'Tardanza' ? 'text-yellow-600' : ($assist['observations'] == 'Completo' ? 'text-green-500' : '') }}">
+                                            @if ($assist['observations'])
+                                                {{ $assist['observations'] }}
+                                            @else
+                                                @svg('fluentui-checkmark-circle-24', 'h-6 w-6 text-green-500')
+                                            @endif
                                         </p>
                                     </td>
                                 </tr>
@@ -204,7 +234,7 @@
                         </tbody>
                     </table>
                     <footer>
-                        {!! $schedules->links() !!}
+                        {!! $assists->links() !!}
                     </footer>
                 @endif
             </div>
