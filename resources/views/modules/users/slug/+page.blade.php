@@ -541,7 +541,7 @@
                                 @foreach ($users as $u)
                                     <option {{ $u->id === $user->supervisor_id ? 'selected' : '' }}
                                         value="{{ $u->id }}">
-                                        {{ $u->first_name }} {{ $u->last_name }} •
+                                        {{ $u->last_name }} {{ $u->first_name }} •
                                         {{ $u->role_position->name }}
                                     </option>
                                 @endforeach
