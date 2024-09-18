@@ -67,7 +67,7 @@
                         </header>
                         <form action="/api/schedules/group/{{ $user->id }}/add" id="form" method="POST"
                             class="p-3 dinamic-form gap-4 overflow-y-auto flex flex-col">
-                            @include('modules.users.schedules.slug.form', [
+                            @include('modules.schedules.slug.form', [
                                 'user' => $user,
                             ])
                         </form>
@@ -152,7 +152,7 @@
                                     </header>
                                     <form action="/api/schedules/{{ $schedule->id }}" id="dialog-form-{{ $schedule->id }}"
                                         method="POST" class="dinamic-form body grid gap-4">
-                                        @include('modules.users.schedules.slug.form', [
+                                        @include('modules.schedules.slug.form', [
                                             'schedule' => $schedule,
                                         ])
                                     </form>
