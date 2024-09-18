@@ -75,10 +75,10 @@
                             </label>
                             <label class="label">
                                 <span>Fecha de nacimiento</span>
-                                <div class="w-full">
+                                <div class="w-full grid grid-cols-3 gap-2">
                                     <select name="date_of_birth_day">
                                         <option value="" selected disabled>
-                                            Día
+                                            - Día -
                                         </option>
                                         @foreach ($days as $day)
                                             <option value="{{ $day }}">
@@ -89,7 +89,7 @@
 
                                     <select name="date_of_birth_month">
                                         <option value="" selected disabled>
-                                            Mes
+                                            - Mes -
                                         </option>
                                         @foreach ($months as $key => $month)
                                             <option value="{{ $key + 1 }}">
@@ -100,7 +100,7 @@
 
                                     <select name="date_of_birth_year">
                                         <option value="" selected disabled>
-                                            Año
+                                            - Año -
                                         </option>
                                         @foreach ($years as $year)
                                             <option value="{{ $year }}">
@@ -122,6 +122,9 @@
                                     Puesto de Trabajo
                                 </span>
                                 <select name="id_job_position" id="job-position-select" required>
+                                    <option disabled selected value="">
+                                        -- Seleccione un puesto de trabajo --
+                                    </option>
                                     @foreach ($job_positions as $item)
                                         @if ($item->isDev() && !$cuser->isDev())
                                             @continue
@@ -137,11 +140,13 @@
                                     Cargo
                                 </span>
                                 <select name="id_role" id="role-select" required>
+                                    <option disabled selected value="">
+                                        -- Seleccione un cargo --
+                                    </option>
                                     @foreach ($roles as $role)
                                         @if ($role->isDev() && !$cuser->isDev())
                                             @continue
                                         @endif
-
                                         <option value="{{ $role->id }}">
                                             {{ $role->name }}
                                         </option>
@@ -153,6 +158,9 @@
                                     Sede
                                 </span>
                                 <select name="id_branch" required>
+                                    <option disabled selected value="">
+                                        -- Seleccione una sede --
+                                    </option>
                                     @foreach ($branches as $branch)
                                         <option value="{{ $branch->id }}">
                                             {{ $branch->name }}</option>
@@ -166,7 +174,9 @@
                                         @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
                                     </div>
                                     <select class="w-full" style="padding-left: 35px" name="group_schedule_id">
-                                        <option disabled selected>Grupo de horario</option>
+                                        <option disabled selected value="">
+                                            -- Seleccione un grupo de horario --
+                                        </option>
                                         @foreach ($group_schedules as $scheldule)
                                             <option value="{{ $scheldule->id }}">{{ $scheldule->name }}</option>
                                         @endforeach
@@ -208,11 +218,13 @@
                                     Jefe inmediato
                                 </span>
                                 <select name="immediate_boss" id="">
-                                    <option value="" selected>--</option>
+                                    <option value="" selected disabled>
+                                        -- Seleccione un jefe inmediato --
+                                    </option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">
-                                            {{ $user->first_name }} {{ $user->last_name }} •
-                                            {{ $user->role_position->name }}
+                                            {{ $user->last_name }} {{ $user->first_name }}
+                                            ({{ $user->role_position->name }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -227,10 +239,10 @@
                             <label class="label w-[200px]">
                                 <span>Rol</span>
                                 <select required name="id_role_user">
+                                    <option value="" selected disabled>
+                                        -- Seleccione un rol --
+                                    </option>
                                     @foreach ($user_roles as $role)
-                                        @if ($role->isDev() && !$cuser->isDev())
-                                            @continue
-                                        @endif
                                         <option value="{{ $role->id }}">
                                             {{ $role->title }}
                                         </option>
