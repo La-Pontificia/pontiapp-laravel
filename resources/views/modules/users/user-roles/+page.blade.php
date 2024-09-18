@@ -31,9 +31,6 @@
             <div class="flex flex-col divide-y">
                 @if ($cuser->has('users:user-roles:show') || $cuser->isDev())
                     @forelse ($roles as $role)
-                        @if ($role->isDev() && !$cuser->isDev())
-                            @continue
-                        @endif
                         <div class="flex relative items-center p-3 gap-2">
                             @svg('fluentui-note-20-o', 'w-6 h-6')
                             <div class="flex-grow">
@@ -43,6 +40,9 @@
                                     {{ count($role->users) }}
                                 </p>
                             </div>
+                            <span class="text-sm text-nowrap bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                Nivel {{ $role->level }}
+                            </span>
                             <button type="button" data-modal-target="dialog-{{ $role->id }}"
                                 data-modal-toggle="dialog-{{ $role->id }}"
                                 class="rounded-full p-2 hover:bg-neutral-200 transition-colors">

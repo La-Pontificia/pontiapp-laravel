@@ -1,10 +1,15 @@
 @php
     $privileges = isset($role) ? $role->privileges : [];
     $title = isset($role) ? $role->title : null;
+    $level = isset($role) ? $role->level : null;
 @endphp
 <label class="label">
     <span>Título:</span>
     <input value="{{ $title }}" required type="" name="title" placeholder="Ejemplo: Administrador">
+</label>
+<label class="label">
+    <span>Nivel:</span>
+    <input value="{{ $level }}" required type="" name="level" placeholder="Ejemplo: 10">
 </label>
 <div class="px-1">
     <p class="tracking-tight py-1 text-stone-600">Privilegios:</p>
