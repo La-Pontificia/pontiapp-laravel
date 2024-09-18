@@ -76,6 +76,8 @@
     $domains = ['lapontificia.edu.pe', 'ilp.edu.pe', 'elp.edu.pe', 'ec.edu.pe', 'idiomas.edu.pe'];
 
     $isEdit = request()->query('view') === 'edit';
+
+    $hasChangeRol = $user->role->level > $cuser->role->level || $cuser->isDev();
 @endphp
 
 
@@ -562,11 +564,11 @@
                         class="grid dinamic-form grid-cols-2 gap-4">
                         <label class="label w-[200px]">
                             <span>Rol</span>
-                            <select required name="id_role_user">
+                            <select {{ !$hasChangeRol ? 'disabled' : '' }} required name="id_role_user">
+                                <option value="" selected disabled>
+                                    -- Seleccione un rol --
+                                </option>
                                 @foreach ($user_roles as $role)
-                                    @if ($role->isDev() && !$cuser->isDev())
-                                        @continue
-                                    @endif
                                     <option {{ $user->id_role_user === $role->id ? 'selected' : '' }}
                                         value="{{ $role->id }}">
                                         {{ $role->title }}
@@ -575,7 +577,7 @@
                             </select>
                         </label>
                         <div class="col-span-2">
-                            <button class="primary gap-2 mt-1 flex">
+                            <button {{ !$hasChangeRol ? 'disabled' : '' }} class="primary gap-2 mt-1 flex">
                                 Guardar
                             </button>
                         </div>
