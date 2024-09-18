@@ -133,6 +133,11 @@ class AssistsService
 
         $assists = [];
         foreach ($terminals as $terminal) {
+
+            if (!$terminal->database_name) {
+                continue;
+            }
+
             // conection to the terminal
             $data = (new Attendance())
                 ->setConnection($terminal->database_name)
