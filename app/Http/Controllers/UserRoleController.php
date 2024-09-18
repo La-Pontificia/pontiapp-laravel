@@ -11,7 +11,7 @@ class UserRoleController extends Controller
     public function index()
     {
         $cuser = User::find(auth()->user()->id);
-        $roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'desc')->get();
+        $roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'asc')->get();
         return view('modules.users.user-roles.+page', compact('roles'));
     }
 
@@ -23,7 +23,7 @@ class UserRoleController extends Controller
     public function slug($id)
     {
         $cuser = User::find(auth()->user()->id);
-        $roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'desc')->get();
+        $roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'asc')->get();
         return view('modules.users.user-roles.slug.+page', compact('role'));
     }
 }
