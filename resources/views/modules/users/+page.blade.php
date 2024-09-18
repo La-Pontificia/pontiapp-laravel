@@ -179,7 +179,9 @@
                                         </td>
 
                                         <td class="relative">
-                                            <button data-modal-target="dialog-{{ $user->id }}"
+                                            <button
+                                                {{ $cuser->has('users:asign-supervisor') || $cuser->isDev() ? '' : 'disabled' }}
+                                                type="button" data-modal-target="dialog-{{ $user->id }}"
                                                 data-modal-toggle="dialog-{{ $user->id }}"
                                                 tip="Asignar o Editar supervisor" class="secondary justify-start">
                                                 @if ($user->supervisor)
@@ -204,9 +206,13 @@
                                                             </p>
                                                         </div>
                                                     </div>
-                                                @else
+                                                @elseif($cuser->has('users:asign-supervisor') || $cuser->isDev())
                                                     @svg('fluentui-person-add-20-o', 'w-6 h-6')
                                                     Asignar supervisor
+                                                @else
+                                                    <p class="text-neutral-500">
+                                                        Sin supervisor
+                                                    </p>
                                                 @endif
                                             </button>
                                             @if ($cuser->has('users:asign-supervisor') || $cuser->isDev())
@@ -262,8 +268,6 @@
                                                         </footer>
                                                     </div>
                                                 </div>
-                                            @else
-                                                --
                                             @endif
 
                                         </td>
@@ -279,6 +283,12 @@
                                                         class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver perfil
                                                     </a>
+                                                    @if (($cuser->has('users:edit') || $cuser->isDev()) && !$user->isDev())
+                                                        <a href="/users/{{ $user->id }}?view=edit"
+                                                            class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                            Editar usuario
+                                                        </a>
+                                                    @endif
                                                     <a href="/users/{{ $user->id }}/schedules"
                                                         class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver Horarios
@@ -287,7 +297,7 @@
                                                         class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver Asistencias
                                                     </a>
-                                                    @if (($cuser->has('users:reset-password') && !$user->has('development')) || $cuser->isDev())
+                                                    @if (($cuser->has('users:reset-password') && !$user->isDev()) || $cuser->isDev())
                                                         <button data-atitle="Restablecer contraseña"
                                                             data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
                                                             data-param="/api/users/reset-password/{{ $user->id }}"
@@ -295,7 +305,7 @@
                                                             Restablecer contraseña
                                                         </button>
                                                     @endif
-                                                    @if (($cuser->has('users:toggle-disable') && !$user->has('development')) || $cuser->isDev())
+                                                    @if (($cuser->has('users:toggle-disable') && !$user->isDev()) || $cuser->isDev())
                                                         <button
                                                             data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
                                                             data-adescription="No podrás deshacer esta acción."
