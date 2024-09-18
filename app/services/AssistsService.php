@@ -134,7 +134,7 @@ class AssistsService
         $assists = [];
         foreach ($terminals as $terminal) {
 
-            if (!$terminal->database_name) {
+            if (!$terminal) {
                 continue;
             }
 
