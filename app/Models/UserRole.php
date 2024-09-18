@@ -14,6 +14,7 @@ class UserRole extends Model
 
     static $rules = [
         'title' => 'required|string|max:255',
+        'level' => 'required|integer',
     ];
 
     protected $fillable = [
@@ -22,17 +23,13 @@ class UserRole extends Model
         'privileges',
         'status',
         'created_by',
+        'level',
         'updated_by',
     ];
 
     protected $casts = [
         'privileges' => 'array',
     ];
-
-    public function isDev()
-    {
-        return $this->id === '9cb63cf0-f278-44f4-9f66-93c13bbb4e82';
-    }
 
     public function users()
     {
