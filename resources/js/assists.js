@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 row.getCell(13).value = assist.marked_in;
                 row.getCell(14).value = assist.marked_out;
                 row.getCell(15).value = assist.owes_time;
-                row.getCell(16).value = assist.terminal;
+                row.getCell(16).value = assist.terminal?.database_name;
                 row.getCell(17).value = assist.observations;
             });
         });
@@ -205,6 +205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         };
     }
+
     if ($snSchedules) {
         $snSchedules.onclick = async () => {
             $snSchedules.disabled = true;
