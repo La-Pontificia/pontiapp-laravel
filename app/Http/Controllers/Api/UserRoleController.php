@@ -17,6 +17,7 @@ class UserRoleController extends Controller
 
         UserRole::create([
             'title' => $request->title,
+            'level' => $request->level,
             'privileges' => $privileges,
             'status' => true,
             'created_by' => auth()->user()->id,
@@ -39,6 +40,7 @@ class UserRoleController extends Controller
         $role->update([
             'title' => $request->title,
             'privileges' => $privileges,
+            'level' => $request->level,
             'status' => $request->status,
             'updated_by' => auth()->user()->id,
         ]);

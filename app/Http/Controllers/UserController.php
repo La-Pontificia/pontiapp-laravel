@@ -127,9 +127,11 @@ class UserController extends Controller
     public function create()
     {
 
+        $cuser = User::find(auth()->user()->id);
+        $user_roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'desc')->get();
+
         $job_positions = JobPosition::all();
         $roles = Role::all();
-        $user_roles = UserRole::all();
         $users = User::all();
         $branches = Branch::all();
         $group_schedules = GroupSchedule::all();
@@ -141,7 +143,9 @@ class UserController extends Controller
     public function slug($id)
     {
         $user = User::find($id);
-        $user_roles = UserRole::all();
+        $cuser = User::find(auth()->user()->id);
+        $user_roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'desc')->get();
+
         $group_schedules = GroupSchedule::all();
         $job_positions = JobPosition::all();
         $roles = Role::all();

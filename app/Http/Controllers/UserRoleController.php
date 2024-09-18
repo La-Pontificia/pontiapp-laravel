@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\UserRole;
 
 class UserRoleController extends Controller
@@ -9,7 +10,8 @@ class UserRoleController extends Controller
 
     public function index()
     {
-        $roles = UserRole::orderBy('created_at', 'asc')->get();
+        $cuser = User::find(auth()->user()->id);
+        $roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'desc')->get();
         return view('modules.users.user-roles.+page', compact('roles'));
     }
 
@@ -20,7 +22,8 @@ class UserRoleController extends Controller
 
     public function slug($id)
     {
-        $role = UserRole::find($id);
+        $cuser = User::find(auth()->user()->id);
+        $roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'desc')->get();
         return view('modules.users.user-roles.slug.+page', compact('role'));
     }
 }
