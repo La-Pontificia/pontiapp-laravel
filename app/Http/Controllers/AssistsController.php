@@ -75,7 +75,7 @@ class AssistsController extends Controller
 
         $users = [];
 
-        if (!$request->get('start') || !$request->get('end')) {
+        if (count($terminalsIds) < 1) {
             $users = $match->limit(2)->get();
         } else {
             $users = $match->get();
