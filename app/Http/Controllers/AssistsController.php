@@ -128,8 +128,8 @@ class AssistsController extends Controller
         $terminals = AssistTerminal::all();
         $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
-        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
+        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
         $query = $request->get('query');
 
         $assists = Collect([]);
