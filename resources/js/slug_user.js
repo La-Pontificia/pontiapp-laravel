@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const elem = $("#date-range") || null;
     const el = document.createElement("div");
 
-    const startDate = moment().startOf("month").format("YYYY-MM-DD");
+    const startDate = moment().format("YYYY-MM-DD");
     const endDate = moment().format("YYYY-MM-DD");
 
     const rangepicker = new DateRangePicker(elem ?? el, {
