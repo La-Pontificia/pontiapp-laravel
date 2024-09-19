@@ -368,11 +368,12 @@ class AssistsService
 
             $matched = [];
 
-            if (!$query) {
-                $matched = $match->limit(25)->get();
-            } else {
-                $matched = $match->get();
-            }
+            // if (!$query) {
+            //     $matched = $match->limit(25)->get();
+            // } else {
+            //     $matched = $match->get();
+            // }
+            $matched = $match->get();
 
             foreach ($matched as $item) {
                 $user = User::where('dni', $item->emp_code)->first();
