@@ -164,7 +164,8 @@ class UserController extends Controller
         $cuser = auth()->user();
 
         // terminals
-        $user->assistTerminals()->delete();
+        UserTerminal::where('user_id', $user->id)->delete();
+
         $assist_terminals = $request->input('assist_terminals', []);
         foreach ($assist_terminals as $terminal) {
             UserTerminal::create([
