@@ -383,7 +383,7 @@ class AssistsService
                     'user' => $user,
                     'date' => Carbon::parse($item->punch_time)->format('d-m-Y'),
                     'day' => Carbon::parse($item->punch_time)->isoFormat('dddd'),
-                    'time' => Carbon::parse($item->upload_time)->format('H:i:s'),
+                    'time' => Carbon::parse($item->punch_time)->format('H:i:s'),
                     'sync_date' => Carbon::parse($item->upload_time)->format('d-m-Y H:i:s'),
                     'terminal' => $terminal,
                     'terminal_id' => $terminal->id,
