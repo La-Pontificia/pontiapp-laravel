@@ -7,6 +7,4 @@ use App\Models\Question;
 use App\Models\QuestionnaireTemplate;
 use Illuminate\Http\Request;
 
-class TemplateController extends Controller
-{
-}
+class TemplateController extends Controller {}
