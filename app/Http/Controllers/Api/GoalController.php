@@ -6,11 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\Eda;
 use App\Models\Goal;
 use App\Models\GoalEvaluation;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class GoalController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
+
 
     public function createGoals($goals, $eda)
     {
@@ -69,6 +78,8 @@ class GoalController extends Controller
         $eda->sent = now();
         $eda->sent_by = auth()->user()->id;
         $eda->save();
+
+        $this->auditService->registerAudit('Objetivos enviados', 'Se han enviado los objetivos', 'edas', 'sent', $request);
 
         // send emails
 
@@ -181,6 +192,8 @@ class GoalController extends Controller
             });
         }
 
+        $this->auditService->registerAudit('Objetivos actualizados', 'Se han actualizado los objetivos', 'edas', 'update', $request);
+
         return response()->json('Objetivos actualizados correctamente.', 201);
     }
 
@@ -193,6 +206,8 @@ class GoalController extends Controller
         $eda->approved = now();
         $eda->approved_by = auth()->user()->id;
         $eda->save();
+
+        $this->auditService->registerAudit('Objetivos aprobados', 'Se han aprobado los objetivos', 'edas', 'approve', request());
 
         return response()->json('Objetivos aprobados correctamente. Se habilitó las evaluaciones y cuestionarios.', 200);
     }
