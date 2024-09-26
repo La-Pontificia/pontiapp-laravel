@@ -166,6 +166,7 @@ class AssistsController extends Controller
     {
         $assists = $this->snSchedules($request, true);
 
+
         foreach ($assists as $assist) {
             $assist['user'] = [
                 'first_name' => $assist['user']['first_name'],
