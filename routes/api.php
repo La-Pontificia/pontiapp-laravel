@@ -13,9 +13,11 @@ use App\Http\Controllers\UserController as ControllersUserController;
 use App\Http\Controllers\Api\UserRoleController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AssistsController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BusinessUnitController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\YearController;
@@ -157,4 +159,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('schedules/{id}', [ScheduleController::class, 'update']);
     Route::get('schedules/user/{id}', [ScheduleController::class, 'by_user']);
+
+    // Events routes
+
+    Route::post('events', [EventController::class, 'store']);
+    Route::post('events/{id}', [EventController::class, 'update']);
+    Route::post('events/{id}/delete', [EventController::class, 'delete']);
+
+    // Audit routes
+
+    Route::post('audits/{id}/delete', [AuditController::class, 'delete']);
 });
