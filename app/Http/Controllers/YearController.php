@@ -6,10 +6,18 @@ use App\Models\Eda;
 use App\Models\Evaluation;
 use App\Models\User;
 use App\Models\Year;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class YearController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
 
     public function index(Request $request)
     {
@@ -44,6 +52,8 @@ class YearController extends Controller
         $year->created_by = auth()->user()->id;
         $year->save();
 
+        $this->auditService->registerAudit('Año creado', 'Se ha creado un año', 'edas', 'create', $request);
+
         if ($createAllEdas) {
             $users = User::where('status', true)->get();
             foreach ($users as $user) {
@@ -61,6 +71,9 @@ class YearController extends Controller
             'id_year' => $year->id,
             'created_by' => auth()->user()->id,
         ]);
+
+        $this->auditService->registerAudit('EDA creado', 'Se ha creado un EDA', 'edas', 'create', request());
+
         foreach ($evaluationArray as $evaluation) {
             Evaluation::create([
                 'number' => $evaluation,
@@ -85,6 +98,8 @@ class YearController extends Controller
         $year->status = $request->status ? true : false;
         $year->updated_by = auth()->user()->id;
         $year->save();
+
+        $this->auditService->registerAudit('Año actualizado', 'Se ha actualizado un año', 'edas', 'update', $request);
 
         return response()->json($year, 200);
     }
