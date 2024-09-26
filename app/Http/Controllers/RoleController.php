@@ -5,25 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\JobPosition;
 use App\Models\Role;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
 
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
+
     // roles
     public function index(Request $request)
     {
         $match = Role::orderBy('created_at', 'asc');
-        $q = $request->get('q');
+        $query = $request->get('query');
         $id_job_position = $request->get('job-position');
         $id_department = $request->get('department');
 
         $departments = Department::orderBy('name', 'asc')->get();
         $jobPositions = JobPosition::orderBy('name', 'asc')->get();
 
-        if ($q) {
-            $match->where('name', 'like', '%' . $q . '%')
-                ->orWhere('code', 'like', '%' . $q . '%');
+        if ($query) {
+            $match->where('name', 'like', '%' . $query . '%')
+                ->orWhere('code', 'like', '%' . $query . '%');
         }
 
         if ($id_job_position) {
@@ -72,6 +80,8 @@ class RoleController extends Controller
         $new->created_by = auth()->user()->id;
         $new->save();
 
+        $this->auditService->registerAudit('Cargo creado', 'Se ha creado un cargo', 'maintenances', 'create', $request);
+
         return response()->json('Cargo registrado correctamente.', 200);
     }
 
@@ -98,6 +108,8 @@ class RoleController extends Controller
         $update->updated_by = auth()->user()->id;
         $update->save();
 
+        $this->auditService->registerAudit('Cargo actualizado', 'Se ha actualizado un cargo', 'maintenances', 'update', $request);
+
         return response()->json('Cargo actualizado correctamente.', 200);
     }
 
@@ -105,6 +117,8 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $role->delete();
+
+        $this->auditService->registerAudit('Cargo eliminado', 'Se ha eliminado un cargo', 'maintenances', 'delete', request());
         return response()->json('Registro eliminado correctamente.', 200);
     }
 }
