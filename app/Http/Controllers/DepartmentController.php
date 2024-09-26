@@ -4,24 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Area;
 use App\Models\Department;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
+
     public function index(Request $request)
     {
         $area = $request->get('area');
         $match = Department::orderBy('created_at', 'asc');
-        $q = $request->get('q');
+        $query = $request->get('query');
         $areas = Area::orderBy('created_at', 'asc')->get();
 
         if ($area) {
             $match->where('id_area', $area);
         }
 
-        if ($q) {
-            $match->where('name', 'like', '%' . $q . '%')
-                ->orWhere('code', 'like', '%' . $q . '%')
+        if ($query) {
+            $match->where('name', 'like', '%' . $query . '%')
+                ->orWhere('code', 'like', '%' . $query . '%')
                 ->get();
         }
 
@@ -64,6 +73,8 @@ class DepartmentController extends Controller
         $department->created_by = auth()->user()->id;
         $department->save();
 
+        $this->auditService->registerAudit('Departamento creado', 'Se ha creado un departamento', 'maintenances', 'create', $request);
+
         return response()->json('Departamento creado correctamente.', 200);
     }
 
@@ -87,6 +98,8 @@ class DepartmentController extends Controller
         $department->updated_by = auth()->user()->id;
         $department->save();
 
+        $this->auditService->registerAudit('Departamento actualizado', 'Se ha actualizado un departamento', 'maintenances', 'update', $request);
+
         return response()->json('Departamento actualizado correctamente.', 200);
     }
 
@@ -94,6 +107,8 @@ class DepartmentController extends Controller
     {
         $department = Department::find($id);
         $department->delete();
+
+        $this->auditService->registerAudit('Departamento eliminado', 'Se ha eliminado un departamento', 'maintenances', 'delete', request());
 
         return response()->json('Eliminado correctamente', 204);
     }
