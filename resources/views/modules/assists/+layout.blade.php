@@ -4,7 +4,9 @@
 
 @section('content')
     <div class="flex flex-col flex-grow h-full w-full">
-        @yield('layout.assists')
+        <div class="flex-grow flex flex-col">
+            @yield('layout.assists')
+        </div>
         <div class="p-2">
             <p class="text-sm">
                 Estado del servidor de asistencias: <span id="check-server"></span>
