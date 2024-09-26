@@ -154,7 +154,7 @@ class UserController extends Controller
 
         $users = User::whereHas('role_position', function ($q) use ($user) {
             $q->whereHas('job_position', function ($qq) use ($user) {
-                $qq->where('level', '<', $user->role_position->job_position->level);
+                $qq->where('level', '<=', $user->role_position->job_position->level);
             });
         })->get();
 
