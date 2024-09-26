@@ -4,7 +4,19 @@
 
 @section('layout.users')
     <div class="w-full max-w-2xl mx-auto">
-        <h2 class="py-5">Cargos.</h2>
+        <h2 class="pt-5">Cargos.</h2>
+        <form class="flex dinamic-form-to-params pb-4 items-center gap-4">
+            <label class="relative mt-6 ml-auto w-full max-w-full">
+                <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
+                    @svg('fluentui-search-28-o', 'w-5 h-5')
+                </div>
+                <input value="{{ request()->get('query') }}" name="query" placeholder="Filtrar..." type="search"
+                    class="pl-9 w-full bg-white">
+            </label>
+            <button class="primary mt-6">
+                Filtrar
+            </button>
+        </form>
         <div class="flex flex-col w-full bg-white border-neutral-300 shadow-[0_0_10px_rgba(0,0,0,.2)] border rounded-xl">
             <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary m-2">
                 @svg('fluentui-add-circle-16-o', 'w-5 h-5')
@@ -30,7 +42,7 @@
                     <div class="flex relative hover:bg-neutral-100 items-start p-2.5 gap-2">
                         @svg('fluentui-toolbox-20-o', 'w-6 h-6 mr-2')
                         <div class="flex-grow">
-                            <p>{{ $role->code }}-{{ $role->name }}</p>
+                            <p class="font-semibold">{{ $role->code }}-{{ $role->name }}</p>
                             <p class="flex text-nowrap text-sm items-center flex-wrap gap-1 text-neutral-600">
                                 @svg('fluentui-people-28-o', 'w-5 h-5') {{ $role->users->count() }} usuarios asociados.
                             </p>
