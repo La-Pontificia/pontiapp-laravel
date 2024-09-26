@@ -117,15 +117,6 @@ class AccessComposerServiceProvider extends ServiceProvider
                             ],
                         ],
                         [
-                            'name' => 'Terminales',
-                            'privileges' => [
-                                'assists:terminals:show' => 'Ver terminales',
-                                'assists:terminals:create' => 'Agregar terminales',
-                                'assists:terminals:edit' => 'Actualizar terminales',
-                                'assists:terminals:delete' => 'Eliminar terminales',
-                            ],
-                        ],
-                        [
                             'name' => 'Asistencias sin calcular',
                             'privileges' => [
                                 'assists:sn-schedules' => 'Acceso completo',
@@ -136,7 +127,17 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'privileges' => [
                                 'assists:single-summary' => 'Acceso completo',
                             ],
+                        ],
+                        [
+                            'name' => 'Terminales',
+                            'privileges' => [
+                                'assists:terminals:show' => 'Ver terminales',
+                                'assists:terminals:create' => 'Agregar terminales',
+                                'assists:terminals:edit' => 'Actualizar terminales',
+                                'assists:terminals:delete' => 'Eliminar terminales',
+                            ],
                         ]
+
                     ]
                 ],
                 [
