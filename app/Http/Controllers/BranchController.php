@@ -3,17 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
+
     public function index(Request $request)
     {
         $match = Branch::orderBy('created_at', 'asc');
-        $q = $request->get('q');
-        if ($q) {
-            $match->where('name', 'like', '%' . $q . '%')
-                ->orWhere('code', 'like', '%' . $q . '%')
+        $query = $request->get('query');
+        if ($query) {
+            $match->where('name', 'like', '%' . $query . '%')
+                ->orWhere('code', 'like', '%' . $query . '%')
                 ->get();
         }
 
@@ -36,6 +45,8 @@ class BranchController extends Controller
         $branch->created_by = auth()->user()->id;
         $branch->save();
 
+        $this->auditService->registerAudit('Sede creado', 'Se ha creado una sede', 'maintenances', 'create', $request);
+
         return response()->json('Sede creado correctamente.', 200);
     }
 
@@ -52,6 +63,8 @@ class BranchController extends Controller
         $branch->updated_by = auth()->user()->id;
         $branch->save();
 
+        $this->auditService->registerAudit('Sede actualizado', 'Se ha actualizado una sede', 'maintenances', 'update', $request);
+
         return response()->json('Sede actualizado correctamente.', 200);
     }
 
@@ -59,6 +72,8 @@ class BranchController extends Controller
     {
         $branch = Branch::find($id);
         $branch->delete();
+
+        $this->auditService->registerAudit('Sede eliminado', 'Se ha eliminado una sede', 'maintenances', 'delete', $branch);
 
         return response()->json('Sede eliminado correctamente.', 204);
     }
