@@ -6,11 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\GroupSchedule;
 use App\Models\Schedule;
 use App\Models\User;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
 
     public function by_user($id_user)
     {
@@ -85,6 +92,8 @@ class ScheduleController extends Controller
             'created_by' => auth()->user()->id
         ]);
 
+        $this->auditService->registerAudit('Horario creado', 'Se ha creado un horario', 'users', 'create', $request);
+
         return response()->json('Horario registrado correctamente.', 200);
     }
 
@@ -137,6 +146,8 @@ class ScheduleController extends Controller
         $schedule->background = $request->background ?? $this->generateRandomColor();
         $schedule->save();
 
+        $this->auditService->registerAudit('Horario actualizado', 'Se ha actualizado un horario', 'users', 'update', $request);
+
         return response()->json('Horario actualizado correctamente.', 200);
     }
 
@@ -156,6 +167,8 @@ class ScheduleController extends Controller
         $group->name = $request->name;
         $group->save();
 
+        $this->auditService->registerAudit('Grupo de horario actualizado', 'Se ha actualizado un grupo de horario', 'users', 'update', $request);
+
         return response()->json('Grupo de horario actualizado correctamente.', 200);
     }
 
@@ -165,10 +178,13 @@ class ScheduleController extends Controller
             'name' => ['max:255', 'required', 'string'],
         ]);
 
-        $group = GroupSchedule::create([
+        GroupSchedule::create([
             'name' => $request->name,
             'created_by' => auth()->user()->id
         ]);
+
+        $this->auditService->registerAudit('Grupo de horario creado', 'Se ha creado un grupo de horario', 'users', 'create', $request);
+
         return response()->json('Grupo de horario creado correctamente.', 200);
     }
 
@@ -186,6 +202,8 @@ class ScheduleController extends Controller
         $group->default = true;
         $group->save();
 
+        $this->auditService->registerAudit('Grupo de horario predeterminado actualizado', 'Se ha actualizado un grupo de horario predeterminado', 'users', 'update', request());
+
         return response()->json('Grupo de horario predeterminado actualizado correctamente.', 200);
     }
 
@@ -197,6 +215,9 @@ class ScheduleController extends Controller
         }
 
         $schedule->delete();
+
+        $this->auditService->registerAudit('Horario eliminado', 'Se ha eliminado un horario', 'users', 'delete', request());
+
         return response()->json('Horario eliminado correctamente.', 200);
     }
 
@@ -206,6 +227,9 @@ class ScheduleController extends Controller
         $schedule->archived = true;
         $schedule->end_date = Carbon::now();
         $schedule->save();
+
+        $this->auditService->registerAudit('Horario archivado', 'Se ha archivado un horario', 'users', 'update', request());
+
         return response()->json('Horario archivado correctamente.', 200);
     }
 
@@ -238,6 +262,9 @@ class ScheduleController extends Controller
         }
 
         $group->delete();
+
+        $this->auditService->registerAudit('Grupo de horario eliminado', 'Se ha eliminado un grupo de horario', 'users', 'delete', request());
+
         return response()->json('Grupo de horario eliminado correctamente', 200);
     }
 
