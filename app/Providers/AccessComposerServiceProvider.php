@@ -113,10 +113,10 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'name' => 'Asistencias',
                             'privileges' => [
                                 'assists:show' => 'Ver asistencias',
-                                'assists:create' => 'Registrar asistencias',
-                                'assists:edit' => 'Actualizar asistencias',
-                                'assists:delete' => 'Eliminar asistencias',
                                 'assists:export' => 'Export asistencias',
+                                'assists:sn-schedules' => 'Asistencias sin calcular',
+                                'assists:single-summary' => 'Resumen único de fechas',
+                                'assists:terminals' => 'Terminales (Biometricos)',
                             ],
                         ],
                         [
@@ -196,6 +196,30 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'privileges' => [
                                 'edas:reports:show' => 'Ver reportes',
                                 'edas:reports:generate' => 'Generar reportes',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'name' => 'Gestion Eventos',
+                    'items' => [
+                        [
+                            'name' => 'Eventos',
+                            'privileges' => [
+                                'event:show' => 'Ver eventos',
+                                'event:edit' => 'Editar eventos',
+                                'event:create' => 'Crear eventos',
+                                'event:delete' => 'Eliminar eventos',
+                            ],
+                        ],
+                        [
+                            'name' => 'Asistencias a eventos',
+                            'privileges' => [
+                                'event:assists:show' => 'Asistencias a eventos',
+                                'event:assists:register' => 'Registrar asistencias a eventos',
+                                'event:assists:edit' => 'Editar asistencias a eventos',
+                                'event:assists:delete' => 'Eliminar asistencias a eventos',
+                                'event:assists:export' => 'Exportar asistencias a eventos',
                             ],
                         ],
                     ],
