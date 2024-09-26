@@ -12,12 +12,12 @@ class JobPositionController extends Controller
     public function index(Request $request)
     {
         $match = JobPosition::orderBy('level', 'asc');
-        $q = $request->get('q');
+        $query = $request->get('query');
         $level = $request->get('level');
 
-        if ($q) {
-            $match->where('name', 'like', '%' . $q . '%')
-                ->orWhere('code', 'like', '%' . $q . '%')
+        if ($query) {
+            $match->where('name', 'like', '%' . $query . '%')
+                ->orWhere('code', 'like', '%' . $query . '%')
                 ->get();
         }
 
