@@ -3,13 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\BusinessUnit;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class BusinessUnitController extends Controller
 {
-    public function index()
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
     {
-        $businesses = BusinessUnit::paginate();
+        $this->auditService = $auditService;
+    }
+
+
+    public function index(Request $request)
+    {
+
+        $query = $request->get('query');
+
+        $match = BusinessUnit::orderBy('created_at', 'desc');
+
+        if ($query) {
+            $match->where('name', 'like', '%' . $query . '%')
+                ->orWhere('acronym', 'like', '%' . $query . '%')
+                ->get();
+        }
+
+        $businesses = $match->paginate();
         return view('modules.settings.business-units.+page', [
             'businesses' => $businesses
         ])
@@ -33,6 +53,8 @@ class BusinessUnitController extends Controller
             'services' => $services,
             'created_by' => auth()->id(),
         ]);
+
+        $this->auditService->registerAudit('Unidad de negocio creada', 'Se ha creado una unidad de negocio', 'maintenances', 'create', $request);
 
         return response()->json('Unidad de negocio creado.', 200);
     }
@@ -61,6 +83,8 @@ class BusinessUnitController extends Controller
             'updated_by' => auth()->id(),
         ]);
 
+        $this->auditService->registerAudit('Unidad de negocio actualizada', 'Se ha actualizado una unidad de negocio', 'maintenances', 'update', $request);
+
         return response()->json('Unidad de negocio actualizada.', 200);
     }
 
@@ -73,6 +97,8 @@ class BusinessUnitController extends Controller
         }
 
         $businessUnit->delete();
+
+        $this->auditService->registerAudit('Unidad de negocio eliminada', 'Se ha eliminado una unidad de negocio', 'maintenances', 'delete', request());
 
         return response()->json('Empresa eliminado', 200);
     }
