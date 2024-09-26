@@ -4,10 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserRole;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class UserRoleController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
 
     public function create(Request $request)
     {
@@ -22,6 +30,8 @@ class UserRoleController extends Controller
             'status' => true,
             'created_by' => auth()->user()->id,
         ]);
+
+        $this->auditService->registerAudit('Rol creado', 'Se ha creado un rol', 'users', 'create', $request);
 
         return response()->json('Rol creado correctamente', 200);
     }
@@ -45,6 +55,8 @@ class UserRoleController extends Controller
             'updated_by' => auth()->user()->id,
         ]);
 
+        $this->auditService->registerAudit('Rol actualizado', 'Se ha actualizado un rol', 'users', 'update', $request);
+
         return response()->json('Rol actualizado correctamente', 200);
     }
 
@@ -64,6 +76,8 @@ class UserRoleController extends Controller
         }
 
         $role->delete();
+
+        $this->auditService->registerAudit('Rol eliminado', 'Se ha eliminado un rol', 'users', 'delete', request());
 
         return response()->json('Rol eliminado correctamente', 200);
     }
