@@ -10,7 +10,7 @@ class SettingController extends Controller
     public function index(Request $request)
     {
         $match = Area::orderBy('created_at', 'desc');
-        $query = $request->get('q');
+        $query = $request->get('query');
 
         if ($query) {
             $match->where('code', 'like', '%' . $query . '%')
