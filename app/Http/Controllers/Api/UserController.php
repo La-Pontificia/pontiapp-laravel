@@ -11,16 +11,18 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\UserBusinessUnit;
 use App\Models\UserTerminal;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
 
-    protected $imageUploadService;
+    protected $imageUploadService, $auditService;
 
-    public function __construct()
+    public function __construct(AuditService $auditService)
     {
         $this->imageUploadService = new ImageUploadController();
+        $this->auditService = $auditService;
     }
 
 
@@ -112,6 +114,8 @@ class UserController extends Controller
             ]);
         }
 
+        $this->auditService->registerAudit('Usuario creado', 'Se ha creado un usuario', 'users', 'create', $request);
+
         return response()->json(
             '/users/' . $user->id,
             200
@@ -153,6 +157,8 @@ class UserController extends Controller
         $user->updated_by = $cuser->id;
         $user->save();
 
+        $this->auditService->registerAudit('Detalles de usuario actualizados', 'Se han actualizado los detalles de un usuario', 'users', 'update', $request);
+
         return response()->json('Detalles actualizados correctamente.', 200);
     }
 
@@ -183,6 +189,9 @@ class UserController extends Controller
         $user->exit_date =  $request->exit_date;
         $user->updated_by = $cuser->id;
         $user->save();
+
+        $this->auditService->registerAudit('Detalles de la organización actualizados', 'Se han actualizado los detalles de la organización de un usuario', 'users', 'update', $request);
+
         return response()->json('Detalles de la organización actualizados correctamente.', 200);
     }
 
@@ -204,6 +213,9 @@ class UserController extends Controller
         $user->entry_date =  null;
         $user->exit_date =  null;
         $user->save();
+
+        $this->auditService->registerAudit('Historial de entradas creado', 'Se ha creado un historial de entradas', 'users', 'update', request());
+
         return response()->json('Fechas actualizadas actualizadas correctamente.', 200);
     }
 
@@ -214,6 +226,8 @@ class UserController extends Controller
 
         $user->id_role_user = $request->id_role_user;
         $user->save();
+
+        $this->auditService->registerAudit('Rol y privilegios actualizados', 'Se han actualizado el rol y los privilegios de un usuario', 'users', 'update', $request);
 
         return response()->json('Privilegios actualizados correctamente.', 200);
     }
@@ -249,6 +263,8 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->email = $constructEmail;
         $user->save();
+
+        $this->auditService->registerAudit('Correo y accesos actualizados', 'Se han actualizado el correo y los accesos de un usuario', 'users', 'update', $request);
 
         return response()->json('Correo y accesos actualizado correctamente.', 200);
     }
@@ -325,6 +341,8 @@ class UserController extends Controller
         $user->supervisor_id = null;
         $user->save();
 
+        $this->auditService->registerAudit('Supervisor removido', 'Se ha removido el supervisor de un usuario', 'users', 'update', $request);
+
         return response()->json('Supervisor removido correctamente', 200);
     }
 
@@ -345,6 +363,8 @@ class UserController extends Controller
 
         $user->supervisor_id = $supervisor->id;
         $user->save();
+
+        $this->auditService->registerAudit('Supervisor asignado', 'Se ha asignado un supervisor a un usuario', 'users', 'update', $request);
 
         return response()->json('Supervisor asignado correctamente', 200);
     }
@@ -377,6 +397,8 @@ class UserController extends Controller
 
         $user->password = bcrypt($user->dni);
         $user->save();
+
+        $this->auditService->registerAudit('Contraseña restablecida', 'Se ha restablecido la contraseña de un usuario', 'users', 'update', request());
 
         return response()->json('Contraseña restablecida correctamente', 200);
     }
@@ -418,6 +440,8 @@ class UserController extends Controller
         $user->status = !$user->status;
         $user->save();
 
+        $this->auditService->registerAudit('Estado de usuario actualizado', 'Se ha actualizado el estado de un usuario', 'users', 'update', request());
+
         return response()->json('Estado actualizado correctamente', 200);
     }
 
@@ -429,6 +453,8 @@ class UserController extends Controller
             return response()->json('El registro no existe', 400);
 
         $entry->delete();
+
+        $this->auditService->registerAudit('Historial de entradas eliminado', 'Se ha eliminado un historial de entradas', 'users', 'delete', request());
 
         return response()->json('Registro eliminado correctamente', 200);
     }
