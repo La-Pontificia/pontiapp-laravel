@@ -114,9 +114,6 @@ class AccessComposerServiceProvider extends ServiceProvider
                             'privileges' => [
                                 'assists:show' => 'Ver asistencias',
                                 'assists:export' => 'Export asistencias',
-                                'assists:sn-schedules' => 'Asistencias sin calcular',
-                                'assists:single-summary' => 'Resumen único de fechas',
-                                'assists:terminals' => 'Terminales (Biometricos)',
                             ],
                         ],
                         [
@@ -126,6 +123,18 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'assists:terminals:create' => 'Agregar terminales',
                                 'assists:terminals:edit' => 'Actualizar terminales',
                                 'assists:terminals:delete' => 'Eliminar terminales',
+                            ],
+                        ],
+                        [
+                            'name' => 'Asistencias sin calcular',
+                            'privileges' => [
+                                'assists:sn-schedules' => 'Acceso completo',
+                            ],
+                        ],
+                        [
+                            'name' => 'Resumen único de asistencias',
+                            'privileges' => [
+                                'assists:single-summary' => 'Acceso completo',
                             ],
                         ]
                     ]
