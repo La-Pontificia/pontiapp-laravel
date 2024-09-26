@@ -6,10 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Eda;
 use App\Models\Evaluation;
 use App\Models\GoalEvaluation;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class EvaluationController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
 
     public function selfqualify(Request $request, $id)
     {
@@ -51,6 +59,8 @@ class EvaluationController extends Controller
         $evaluation->self_rated_at = now();
         $evaluation->self_rated_by = auth()->user()->id;
         $evaluation->save();
+
+        $this->auditService->registerAudit('Objetivos autocalificados', 'Se han autocalificado los objetivos', 'edas', 'selfqualify', $request);
 
         return response()->json('Objetivos autocalificados correctamente.', 200);
     }
@@ -95,6 +105,8 @@ class EvaluationController extends Controller
         $evaluation->qualified_by = auth()->user()->id;
         $evaluation->save();
 
+        $this->auditService->registerAudit('Objetivos calificados', 'Se han calificado los objetivos', 'edas', 'qualify', $request);
+
         return response()->json('Objetivos calificados correctamente.', 200);
     }
 
@@ -109,6 +121,8 @@ class EvaluationController extends Controller
         $evaluation->closed = now();
         $evaluation->closed_by = auth()->user()->id;
         $evaluation->save();
+
+        $this->auditService->registerAudit('Evaluación cerrada', 'Se ha cerrado una evaluación', 'edas', 'close', request());
 
         return response()->json('Evaluación cerrada correctamente', 200);
     }
@@ -130,6 +144,8 @@ class EvaluationController extends Controller
         $evaluation->feedback_score = $request->feedback_score;
         $evaluation->feedback_at = now();
         $evaluation->save();
+
+        $this->auditService->registerAudit('Feedback enviado', 'Se ha enviado un feedback', 'edas', 'feedback', $request);
 
         return response()->json('Feedback enviado correctamente', 200);
     }
