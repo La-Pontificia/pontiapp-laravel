@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssistTerminal;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class AssistTerminalController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
+
     public function index()
     {
         $terminals = AssistTerminal::all();
@@ -27,8 +36,12 @@ class AssistTerminalController extends Controller
 
         $data['created_by'] = auth()->id();
         $data['updated_by'] = auth()->id();
-        $terminal = AssistTerminal::create($data);
-        return response()->json('Terminal registrada.', 200);
+        AssistTerminal::create($data);
+
+
+        $this->auditService->registerAudit('Terminal registrada', 'Se ha registrado una terminal', 'assists', 'create', $request);
+
+        return response()->json('Terminal registrada.');
     }
 
     public function update(Request $request, $id)
@@ -50,7 +63,9 @@ class AssistTerminalController extends Controller
         $data['updated_by'] = auth()->id();
         $terminal->update($data);
 
-        return response()->json('Terminal actualizada.', 200);
+        $this->auditService->registerAudit('Terminal actualizada', 'Se ha actualizado una terminal', 'assists', 'update', $request);
+
+        return response()->json('Terminal actualizada.');
     }
 
     public function delete($id)
@@ -62,6 +77,9 @@ class AssistTerminalController extends Controller
         }
 
         $terminal->delete();
-        return response()->json('Terminal eliminada.', 200);
+
+        $this->auditService->registerAudit('Terminal eliminada', 'Se ha eliminado una terminal', 'assists', 'delete', request());
+
+        return response()->json('Terminal eliminada.');
     }
 }
