@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AssistsController;
 use App\Http\Controllers\AssistTerminalController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,8 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BusinessUnitController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EdaController;
+use App\Http\Controllers\EventAssistController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\ModuleController;
@@ -111,6 +114,14 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     Route::get('settings/branches', [BranchController::class, 'index']);
     Route::get('settings/business-units', [BusinessUnitController::class, 'index']);
+
+    // -------- EVENT ROUTES ---------------------------
+    Route::get('events', [EventController::class, 'index']);
+    Route::get('events/assists', [EventAssistController::class, 'index']);
+
+    // -------- AUDIT ROUTES ---------------------------
+    Route::get('audit', [AuditController::class, 'index']);
+
 
     // routes if no route is found
     Route::fallback(function () {
