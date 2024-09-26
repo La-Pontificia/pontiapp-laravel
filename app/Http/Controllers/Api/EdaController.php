@@ -11,10 +11,19 @@ use App\Models\QuestionnaireAnswer;
 use App\Models\QuestionnaireTemplate;
 use App\Models\User;
 use App\Models\Year;
+use App\services\AuditService;
 use Illuminate\Http\Request;
 
 class EdaController extends Controller
 {
+
+    protected $auditService;
+
+    public function __construct(AuditService $auditService)
+    {
+        $this->auditService = $auditService;
+    }
+
     public function createIndependent(Request $request)
     {
 
@@ -55,6 +64,8 @@ class EdaController extends Controller
             ]);
         }
 
+        $this->auditService->registerAudit('Eda creado', 'Se ha creado un eda', 'edas', 'create', $request);
+
         return response()->json('Eda creado correctamente.', 200);
     }
 
@@ -81,6 +92,8 @@ class EdaController extends Controller
                 'id_eda' => $eda->id,
             ]);
         }
+        $this->auditService->registerAudit('Eda creado', 'Se ha creado un eda', 'edas', 'create', request());
+
 
         return response()->json('Eda creado correctamente.', 200);
     }
@@ -98,6 +111,8 @@ class EdaController extends Controller
         $eda->closed_by = auth()->user()->id;
 
         $eda->save();
+
+        $this->auditService->registerAudit('Eda cerrado', 'Se ha cerrado un eda', 'edas', 'update', $request);
 
         return response()->json('Eda cerrado correctamente. Se habilitó la posibilidad de resolver los cuestionarios asignados.', 200);
     }
@@ -122,6 +137,8 @@ class EdaController extends Controller
         $evaluationArray = [1, 2];
 
         $eda->save();
+
+        $this->auditService->registerAudit('Eda reiniciado', 'Se ha reiniciado un eda', 'edas', 'update', $request);
 
         foreach ($evaluationArray as $evaluation) {
             Evaluation::create([
