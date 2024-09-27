@@ -70,7 +70,7 @@ class UserController extends Controller
                 return response()->json('El supervisor no existe', 400);
 
             //verify level of supervisor
-            if ($supervisor->role_position->job_position->level > $role_position->job_position->level)
+            if ($supervisor->role_position->job_position->level >= $role_position->job_position->level)
                 return response()->json('El jefe inmediato no puede ser de un nivel inferior al usuario', 400);
         }
 
