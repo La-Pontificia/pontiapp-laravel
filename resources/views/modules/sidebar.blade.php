@@ -210,7 +210,7 @@
                 [
                     'icon' => 'fluentui-calculator-multiple-20-o',
                     'text' => 'Terminales (Biometricos)',
-                    'enable' => $cuser->has('assists:terminals') || $cuser->isDev(),
+                    'enable' => $cuser->has('assists:terminals:show') || $cuser->isDev(),
                     'href' => '/assists/terminals',
                     'active' => request()->is('assists/terminals*'),
                     'active-icon' => 'fluentui-calculator-multiple-20',
