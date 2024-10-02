@@ -8,17 +8,16 @@
 
     $query = request()->query('query');
 
-    $queryTerminals = request()->query('assist_terminals')
-        ? explode(',', request()->query('assist_terminals'))
-        : [$terminals->first()->id];
+    $queryTerminals = request()->query('assist_terminals') ? explode(',', request()->query('assist_terminals')) : [];
 
-    $terminalsInQuery = count($queryTerminals) > 0 ? $terminals->whereIn('id', $queryTerminals) : [$terminals->first()];
+    $terminalsInQuery = count($queryTerminals) > 0 ? $terminals->whereIn('id', $queryTerminals) : [];
 
 @endphp
 
 @section('layout.assists')
     <p class="py-2 text-sm">
-        Asistencias sin horario. En este modo solo se muestran las marcaciones en las bases de datos de los terminales.
+        Asistencias sin horario pero con usario del sistema. En este modo solo se muestran las marcaciones en las bases de
+        datos de los terminales y el usuario del sistema.
     </p>
     <div class="space-y-2 flex flex-col h-full overflow-auto">
         <div class="flex-grow dinamic-form-to-params flex items-center flex-wrap gap-4">
