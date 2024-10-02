@@ -55,7 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const redirectToResponse = f.hasAttribute(
                 "data-redirect-to-response"
             );
-            const url = f.action;
+            const windowUrl = new URL(window.location.href);
+            const searchParams = windowUrl.searchParams;
+
+            const url = `${f.action}?${searchParams.toString()}`;
             const method = f.method ?? "POST";
             const redirect = f.getAttribute("data-redirect");
 
