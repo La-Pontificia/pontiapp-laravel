@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AssistsWithoutCalculating;
 use App\Models\Area;
 use App\Models\AssistTerminal;
 use App\Models\Department;
@@ -14,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AssistsController extends Controller
 {
@@ -125,6 +128,8 @@ class AssistsController extends Controller
     public function snSchedules(Request $request, $isExport = false)
     {
 
+        set_time_limit(300);
+
         $terminals = AssistTerminal::all();
         $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
 
@@ -181,6 +186,7 @@ class AssistsController extends Controller
 
         $terminals = AssistTerminal::all();
 
+
         if ($isExport) {
             return $allAssists;
         }
@@ -201,20 +207,20 @@ class AssistsController extends Controller
             ]
         );
     }
+
     public function withoutCalculatingExport(Request $request)
     {
-        $assists = $this->withoutCalculating($request, true);
+        $query = $request->get('query');
+        $customEmail = $request->get('email');
+        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
+        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
+        AssistsWithoutCalculating::dispatch($query, $terminalsIds, $startDate, $endDate, auth()->id(), $customEmail);
 
-        foreach ($assists as $assist) {
-            $assist['user'] = [
-                'first_name' => $assist['user']['first_name'],
-                'last_name' => $assist['user']['last_name'],
-                'dni' => $assist['user']['emp_code'],
-            ];
-        }
-        return $assists;
+        return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $customEmail . ' O tambien ver el archivo en la sección de reportes / descargas');
     }
+
     public function snSchedulesExport(Request $request)
     {
         $assists = $this->snSchedules($request, true);

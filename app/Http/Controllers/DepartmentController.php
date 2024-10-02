@@ -31,7 +31,6 @@ class DepartmentController extends Controller
         if ($query) {
             $match->where('name', 'like', '%' . $query . '%')
                 ->orWhere('code', 'like', '%' . $query . '%')
-                ->get();
         }
 
         $departments = $match->paginate();
