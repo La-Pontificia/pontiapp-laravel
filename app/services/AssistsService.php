@@ -441,35 +441,38 @@ class AssistsService
 
         $assists = collect();
 
-        $users = User::where('dni', 'like', '%' . $query . '%')
-            ->orWhere('first_name', 'like', '%' . $query . '%')
-            ->orWhere('last_name', 'like', '%' . $query . '%')
-            ->get();
-
         foreach ($terminals as $terminal) {
-            $attendanceQuery = (new Attendance())
-                ->setConnection($terminal->database_name)
-                ->whereIn('emp_code', $users->pluck('dni')->toArray())
-                ->whereBetween(DB::raw('CAST(punch_time AS DATE)'), [$startDate, $endDate])
-                ->orderBy('punch_time', 'desc');
+
+            $attendanceQuery = DB::connection($terminal->database_name)
+                ->table('iclock_transaction as it')
+                ->join('personnel_employee as pe', 'it.emp_code', '=', 'pe.emp_code')
+                ->select('it.id', 'it.punch_time', 'it.upload_time', 'pe.emp_code', 'pe.first_name', 'pe.last_name')
+                ->whereBetween(DB::raw('CAST(it.punch_time AS DATE)'), [$startDate, $endDate])
+                ->orderBy('it.punch_time', 'desc');
+
+            if (!empty($query)) {
+                $attendanceQuery->where(function ($q) use ($query) {
+                    $q->where('pe.first_name', 'like', '%' . $query . '%')
+                        ->orWhere('pe.last_name', 'like', '%' . $query . '%')
+                        ->orWhere('pe.emp_code', 'like', '%' . $query . '%');
+                });
+            }
 
             $matched = $attendanceQuery->get();
 
-            $matched->each(function ($item) use (&$assists, $terminal, $users) {
+            $assists = $assists->merge($matched->map(function ($item) use ($terminal) {
                 $punchTime = Carbon::parse($item->punch_time);
-                $assists->push([
+                return [
                     'id' => $item->id,
-
-                    // match to $users
-                    'user' => $users->where('dni', $item->emp_code)->first(),
                     'date' => $punchTime->format('d-m-Y'),
                     'day' => $punchTime->isoFormat('dddd'),
+                    'employee_code' => $item->emp_code,
+                    'employee_name' => $item->first_name . ' ' . $item->last_name,
                     'time' => $punchTime->format('H:i:s'),
                     'sync_date' => Carbon::parse($item->upload_time)->format('d-m-Y H:i:s'),
                     'terminal' => $terminal,
-                    'terminal_id' => $terminal->id,
-                ]);
-            });
+                ];
+            }));
         }
 
         return $assists;
