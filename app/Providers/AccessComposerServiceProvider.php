@@ -254,6 +254,18 @@ class AccessComposerServiceProvider extends ServiceProvider
                     ],
                 ],
                 [
+                    'name' => 'Gestión de reportes',
+                    'items' => [
+                        [
+                            'name' => 'Descargas',
+                            'privileges' => [
+                                'reports:dowloads:my' => 'Ver y descargar mis reportes',
+                                'reports:dowloads:all' => 'Ver y descargar todos los reportes',
+                            ],
+                        ],
+                    ],
+                ],
+                [
                     'name' => 'Ajustes del sistema',
                     'items' => [
                         [
