@@ -155,8 +155,7 @@
                                         <div class="flex items-center gap-2">
                                             <div>
                                                 <p>
-                                                    {{ $assist['user']->first_name }}
-                                                    {{ $assist['user']->last_name }}
+                                                    {{ $assist['employee_name'] }}
                                                 </p>
                                             </div>
                                         </div>
