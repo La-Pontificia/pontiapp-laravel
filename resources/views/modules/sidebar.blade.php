@@ -177,19 +177,20 @@
                     'enable' => $cuser->has('assists:show') || $cuser->isDev(),
                     'active-icon' => 'fluentui-document-text-clock-24',
                 ],
-                // [
-                //     'icon' => 'fluentui-globe-clock-20-o',
-                //     'text' => 'Externas',
-                //     'href' => '/assists/external',
-                //     'active' => request()->is('assists/external*'),
-                //     'active-icon' => 'fluentui-globe-clock-20',
-                // ],
                 [
                     'icon' => 'fluentui-calculator-arrow-clockwise-20-o',
-                    'text' => 'Sin calcular',
+                    'text' => 'Centralizadas (Sin calc)',
                     'enable' => $cuser->has('assists:sn-schedules') || $cuser->isDev(),
                     'href' => '/assists/sn-schedules',
                     'active' => request()->is('assists/sn-schedules*'),
+                    'active-icon' => 'fluentui-calculator-arrow-clockwise-20',
+                ],
+                [
+                    'icon' => 'fluentui-calculator-arrow-clockwise-20-o',
+                    'text' => 'Sin calc',
+                    'enable' => $cuser->has('assists:without-calculating') || $cuser->isDev(),
+                    'href' => '/assists/without-calculating',
+                    'active' => request()->is('assists/without-calculating*'),
                     'active-icon' => 'fluentui-calculator-arrow-clockwise-20',
                 ],
                 // [
