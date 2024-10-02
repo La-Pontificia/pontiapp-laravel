@@ -441,24 +441,27 @@ class AssistsService
 
         $assists = collect();
 
+        $users = User::where('dni', 'like', '%' . $query . '%')
+            ->orWhere('first_name', 'like', '%' . $query . '%')
+            ->orWhere('last_name', 'like', '%' . $query . '%')
+            ->get();
+
         foreach ($terminals as $terminal) {
             $attendanceQuery = (new Attendance())
                 ->setConnection($terminal->database_name)
-                ->whereHas('employee', function ($q) use ($query) {
-                    $q->where('first_name', 'like', '%' . $query . '%')
-                        ->orWhere('last_name', 'like', '%' . $query . '%')
-                        ->orWhere('emp_code', 'like', '%' . $query . '%');
-                })
+                ->whereIn('emp_code', $users->pluck('dni')->toArray())
                 ->whereBetween(DB::raw('CAST(punch_time AS DATE)'), [$startDate, $endDate])
                 ->orderBy('punch_time', 'desc');
 
-            $matched = $attendanceQuery->paginate(20);
+            $matched = $attendanceQuery->get();
 
-            $matched->each(function ($item) use (&$assists, $terminal) {
+            $matched->each(function ($item) use (&$assists, $terminal, $users) {
                 $punchTime = Carbon::parse($item->punch_time);
                 $assists->push([
                     'id' => $item->id,
-                    'user' => $item->employee,
+
+                    // match to $users
+                    'user' => $users->where('dni', $item->emp_code)->first(),
                     'date' => $punchTime->format('d-m-Y'),
                     'day' => $punchTime->isoFormat('dddd'),
                     'time' => $punchTime->format('H:i:s'),
