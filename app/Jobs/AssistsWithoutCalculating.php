@@ -74,8 +74,7 @@ class AssistsWithoutCalculating implements ShouldQueue
                 return [
                     'id' => $item->id,
                     'date' => $punchTime->format('d-m-Y'),
-                    // 'day' => $punchTime->isoFormat('dddd'),
-                    'day' => '',
+                    'day' => $punchTime->isoFormat('dddd'),
                     'employee_code' => $item->emp_code,
                     'employee_name' => $item->first_name . ' ' . $item->last_name,
                     'time' => $punchTime->format('H:i:s'),
