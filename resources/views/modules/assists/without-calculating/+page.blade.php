@@ -157,6 +157,9 @@
                                                 <p>
                                                     {{ $assist['employee_name'] }}
                                                 </p>
+                                                <p class="text-sm opacity-80">
+                                                    {{ $assist['employee_code'] }}
+                                                </p>
                                             </div>
                                         </div>
                                     </td>
