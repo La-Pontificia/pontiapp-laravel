@@ -75,13 +75,50 @@
                 <button type="submit" class="primary mt-2 filter-button">Filtrar</button>
             </form>
 
-            <button {{ $assists->count() === 0 ? 'disabled' : '' }} type="button" id="export-assists-without-calculating"
+            {{-- <button {{ $assists->count() === 0 ? 'disabled' : '' }} type="button" id="export-assists-without-calculating"
                 class="secondary mt-6">
                 @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
                 <span>
                     Exportar
                 </span>
+            </button> --}}
+
+            <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="secondary mt-6">
+                @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
+                <span>
+                    Exportar
+                </span>
             </button>
+            <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                <div class="content lg:max-w-lg max-w-full">
+                    <header>
+                        Generar reporte
+                    </header>
+                    <form action="/api/assists/without-calculating/report" method="POST" id="dialog-form"
+                        class="dinamic-form body grid gap-4">
+                        <label class="label">
+                            <span>
+                                Ingresa un correo para notificar cuando el reporte esté listo
+                            </span>
+                            <input type="email" name="email" placeholder="" required value={{ $cuser->email }}>
+                        </label>
+                        <p class="text-sm">
+                            El reporte se generará con los filtros actuales. y se enviará al correo ingresado o tambien una
+                            vez generado puedes descargarlo directamente desde <a href="/reports/downloads"
+                                class="text-blue-500 hover:underline" target="_blank">
+                                Aquí
+                            </a>
+                        </p>
+                    </form>
+                    <footer>
+                        <button data-modal-hide="dialog" type="button">Cancelar</button>
+                        <button form="dialog-form" type="submit">
+                            Generar
+                        </button>
+                    </footer>
+                </div>
+            </div>
+
         </div>
         <nav class="flex items-center gap-2 px-2">
             @foreach ($terminalsInQuery as $term)
