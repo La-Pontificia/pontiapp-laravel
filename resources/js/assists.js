@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $peerUser = $("#button-export-assists-peer-user");
     const $centralized = $("#button-export-assists-centralized");
     const $snSchedules = $("#export-assists-sn-schedules");
+    const $withoutCalculating = $("#export-assists-without-calculating");
+
     const $checkServer = $("#check-server");
     const $errorServer = $("#error-server");
 
@@ -293,6 +295,95 @@ document.addEventListener("DOMContentLoaded", async () => {
                 $snSchedules.disabled = false;
                 $snSchedules.classList.remove("animation-pulse");
                 $snSchedules.querySelector("span").innerText = "Exportar";
+            }
+        };
+    }
+
+    if ($withoutCalculating) {
+        $withoutCalculating.onclick = async () => {
+            $withoutCalculating.disabled = true;
+            $withoutCalculating.classList.add("animation-pulse");
+            $withoutCalculating.querySelector("span").innerText = "Espere...";
+
+            try {
+                const url = new URL(window.location.href);
+                const searchParams = url.searchParams;
+
+                const assists = await window.query(
+                    `/api/assists/without-calculating/export?${searchParams.toString()}`
+                );
+
+                const workbook = new ExcelJS.Workbook();
+                const response = await fetch(
+                    "/templates/without-calculating.xlsx"
+                );
+                const arrayBuffer = await response.arrayBuffer();
+
+                if (!arrayBuffer) return;
+
+                await workbook.xlsx.load(arrayBuffer);
+                const worksheet = workbook.getWorksheet("Asistencias");
+
+                let rr = 4;
+
+                assists.forEach((assist, ii) => {
+                    const index = ii + 1 < 10 ? `0${ii + 1}` : ii + 1;
+                    const row = worksheet.getRow(rr);
+                    rr++;
+
+                    row.getCell(2).value = index;
+                    row.getCell(3).value = assist.user.emp_code ?? "";
+                    row.getCell(4).value =
+                        assist.user.first_name + " " + assist.user.last_name;
+                    row.getCell(5).value = assist.date;
+
+                    if (assist.date) {
+                        row.getCell(5).numFmt = "dd/mm/yyyy";
+                    }
+
+                    row.getCell(6).value = assist.day;
+                    row.getCell(7).value = assist.terminal.name;
+                    row.getCell(8).value = assist.time;
+                    row.getCell(8).numFmt = "hh:mm:ss";
+                    row.getCell(9).value = assist.sync_date;
+                });
+
+                worksheet.columns.forEach((column) => {
+                    let maxLength = 0;
+                    column.eachCell({ includeEmpty: true }, (cell) => {
+                        const cellValue = cell.value
+                            ? cell.value.toString()
+                            : "";
+                        maxLength = Math.max(maxLength, cellValue.length);
+                    });
+                    column.width = maxLength < 10 ? 10 : maxLength + 2;
+                });
+
+                const filename = `Asistencias sin calcular ${moment().format(
+                    "YYYY-MM-DD"
+                )}`;
+
+                const buffer = await workbook.xlsx.writeBuffer();
+
+                const blob = new Blob([buffer], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = filename + ".xlsx";
+                link.click();
+            } catch (error) {
+                console.error(error);
+                window.alert(
+                    "Error",
+                    "Ocurrió un error al exportar las asistencias"
+                );
+            } finally {
+                $withoutCalculating.disabled = false;
+                $withoutCalculating.classList.remove("animation-pulse");
+                $withoutCalculating.querySelector("span").innerText =
+                    "Exportar";
             }
         };
     }
