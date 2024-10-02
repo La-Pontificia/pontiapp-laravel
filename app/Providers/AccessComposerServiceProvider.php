@@ -110,16 +110,22 @@ class AccessComposerServiceProvider extends ServiceProvider
                     'name' => 'Gestión Asistencias',
                     'items' => [
                         [
-                            'name' => 'Asistencias',
+                            'name' => 'Asistencias centralizadas',
                             'privileges' => [
                                 'assists:show' => 'Ver asistencias',
                                 'assists:export' => 'Export asistencias',
                             ],
                         ],
                         [
-                            'name' => 'Asistencias sin calcular',
+                            'name' => 'Asistencias centralizadas sin calcular',
                             'privileges' => [
                                 'assists:sn-schedules' => 'Acceso completo',
+                            ],
+                        ],
+                        [
+                            'name' => 'Asistencias sin calcular',
+                            'privileges' => [
+                                'assists:without-calculating' => 'Acceso completo',
                             ],
                         ],
                         [
