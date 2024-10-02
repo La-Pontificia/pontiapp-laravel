@@ -254,6 +254,23 @@
             'enable' => $cuser->hasGroup('audit') || $cuser->isDev(),
         ],
         [
+            'icon' => 'fluentui-data-bar-vertical-add-20-o',
+            'text' => 'Gestión Reportes',
+            'href' => '/reports',
+            'active' => request()->is('reports*'),
+            'active-icon' => 'fluentui-data-bar-vertical-add-20',
+            'enable' => $cuser->hasGroup('reports') || $cuser->isDev(),
+            'subItems' => [
+                [
+                    'icon' => 'fluentui-document-table-20-o',
+                    'text' => 'Descargas',
+                    'href' => '/reports/downloads',
+                    'active' => request()->is('reports/downloads'),
+                    'active-icon' => 'fluentui-document-table-20',
+                ],
+            ],
+        ],
+        [
             'icon' => 'fluentui-apps-16-o',
             'text' => 'Ajustes y mantenimiento',
             'href' => '/settings',
