@@ -456,21 +456,21 @@ class AssistsService
                 });
             }
 
-            $matched = $attendanceQuery->paginate(10);
+            $matched = $query ? $attendanceQuery->get() : $attendanceQuery->paginate(5);
 
-            $matched->each(function ($item) use (&$assists, $terminal) {
+            $assists = $assists->merge($matched->map(function ($item) use ($terminal) {
                 $punchTime = Carbon::parse($item->punch_time);
-                $assists->push([
+                return [
                     'id' => $item->id,
-                    'employee_name' => $item->employee->first_name . ' ' . $item->employee->last_name,
                     'date' => $punchTime->format('d-m-Y'),
                     'day' => $punchTime->isoFormat('dddd'),
+                    'employee_code' => $item->employee->emp_code,
+                    'employee_name' => $item->employee->first_name . ' ' . $item->employee->last_name,
                     'time' => $punchTime->format('H:i:s'),
                     'sync_date' => Carbon::parse($item->upload_time)->format('d-m-Y H:i:s'),
                     'terminal' => $terminal,
-                    'terminal_id' => $terminal->id,
-                ]);
-            });
+                ];
+            }));
         }
 
         return $assists;
