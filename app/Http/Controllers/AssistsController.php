@@ -162,6 +162,59 @@ class AssistsController extends Controller
         );
     }
 
+    public function withoutCalculating(Request $request, $isExport = false)
+    {
+
+        $terminals = AssistTerminal::all();
+        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
+
+        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $query = $request->get('query');
+
+        $assists = Collect([]);
+        $perPage = 25;
+        $currentPage = $request->get('page', 1);
+
+        $allAssists = $this->assistsService->assistsSnUser($query, $terminalsIds, $startDate, $endDate, $isExport);
+        $assists = $allAssists->forPage($currentPage, $perPage);
+
+        $terminals = AssistTerminal::all();
+
+        if ($isExport) {
+            return $allAssists;
+        }
+
+        $paginatedAssists = new LengthAwarePaginator(
+            $assists,
+            isset($allAssists) ? $allAssists->count() : 0,
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view(
+            'modules.assists.without-calculating.+page',
+            [
+                'terminals' => $terminals,
+                'assists' => $paginatedAssists
+            ]
+        );
+    }
+    public function withoutCalculatingExport(Request $request)
+    {
+        $assists = $this->withoutCalculating($request, true);
+
+
+        foreach ($assists as $assist) {
+            $assist['user'] = [
+                'first_name' => $assist['user']['first_name'],
+                'last_name' => $assist['user']['last_name'],
+                'dni' => $assist['user']['emp_code'],
+            ];
+        }
+        return $assists;
+    }
     public function snSchedulesExport(Request $request)
     {
         $assists = $this->snSchedules($request, true);
