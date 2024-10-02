@@ -18,6 +18,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\QuestionnaireTemplateController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SettingController;
@@ -123,6 +124,10 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // -------- AUDIT ROUTES ---------------------------
     Route::get('audit', [AuditController::class, 'index']);
+
+    // -------- REPORT ROUTES ---------------------------
+    Route::get('reports', [ReportController::class, 'index']);
+    Route::get('reports/downloads', [ReportController::class, 'downloads']);
 
 
     // routes if no route is found
