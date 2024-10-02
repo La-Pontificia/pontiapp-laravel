@@ -203,7 +203,7 @@ class AssistsController extends Controller
             'modules.assists.without-calculating.+page',
             [
                 'terminals' => $terminals,
-                'assists' => $paginatedAssists
+                'assists' => $paginatedAssists,
             ]
         );
     }
