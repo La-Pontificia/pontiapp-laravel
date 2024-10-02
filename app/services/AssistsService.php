@@ -344,8 +344,6 @@ class AssistsService
             foreach ($terminalsIds as $terminalId) {
                 $terminals[] = AssistTerminal::find($terminalId);
             }
-        } else {
-            $terminals = AssistTerminal::limit(1)->get();
         }
 
         $assists = Collect([]);
@@ -381,6 +379,55 @@ class AssistsService
                 $assists[] = [
                     'id' => $item->id,
                     'user' => $user,
+                    'date' => Carbon::parse($item->punch_time)->format('d-m-Y'),
+                    'day' => Carbon::parse($item->punch_time)->isoFormat('dddd'),
+                    'time' => Carbon::parse($item->punch_time)->format('H:i:s'),
+                    'sync_date' => Carbon::parse($item->upload_time)->format('d-m-Y H:i:s'),
+                    'terminal' => $terminal,
+                    'terminal_id' => $terminal->id,
+                    'day' => Carbon::parse($item->punch_time)->isoFormat('dddd'),
+                    'date' => Carbon::parse($item->punch_time)->format('d-m-Y'),
+                ];
+            }
+        }
+
+
+        return $assists;
+    }
+
+    public static function assistsSnUser($query, $terminalsIds, $startDate, $endDate, $isExport = false)
+    {
+
+        $terminals = [];
+
+        if (count($terminalsIds) > 0) {
+            foreach ($terminalsIds as $terminalId) {
+                $terminals[] = AssistTerminal::find($terminalId);
+            }
+        }
+
+        $assists = Collect([]);
+
+        foreach ($terminals as $terminal) {
+
+            $match = (new Attendance())
+                ->setConnection($terminal->database_name)
+                ->whereHas('employee', function ($q) use ($query) {
+                    $q->where('first_name', 'like', '%' . $query . '%')
+                        ->orWhere('last_name', 'like', '%' . $query . '%')
+                        ->orWhere('emp_code', 'like', '%' . $query . '%');
+                })
+                ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
+                ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+                ->orderBy('punch_time', 'desc');
+
+            $matched = [];
+            $matched = $match->get();
+
+            foreach ($matched as $item) {
+                $assists[] = [
+                    'id' => $item->id,
+                    'user' => $item->employee,
                     'date' => Carbon::parse($item->punch_time)->format('d-m-Y'),
                     'day' => Carbon::parse($item->punch_time)->isoFormat('dddd'),
                     'time' => Carbon::parse($item->punch_time)->format('H:i:s'),
