@@ -167,7 +167,7 @@ class AssistsController extends Controller
         );
     }
 
-    public function withoutCalculating(Request $request, $isExport = false)
+    public function withoutCalculating(Request $request)
     {
 
         $terminals = AssistTerminal::all();
@@ -181,15 +181,10 @@ class AssistsController extends Controller
         $perPage = 25;
         $currentPage = $request->get('page', 1);
 
-        $allAssists = $this->assistsService->assistsSnUser($query, $terminalsIds, $startDate, $endDate, $isExport);
+        $allAssists = $this->assistsService->assistsSnUser($query, $terminalsIds, $startDate, $endDate);
         $assists = $allAssists->forPage($currentPage, $perPage);
 
         $terminals = AssistTerminal::all();
-
-
-        if ($isExport) {
-            return $allAssists;
-        }
 
         $paginatedAssists = new LengthAwarePaginator(
             $assists,
