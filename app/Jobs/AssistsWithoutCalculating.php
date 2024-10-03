@@ -48,32 +48,6 @@ class AssistsWithoutCalculating implements ShouldQueue
     {
         $terminals = AssistTerminal::whereIn('id', $this->terminalsIds)->get();
 
-        // try {
-
-        // } catch (\Exception $e) {
-        //     // Manejar el error
-        //     $errorMessage = $e->getMessage();
-
-        //     // Actualizar el registro del informe en caso de error
-        //     Report::create([
-        //         'title' => null,
-        //         'file_url' => null, // No hay archivo si ocurre un error
-        //         'download_link' => null,
-        //         'file_name' => null,
-        //         'status' => 'error', // Establecer el estado a error
-        //         'time' => now(),
-        //         'generated_by' => $this->userId,
-        //         'error_message' => $errorMessage, // Mensaje de error
-        //     ]);
-
-        //     $email = $this->customEmail;
-        //     Mail::raw('Se produjo un error al generar el reporte de Asistencias: ' . $errorMessage, function ($message) use ($email) {
-        //         $message->to($email)
-        //             ->subject('Error al Generar Reporte de Asistencias');
-        //     });
-
-        //     throw $e;
-        // }
         $assists = collect();
 
         foreach ($terminals as $terminal) {
