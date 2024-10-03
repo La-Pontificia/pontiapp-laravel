@@ -131,7 +131,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // assists routes
 
     Route::get('assists/export', [AssistsController::class, 'peerScheduleExport']);
-    Route::get('assists/sn-schedules/export', [AssistsController::class, 'snSchedulesExport']);
+    Route::post('assists/sn-schedules/report', [AssistsController::class, 'snSchedulesReport']);
     Route::post('assists/without-calculating/report', [AssistsController::class, 'withoutCalculatingExport']);
 
     Route::get('assists/peer-user/{id}/export', [AssistsController::class, 'peerUserExport']);
