@@ -52,13 +52,18 @@ document.addEventListener("DOMContentLoaded", function () {
         f.addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(f);
+
+            const addParams = f.hasAttribute("data-add-params");
+
             const redirectToResponse = f.hasAttribute(
                 "data-redirect-to-response"
             );
             const windowUrl = new URL(window.location.href);
             const searchParams = windowUrl.searchParams;
 
-            const url = `${f.action}?${searchParams.toString()}`;
+            const url = addParams
+                ? `${f.action}?${searchParams.toString()}`
+                : f.action;
             const method = f.method ?? "POST";
             const redirect = f.getAttribute("data-redirect");
 
