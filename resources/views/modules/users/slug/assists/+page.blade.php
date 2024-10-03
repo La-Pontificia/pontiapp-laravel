@@ -20,7 +20,7 @@
                 </p>
                 <div class="p-1 flex items-end">
                     <form class="flex-grow dinamic-form-to-params flex items-center flex-wrap gap-4">
-                        <div id="date-range" class="flex items-center gap-2">
+                        <div class="flex date-range items-center gap-2">
                             <label class="label">
                                 <span>Desde</span>
                                 <input class="w-[100px] bg-white" readonly type="text" name="start" placeholder="-">
