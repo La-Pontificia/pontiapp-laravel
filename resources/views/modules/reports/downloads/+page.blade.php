@@ -68,11 +68,11 @@
                         </svg>
                         <div class="flex-grow">
                             <p>
-                                {{ $report->title }} <span class="text-xs text-blue-600">
+                                {{ $report->title }} <span class="text-sm text-blue-600">
                                     Hace {{ $report->created_at->diffForHumans() }}
                                 </span>
                             </p>
-                            <p class="text-xs opacity-60">
+                            <p class="text-sm">
                                 Generado por {{ $report->generatedBy->names() }} el
                                 {{ $report->created_at->format('d/m/Y') }}
                             </p>
