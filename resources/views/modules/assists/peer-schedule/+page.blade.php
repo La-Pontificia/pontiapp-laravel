@@ -27,7 +27,7 @@
                             {{ $g->name }}</option>
                     @endforeach
                 </select>
-                <div id="date-range" class="flex items-center gap-1">
+                <div class="flex date-range items-center gap-1">
                     <input class="w-[100px]" readonly {{ $start ? "data-default=$start" : '' }} type="text"
                         name="start" placeholder="-">
                     <span>a</span>
