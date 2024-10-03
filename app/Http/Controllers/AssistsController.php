@@ -177,7 +177,7 @@ class AssistsController extends Controller
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
         $query = $request->get('query');
 
-        $assists = Collect([]);
+        $assists = Collect();
         $perPage = 25;
         $currentPage = $request->get('page', 1);
 
