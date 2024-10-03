@@ -338,14 +338,8 @@ class AssistsService
     public static function assists($query, $terminalsIds, $startDate, $endDate, $isExport = false)
     {
 
-        $terminals = [];
+        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
         $users = User::all();
-
-        if (count($terminalsIds) > 0) {
-            foreach ($terminalsIds as $terminalId) {
-                $terminals[] = AssistTerminal::find($terminalId);
-            }
-        }
 
         $assists = Collect([]);
 
@@ -394,8 +388,7 @@ class AssistsService
 
     public static function assistsSnUser($query, $terminalsIds, $startDate, $endDate)
     {
-        // $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
-        $terminals = AssistTerminal::limit(1)->get();
+        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
 
         $assists = collect();
 
