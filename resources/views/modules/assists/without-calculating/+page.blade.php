@@ -176,10 +176,10 @@
                                     </td>
                                     <td>
                                         <div>
-                                            <span class="block"> {{ $assist['terminal']->name }} </span>
+                                            <span class="block"> {{ $assist['terminal_name'] }} </span>
                                             <p class="flex items-center gap-2">
                                                 @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
-                                                <span class="text-sm font-normal"> {{ $assist['terminal']->database_name }}
+                                                <span class="text-sm font-normal"> {{ $assist['terminal_database'] }}
                                                 </span>
                                             </p>
                                         </div>
