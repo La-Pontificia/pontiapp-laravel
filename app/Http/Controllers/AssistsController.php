@@ -206,10 +206,15 @@ class AssistsController extends Controller
     public function withoutCalculatingExport(Request $request)
     {
         $query = $request->get('query');
+        $estrategy = $request->get('estrategy', 'body');
+
+        $isParams = $estrategy === 'params';
+
         $customEmail = $request->get('email');
-        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
+        $terminalsIds = $isParams ? ($request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : []) : $request->input('assist_terminals', []);
         $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+
 
         AssistsWithoutCalculating::dispatch($query, $terminalsIds, $startDate, $endDate, auth()->id(), $customEmail);
 
