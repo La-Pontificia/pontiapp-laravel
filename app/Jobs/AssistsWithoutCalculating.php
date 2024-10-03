@@ -48,104 +48,133 @@ class AssistsWithoutCalculating implements ShouldQueue
     {
         $terminals = AssistTerminal::whereIn('id', $this->terminalsIds)->get();
 
-        $assists = collect();
+        try {
+            $assists = collect();
 
-        foreach ($terminals as $terminal) {
+            foreach ($terminals as $terminal) {
 
-            $attendanceQuery = DB::connection($terminal->database_name)
-                ->table('iclock_transaction as it')
-                ->join('personnel_employee as pe', 'it.emp_code', '=', 'pe.emp_code')
-                ->select('it.id', 'it.punch_time', 'it.upload_time', 'pe.emp_code', 'pe.first_name', 'pe.last_name')
-                ->whereBetween(DB::raw('CAST(it.punch_time AS DATE)'), [$this->startDate, $this->endDate])
-                ->orderBy('it.punch_time', 'desc');
+                $attendanceQuery = DB::connection($terminal->database_name)
+                    ->table('iclock_transaction as it')
+                    ->join('personnel_employee as pe', 'it.emp_code', '=', 'pe.emp_code')
+                    ->select('it.id', 'it.punch_time', 'it.upload_time', 'pe.emp_code', 'pe.first_name', 'pe.last_name')
+                    ->whereBetween(DB::raw('CAST(it.punch_time AS DATE)'), [$this->startDate, $this->endDate])
+                    ->orderBy('it.punch_time', 'desc');
 
-            if (!empty($this->query)) {
-                $attendanceQuery->where(function ($q) {
-                    $q->where('pe.first_name', 'like', '%' . $this->query . '%')
-                        ->orWhere('pe.last_name', 'like', '%' . $this->query . '%')
-                        ->orWhere('pe.emp_code', 'like', '%' . $this->query . '%');
-                });
+                if (!empty($this->query)) {
+                    $attendanceQuery->where(function ($q) {
+                        $q->where('pe.first_name', 'like', '%' . $this->query . '%')
+                            ->orWhere('pe.last_name', 'like', '%' . $this->query . '%')
+                            ->orWhere('pe.emp_code', 'like', '%' . $this->query . '%');
+                    });
+                }
+
+                $matched = $attendanceQuery->get();
+
+                $assists = $assists->merge($matched->map(function ($item) use ($terminal) {
+                    $punchTime = Carbon::parse($item->punch_time);
+                    return [
+                        'id' => $item->id,
+                        'date' => $punchTime->format('d-m-Y'),
+                        'day' => $punchTime->isoFormat('dddd'),
+                        'employee_code' => $item->emp_code,
+                        'employee_name' => $item->first_name . ' ' . $item->last_name,
+                        'time' => $punchTime->format('H:i:s'),
+                        'sync_date' => Carbon::parse($item->upload_time)->format('d-m-Y H:i:s'),
+                        'terminal' => $terminal,
+                    ];
+                }));
             }
 
-            $matched = $attendanceQuery->get();
-
-            $assists = $assists->merge($matched->map(function ($item) use ($terminal) {
-                $punchTime = Carbon::parse($item->punch_time);
-                return [
-                    'id' => $item->id,
-                    'date' => $punchTime->format('d-m-Y'),
-                    'day' => $punchTime->isoFormat('dddd'),
-                    'employee_code' => $item->emp_code,
-                    'employee_name' => $item->first_name . ' ' . $item->last_name,
-                    'time' => $punchTime->format('H:i:s'),
-                    'sync_date' => Carbon::parse($item->upload_time)->format('d-m-Y H:i:s'),
-                    'terminal' => $terminal,
-                ];
-            }));
-        }
-
-        // Agrupar los datos primero por terminal, luego por DNI y luego por fecha
-        $groupedAssists = $assists->groupBy(function ($assist) {
-            return $assist['terminal']->id; // Agrupar por terminal
-        })->map(function ($group) {
-            return $group->groupBy('employee_code')->map(function ($subGroup) {
-                return $subGroup->groupBy('date');
+            // Agrupar los datos primero por terminal, luego por DNI y luego por fecha
+            $groupedAssists = $assists->groupBy(function ($assist) {
+                return $assist['terminal']->id; // Agrupar por terminal
+            })->map(function ($group) {
+                return $group->groupBy('employee_code')->map(function ($subGroup) {
+                    return $subGroup->groupBy('date');
+                });
             });
-        });
 
-        // Cargar la plantilla de Excel
-        $spreadsheet = IOFactory::load(public_path('templates/without-calculating.xlsx'));
-        $worksheet = $spreadsheet->getActiveSheet();
+            // Cargar la plantilla de Excel
+            $spreadsheet = IOFactory::load(public_path('templates/without-calculating.xlsx'));
+            $worksheet = $spreadsheet->getActiveSheet();
 
-        // Iniciar en la fila 4 para llenar los datos
-        $rr = 4;
+            // Iniciar en la fila 4 para llenar los datos
+            $rr = 4;
 
-        foreach ($groupedAssists as $terminalId => $employees) {
+            foreach ($groupedAssists as $terminalId => $employees) {
 
-            foreach ($employees as $employeeCode => $dates) {
-                foreach ($dates as $date => $assists) {
-                    foreach ($assists as $assist) {
-                        $worksheet->setCellValue('B' . $rr, $rr - 3); // Número de asistencia
-                        $worksheet->setCellValue('C' . $rr, $assist['terminal']->name);
-                        $worksheet->setCellValue('D' . $rr, $assist['employee_code'] ?? "");
-                        $worksheet->setCellValue('E' . $rr, $assist['employee_name'] ?? "");
-                        $worksheet->setCellValue('F' . $rr, \PhpOffice\PhpSpreadsheet\Shared\Date::stringToExcel($assist['date']));
-                        $worksheet->getStyle('F' . $rr)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-                        $worksheet->setCellValue('G' . $rr, $assist['day']);
-                        $worksheet->setCellValue('H' . $rr, $assist['time']);
-                        $worksheet->getStyle('H' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        $worksheet->setCellValue('I' . $rr, $assist['sync_date']);
-                        $rr++;
+                foreach ($employees as $employeeCode => $dates) {
+                    foreach ($dates as $date => $assists) {
+                        foreach ($assists as $assist) {
+                            $worksheet->setCellValue('B' . $rr, $rr - 3); // Número de asistencia
+                            $worksheet->setCellValue('C' . $rr, $assist['terminal']->name);
+                            $worksheet->setCellValue('D' . $rr, $assist['employee_code'] ?? "");
+                            $worksheet->setCellValue('E' . $rr, $assist['employee_name'] ?? "");
+                            $worksheet->setCellValue('F' . $rr, \PhpOffice\PhpSpreadsheet\Shared\Date::stringToExcel($assist['date']));
+                            $worksheet->getStyle('F' . $rr)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+                            $worksheet->setCellValue('G' . $rr, $assist['day']);
+                            $worksheet->setCellValue('H' . $rr, $assist['time']);
+                            $worksheet->getStyle('H' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                            $worksheet->setCellValue('I' . $rr, $assist['sync_date']);
+                            $rr++;
+                        }
                     }
                 }
             }
+
+            // Ajustar el ancho de las columnas
+            foreach (range('B', 'I') as $columnID) {
+                $worksheet->getColumnDimension($columnID)->setAutoSize(true);
+            }
+
+            // Guardar el archivo Excel
+            $fileName = 'Asistencias_sin_calcular_' . now()->timestamp . '.xlsx';
+            $filePath = 'files/reports/' . $fileName;
+            $downloadLink = asset($filePath);
+
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save(public_path($filePath));
+
+            $email = $this->customEmail;
+            Mail::raw('Hola, el reporte de Asistencias ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, function ($message) use ($email) {
+                $message->to($email)
+                    ->subject('Reporte de Asistencias Generado');
+            });
+
+            $fileSize = Storage::size($filePath);
+
+            Report::create([
+                'title' => 'Asistencias sin calcular',
+                'file_url' => Storage::url($filePath),
+                'download_link' => $downloadLink,
+                'file_name' => $fileName,
+                'status' => 'completed',
+                'file_size' => $fileSize,
+                'generated_by' => $this->userId,
+            ]);
+        } catch (\Exception $e) {
+            // Manejar el error
+            $errorMessage = $e->getMessage();
+
+            // Actualizar el registro del informe en caso de error
+            Report::create([
+                'title' => null,
+                'file_url' => null, // No hay archivo si ocurre un error
+                'download_link' => null,
+                'file_name' => null,
+                'status' => 'error', // Establecer el estado a error
+                'time' => now(),
+                'generated_by' => $this->userId,
+                'error_message' => $errorMessage, // Mensaje de error
+            ]);
+
+            $email = $this->customEmail;
+            Mail::raw('Se produjo un error al generar el reporte de Asistencias: ' . $errorMessage, function ($message) use ($email) {
+                $message->to($email)
+                    ->subject('Error al Generar Reporte de Asistencias');
+            });
+
+            throw $e;
         }
-
-        // Ajustar el ancho de las columnas
-        foreach (range('B', 'I') as $columnID) {
-            $worksheet->getColumnDimension($columnID)->setAutoSize(true);
-        }
-
-        // Guardar el archivo Excel
-        $fileName = 'Asistencias_sin_calcular_' . now()->timestamp . '.xlsx';
-        $filePath = 'files/reports/' . $fileName;
-        $downloadLink = asset($filePath);
-
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save(public_path($filePath));
-
-        $email = $this->customEmail;
-        Mail::raw('Hola, el reporte de Asistencias ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, function ($message) use ($email) {
-            $message->to($email)
-                ->subject('Reporte de Asistencias Generado');
-        });
-
-        Report::create([
-            'title' => 'Asistencias sin calcular',
-            'file_url' => Storage::url($filePath),
-            'download_link' => $downloadLink,
-            'file_name' => $fileName,
-            'generated_by' => $this->userId,
-        ]);
     }
 }
