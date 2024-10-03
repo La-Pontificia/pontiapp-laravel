@@ -33,7 +33,7 @@
                     </select>
                 </label>
 
-                <div id="date-range" class="flex items-center gap-1">
+                <div class="flex date-range items-center gap-1">
                     <label for="">
                         <span class="block">Desde:</span>
                         <input class="w-[100px] bg-white" readonly {{ $start ? "data-default=$start" : '' }} type="text"
