@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AssistsSnSchedules;
 use App\Jobs\AssistsWithoutCalculating;
 use App\Models\Area;
 use App\Models\AssistTerminal;
@@ -221,21 +222,23 @@ class AssistsController extends Controller
         return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $customEmail . ' O tambien ver el archivo en la sección de reportes / descargas');
     }
 
-    public function snSchedulesExport(Request $request)
+    public function snSchedulesReport(Request $request)
     {
-        $assists = $this->snSchedules($request, true);
+
+        $estrategy = $request->get('estrategy', 'body');
+
+        $isParams = $estrategy === 'params';
+        $customEmail = $request->get('email');
+        $terminalsIds = $isParams ? ($request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : []) : $request->input('assist_terminals', []);
+
+        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
+        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $query = $request->get('query');
 
 
-        foreach ($assists as $assist) {
-            $assist['user'] = [
-                'first_name' => $assist['user']['first_name'],
-                'last_name' => $assist['user']['last_name'],
-                'dni' => $assist['user']['dni'],
-                'job' => $assist['user']->role_position->job_position->name,
-                'role' => $assist['user']->role_position->name,
-            ];
-        }
-        return $assists;
+        AssistsSnSchedules::dispatch($query, $terminalsIds, $startDate, $endDate, $customEmail, auth()->id());
+
+        return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $customEmail . ' O tambien ver el archivo en la sección de reportes / descargas');
     }
 
     public function peerSchedule(Request $request, $isExport = false)
