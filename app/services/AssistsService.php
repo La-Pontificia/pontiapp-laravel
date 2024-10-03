@@ -339,7 +339,16 @@ class AssistsService
     {
 
         $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
-        $users = User::all();
+        $users = null;
+
+        if ($query) {
+            User::where('first_name', 'like', '%' . $query . '%')
+                ->orWhere('last_name', 'like', '%' . $query . '%')
+                ->orWhere('dni', 'like', '%' . $query . '%')
+                ->get();
+        } else {
+            $users = User::all();
+        }
 
         $assists = Collect([]);
 
@@ -349,13 +358,7 @@ class AssistsService
 
             $match = (new Attendance())
                 ->setConnection($terminal->database_name)
-                ->whereHas('employee', function ($q) use ($query) {
-                    $q->where('first_name', 'like', '%' . $query . '%')
-                        ->orWhere('last_name', 'like', '%' . $query . '%')
-                        ->orWhere('emp_code', 'like', '%' . $query . '%');
-                })
-                ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
-                ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
+                ->whereBetween(DB::raw('CAST(punch_time AS DATE)'), [$startDate, $endDate])
                 ->whereIn('emp_code', $userDnis)
                 ->orderBy('punch_time', 'desc');
 
