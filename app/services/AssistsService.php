@@ -415,7 +415,7 @@ class AssistsService
                 });
             }
 
-            $matched = $query ? $attendanceQuery->get() : $attendanceQuery->paginate(10);
+            $matched = !empty($query) ? $attendanceQuery->get() : $attendanceQuery->paginate(10);
 
             $assists = $assists->merge($matched->map(function ($item) use ($terminal) {
                 $punchTime = Carbon::parse($item->punch_time);
