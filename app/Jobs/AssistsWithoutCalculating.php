@@ -141,15 +141,12 @@ class AssistsWithoutCalculating implements ShouldQueue
                     ->subject('Reporte de Asistencias Generado');
             });
 
-            $fileSize = Storage::size($filePath);
-
             Report::create([
                 'title' => 'Asistencias sin calcular',
                 'file_url' => Storage::url($filePath),
                 'download_link' => $downloadLink,
                 'file_name' => $fileName,
                 'status' => 'completed',
-                'file_size' => $fileSize,
                 'generated_by' => $this->userId,
             ]);
         } catch (\Exception $e) {
