@@ -91,10 +91,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // PL Andahuaylas
@@ -110,10 +107,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // PL Casuarina
@@ -129,10 +123,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // PL Cybernet
@@ -148,10 +139,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
 
@@ -168,10 +156,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // RH Alameda
@@ -187,10 +172,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // RH Andahuaylas
@@ -206,10 +188,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // RH Casuarina
@@ -225,10 +204,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // PL Cybernet
@@ -244,10 +220,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
         // RH Jazmines
@@ -263,10 +236,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'no',
-            'options'   => [
-                PDO::ATTR_PERSISTENT => true, // Activa conexiones persistentes
-            ],
+            'encrypt' => 'no'
         ],
 
     ],
