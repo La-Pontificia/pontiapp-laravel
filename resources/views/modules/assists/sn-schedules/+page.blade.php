@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <label class="relative ml-auto w-[200px] max-w-full">
+                <label class="relative w-[200px] max-w-full">
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
                         @svg('fluentui-search-28-o', 'w-5 h-5')
                     </div>
@@ -76,13 +76,94 @@
                 <button type="submit" class="primary mt-2 filter-button">Filtrar</button>
             </form>
 
-            <button {{ $assists->count() === 0 ? 'disabled' : '' }} type="button" id="export-assists-sn-schedules"
-                class="secondary mt-6">
+            <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="secondary mt-6">
                 @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
                 <span>
-                    Exportar
+                    Generar reporte
                 </span>
             </button>
+            <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                <div style="overflow-y: unset" class="content lg:max-w-lg max-w-full">
+                    <header>
+                        Generar reporte
+                    </header>
+                    <form action="/api/assists/sn-schedules/report" method="POST" id="dialog-form"
+                        class="dinamic-form body grid gap-4">
+                        <div class="flex flex-col gap-4 pb-5">
+                            <div class="grid grid-cols-2 date-range items-center gap-4">
+                                <label for="">
+                                    <span class="block">Desde:</span>
+                                    <input class="bg-white w-full" readonly {{ $start ? "data-default=$start" : '' }}
+                                        type="text" name="start" placeholder="-">
+                                </label>
+                                <label for="">
+                                    <span class="block">Hasta:</span>
+                                    <input class="bg-white w-full" readonly {{ $end ? "data-default=$end" : '' }}
+                                        type="text" name="end" placeholder="-">
+                                </label>
+                            </div>
+                            <div class="label">
+                                <span>
+                                    Terminal
+                                </span>
+                                <button aria-hidden="true" id="terminal_button-2" data-dropdown-toggle="terminals-2"
+                                    class="form-control flex items-center gap-2" type="button">
+                                    Terminales
+                                    @svg('fluentui-chevron-down-20-o', 'w-5 h-5')
+                                </button>
+
+                                <div id="terminals-2" class="hidden w-48 z-50 bg-white rounded-lg shadow">
+                                    <div class="flex flex-col p-1">
+                                        @foreach ($terminals as $terminal)
+                                            @php
+                                                $checked = in_array($terminal->id, $queryTerminals);
+                                            @endphp
+                                            <label class="flex p-2 rounded-lg hover:bg-stone-100 items-center gap-2">
+                                                <input {{ $checked ? 'checked' : '' }} type="checkbox"
+                                                    name="assist_terminals[]" value="{{ $terminal->id }}">
+                                                <div>
+                                                    <span class="block"> {{ $terminal->name }} </span>
+                                                    <p class="flex items-center gap-2">
+                                                        @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
+                                                        <span class="text-sm font-normal"> {{ $terminal->database_name }}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="relative w-full">
+                                <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
+                                    @svg('fluentui-search-28-o', 'w-5 h-5')
+                                </div>
+                                <input value="{{ request()->get('query') }}" name="query"
+                                    placeholder="Filtrar por usuarios..." type="search" class="pl-9 w-full bg-white">
+                            </label>
+                        </div>
+                        <label class="label">
+                            <span>
+                                Ingresa un correo para notificar cuando el reporte esté listo
+                            </span>
+                            <input type="email" name="email" placeholder="" required value={{ $cuser->email }}>
+                        </label>
+                        <p class="text-sm">
+                            El reporte se generará con los filtros actuales. y se enviará al correo ingresado o tambien una
+                            vez generado puedes descargarlo directamente desde <a href="/reports/downloads"
+                                class="text-blue-500 hover:underline" target="_blank">
+                                Aquí
+                            </a>
+                        </p>
+                    </form>
+                    <footer>
+                        <button data-modal-hide="dialog" type="button">Cancelar</button>
+                        <button form="dialog-form" type="submit">
+                            Generar
+                        </button>
+                    </footer>
+                </div>
+            </div>
         </div>
         <nav class="flex items-center gap-2 px-2">
             @foreach ($terminalsInQuery as $term)
@@ -114,7 +195,8 @@
                         </thead>
                         <tbody class="divide-y divide-neutral-300 z-[0]">
                             @foreach ($assists as $assist)
-                                <tr class="[&>td]:py-3 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
+                                <tr
+                                    class="[&>td]:py-3 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
                                     <td>
                                         <div class="flex items-center gap-2">
                                             @include('commons.avatar', [
@@ -148,7 +230,8 @@
                                             <span class="block"> {{ $assist['terminal']->name }} </span>
                                             <p class="flex items-center gap-2">
                                                 @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
-                                                <span class="text-sm font-normal"> {{ $assist['terminal']->database_name }}
+                                                <span class="text-sm font-normal">
+                                                    {{ $assist['terminal']->database_name }}
                                                 </span>
                                             </p>
                                         </div>
