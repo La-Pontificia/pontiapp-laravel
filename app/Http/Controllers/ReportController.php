@@ -20,7 +20,7 @@ class ReportController extends Controller
 
         $cuser = User::find(auth()->id());
 
-        $hasAll = $cuser->has('reports:downloads:all');
+        $hasAll = $cuser->has('reports:downloads:all') || $cuser->isDev();
 
         $match = Report::orderBy('created_at', 'desc');
 
