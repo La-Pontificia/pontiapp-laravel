@@ -5,15 +5,7 @@
 @php
     $institutionLogos = [
         'elp' => '/logos/elp.webp',
-        'ilp' => 'ilp.webp',
-    ];
-
-    $institutionNames = [
-        'ELP' => 'Escuela Superior La Pontificia',
-        'ILP' => 'Instituto La Pontificia',
-        'Universidad Nacional de San Agustin' => 'Universidad Nacional de San Agustin',
-        'Escuela Superior La Pontificia' => 'Escuela Superior La Pontificia',
-        'Instituto La Pontificia' => 'Instituto La Pontificia',
+        'ilp' => '/logos/ilp.webp',
     ];
 
 @endphp
@@ -162,6 +154,10 @@
                         <div class="content lg:max-w-lg max-w-full">
                             <header>
                                 Registrar nuevo evento
+                            </header>
+                            <header class="flex justify-center">
+                                <img width="100" loading="lazy" decoding="async"
+                                    src="{{ $institutionLogos[$institutionQuery] }}" alt="">
                             </header>
                             <form id="form-search-person" class="body grid gap-4">
                                 <div class="py-2">
