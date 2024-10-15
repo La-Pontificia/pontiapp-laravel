@@ -41,4 +41,13 @@ class ReportController extends Controller
         return view('modules.reports.downloads.+page', compact('reports'))
             ->with('i', (request()->input('page', 1) - 1) * $reports->perPage());
     }
+
+    public function update(Request $request, $id)
+    {
+        $report = Report::find($id);
+        $report->title = $request->title;
+        $report->save();
+
+        return response()->json('Reporte actualizado');
+    }
 }
