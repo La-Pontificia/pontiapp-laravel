@@ -266,7 +266,7 @@
                     'icon' => 'fluentui-flash-20-o',
                     'text' => 'Real Time',
                     'href' => '/tickets/real-time',
-                    'enable' => $cuser->has('tickets:realtime') || $cuser->isDev(),
+                    'enable' => $cuser->has('tickets:realtime:show') || $cuser->isDev(),
                     'active' => request()->is('tickets/real-time'),
                     'active-icon' => 'fluentui-flash-20',
                 ],
