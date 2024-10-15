@@ -238,7 +238,7 @@
                 [
                     'icon' => 'fluentui-text-bullet-list-square-person-20-o',
                     'text' => 'Asistencias a eventos',
-                    'href' => '/events/assists',
+                    'href' => '/events/assists?selectEvent=true',
                     'enable' => $cuser->has('events:assists') || $cuser->isDev(),
                     'active' => request()->is('events/assists'),
                     'active-icon' => 'fluentui-text-bullet-list-square-person-20',
@@ -368,7 +368,7 @@
         <a title="{{ $item['text'] }}" {{ isset($item['active']) && $item['active'] ? 'data-active' : '' }}
             class="flex group relative transition-all items-center data-[active]:font-semibold gap-3 p-2 px-2 data-[active]:text-[#115ea3] text-black hover:bg-stone-200 rounded-lg"
             href="{{ $item['href'] }}">
-            @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
+            @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-[#115ea3]')
             <span class="text-nowrap">{{ $item['text'] }}</span>
         </a>
     @endforeach
@@ -387,11 +387,11 @@
                 {{ $item['active'] ? 'data-expanded' : '' }}>
                 <a href="{{ $href }}"
                     class="flex sidebar-item-button transition-all w-full text-left relative items-center group-data-[expanded]:font-semibold gap-3 p-2 px-2 text-black hover:bg-stone-200 rounded-lg">
-                    @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 group-data-[expanded]:text-blue-600')
+                    @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 group-data-[expanded]:text-[#115ea3]')
                     <span class="text-nowrap">{{ $item['text'] }}</span>
                     @if (isset($item['badge']))
                         <span
-                            class="bg-blue-700 rounded-full px-1.5 py-px font-medium text-[11px] text-white">{{ $item['badge'] }}</span>
+                            class="bg-[#115ea3] rounded-full px-1.5 font-medium text-[11px] text-white">{{ $item['badge'] }}</span>
                     @endif
                     @if (isset($item['subItems']))
                         @svg('fluentui-chevron-down-16', 'w-3 h-3 ml-auto group-data-[expanded]:rotate-0 -rotate-90 transition-all')
