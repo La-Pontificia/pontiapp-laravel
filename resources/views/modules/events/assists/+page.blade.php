@@ -82,7 +82,7 @@
                                         {{ $key }}
                                     </div>
                                     <div class="w-full">
-                                        {{ $institutionNames[$institution] }}
+                                        {{ $institution }}
                                     </div>
                                 </div>
                                 <svg class="w-5 h-5 ms-3 rtl:rotate-180" aria-hidden="true"
