@@ -374,7 +374,17 @@
     @endforeach
 </nav>
 
-@if ($otherItems[0]['enable'] || $otherItems[1]['enable'] || $otherItems[2]['enable'] || $otherItems[3]['enable'])
+@if (
+    $otherItems[0]['enable'] ||
+        $otherItems[1]['enable'] ||
+        $otherItems[2]['enable'] ||
+        $otherItems[3]['enable'] ||
+        $otherItems[4]['enable'] ||
+        $otherItems[5]['enable'] ||
+        $otherItems[6]['enable'] ||
+        $otherItems[7]['enable'] ||
+        $otherItems[8]['enable']
+)
     <nav class="py-2 border-t border-neutral-300 transition-all">
         @foreach ($otherItems as $item)
             @if (!$item['enable'])
