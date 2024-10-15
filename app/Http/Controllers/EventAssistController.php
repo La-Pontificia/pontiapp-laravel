@@ -59,7 +59,7 @@ class EventAssistController extends Controller
         $res = Http::withOptions([
             'verify' => false,
         ])->withHeaders([
-            'Authorization' => '33yIWUyLZDxOdbdQMMQCZAi28ugXSGqOY0o53OWRchGo4jfzc6tmhY1UcxqIcPJSb66FXL3pQRTFWDLG4vDFwCzmBwYYXhaCdb6khch71bQ86R6o7tmrwdbefastKjRxZoMLWXgYDF2qHQzHUZKo8OMjIaFvXkcQxhU3gDOQyzTcAFMIFpwFTY5RJ9U5maUH6G42JxYi1xKyHaL2',
+            'Authorization' => '33yIWUyLZDxOdbdQMMQCZAi28ug',
         ])->get("http://localhost:8001/api/people/$query?institution=$institution");
 
         if ($res->status() != 200) return response()->json('Persona no encontrada', 404);
