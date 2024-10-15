@@ -44,21 +44,9 @@ class EventAssistController extends Controller
 
     public function create(Request $request)
     {
-        $mockup = [
-            'dni' => '72377688',
-            'email' => '72377688@elp.edu.pe',
-            'names' => 'Miguel Angel',
-            'lastname_1' => 'Gonzales',
-            'lastname_2' => 'Quispe',
-            'period' => '2024-3',
-            'sex' => 'M',
-            'institution' => 'Escuela Superior La Pontificia',
-            'career' => 'AE - Administración de Empresas',
-        ];
 
-        $event = Event::find($request->event_id);
         $query = $request->input('query');
-        if (!$event) return response()->json('Evento no encontrado', 404);
+        $institution = $request->input('institution');
 
         // logic to search the person by api: http://localhost:8000/api/people/74360982
         // $dni = $request->dni;
@@ -67,25 +55,27 @@ class EventAssistController extends Controller
         // $person = $response->json();
         // if (!$person) return response()->json('Persona no encontrada', 404);
 
-        $person = Http::withOptions([
+        $event = Event::find($request->input('event'));
+        $res = Http::withOptions([
             'verify' => false,
         ])->withHeaders([
-            'Authorization' => 'Bearer univercelFree',
-        ])->get("https://apisunat.daustinn.com/queries/dni?number=$query")->json();
+            'Authorization' => '33yIWUyLZDxOdbdQMMQCZAi28ugXSGqOY0o53OWRchGo4jfzc6tmhY1UcxqIcPJSb66FXL3pQRTFWDLG4vDFwCzmBwYYXhaCdb6khch71bQ86R6o7tmrwdbefastKjRxZoMLWXgYDF2qHQzHUZKo8OMjIaFvXkcQxhU3gDOQyzTcAFMIFpwFTY5RJ9U5maUH6G42JxYi1xKyHaL2',
+        ])->get("http://localhost:8001/api/people/$query?institution=$institution");
 
-        if (!$person['status']) return response()->json('Persona no encontrada', 404);
+        if ($res->status() != 200) return response()->json('Persona no encontrada', 404);
 
+        $person = $res->json();
         $assist = AssistEvent::create([
-            'document_id' => $mockup['dni'],
-            'first_name' => $person['credentials']['nombres'],
-            'first_surname' => $person['credentials']['apellidoPaterno'],
-            'second_surname' => $person['credentials']['apellidoMaterno'],
-            'career' => $mockup['career'],
+            'document_id' => $person['id'],
+            'first_name' => $person['firstName'],
+            'first_surname' => $person['lastName'],
+            'second_surname' => $person['lastName_2'],
+            'career' => $person['career'],
             'event_id' => $event->id,
-            'institution' => $mockup['institution'],
-            'sex' =>  $mockup['sex'],
-            'period' => $mockup['period'],
-            'email' => $mockup['email'],
+            'institution' => $institution,
+            'sex' =>  $person['sex'],
+            'period' => $person['periodName'],
+            'email' => $person['email'],
         ]);
 
         $assist['event'] = $event;
