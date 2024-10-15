@@ -239,7 +239,7 @@
                     'icon' => 'fluentui-text-bullet-list-square-person-20-o',
                     'text' => 'Asistencias a eventos',
                     'href' => '/events/assists?selectEvent=true',
-                    'enable' => $cuser->has('events:assists') || $cuser->isDev(),
+                    'enable' => $cuser->has('events:assists:show') || $cuser->isDev(),
                     'active' => request()->is('events/assists'),
                     'active-icon' => 'fluentui-text-bullet-list-square-person-20',
                 ],
