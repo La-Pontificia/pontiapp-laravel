@@ -32,9 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
             $tds[3].textContent = data.period;
             $tds[4].textContent = data.institution;
             $tds[5].textContent = data.event.name;
-            $tds[6].textContent = moment(data.created_at).format(
-                "DD/MM/YYYY HH:mm"
-            );
+            $tds[6].textContent = moment(data.created_at).format("DD/MM/YYYY");
+            $tds[7].textContent = moment(data.created_at).format("HH:mm:ss");
             $tbody.prepend($row);
 
             const mp3 = new Audio("/notify.mp3");
