@@ -146,7 +146,7 @@ class Assists implements ShouldQueue
         }
 
         // Guardar el archivo Excel
-        $fileName = 'Asistencias_Centralizadas_Sin_Calcular' . now()->timestamp . '.xlsx';
+        $fileName = now()->timestamp . '.xlsx';
         $filePath = 'files/reports/' . $fileName;
         $downloadLink = asset($filePath);
 
@@ -161,10 +161,8 @@ class Assists implements ShouldQueue
 
         Report::create([
             'title' => 'Asistencias Centralizadas Sin Calcular',
-            'file_url' => Storage::url($filePath),
+            'file_url' => $filePath,
             'download_link' => $downloadLink,
-            'file_name' => $fileName,
-            'status' => 'completed',
             'generated_by' => $this->userId,
         ]);
     }
