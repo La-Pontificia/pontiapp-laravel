@@ -48,6 +48,9 @@ class EventAssistController extends Controller
         $query = $request->input('query');
         $institution = $request->input('institution');
 
+        if (!$institution) return response()->json('Institución no encontrada', 404);
+
+
         // logic to search the person by api: http://localhost:8000/api/people/74360982
         // $dni = $request->dni;
         // $response = Http::get("http://localhost:8000/api/people/$dni");
@@ -56,6 +59,9 @@ class EventAssistController extends Controller
         // if (!$person) return response()->json('Persona no encontrada', 404);
 
         $event = Event::find($request->input('event'));
+
+        if (!$event) return response()->json('Evento no encontrado', 404);
+
         $res = Http::withOptions([
             'verify' => false,
         ])->withHeaders([
