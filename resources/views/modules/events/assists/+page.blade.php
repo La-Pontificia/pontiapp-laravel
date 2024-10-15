@@ -244,7 +244,7 @@
                 </nav>
             </header>
             <div class="p-2 overflow-y-auto flex flex-grow flex-col">
-                @if ($cuser->has('events:assists:show'))
+                @if ($cuser->has('events:assists:show') || $cuser->isDev())
                     <div class="bg-white overflow-y-auto border border-neutral-200 shadow-md flex-grow rounded-2xl">
                         <table class="w-full">
                             <thead class="border-b">
