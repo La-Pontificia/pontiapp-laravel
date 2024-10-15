@@ -13,7 +13,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AssistsWithoutCalculating implements ShouldQueue
@@ -127,7 +126,7 @@ class AssistsWithoutCalculating implements ShouldQueue
         }
 
         // Guardar el archivo Excel
-        $fileName = 'Asistencias_sin_calcular_' . now()->timestamp . '.xlsx';
+        $fileName = now()->timestamp . '.xlsx';
         $filePath = 'files/reports/' . $fileName;
         $downloadLink = asset($filePath);
 
@@ -140,12 +139,12 @@ class AssistsWithoutCalculating implements ShouldQueue
                 ->subject('Reporte de Asistencias Generado');
         });
 
+
         Report::create([
             'title' => 'Asistencias sin calcular',
-            'file_url' => Storage::url($filePath),
+            'file_url' => $filePath,
             'download_link' => $downloadLink,
-            'file_name' => $fileName,
-            'status' => 'completed',
+            'ext' => 'xlsx',
             'generated_by' => $this->userId,
         ]);
     }
