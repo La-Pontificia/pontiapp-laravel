@@ -14,7 +14,7 @@
     {{-- <script type="module" src="."></script> --}}
 </head>
 
-<body class="bg-[#f5f5f5] text-[15px]">
+<body class="bg-[#f4f3f5] text-[15px]">
     @yield('app')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css">
