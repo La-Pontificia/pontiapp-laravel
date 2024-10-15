@@ -16,10 +16,6 @@
                 <div id="sidebar-overlay" class="fixed data-[expanded]:block z-40 inset-0 bg-black/40 hidden">
                 </div>
                 <main class="flex h-full relative overflow-auto">
-                    <div class="fixed inset-0 pointer-events-none -z-[1] opacity-15 select-none" aria-hidden="true">
-                        <img aria-hidden="true" src="/gradient-bg.webp" class="w-full select-none pointer-events-none h-full"
-                            alt="bg">
-                    </div>
                     <div class="fixed data-[open]:flex hidden flex-col z-20 inset-0 bg-white/95" id="loading-feedback">
                         <div class="w-full h-full grid place-content-center">
                             <span class="loader"></span>
@@ -29,11 +25,11 @@
                         </div>
                     </div>
                     <aside id="sidebar"
-                        class="flex peer flex-col max-lg:bg-[#fcfcfc] pt-2 max-lg:top-0 max-lg:pt-0 min-w-[300px] text-sm font-medium max-lg:-translate-x-full data-[expanded]:translate-x-0 max-lg:shadow-lg max-lg:fixed data-[expanded]:z-40 transition-all h-full overflow-y-auto">
+                        class="flex peer flex-col max-lg:bg-[#fcfcfc] pt-2 max-lg:top-0 max-lg:pt-0 min-w-[270px] text-sm font-medium max-lg:-translate-x-full data-[expanded]:translate-x-0 max-lg:shadow-lg max-lg:fixed data-[expanded]:z-40 transition-all h-full overflow-y-auto">
                         <div class="p-5 pb-3 lg:hidden block">
-                            <a href="/"><img src="/lp.webp" class="w-24" /></a>
+                            <a href="/"><img src="/elp.webp" class="w-24" /></a>
                         </div>
-                        <div class="flex-grow px-2 overflow-y-auto transition-all">
+                        <div class="flex-grow px-4 overflow-y-auto transition-all">
                             @include('modules.sidebar')
                         </div>
                         <footer class="p-5 font-normal max-w-[300px] hover:[&>a]:underline text-xs text-black text-center">
@@ -54,7 +50,7 @@
                             </a>
                         </footer>
                     </aside>
-                    <div class="overflow-auto w-full p-2 flex-grow flex flex-col h-full">
+                    <div class="overflow-auto w-full p-2 pl-0 flex-grow flex flex-col h-full">
                         @yield('content')
                     </div>
                 </main>
