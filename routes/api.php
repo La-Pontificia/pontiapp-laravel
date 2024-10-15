@@ -17,8 +17,10 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BusinessUnitController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EventAssistController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\JobPositionController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\YearController;
 use Illuminate\Http\Request;
@@ -165,10 +167,17 @@ Route::middleware('auth:sanctum')->group(function () {
     // Events routes
 
     Route::post('events', [EventController::class, 'store']);
+    Route::post('events/assists', [EventAssistController::class, 'create']);
+    Route::post('events/assists/report', [EventAssistController::class, 'report']);
+
     Route::post('events/{id}', [EventController::class, 'update']);
     Route::post('events/{id}/delete', [EventController::class, 'delete']);
 
-    // Audit routes
+    // Reports routes
 
+    Route::post('reports/{id}', [ReportController::class, 'update']);
+
+
+    // Audit routes
     Route::post('audits/{id}/delete', [AuditController::class, 'delete']);
 });
