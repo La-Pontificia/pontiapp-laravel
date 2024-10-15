@@ -22,6 +22,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\YearController;
 
 // -------------------------------- AUTH ROUTES ---------------------------
@@ -129,6 +130,9 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('reports', [ReportController::class, 'index']);
     Route::get('reports/downloads', [ReportController::class, 'downloads']);
 
+    // -------- TICKETS ROUTES ---------------------------
+    Route::get('tickets', [TicketController::class, 'index']);
+    Route::get('tickets/real-time', [TicketController::class, 'realTime']);
 
     // routes if no route is found
     Route::fallback(function () {
