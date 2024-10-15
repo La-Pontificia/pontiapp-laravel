@@ -72,7 +72,7 @@
         </div>
     @elseif($selectInstitution == 'true')
         <div class="p-10">
-            <form class="max-w-xl grid gap-4 mx-auto w-full">
+            <form id="nextInstitution" class="max-w-xl grid gap-4 mx-auto w-full">
                 <h3 class="mb-5 text-xl font-semibold">
                     Selecciona la institución
                 </h3>
