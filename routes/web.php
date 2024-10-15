@@ -128,7 +128,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // -------- REPORT ROUTES ---------------------------
     Route::get('reports', [ReportController::class, 'index']);
-    Route::get('reports/downloads', [ReportController::class, 'downloads']);
+    Route::get('reports/files', [ReportController::class, 'files']);
 
     // -------- TICKETS ROUTES ---------------------------
     Route::get('tickets', [TicketController::class, 'index']);
