@@ -222,22 +222,46 @@ class AccessComposerServiceProvider extends ServiceProvider
                         [
                             'name' => 'Eventos',
                             'privileges' => [
-                                'event:show' => 'Ver eventos',
-                                'event:edit' => 'Editar eventos',
-                                'event:create' => 'Crear eventos',
-                                'event:delete' => 'Eliminar eventos',
+                                'events:show' => 'Ver eventos',
+                                'events:edit' => 'Editar eventos',
+                                'events:create' => 'Crear eventos',
+                                'events:delete' => 'Eliminar eventos',
                             ],
                         ],
                         [
                             'name' => 'Asistencias a eventos',
                             'privileges' => [
-                                'event:assists:show' => 'Asistencias a eventos',
-                                'event:assists:register' => 'Registrar asistencias a eventos',
-                                'event:assists:edit' => 'Editar asistencias a eventos',
-                                'event:assists:delete' => 'Eliminar asistencias a eventos',
-                                'event:assists:export' => 'Exportar asistencias a eventos',
+                                'events:assists:show' => 'Asistencias a eventos',
+                                'events:assists:register' => 'Registrar asistencias a eventos',
+                                'events:assists:edit' => 'Editar asistencias a eventos',
+                                'events:assists:delete' => 'Eliminar asistencias a eventos',
+                                'events:assists:export' => 'Exportar asistencias a eventos',
                             ],
                         ],
+                    ],
+                ],
+                [
+                    'name' => 'Gestion Tickets',
+                    'items' => [
+                        [
+                            'name' => 'Tickets',
+                            'privileges' => [
+                                'tickets:show' => 'Ver eventos',
+                                'tickets:edit' => 'Editar eventos',
+                                'tickets:create' => 'Crear eventos',
+                                'tickets:delete' => 'Eliminar eventos',
+                            ],
+                        ],
+                        [
+                            "name" => 'Real Time',
+                            'privileges' => [
+                                'tickets:real-time:show' => 'Ver Real Time',
+                                'tickets:real-time:edit' => 'Editar Real Time',
+                                'tickets:real-time:create' => 'Crear Real Time',
+                                'tickets:real-time:delete' => 'Eliminar Real Time',
+                            ],
+                        ]
+
                     ],
                 ],
                 [
