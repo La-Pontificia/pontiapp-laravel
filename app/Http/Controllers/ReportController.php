@@ -10,17 +10,17 @@ class ReportController extends Controller
 {
     public function index()
     {
-        return redirect('/reports/downloads');
+        return redirect('/reports/files');
     }
 
-    public function downloads(Request $request)
+    public function files(Request $request)
     {
 
         $query = $request->get('query');
 
         $cuser = User::find(auth()->id());
 
-        $hasAll = $cuser->has('reports:downloads:all') || $cuser->isDev();
+        $hasAll = $cuser->has('reports:files:all') || $cuser->isDev();
 
         $match = Report::orderBy('created_at', 'desc');
 
@@ -38,7 +38,7 @@ class ReportController extends Controller
 
         $reports = $match->paginate(20);
 
-        return view('modules.reports.downloads.+page', compact('reports'))
+        return view('modules.reports.files.+page', compact('reports'))
             ->with('i', (request()->input('page', 1) - 1) * $reports->perPage());
     }
 
