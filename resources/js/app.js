@@ -13,6 +13,7 @@ import "./assists.js";
 import "./ui.js";
 import "./questionnaires.js";
 import "./fluentui.js";
+import "./events.js";
 
 // import {
 //     fluentSwitch,

@@ -15,6 +15,85 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const dinamicFormAcumulate = $$(".dinamic-form-acumulate");
 
+    const $dinamicToUrl = $$(".dinamic-to-url");
+    const $refreshPage = $$(".refresh-page");
+    const $dinamicRequests = $$(".dinamic-request");
+    const $dinamicDownloadFile = $$(".dinamic-download-file");
+
+    $dinamicDownloadFile?.forEach((f) => {
+        f.addEventListener("click", async () => {
+            const url = f.getAttribute("data-url");
+            const name = f.getAttribute("data-name");
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", name);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        });
+    });
+
+    $dinamicRequests?.forEach((f) => {
+        f.addEventListener("click", async () => {
+            f.disabled = true;
+            const method = f.getAttribute("data-method") ?? "POST";
+            const url = f.getAttribute("data-url");
+            const current_url = new URL(window.location.href);
+            const searchParams = current_url.searchParams;
+
+            try {
+                const { data } = await axios({
+                    method,
+                    url: `${url}?${searchParams.toString()}`,
+                });
+
+                Swal.fire({
+                    icon: "info",
+                    title: "¡Hecho!",
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    text: data ?? "Petición exitosa",
+                }).then(() => {
+                    redirect && (window.location.href = redirect);
+                });
+            } catch (e) {
+                const content =
+                    typeof e.response.data === "object"
+                        ? e.response.data.message
+                        : e.response.data;
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    text: content ?? "Error al realizar esta Petición",
+                });
+            } finally {
+                f.disabled = false;
+            }
+        });
+    });
+
+    $refreshPage?.forEach((f) => {
+        f.addEventListener("click", function () {
+            window.location.reload();
+        });
+    });
+
+    $dinamicToUrl?.forEach((f) => {
+        f.addEventListener("change", function (e) {
+            const value = e.target.value;
+            const name = e.target.name;
+            const params = new URLSearchParams(window.location.search);
+            if (value !== "0") params.set(name, value);
+            else params.delete(name);
+
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.history.replaceState({}, "", newUrl);
+        });
+    });
+
     dinamicSelects?.forEach((f) => {
         f.addEventListener("change", function (e) {
             const value = e.target.value;
