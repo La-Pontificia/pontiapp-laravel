@@ -53,6 +53,10 @@
                     <p>
                     </p>
                 </td>
+                <td>
+                    <p>
+                    </p>
+                </td>
             </tr>
         </template>
         <header class="py-2 px-1">
@@ -159,7 +163,7 @@
                 </div>
             </nav>
         </header>
-        <div class="p-2 overflow-y-auto flex flex-col">
+        <div class="p-2 overflow-y-auto flex flex-grow flex-col">
             <div class="bg-white overflow-y-auto border border-neutral-200 shadow-md flex-grow rounded-2xl">
                 <table class="w-full">
                     <thead class="border-b">
@@ -185,8 +189,11 @@
                             <th>
                                 Evento
                             </th>
+                            <th>
+                                Fecha
+                            </th>
                             <th class="w-full">
-                                Registro
+                                Hora
                             </th>
                         </tr>
                     </thead>
@@ -225,7 +232,12 @@
                                 </td>
                                 <td>
                                     <p>
-                                        {{ $assist->created_at->format('d/m/Y H:i:s') }}
+                                        {{ $assist->created_at->format('d/m/Y') }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p>
+                                        {{ $assist->created_at->format('H:i:s') }}
                                     </p>
                                 </td>
                             </tr>
