@@ -6,6 +6,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const $$ = document.querySelectorAll.bind(document);
     const $form = $("#form-search-person");
 
+    const $formNextInstitution = $("#nextInstitution");
+
+    $formNextInstitution?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const institution = formData.get("institution");
+        const event = formData.get("event");
+
+        window.location.href = `/events/assists?institution=${institution}&event=${event}`;
+    });
+
     const institutions = {
         elp: "Escuela Superior La Pontificia",
         ilp: "Instituto La Pontificia",
