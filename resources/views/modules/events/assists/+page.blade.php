@@ -152,36 +152,39 @@
                         Asistencias a eventos
                     </h1>
                 </nav>
-                <button data-modal-target="dialog" data-modal-toggle="dialog" class="primary my-2 text-nowrap gradient-btn">
-                    @svg('fluentui-add-circle-16-o', 'w-5 h-5')
-                    Registrar asistencia
-                </button>
-                <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
-                    <div class="content lg:max-w-lg max-w-full">
-                        <header>
-                            Registrar nuevo evento
-                        </header>
-                        <form id="form-search-person" class="body grid gap-4">
-                            <div class="py-2">
-                                <label class="label">
-                                    <span>
-                                        DNI
-                                    </span>
-                                    <input name="query" id="dni" type="text"
-                                        class="p-2 text-center font-semibold text-xl" placeholder="72377689">
-                                    <p>
-                                        Ingrese el DNI para buscar la persona y registrar su asistencia.
-                                    </p>
-                                </label>
-                                <input type="hidden" name="event" value="{{ $eventQuery }}">
-                                <input type="hidden" name="institution" value="{{ $institutionQuery }}">
-                            </div>
-                        </form>
-                        <footer>
-                            <button data-modal-hide="dialog" type="button" class="w-full">Cerrar</button>
-                        </footer>
+                @if ($cuser->has('events:assists:register') || $cuser->isDev())
+                    <button data-modal-target="dialog" data-modal-toggle="dialog"
+                        class="primary my-2 text-nowrap gradient-btn">
+                        @svg('fluentui-add-circle-16-o', 'w-5 h-5')
+                        Registrar asistencia
+                    </button>
+                    <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                        <div class="content lg:max-w-lg max-w-full">
+                            <header>
+                                Registrar nuevo evento
+                            </header>
+                            <form id="form-search-person" class="body grid gap-4">
+                                <div class="py-2">
+                                    <label class="label">
+                                        <span>
+                                            DNI
+                                        </span>
+                                        <input name="query" id="dni" type="text"
+                                            class="p-2 text-center font-semibold text-xl" placeholder="72377689">
+                                        <p>
+                                            Ingrese el DNI para buscar la persona y registrar su asistencia.
+                                        </p>
+                                    </label>
+                                    <input type="hidden" name="event" value="{{ $eventQuery }}">
+                                    <input type="hidden" name="institution" value="{{ $institutionQuery }}">
+                                </div>
+                            </form>
+                            <footer>
+                                <button data-modal-hide="dialog" type="button" class="w-full">Cerrar</button>
+                            </footer>
+                        </div>
                     </div>
-                </div>
+                @endif
                 <nav class="flex items-end gap-2">
                     <div class="px-1">
                         <div class="flex items-end flex-wrap gap-2">
@@ -241,92 +244,100 @@
                 </nav>
             </header>
             <div class="p-2 overflow-y-auto flex flex-grow flex-col">
-                <div class="bg-white overflow-y-auto border border-neutral-200 shadow-md flex-grow rounded-2xl">
-                    <table class="w-full">
-                        <thead class="border-b">
-                            <tr class="[&>th]:font-semibold text-sm [&>th]:p-3 [&>th]:px-5 text-left">
-                                <th>
-                                    <div class="flex items-center gap-1">
-                                        @svg('fluentui-person-info-20-o', 'w-5 h-5 opacity-70')
-                                        Nombres
-                                    </div>
-                                </th>
-                                <th>
-                                    Correo institucional
-                                </th>
-                                <th>
-                                    Carrera
-                                </th>
-                                <th>
-                                    Periodo
-                                </th>
-                                <th>
-                                    Institución
-                                </th>
-                                <th>
-                                    Evento
-                                </th>
-                                <th>
-                                    Fecha
-                                </th>
-                                <th class="w-full">
-                                    Hora
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="assist_events" class="divide-y divide-neutral-200/80">
-                            @foreach ($assists as $assist)
-                                <tr class="[&>td]:p-3 [&>td>p]:text-nowrap [&>td]:px-5">
-                                    <td>
-                                        <p>
-                                            {{ $assist->first_surname }} {{ $assist->second_surname }},
-                                            {{ $assist->first_name }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p>
-                                            {{ $assist->email }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p>
-                                            {{ $assist->career }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p>
-                                            {{ $assist->period }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <img width="50" loading="lazy" decoding="async"
-                                            src="{{ $institutionLogos[$assist->institution] }}" alt="">
-                                    </td>
-                                    <td>
-                                        <p>
-                                            {{ $assist->event->name }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p>
-                                            {{ $assist->created_at->format('d/m/Y') }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <p>
-                                            {{ $assist->created_at->format('H:i:s') }}
-                                        </p>
-                                    </td>
+                @if ($cuser->has('events:assists:show'))
+                    <div class="bg-white overflow-y-auto border border-neutral-200 shadow-md flex-grow rounded-2xl">
+                        <table class="w-full">
+                            <thead class="border-b">
+                                <tr class="[&>th]:font-semibold text-sm [&>th]:p-3 [&>th]:px-5 text-left">
+                                    <th>
+                                        <div class="flex items-center gap-1">
+                                            @svg('fluentui-person-info-20-o', 'w-5 h-5 opacity-70')
+                                            Nombres
+                                        </div>
+                                    </th>
+                                    <th>
+                                        Correo institucional
+                                    </th>
+                                    <th>
+                                        Carrera
+                                    </th>
+                                    <th>
+                                        Periodo
+                                    </th>
+                                    <th>
+                                        Institución
+                                    </th>
+                                    <th>
+                                        Evento
+                                    </th>
+                                    <th>
+                                        Fecha
+                                    </th>
+                                    <th class="w-full">
+                                        Hora
+                                    </th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <footer>
-                        <footer class="px-5 py-4">
-                            {!! $assists->links() !!}
+                            </thead>
+                            <tbody id="assist_events" class="divide-y divide-neutral-200/80">
+                                @foreach ($assists as $assist)
+                                    <tr class="[&>td]:p-3 [&>td>p]:text-nowrap [&>td]:px-5">
+                                        <td>
+                                            <p>
+                                                {{ $assist->first_surname }} {{ $assist->second_surname }},
+                                                {{ $assist->first_name }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                {{ $assist->email }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                {{ $assist->career }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                {{ $assist->period }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <img width="50" loading="lazy" decoding="async"
+                                                src="{{ $institutionLogos[$assist->institution] }}" alt="">
+                                        </td>
+                                        <td>
+                                            <p>
+                                                {{ $assist->event->name }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                {{ $assist->created_at->format('d/m/Y') }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p>
+                                                {{ $assist->created_at->format('H:i:s') }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <footer>
+                            <footer class="px-5 py-4">
+                                {!! $assists->links() !!}
+                            </footer>
                         </footer>
-                    </footer>
-                </div>
+                    </div>
+                @else
+                    <div>
+                        <p>
+                            No tienes permisos para ver esta información.
+                        </p>
+                    </div>
+                @endif
             </div>
         </div>
     @endif
