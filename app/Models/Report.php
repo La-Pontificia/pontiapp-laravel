@@ -12,7 +12,6 @@ class Report extends Model
 
     protected $table = 'reports';
 
-
     protected $perPage = 25;
 
     protected $fillable = ['id', 'title', 'file_url', 'ext', 'download_link', 'generated_by'];
