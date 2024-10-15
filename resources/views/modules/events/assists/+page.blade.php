@@ -14,8 +14,8 @@
     $selectEvent = request()->query('selectEvent');
     $selectInstitution = request()->query('selectInstitution');
 
-    $eventQuery = request()->query('event');
-    $institutionQuery = request()->query('institution');
+    $eventQuery = request()->query('event') ?? null;
+    $institutionQuery = request()->query('institution') ?? null;
 
     $institutionsList = [
         'elp' => 'Escuela Superior La Pontificia',
@@ -156,8 +156,10 @@
                                 Registrar nuevo evento
                             </header>
                             <header class="flex justify-center">
-                                <img width="100" loading="lazy" decoding="async"
-                                    src="{{ $institutionLogos[$institutionQuery] }}" alt="">
+                                @if ($institutionQuery)
+                                    <img width="100" loading="lazy" decoding="async"
+                                        src="{{ $institutionLogos[$institutionQuery] }}" alt="">
+                                @endif
                             </header>
                             <form id="form-search-person" class="body grid gap-4">
                                 <div class="py-2">
