@@ -4,7 +4,7 @@
         [
             'icon' => 'fluentui-home-48-o',
             'active-icon' => 'fluentui-home-48',
-            'text' => $cuser->first_name,
+            'text' => $cuser->names(),
             'href' => '/users/' . $cuser->id,
             'active' => request()->is('users/' . $cuser->id . '*'),
         ],
@@ -218,11 +218,11 @@
                 ],
             ],
         ],
-
         [
             'icon' => 'fluentui-calendar-data-bar-20-o',
-            'text' => 'Gestion Eventos',
+            'text' => 'Gestión Eventos',
             'href' => '/events',
+            'badge' => 'New',
             'active' => request()->is('events*'),
             'active-icon' => 'fluentui-calendar-data-bar-20',
             'enable' => $cuser->hasGroup('events') || $cuser->isDev(),
@@ -246,8 +246,35 @@
             ],
         ],
         [
+            'icon' => 'fluentui-ticket-diagonal-20-O',
+            'text' => 'Gestión Tickets',
+            'href' => '/tickets',
+            'badge' => 'New',
+            'active' => request()->is('tickets*'),
+            'active-icon' => 'fluentui-ticket-diagonal-20',
+            'enable' => $cuser->hasGroup('tickets') || $cuser->isDev(),
+            'subItems' => [
+                [
+                    'icon' => 'fluentui-ticket-horizontal-20-o',
+                    'text' => 'Tickets',
+                    'href' => '/tickets',
+                    'enable' => $cuser->has('tickets:show') || $cuser->isDev(),
+                    'active' => request()->is('tickets'),
+                    'active-icon' => 'fluentui-ticket-horizontal-20',
+                ],
+                [
+                    'icon' => 'fluentui-flash-20-o',
+                    'text' => 'Real Time',
+                    'href' => '/tickets/real-time',
+                    'enable' => $cuser->has('tickets:realtime') || $cuser->isDev(),
+                    'active' => request()->is('tickets/real-time'),
+                    'active-icon' => 'fluentui-flash-20',
+                ],
+            ],
+        ],
+        [
             'icon' => 'fluentui-shield-person-20-o',
-            'text' => 'Gestion auditoria',
+            'text' => 'Gestión auditoria',
             'href' => '/audit',
             'active' => request()->is('audit*'),
             'active-icon' => 'fluentui-shield-person-20',
@@ -256,6 +283,7 @@
         [
             'icon' => 'fluentui-data-bar-vertical-add-20-o',
             'text' => 'Gestión Reportes',
+            'badge' => 'New',
             'href' => '/reports',
             'active' => request()->is('reports*'),
             'active-icon' => 'fluentui-data-bar-vertical-add-20',
@@ -330,7 +358,7 @@
 <nav class="pb-2 transition-all">
     @foreach ($userItems as $item)
         <a title="{{ $item['text'] }}" {{ isset($item['active']) && $item['active'] ? 'data-active' : '' }}
-            class="flex group relative transition-all items-center data-[active]:font-semibold gap-3 p-2 px-5 data-[active]:text-[#1967da] text-black hover:bg-white rounded-lg"
+            class="flex group relative transition-all items-center data-[active]:font-semibold gap-3 p-2 px-2 data-[active]:text-[#115ea3] text-black hover:bg-stone-200 rounded-lg"
             href="{{ $item['href'] }}">
             @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-blue-600')
             <span class="text-nowrap">{{ $item['text'] }}</span>
@@ -347,25 +375,30 @@
             @php
                 $href = $item['href'] ?? null;
             @endphp
-            <div class="sidebar-item group" {{ $item['active'] ? 'data-expanded' : '' }}>
+            <div class="sidebar-item group data-[expanded]:my-1 data-[expanded]:rounded-xl data-[expanded]:p-1 data-[expanded]:bg-white data-[expanded]:drop-shadow-[0px_2px_8px_rgba(0,_0,_0,_0.15)]"
+                {{ $item['active'] ? 'data-expanded' : '' }}>
                 <a href="{{ $href }}"
-                    class="flex sidebar-item-button group-data-[expanded]:bg-white transition-all w-full text-left relative items-center group-data-[expanded]:font-semibold group-data-[expanded]:text-[#1967da] gap-3 p-2 px-5 text-black hover:bg-white rounded-lg">
+                    class="flex sidebar-item-button transition-all w-full text-left relative items-center group-data-[expanded]:font-semibold gap-3 p-2 px-2 text-black hover:bg-stone-200 rounded-lg">
                     @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 group-data-[expanded]:text-blue-600')
                     <span class="text-nowrap">{{ $item['text'] }}</span>
+                    @if (isset($item['badge']))
+                        <span
+                            class="bg-blue-700 rounded-full px-1.5 py-px font-medium text-[11px] text-white">{{ $item['badge'] }}</span>
+                    @endif
                     @if (isset($item['subItems']))
                         @svg('fluentui-chevron-down-16', 'w-3 h-3 ml-auto group-data-[expanded]:rotate-0 -rotate-90 transition-all')
                     @endif
                 </a>
                 @if (isset($item['subItems']))
-                    <div class="sidebar-item-content data-[expanded]:mb-3" {{ $item['active'] ? 'data-expanded' : '' }}>
+                    <div class="sidebar-item-content " {{ $item['active'] ? 'data-expanded' : '' }}>
                         @foreach ($item['subItems'] as $subItem)
                             @if (isset($subItem['enable']) && !$subItem['enable'])
                                 @continue
                             @endif
                             <a {{ $subItem['active'] ? 'data-active' : '' }}
-                                class="flex group relative transition-all items-center data-[active]:font-semibold data-[active]:text-[#1967da] gap-3 p-2 px-5 pl-8 text-black hover:bg-white rounded-lg"
+                                class="flex group relative transition-all items-center data-[active]:font-semibold gap-3 p-2 px-2 pl-5 text-black hover:bg-stone-200 rounded-lg"
                                 href="{{ $subItem['href'] }}">
-                                @svg($subItem['active'] ? $subItem['active-icon'] : $subItem['icon'], 'w-5 h-5 m-0.5 group-data-[active]:text-blue-600')
+                                @svg($subItem['active'] ? $subItem['active-icon'] : $subItem['icon'], 'w-5 h-5 m-0.5 group-data-[active]:text-[#115ea3]')
                                 <span class="text-nowrap">{{ $subItem['text'] }}</span>
                             </a>
                         @endforeach
