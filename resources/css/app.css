@@ -73,11 +73,12 @@ button[disabled] {
                 border-radius: 999px;
                 padding-inline: 18px;
                 padding-block: 8px;
-                font-weight: 500;
+                font-weight: 600;
             }
             & [type="submit"] {
                 background-color: #0b57d0;
                 color: white;
+                font-weight: 600;
                 &:hover {
                     background-color: #2468d5;
                 }
@@ -85,6 +86,7 @@ button[disabled] {
             & [type="button"] {
                 background-color: #f3f4f6;
                 color: #4b5563;
+                font-weight: 600;
                 border: 1px solid #0b57d060;
                 color: #0b57d0;
                 &:hover {
@@ -102,6 +104,11 @@ button[disabled] {
         color: #323232;
         font-size: 0.8rem;
         margin-bottom: 3px;
+    }
+    > p {
+        color: #323232;
+        font-size: 0.7rem;
+        margin: 0 2px;
     }
 }
 
@@ -125,6 +132,9 @@ select,
     &:disabled {
         background-color: #d6d6d6 !important;
         color: #4b5563;
+    }
+    &::placeholder {
+        color: #838383;
     }
 }
 
@@ -151,10 +161,10 @@ a.secondary {
     text-align: center;
     text-decoration: none;
     width: fit-content;
-    border-radius: 9px;
+    border-radius: 999px;
     padding: 6px 12px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     transition: background-color 0.2s;
 }
 
@@ -164,6 +174,13 @@ a.primary {
     color: white;
     &:hover {
         background-color: #2468d5;
+    }
+    &.gradient-btn {
+        background: linear-gradient(90deg, #0b57d0 0%, #5f24d5 100%);
+        color: white;
+        &:hover {
+            background: linear-gradient(90deg, #2468d5 0%, #7724d5 100%);
+        }
     }
 }
 
