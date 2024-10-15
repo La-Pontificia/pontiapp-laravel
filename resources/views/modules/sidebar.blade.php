@@ -270,6 +270,14 @@
                     'active' => request()->is('tickets/real-time'),
                     'active-icon' => 'fluentui-flash-20',
                 ],
+                [
+                    'icon' => 'fluentui-checkbox-person-20-o',
+                    'text' => 'Atenciones',
+                    'href' => '/tickets/attentions',
+                    'enable' => $cuser->has('tickets:attentions:show') || $cuser->isDev(),
+                    'active' => request()->is('attentions'),
+                    'active-icon' => 'fluentui-checkbox-person-20',
+                ],
             ],
         ],
         [
@@ -290,17 +298,17 @@
             'enable' => $cuser->hasGroup('reports') || $cuser->isDev(),
             'subItems' => [
                 [
-                    'icon' => 'fluentui-document-table-20-o',
-                    'text' => 'Descargas',
-                    'href' => '/reports/downloads',
-                    'active' => request()->is('reports/downloads'),
-                    'active-icon' => 'fluentui-document-table-20',
+                    'icon' => 'fluentui-folder-20-o',
+                    'text' => 'Archivos',
+                    'href' => '/reports/files',
+                    'active' => request()->is('reports/files'),
+                    'active-icon' => 'fluentui-folder-20',
                 ],
             ],
         ],
         [
             'icon' => 'fluentui-apps-16-o',
-            'text' => 'Ajustes y mantenimiento',
+            'text' => 'Ajustes',
             'href' => '/settings',
             'active' => request()->is('settings*'),
             'active-icon' => 'fluentui-apps-16',
