@@ -91,7 +91,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // PL Andahuaylas
@@ -107,7 +107,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // PL Casuarina
@@ -123,7 +123,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // PL Cybernet
@@ -139,7 +139,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // PL Jazmines
@@ -155,7 +155,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // RH Alameda
@@ -171,7 +171,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // RH Andahuaylas
@@ -187,7 +187,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // RH Casuarina
@@ -203,7 +203,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // PL Cybernet
@@ -219,7 +219,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
         // RH Jazmines
@@ -235,7 +235,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'trust_server_certificate' => true,
-            'encrypt' => 'yes'
+            'encrypt' => false
         ],
 
     ],
