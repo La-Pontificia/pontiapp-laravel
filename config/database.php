@@ -63,32 +63,6 @@ return [
             ]) : [],
         ],
 
-        // Jaguar elp
-        'Jaguar-elp' => [
-            'driver' => 'mysql',
-            'host' => env('JAGUAR_DB_HOST', '127.0.0.1'),
-            'port' => env('JAGUAR_DB_PORT', '3306'),
-            'database' => env('JAGUAR_DB_ELP', 'eda_consorcio'),
-            'username' => env('JAGUAR_DB_USERNAME', 'root'),
-            'password' => env('JAGUAR_DB_PASSWORD', 'root'),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix_indexes' => true,
-        ],
-
-        // Jaguar ilp
-        'Jaguar-ilp' => [
-            'driver' => 'mysql',
-            'host' => env('JAGUAR_DB_HOST', '127.0.0.1'),
-            'port' => env('JAGUAR_DB_PORT', '3306'),
-            'database' => env('JAGUAR_DB_ILP', 'eda_consorcio'),
-            'username' => env('JAGUAR_DB_USERNAME', 'root'),
-            'password' => env('JAGUAR_DB_PASSWORD', 'root'),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix_indexes' => true,
-        ],
-
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
