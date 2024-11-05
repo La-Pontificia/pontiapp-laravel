@@ -22,6 +22,8 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\YearController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -177,7 +179,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('reports/{id}', [ReportController::class, 'update']);
 
+    Route::get('person/{document_id}', [UtilsController::class, 'person']);
+
 
     // Audit routes
     Route::post('audits/{id}/delete', [AuditController::class, 'delete']);
+
+
+    // -------- TICKETS ROUTES ---------------------------
+    Route::post('tickets', [TicketController::class, 'store']);
+    Route::post('tickets/settings/business-units', [TicketController::class, 'SettingsBusinessUnitsUpdate']);
 });
