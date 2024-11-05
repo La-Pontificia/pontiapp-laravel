@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AssistsController extends Controller
 {
@@ -127,7 +128,6 @@ class AssistsController extends Controller
     public function snSchedules(Request $request, $isExport = false)
     {
 
-        set_time_limit(300);
 
         $terminals = AssistTerminal::all();
         $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
@@ -215,7 +215,7 @@ class AssistsController extends Controller
         $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
 
 
-        AssistsWithoutCalculating::dispatch($query, $terminalsIds, $startDate, $endDate, auth()->id(), $customEmail);
+        AssistsWithoutCalculating::dispatch($query, $terminalsIds, $startDate, $endDate, Auth::id(), $customEmail);
 
         return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $customEmail . ' O tambien ver el archivo en la sección de reportes / descargas');
     }
@@ -234,7 +234,7 @@ class AssistsController extends Controller
         $query = $request->get('query');
 
 
-        AssistsSnSchedules::dispatch($query, $terminalsIds, $startDate, $endDate, $customEmail, auth()->id());
+        AssistsSnSchedules::dispatch($query, $terminalsIds, $startDate, $endDate, $customEmail, Auth::id());
 
         return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $customEmail . ' O tambien ver el archivo en la sección de reportes / descargas');
     }

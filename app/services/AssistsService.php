@@ -339,10 +339,10 @@ class AssistsService
     {
 
         $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
-        $users = null;
+        $users = Collect([]);
 
         if ($query) {
-            User::where('first_name', 'like', '%' . $query . '%')
+            $users = User::where('first_name', 'like', '%' . $query . '%')
                 ->orWhere('last_name', 'like', '%' . $query . '%')
                 ->orWhere('dni', 'like', '%' . $query . '%')
                 ->get();
@@ -354,15 +354,13 @@ class AssistsService
 
         foreach ($terminals as $terminal) {
 
-            $userDnis = $users->pluck('dni')->toArray();
+            $ids = $users->pluck('dni')->toArray();
 
             $match = (new Attendance())
                 ->setConnection($terminal->database_name)
                 ->whereBetween(DB::raw('CAST(punch_time AS DATE)'), [$startDate, $endDate])
-                ->whereIn('emp_code', $userDnis)
+                ->whereIn('emp_code', $ids)
                 ->orderBy('punch_time', 'desc');
-
-            $matched = [];
 
             $matched = $match->get();
 
@@ -383,7 +381,6 @@ class AssistsService
                 ];
             }
         }
-
 
         return $assists;
     }
