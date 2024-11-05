@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Year;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EdaController extends Controller
 {
@@ -34,7 +35,7 @@ class EdaController extends Controller
 
         $year_id = $request->year_id;
         $user_id = $request->user_id;
-        $cuser = User::find(auth()->user()->id);
+        $cuser = User::find(Auth::id());
         $user = User::find($user_id);
         $year = Year::find($year_id);
 
@@ -54,7 +55,7 @@ class EdaController extends Controller
         $eda = Eda::create([
             'id_user' => $user_id,
             'id_year' => $year_id,
-            'created_by' => auth()->user()->id,
+            'created_by' => Auth::id(),
         ]);
 
         foreach ($evaluationArray as $evaluation) {
@@ -83,7 +84,7 @@ class EdaController extends Controller
         $eda = Eda::create([
             'id_user' => $foundedUser->id,
             'id_year' => $foundYear->id,
-            'created_by' => auth()->user()->id,
+            'created_by' => Auth::id(),
         ]);
 
         foreach ($evaluationArray as $evaluation) {
@@ -108,7 +109,7 @@ class EdaController extends Controller
 
         $eda->closed = now();
 
-        $eda->closed_by = auth()->user()->id;
+        $eda->closed_by = Auth::id();
 
         $eda->save();
 
@@ -173,7 +174,7 @@ class EdaController extends Controller
         $questionnaire =  Questionnaire::create([
             'eda_id' => $eda->id,
             'questionnaire_template_id' => $questionnaire_template->id,
-            'answered_by' => auth()->user()->id,
+            'answered_by' => Auth::id(),
         ]);
 
         foreach ($request->answers as $answer) {
