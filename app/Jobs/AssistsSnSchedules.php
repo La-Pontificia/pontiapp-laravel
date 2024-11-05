@@ -9,13 +9,11 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AssistsSnSchedules implements ShouldQueue
@@ -50,10 +48,10 @@ class AssistsSnSchedules implements ShouldQueue
     public function handle(): void
     {
         $terminals = AssistTerminal::whereIn('id', $this->terminalsIds)->get();
-        $users = null;
+        $users = Collect([]);
 
         if ($this->query) {
-            User::where('first_name', 'like', '%' . $this->query . '%')
+            $users = User::where('first_name', 'like', '%' . $this->query . '%')
                 ->orWhere('last_name', 'like', '%' . $this->query . '%')
                 ->orWhere('dni', 'like', '%' . $this->query . '%')
                 ->get();
@@ -72,8 +70,6 @@ class AssistsSnSchedules implements ShouldQueue
                 ->whereBetween(DB::raw('CAST(punch_time AS DATE)'), [$this->startDate, $this->endDate])
                 ->whereIn('emp_code', $userDnis)
                 ->orderBy('punch_time', 'desc');
-
-            $matched = [];
 
             $matched = $match->get();
 
