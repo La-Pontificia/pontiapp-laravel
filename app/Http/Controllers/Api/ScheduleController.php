@@ -248,7 +248,10 @@ class ScheduleController extends Controller
             return response()->json('Group not found', 404);
         }
 
+
         $alreadyUsersCount = $group->users()->count();
+
+        $group->schedules()->delete();
 
         if ($alreadyUsersCount > 0) {
             $for = $alreadyUsersCount == 1 ? 'un usuario' : $alreadyUsersCount . ' usuarios';
