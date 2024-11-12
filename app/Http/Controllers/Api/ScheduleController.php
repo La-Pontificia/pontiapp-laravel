@@ -9,6 +9,7 @@ use App\Models\User;
 use App\services\AuditService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
@@ -89,7 +90,7 @@ class ScheduleController extends Controller
             'to_end' => $toEnd,
 
             'background' => $request->background ?? $this->generateRandomColor(),
-            'created_by' => auth()->user()->id
+            'created_by' => Auth::id()
         ]);
 
         $this->auditService->registerAudit('Horario creado', 'Se ha creado un horario', 'users', 'create', $request);
@@ -142,7 +143,7 @@ class ScheduleController extends Controller
         $schedule->from_end = $fromEnd;
         $schedule->to_start = $toStart;
         $schedule->to_end = $toEnd;
-        $schedule->updated_by = auth()->user()->id;
+        $schedule->updated_by = Auth::id();
         $schedule->background = $request->background ?? $this->generateRandomColor();
         $schedule->save();
 
@@ -180,7 +181,7 @@ class ScheduleController extends Controller
 
         GroupSchedule::create([
             'name' => $request->name,
-            'created_by' => auth()->user()->id
+            'created_by' => Auth::id()
         ]);
 
         $this->auditService->registerAudit('Grupo de horario creado', 'Se ha creado un grupo de horario', 'users', 'create', $request);

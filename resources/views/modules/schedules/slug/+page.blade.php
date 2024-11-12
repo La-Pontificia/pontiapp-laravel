@@ -76,7 +76,7 @@
                         </header>
                         <form action="/api/schedules/group/{{ $group_schedule->id }}/add" id="dialog-form" method="POST"
                             class="dinamic-form body grid gap-4">
-                            @include('modules.users.schedules.slug.form')
+                            @include('modules.schedules.slug.form')
                         </form>
                         <footer>
                             <button data-modal-hide="dialog" type="button">Cancelar</button>
@@ -92,7 +92,7 @@
                         $from = date('h:i A', strtotime($schedule->from));
                         $to = date('h:i A', strtotime($schedule->to));
                     @endphp
-                    <div class="flex w-full shadow-md bg-white border p-3 rounded-lg text-sm gap-2 items-center">
+                    <div class="flex w-full shadow-md bg-white border p-3 rounded-lg gap-2 items-center">
                         <div class="flex-grow">
                             <div class="border-b w-full flex items-center gap-2 pb-2">
                                 @svg('fluentui-calendar-info-20-o', 'w-6 h-6 text-blue-700')
@@ -102,14 +102,14 @@
                             </div>
                             <div class="flex pt-2 items-center gap-2">
                                 @svg('fluentui-clock-16-o', 'w-6 h-6 opacity-60')
-                                <div class="label flex-grow">
+                                <div class="flex-grow text-sm">
                                     <p class="font-semibold">
                                         {{ $from }} - {{ $to }}
                                     </p>
                                     <div class="flex ">
                                         @foreach ($days as $key => $day)
                                             @if (in_array($day['key'], $schedule->days))
-                                                <span class="text-xs text-stone-500">
+                                                <span class="text-stone-500">
                                                     {{ $day['name'] }}
                                                     {{ $key < count($schedule->days) - 1 ? ',' : '' }}
                                                 </span>
@@ -156,7 +156,7 @@
                                     </header>
                                     <form action="/api/schedules/{{ $schedule->id }}" id="dialog-form-{{ $schedule->id }}"
                                         method="POST" class="dinamic-form body grid gap-4">
-                                        @include('modules.users.schedules.slug.form', [
+                                        @include('modules.schedules.slug.form', [
                                             'schedule' => $schedule,
                                         ])
                                     </form>

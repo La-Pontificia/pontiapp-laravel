@@ -3,6 +3,7 @@
 namespace App\services;
 
 use App\Models\Audit;
+use Illuminate\Support\Facades\Auth;
 use Jenssegers\Agent\Agent;
 use Stevebauman\Location\Facades\Location;
 
@@ -14,7 +15,7 @@ class AuditService
         $agent = new Agent();
         $location = Location::get($request->ip());
         Audit::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'module' => $module,
             'title' => $title,
             'description' => $description,
