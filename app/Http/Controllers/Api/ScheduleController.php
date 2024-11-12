@@ -248,14 +248,7 @@ class ScheduleController extends Controller
             return response()->json('Group not found', 404);
         }
 
-        $alreadyUsedCount = $group->schedules()->count();
         $alreadyUsersCount = $group->users()->count();
-
-
-        if ($alreadyUsedCount > 0) {
-            $for = $alreadyUsedCount == 1 ? 'un horario' : $alreadyUsedCount . ' horarios';
-            return response()->json('No se puede eliminar el grupo porque ya está siendo usado por ' . $for . '.', 400);
-        }
 
         if ($alreadyUsersCount > 0) {
             $for = $alreadyUsersCount == 1 ? 'un usuario' : $alreadyUsersCount . ' usuarios';
