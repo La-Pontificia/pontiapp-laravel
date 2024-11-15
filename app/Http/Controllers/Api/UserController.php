@@ -13,6 +13,7 @@ use App\Models\UserBusinessUnit;
 use App\Models\UserTerminal;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -93,7 +94,7 @@ class UserController extends Controller
             'entry_date' => $request->entry_date,
             'exit_date' => $request->exit_date,
             'username' => $request->username,
-            'created_by' => auth()->user()->id,
+            'created_by' => Auth::id(),
         ]);
 
         // business_units
@@ -133,15 +134,18 @@ class UserController extends Controller
         if ($already && $already->id !== $id)
             return response()->json('El usuario con el dni ingresado ya existe', 400);
 
-        $cuser = auth()->user();
+        $cuser = Auth::user();
 
         // construct and validate date of birth
         $year = $request->date_of_birth_year;
         $month = $request->date_of_birth_month;
         $day = $request->date_of_birth_day;
+
         if (!checkdate($month, $day, $year))
             return response()->json('La fecha de nacimiento no es valida', 400);
+
         $dateOfBirth = $year . '-' . $month . '-' . $day;
+
         $date = new \DateTime($dateOfBirth);
         $now = new \DateTime();
         $interval = $now->diff($date);
@@ -167,7 +171,7 @@ class UserController extends Controller
 
         $user = User::find($id);
         request()->validate(User::$organization);
-        $cuser = auth()->user();
+        $cuser = Auth::user();
 
         // terminals
         UserTerminal::where('user_id', $user->id)->delete();
@@ -199,7 +203,7 @@ class UserController extends Controller
     {
 
         $user = User::find($id);
-        $cuser = auth()->user();
+        $cuser = Auth::user();
 
         if ($user->entry_date && $user->exit_date) {
             HistoryUserEntry::create([
@@ -412,7 +416,7 @@ class UserController extends Controller
         ]);
 
         $user = User::find($id);
-        $cuser = User::find(auth()->user()->id);
+        $cuser = User::find(Auth::id());
         if (!$user)
             return response()->json('El usuario no existe', 400);
 
