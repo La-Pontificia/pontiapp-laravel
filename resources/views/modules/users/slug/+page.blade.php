@@ -96,14 +96,14 @@
                                 @endphp
                                 <div class="flex shadow-sm border p-2 rounded-lg bg-white text-sm gap-2 items-center">
                                     @svg('fluentui-clock-16-o', 'w-5 h-5 opacity-60')
-                                    <div class="label">
+                                    <div class="">
                                         <p class="font-semibold">
                                             {{ $from }} - {{ $to }}
                                         </p>
                                         <div class="flex ">
                                             @foreach ($daysMatch as $key => $day)
                                                 @if (in_array($day['key'], $schedule->days))
-                                                    <span class="text-xs text-stone-500">
+                                                    <span class="text-stone-500">
                                                         {{ $day['name'] }}
                                                         {{ $key < count($schedule->days) - 1 ? ',' : '' }}
                                                     </span>
