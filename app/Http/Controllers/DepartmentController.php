@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Department;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DepartmentController extends Controller
 {
@@ -30,7 +31,7 @@ class DepartmentController extends Controller
 
         if ($query) {
             $match->where('name', 'like', '%' . $query . '%')
-                ->orWhere('code', 'like', '%' . $query . '%')
+                ->orWhere('code', 'like', '%' . $query . '%');
         }
 
         $departments = $match->paginate();
@@ -69,7 +70,7 @@ class DepartmentController extends Controller
         $department->name = $request->name;
         $department->code = $code;
         $department->id_area = $request->id_area;
-        $department->created_by = auth()->user()->id;
+        $department->created_by = Auth::id();
         $department->save();
 
         $this->auditService->registerAudit('Departamento creado', 'Se ha creado un departamento', 'maintenances', 'create', $request);
@@ -94,7 +95,7 @@ class DepartmentController extends Controller
         $department->code = $request->code;
         $department->name = $request->name;
         $department->id_area = $request->id_area;
-        $department->updated_by = auth()->user()->id;
+        $department->updated_by = Auth::id();
         $department->save();
 
         $this->auditService->registerAudit('Departamento actualizado', 'Se ha actualizado un departamento', 'maintenances', 'update', $request);
