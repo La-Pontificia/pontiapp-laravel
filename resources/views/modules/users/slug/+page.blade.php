@@ -300,6 +300,8 @@
                     Atras
                 </button>
                 <div class="grid gap-4 w-full">
+
+                    {{-- User details --}}
                     <div class="border-t pt-2 text-lg">
                         <p>
                             Detalles del usuario
@@ -368,6 +370,8 @@
                             </button>
                         </div>
                     </form>
+
+                    {{-- User organization --}}
                     <div class="border-t pt-4 mt-7 text-lg">
                         <p>
                             Organización y horarios
@@ -465,12 +469,12 @@
                                 <div class="grid grid-cols-2 gap-4 w-full">
                                     <label class="label">
                                         <span>Fecha de ingreso</span>
-                                        <input value="{{ $user->entry_date ? $user->entry_date->format('d/m/Y') : '' }}"
+                                        <input value="{{ $user->entry_date ? $user->entry_date->format('Y-m-d') : '' }}"
                                             autocomplete="off" type="date" name="entry_date">
                                     </label>
                                     <label class="label">
                                         <span>Fecha de Cese</span>
-                                        <input value="{{ $user->exit_date ? $user->exit_date->format('d/m/Y') : '' }}"
+                                        <input value="{{ $user->exit_date ? $user->exit_date->format('Y-m-d') : '' }}"
                                             autocomplete="off" type="date" name="exit_date">
                                     </label>
                                 </div>
@@ -555,6 +559,8 @@
                             </button>
                         </div>
                     </form>
+
+                    {{-- User roles and privileges --}}
                     <div class="border-t pt-4 mt-7 text-lg">
                         <p>
                             Rol y privilegios
@@ -582,6 +588,8 @@
                             </button>
                         </div>
                     </form>
+
+                    {{-- User security and access --}}
                     <div class="border-t pt-4 mt-7 text-lg">
                         <p>
                             Seguridad y accesos
