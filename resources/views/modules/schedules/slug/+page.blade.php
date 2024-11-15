@@ -92,7 +92,7 @@
                         $from = date('h:i A', strtotime($schedule->from));
                         $to = date('h:i A', strtotime($schedule->to));
                     @endphp
-                    <div class="flex w-full shadow-md bg-white border p-3 rounded-lg gap-2 items-center">
+                    <div class="flex w-full shadow-md bg-white border p-3 rounded-xl gap-2 items-center">
                         <div class="flex-grow">
                             <div class="border-b w-full flex items-center gap-2 pb-2">
                                 @svg('fluentui-calendar-info-20-o', 'w-6 h-6 text-blue-700')
@@ -102,11 +102,11 @@
                             </div>
                             <div class="flex pt-2 items-center gap-2">
                                 @svg('fluentui-clock-16-o', 'w-6 h-6 opacity-60')
-                                <div class="flex-grow text-sm">
+                                <div class="flex-grow">
                                     <p class="font-semibold">
                                         {{ $from }} - {{ $to }}
                                     </p>
-                                    <div class="flex ">
+                                    <div class="flex">
                                         @foreach ($days as $key => $day)
                                             @if (in_array($day['key'], $schedule->days))
                                                 <span class="text-stone-500">

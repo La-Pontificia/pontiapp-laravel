@@ -17,21 +17,21 @@
     $background = isset($schedule) ? $schedule->background : '#52525b';
 
     $times = [];
+    $amPmLabels = ['AM', 'PM'];
+
     for ($hour = 5; $hour <= 23; $hour++) {
         for ($minute = 0; $minute < 60; $minute += 15) {
-            $time = $hour . ':' . str_pad($minute, 2, '0', STR_PAD_LEFT);
-            $label = ($hour < 12
-                    ? $hour . ':' . str_pad($minute, 2, '0', STR_PAD_LEFT) . ' AM'
-                    : $hour > 12)
-                ? $hour - 12 . ':' . str_pad($minute, 2, '0', STR_PAD_LEFT) . ' PM'
-                : '12:' . str_pad($minute, 2, '0', STR_PAD_LEFT) . ' PM';
+            $amPmIndex = $hour >= 12 ? 1 : 0;
+            $hourDisplay = $hour % 12 == 0 ? 12 : $hour % 12;
+            $timeValue = sprintf('%02d:%02d', $hourDisplay, $minute);
+            $timeLabel = sprintf('%02d:%02d %s', $hourDisplay, $minute, $amPmLabels[$amPmIndex]);
+
             $times[] = [
-                'value' => $time,
-                'label' => $label,
+                'value' => $timeValue,
+                'label' => $timeLabel,
             ];
         }
     }
-
 @endphp
 
 
@@ -44,15 +44,17 @@
         class="outline-none">Título: </fluent-text-field>
 </div>
 
-<div class="grid-cols-2 hidden gap-5">
+<div class="grid-cols-2 gap-5">
     <label class="label">
-        <span>Inicia a partir de la fecha:</span>
+        <span>Inicia a partir de la fecha: (Opcional)</span>
         <input value="{{ $startDate }}" type="date" placeholder="Nombre" name="start_date">
     </label>
-    <label class="label">
-        <span>Finaliza en la fecha:</span>
-        <input value="{{ $endDate }}" type="date" name="end_date">
-    </label>
+    <div class="hidden">
+        <label class="label ">
+            <span>Finaliza en la fecha:</span>
+            <input value="{{ $endDate }}" type="date" name="end_date">
+        </label>
+    </div>
 </div>
 
 <div>
