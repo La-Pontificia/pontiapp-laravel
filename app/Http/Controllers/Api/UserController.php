@@ -12,8 +12,10 @@ use App\Models\User;
 use App\Models\UserBusinessUnit;
 use App\Models\UserTerminal;
 use App\services\AuditService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -297,17 +299,45 @@ class UserController extends Controller
         $list = User::where('first_name', 'like', '%' . $query . '%')
             ->orWhere('last_name', 'like', '%' . $query . '%')
             ->orWhere('dni', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%')
             ->get();
-
-        // create new array and add full name
         $users = [];
         foreach ($list as $user) {
             $user->full_name = $user->first_name . ' ' . $user->last_name;
+            $user->role_position = $user->role_position->name;
             $users[] = $user;
         }
 
         return response()->json($users, 200);
     }
+
+    public function quickSearch(Request $request)
+    {
+        $query = $request->query('query');
+        $cacheKey = 'quickSearch_' . md5($query);
+
+        $users = Cache::remember($cacheKey, Carbon::now()->addMinutes(60), function () use ($query) {
+            return User::select('id', 'first_name', 'last_name', 'profile', 'id_role')
+                ->where('first_name', 'like', '%' . $query . '%')
+                ->orWhere('last_name', 'like', '%' . $query . '%')
+                ->orWhere('dni', 'like', '%' . $query . '%')
+                ->orWhere('email', 'like', '%' . $query . '%')
+                ->limit(10)
+                ->get()
+                ->map(function ($user) {
+                    return [
+                        'full_name' => $user->first_name . ' ' . $user->last_name,
+                        'id' => $user->id,
+                        'role_position' => $user->role_position->name,
+                        'avatar' => $user->profile,
+                    ];
+                });
+        });
+
+
+        return response()->json($users, 200);
+    }
+
 
     public function searchSupervisor(Request $request, $id)
     {
