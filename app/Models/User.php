@@ -39,6 +39,7 @@ class User extends Authenticatable
         'created_by',
         'updated_by',
         'entry_date',
+        'full_name',
         'exit_date',
         'date_of_birth',
         'default_assist_terminal_id'
