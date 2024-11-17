@@ -111,4 +111,33 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
     });
+
+    // search input
+
+    const $search = $("#search");
+    const $searchButton = $("#search-button");
+    const $searchInput = $("#search-input");
+    const $seachOverlay = $("#search-overlay");
+    const $modalSearch = $("#search-result-modal");
+
+    $searchInput?.addEventListener("focus", () => {
+        $modalSearch.setAttribute("data-open", "");
+        $seachOverlay?.setAttribute("data-open", "");
+    });
+
+    if ($searchButton) {
+        $searchButton.onclick = () => {
+            $search?.setAttribute("data-open", "");
+            $seachOverlay?.setAttribute("data-open", "");
+            $searchInput?.focus();
+        };
+    }
+
+    if ($seachOverlay) {
+        $seachOverlay.onclick = () => {
+            $search.removeAttribute("data-open");
+            $seachOverlay.removeAttribute("data-open");
+            $modalSearch.removeAttribute("data-open");
+        };
+    }
 });

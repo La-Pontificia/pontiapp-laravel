@@ -60,18 +60,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 );
                 const uri = res.data.secure_url;
-                const id = inputProfile.getAttribute("data-userid");
+                const id = $inputProfile.getAttribute("data-userid");
 
                 await axios.post(`/api/users/${id}/profile`, { profile: uri });
 
                 window.location.reload();
             } catch (error) {
                 console.error(error);
-                window.toast.fire({
-                    icon: "error",
-                    title:
-                        error.response.data ?? "Error al enviar el formulario",
-                });
+                alert("Error al subir la imagen");
             }
         }
     });
@@ -265,183 +261,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         await window.mutation(action, Object.fromEntries(formData));
 
         window.enabledFormChildren(formChangePassword);
-    });
-
-    // export data users
-
-    const $exportButton = $("#export-users");
-
-    $exportButton?.addEventListener("click", async () => {
-        $exportButton.disabled = true;
-        $exportButton.querySelector("span").textContent = "Exportando...";
-        const url = new URL(window.location.href);
-        const searchParams = url.searchParams;
-
-        const { users, business_units } = await window.query(
-            `/api/users/export?${searchParams.toString()}`
-        );
-
-        const date = moment().format("DD-MM-YYYY");
-        const filename = `Usuarios-${date}`;
-
-        const workbook = new ExcelJS.Workbook();
-        const response = await fetch("/templates/users.xlsx");
-        const arrayBuffer = await response.arrayBuffer();
-
-        if (!arrayBuffer) return;
-
-        await workbook.xlsx.load(arrayBuffer);
-        const worksheet = workbook.getWorksheet("Usuarios");
-        const startRow = 6;
-
-        // dinamic business columns
-        business_units.forEach((bu, i) => {
-            const index = 4 + i;
-            worksheet.spliceColumns(index, 0, []);
-            worksheet.getColumn(index).width = 4;
-
-            const cell = worksheet.getCell(5, index);
-            cell.value = bu.acronym ?? bu.name;
-            cell.font = { color: { argb: "FFFFFFFF" } };
-            cell.fill = {
-                type: "pattern",
-                pattern: "solid",
-                fgColor: { argb: "315496" },
-            };
-            cell.alignment = {
-                vertical: "middle",
-                horizontal: "center",
-                textRotation: 90,
-            };
-            cell.border = {
-                top: { style: "thin" },
-                left: { style: "thin" },
-                bottom: { style: "thin" },
-                right: { style: "thin" },
-            };
-        });
-
-        // merge business columns
-        const endColumn = 4 + business_units.length - 1;
-        worksheet.mergeCells(4, 4, 4, endColumn);
-        const cell = worksheet.getCell(4, 4);
-        cell.value = "Unidad de Negocio";
-        cell.font = { color: { argb: "FFFFFFFF" } };
-        cell.fill = {
-            type: "pattern",
-            pattern: "solid",
-            fgColor: { argb: "012060" },
-        };
-        cell.alignment = {
-            horizontal: "center",
-        };
-        cell.border = {
-            top: { style: "thin" },
-            left: { style: "thin" },
-            bottom: { style: "thin" },
-            right: { style: "thin" },
-        };
-
-        users.forEach((user, i) => {
-            const businessIds = user.business_units.map(
-                (bu) => bu.business_unit_id
-            );
-
-            const row = worksheet.getRow(startRow + i);
-            const index = i + 1 < 10 ? `0${i + 1}` : i + 1;
-            row.getCell(2).value = index;
-            row.getCell(3).value = user.status ? "✅" : "";
-
-            business_units.forEach((bu, j) => {
-                row.getCell(4 + j).value = businessIds.includes(bu.id)
-                    ? "✅"
-                    : "";
-            });
-
-            const newColumn = 3 + business_units.length;
-
-            row.getCell(newColumn + 1).value = user.dni;
-            row.getCell(
-                newColumn + 2
-            ).value = `${user.last_name}, ${user.first_name}`;
-            row.getCell(newColumn + 3).value = user.date_of_birth
-                ? moment(user.date_of_birth).format("DD-MM-YYYY")
-                : "";
-            row.getCell(newColumn + 4).value = user.email;
-            row.getCell(newColumn + 5).value =
-                user.role_position.department.area.name;
-            row.getCell(newColumn + 6).value =
-                user.role_position.department.name;
-            row.getCell(newColumn + 7).value =
-                user.role_position.job_position.name;
-            row.getCell(newColumn + 8).value = user.role_position.name;
-            row.getCell(newColumn + 9).value = user.supervisor
-                ? `${user.supervisor.last_name}, ${user.supervisor.first_name}`
-                : "";
-            row.getCell(newColumn + 10).value = user.profile;
-            row.getCell(newColumn + 11).value = user.role.title;
-            row.getCell(newColumn + 12).value = user.status
-                ? "Activo"
-                : "Inactivo";
-            row.getCell(newColumn + 13).value = user.branch.name;
-            row.getCell(newColumn + 14).value = moment(user.created_at).format(
-                "DD-MM-YYYY HH:mm"
-            );
-            row.getCell(newColumn + 15).value = moment(user.updated_at).format(
-                "DD-MM-YYYY HH:mm"
-            );
-            row.commit();
-        });
-
-        const businessColumns = Array.from(
-            { length: endColumn - 2 },
-            (_, i) => i + 3
-        );
-
-        worksheet.columns.forEach((column) => {
-            if (businessColumns.includes(column.number)) return;
-
-            let maxLength = 0;
-            column.eachCell({ includeEmpty: true }, (cell) => {
-                const cellValue = cell.value ? cell.value.toString() : "";
-                maxLength = Math.max(maxLength, cellValue.length);
-            });
-            column.width = maxLength < 10 ? 10 : maxLength + 2;
-        });
-
-        const buffer = await workbook.xlsx.writeBuffer();
-
-        const blob = new Blob([buffer], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = filename + ".xlsx";
-        link.click();
-
-        $exportButton.disabled = false;
-        $exportButton.querySelector("span").textContent = "Exportar";
-    });
-
-    const exportEmailAcessButton = $("#export-email-access");
-
-    exportEmailAcessButton?.addEventListener("click", async () => {
-        const url = new URL(window.location.href);
-        const searchParams = url.searchParams;
-        const uri = `/api/users/export-email-access?${searchParams.toString()}`;
-        try {
-            const { data: users } = await axios.get(uri);
-
-            const workbook = new ExcelJS.Workbook();
-            const worksheet = workbook.addWorksheet("Usuarios");
-            console.log(users);
-        } catch (error) {
-            console.error(error);
-            window.toast.fire({
-                icon: "error",
-                title: "Error al exportar los datos",
-            });
-        }
     });
 });
