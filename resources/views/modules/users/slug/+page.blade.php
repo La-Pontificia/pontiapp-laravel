@@ -53,6 +53,7 @@
     ];
 
     $days = range(1, 31);
+
     $months = [
         'Enero',
         'Febrero',
@@ -67,6 +68,7 @@
         'Noviembre',
         'Diciembre',
     ];
+
     $years = range(date('Y'), date('Y') - 100);
 
     $userYear = $user->date_of_birth ? date('Y', strtotime($user->date_of_birth)) : null;
@@ -83,18 +85,18 @@
 
 @section('layout.users.slug')
 
-    <div class="max-w-2xl p-2 text-stone-700 h-full flex flex-col flex-grow mx-auto w-full">
+    <div class="max-w-7xl p-2 text-stone-700 h-full flex flex-col flex-grow mx-auto w-full">
         @if (!$isEdit)
             <div class="p-1 pt-2 flex flex-grow flex-col gap-4">
                 @if (count($user->summarySchedules()) !== 0)
                     <div>
-                        <div class="grid grid-cols-3 gap-2">
+                        <div class="grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 grid-cols-1 gap-2">
                             @foreach ($user->summarySchedules() as $schedule)
                                 @php
                                     $from = date('h:i A', strtotime($schedule->from));
                                     $to = date('h:i A', strtotime($schedule->to));
                                 @endphp
-                                <div class="flex shadow-sm border p-2 rounded-lg bg-white text-sm gap-2 items-center">
+                                <div class="flex p-2 rounded-lg bg-blue-600 text-white text-sm gap-2 items-center">
                                     @svg('fluentui-clock-16-o', 'w-5 h-5 opacity-60')
                                     <div class="">
                                         <p class="font-semibold">
@@ -103,7 +105,7 @@
                                         <div class="flex ">
                                             @foreach ($daysMatch as $key => $day)
                                                 @if (in_array($day['key'], $schedule->days))
-                                                    <span class="text-stone-500">
+                                                    <span class="text-stone-100">
                                                         {{ $day['name'] }}
                                                         {{ $key < count($schedule->days) - 1 ? ',' : '' }}
                                                     </span>

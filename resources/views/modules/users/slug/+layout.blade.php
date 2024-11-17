@@ -45,7 +45,7 @@
 @section('layout.users')
     <div class="text-black pt-4 pb-2 w-full flex-col flex-grow flex overflow-y-auto">
         <div class="w-full h-full flex-grow flex flex-col">
-            <header class="mb-2 bg-white p-3 rounded-xl shadow-md max-w-2xl w-full mx-auto">
+            <header class="mb-2 p-3 rounded-xl max-w-7xl w-full mx-auto">
                 <div class="flex gap-4 items-center overflow-hidden">
                     <div class="relative group w-fit overflow-hidden rounded-full">
                         <div class="flex items-center gap-4">
