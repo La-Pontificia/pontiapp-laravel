@@ -84,6 +84,7 @@ class UserController extends Controller
             'dni' => $request->dni,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'full_name' => $request->first_name . ' ' . $request->last_name,
             'password' => bcrypt($request->password ?? $request->dni),
             'role' => $request->role,
             'email' => $constructEmail,
@@ -159,6 +160,7 @@ class UserController extends Controller
         $user->date_of_birth = $dateOfBirth;
         $user->dni = $request->dni;
         $user->first_name = $request->first_name;
+        $user->full_name = $request->first_name . ' ' . $request->last_name;
         $user->last_name = $request->last_name;
         $user->updated_by = $cuser->id;
         $user->save();
@@ -296,8 +298,7 @@ class UserController extends Controller
     public function search(Request $request)
     {
         $query = $request->query('query');
-        $list = User::where('first_name', 'like', '%' . $query . '%')
-            ->orWhere('last_name', 'like', '%' . $query . '%')
+        $list = User::where('full_name', 'like', '%' . $query . '%')
             ->orWhere('dni', 'like', '%' . $query . '%')
             ->orWhere('email', 'like', '%' . $query . '%')
             ->get();
@@ -317,16 +318,15 @@ class UserController extends Controller
         $cacheKey = 'quickSearch_' . md5($query);
 
         $users = Cache::remember($cacheKey, Carbon::now()->addMinutes(60), function () use ($query) {
-            return User::select('id', 'first_name', 'last_name', 'profile', 'id_role')
-                ->where('first_name', 'like', '%' . $query . '%')
-                ->orWhere('last_name', 'like', '%' . $query . '%')
+            return User::select('id', 'full_name', 'profile', 'id_role')
+                ->where('full_name', 'like', '%' . $query . '%')
                 ->orWhere('dni', 'like', '%' . $query . '%')
                 ->orWhere('email', 'like', '%' . $query . '%')
                 ->limit(10)
                 ->get()
                 ->map(function ($user) {
                     return [
-                        'full_name' => $user->first_name . ' ' . $user->last_name,
+                        'full_name' => $user->full_name,
                         'id' => $user->id,
                         'role_position' => $user->role_position->name,
                         'avatar' => $user->profile,
