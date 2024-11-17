@@ -13,15 +13,23 @@
         </div>
         @include('modules.search')
         <nav class="flex-grow basis-0 justify-end flex items-center gap-4">
-            <button class="max-md:block hidden">
+            <button class="max-md:block hidden" id="search-button">
                 @svg('fluentui-search-28-o', 'w-6 h-6')
             </button>
-            <button>
-                @svg('fluentui-settings-20-o', 'w-6 h-6')
+            <a title="Guía del usuario" href="/docs/user-guide"
+                class="md:p-2 md:py-1 md:hover:bg-blue-500/10 font-semibold text-sm text-nowrap flex items-center gap-1 rounded-md border-blue-500 text-blue-600 md:border">
+                @svg('fluentui-book-contacts-20-o', 'w-6 h-6')
+                <p class="max-md:hidden">
+                    Guia
+                </p>
+            </a>
+            <button title="Enviar bug o sugerencia">
+                @svg('fluentui-person-feedback-20-o', 'w-6 h-6')
             </button>
-            <button>
+            <button title="Notificaciones">
                 @svg('fluentui-alert-28-o', 'w-6 h-6')
             </button>
+
             <button type="button" class="flex items-center gap-2" id="user-menu-button" aria-expanded="false"
                 data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                 @include('commons.avatar', [
