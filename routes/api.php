@@ -23,6 +23,7 @@ use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\Api\TicketController as ApiTicketController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\YearController;
 use Illuminate\Http\Request;
@@ -45,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users/export-email-access', [ControllersUserController::class, 'exportEmailAccess']);
 
     Route::get('users/search', [UserController::class, 'search']);
+    Route::get('users/search/quick', [UserController::class, 'quickSearch']);
     Route::post('users/email-access/{id}', [UserController::class, 'updateEmailAccess']);
     Route::get('users/supervisor/{id}/search', [UserController::class, 'searchSupervisor']);
     Route::post('users/supervisor/remove/{id}', [UserController::class, 'removeSupervisor']);
@@ -133,7 +135,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('questionnaire-templates/{id}/use/{for}', [QuestionnaireTemplateController::class, 'use']);
 
     // assists routes
-
     Route::get('assists/export', [AssistsController::class, 'peerScheduleExport']);
     Route::post('assists/sn-schedules/report', [AssistsController::class, 'snSchedulesReport']);
     Route::post('assists/without-calculating/report', [AssistsController::class, 'withoutCalculatingExport']);
@@ -167,7 +168,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('schedules/user/{id}', [ScheduleController::class, 'by_user']);
 
     // Events routes
-
     Route::post('events', [EventController::class, 'store']);
     Route::post('events/assists', [EventAssistController::class, 'create']);
     Route::post('events/assists/report', [EventAssistController::class, 'report']);
@@ -176,17 +176,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('events/{id}/delete', [EventController::class, 'delete']);
 
     // Reports routes
-
     Route::post('reports/{id}', [ReportController::class, 'update']);
 
     Route::get('person/{document_id}', [UtilsController::class, 'person']);
 
-
     // Audit routes
     Route::post('audits/{id}/delete', [AuditController::class, 'delete']);
-
 
     // -------- TICKETS ROUTES ---------------------------
     Route::post('tickets', [TicketController::class, 'store']);
     Route::post('tickets/settings/business-units', [TicketController::class, 'SettingsBusinessUnitsUpdate']);
+    Route::post('tickets/settings/modules', [ApiTicketController::class, 'settingModule']);
+    Route::post('tickets/settings/modules/{id}', [ApiTicketController::class, 'settingModuleUpdate']);
+    Route::post('tickets/settings/modules/delete/{id}', [ApiTicketController::class, 'settingModuleDelete']);
 });
