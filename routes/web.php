@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BusinessUnitController;
+use App\Http\Controllers\ContractTypeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EdaController;
 use App\Http\Controllers\EventAssistController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobPositionController;
-use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\QuestionnaireTemplateController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -115,7 +115,7 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('settings/departments', [DepartmentController::class, 'index']);
     Route::get('settings/job-positions', [JobPositionController::class, 'index']);
     Route::get('settings/roles', [RoleController::class, 'index']);
-
+    Route::get('settings/contract_types', [ContractTypeController::class, 'index']);
     Route::get('settings/branches', [BranchController::class, 'index']);
     Route::get('settings/business-units', [BusinessUnitController::class, 'index']);
 
@@ -132,7 +132,24 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // -------- TICKETS ROUTES ---------------------------
     Route::get('tickets', [TicketController::class, 'index']);
-    Route::get('tickets/real-time', [TicketController::class, 'realTime']);
+    // Route::get('tickets/pdf', [TicketController::class, 'pdf']);
+    Route::get('tickets/create', [TicketController::class, 'create']);
+    Route::get('tickets/create/manual', [TicketController::class, 'createManual']);
+
+    Route::get('tickets/tables', [TicketController::class, 'tables']);
+    Route::get('tickets/screen', [TicketController::class, 'screen']);
+    Route::get('tickets/attentions', [TicketController::class, 'attentions']);
+
+    Route::get('tickets/settings', [TicketController::class, 'settings']);
+    Route::get('tickets/settings/modules', [TicketController::class, 'settingsModules']);
+    Route::get('tickets/settings/subjects', [TicketController::class, 'settingsSubjects']);
+    Route::get('tickets/settings/business-units', [TicketController::class, 'settingsBusinessUnits']);
+
+    // Contract types
+
+    Route::post('contract-types', [ContractTypeController::class, 'store']);
+    Route::post('contract-types/{id}', [ContractTypeController::class, 'update']);
+    Route::post('contract-types/delete/{id}', [ContractTypeController::class, 'delete']);
 
     // routes if no route is found
     Route::fallback(function () {
