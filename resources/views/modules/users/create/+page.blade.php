@@ -183,6 +183,22 @@
                                     </select>
                                 </div>
                             </label>
+                            <label class="label">
+                                <span>Tipo de contrato</span>
+                                <div class="relative">
+                                    <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
+                                        @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
+                                    </div>
+                                    <select class="w-full" style="padding-left: 35px" name="contract_id">
+                                        <option disabled selected value="">
+                                            -- Seleccione un tipo --
+                                        </option>
+                                        @foreach ($contracts as $contract)
+                                            <option value="{{ $contract->id }}">{{ $contract->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </label>
                             <div class="label col-span-2">
                                 <span>
                                     Terminales de asistencia

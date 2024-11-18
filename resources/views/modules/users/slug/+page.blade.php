@@ -117,13 +117,13 @@
                             @endforeach
                         </div>
                         <div class="pt-3">
-                            <a class="font-semibold text-blue-600 hover:underline"
-                                href="/users/{{ $user->id }}/schedules">
+                            <a class=" text-blue-600 text-sm hover:underline" href="/users/{{ $user->id }}/schedules">
                                 Ver todos los horarios
                             </a>
                         </div>
                     </div>
                 @endif
+                {{-- // User details --}}
                 <div class="border-t pt-2 border-neutral-200">
                     <p class="pb-3 text-lg">
                         Información
@@ -132,9 +132,9 @@
                         <a href="mailto:{{ $user->email }}"
                             class="flex hover:bg-white p-1 rounded-lg text-sm font-semibold items-center gap-2 w-fit">
                             @svg('fluentui-mail-20-o', 'w-5 h-5')
-                            <div class="label flex flex-col gap-0">
+                            <div class=" flex flex-col gap-0">
                                 <span style="margin-bottom: 0px;">Email</span>
-                                <p class="leading-4 text-blue-500">
+                                <p class="leading-4 text-blue-500 text-sm font-normal">
                                     {{ $user->email }}
                                 </p>
                             </div>
@@ -168,6 +168,8 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- // User organization --}}
                 <div class="border-t pt-2 border-neutral-200">
                     <p class="pb-3 text-lg">
                         Organización
@@ -230,12 +232,13 @@
                         @endif
                     </div>
                     <div class="pt-3">
-                        <a class="font-semibold text-blue-600 hover:underline"
-                            href="/users/{{ $user->id }}/organization">
+                        <a class=" text-blue-600 text-sm hover:underline" href="/users/{{ $user->id }}/organization">
                             Ver toda la organización
                         </a>
                     </div>
                 </div>
+
+                {{-- // User roles and privileges --}}
                 <div class="border-t pt-2 border-neutral-200">
                     <div class="flex gap-2 pb-4 pt-2 flex-wrap">
                         @foreach ($user->businessUnits as $unit)
@@ -436,6 +439,23 @@
                                     @foreach ($group_schedules as $scheldule)
                                         <option {{ $user->group_schedule_id === $scheldule->id ? 'selected' : '' }}
                                             value="{{ $scheldule->id }}">{{ $scheldule->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </label>
+                        <label class="label">
+                            <span>Tipo de contrato</span>
+                            <div class="relative">
+                                <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
+                                    @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
+                                </div>
+                                <select class="w-full" style="padding-left: 35px" name="contract_id">
+                                    <option disabled selected value="">
+                                        -- Seleccione un tipo --
+                                    </option>
+                                    @foreach ($contracts as $contract)
+                                        <option {{ $user->contract_id === $contract->id ? 'selected' : '' }}
+                                            value="{{ $contract->id }}">{{ $contract->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
