@@ -61,17 +61,6 @@
                         $cuser->has('users:user-roles:show') ||
                         $cuser->isDev(),
                 ],
-                // [
-                //     'icon' => 'fluentui-people-settings-20-o',
-                //     'text' => 'Correos y accesos',
-                //     'href' => '/users/emails-access',
-                //     'active' => request()->is('users/emails-access*'),
-                //     'active-icon' => 'fluentui-people-settings-20',
-                //     'enable' =>
-                //         $cuser->has('users:emails-access:edit') ||
-                //         $cuser->has('users:emails-access:show') ||
-                //         $cuser->isDev(),
-                // ],
             ],
         ],
         [
@@ -193,13 +182,6 @@
                     'active' => request()->is('assists/without-calculating*'),
                     'active-icon' => 'fluentui-calculator-arrow-clockwise-20',
                 ],
-                // [
-                //     'icon' => 'fluentui-calculator-arrow-clockwise-20-o',
-                //     'text' => 'Calcular por horario',
-                //     'href' => '/assists/peer-schedule',
-                //     'active' => request()->is('assists/peer-schedule*'),
-                //     'active-icon' => 'fluentui-calculator-arrow-clockwise-20',
-                // ],
                 [
                     'icon' => 'fluentui-calendar-data-bar-20-o',
                     'text' => 'Resumen único de fechas',
@@ -222,7 +204,6 @@
             'icon' => 'fluentui-calendar-data-bar-20-o',
             'text' => 'Gestión Eventos',
             'href' => '/events',
-            'badge' => 'New',
             'active' => request()->is('events*'),
             'active-icon' => 'fluentui-calendar-data-bar-20',
             'enable' => $cuser->hasGroup('events') || $cuser->isDev(),
@@ -255,6 +236,14 @@
         //     'enable' => $cuser->hasGroup('tickets') || $cuser->isDev(),
         //     'subItems' => [
         //         [
+        //             'icon' => 'fluentui-add-circle-20-o',
+        //             'text' => 'Registro de ticket',
+        //             'href' => '/tickets/create',
+        //             'enable' => $cuser->has('tickets:create') || $cuser->isDev(),
+        //             'active' => request()->is('tickets/create'),
+        //             'active-icon' => 'fluentui-add-circle-20',
+        //         ],
+        //         [
         //             'icon' => 'fluentui-ticket-horizontal-20-o',
         //             'text' => 'Tickets',
         //             'href' => '/tickets',
@@ -263,20 +252,28 @@
         //             'active-icon' => 'fluentui-ticket-horizontal-20',
         //         ],
         //         [
-        //             'icon' => 'fluentui-flash-20-o',
-        //             'text' => 'Real Time',
-        //             'href' => '/tickets/real-time',
-        //             'enable' => $cuser->has('tickets:realtime:show') || $cuser->isDev(),
-        //             'active' => request()->is('tickets/real-time'),
-        //             'active-icon' => 'fluentui-flash-20',
+        //             'icon' => 'fluentui-tv-20-o',
+        //             'text' => 'Pantalla de tickets',
+        //             'href' => '/tickets/screen',
+        //             'enable' => $cuser->has('tickets:screen') || $cuser->isDev(),
+        //             'active' => request()->is('tickets/screen*'),
+        //             'active-icon' => 'fluentui-tv-20',
         //         ],
         //         [
         //             'icon' => 'fluentui-checkbox-person-20-o',
         //             'text' => 'Atenciones',
         //             'href' => '/tickets/attentions',
         //             'enable' => $cuser->has('tickets:attentions:show') || $cuser->isDev(),
-        //             'active' => request()->is('attentions'),
+        //             'active' => request()->is('tickets/attentions*'),
         //             'active-icon' => 'fluentui-checkbox-person-20',
+        //         ],
+        //         [
+        //             'icon' => 'fluentui-settings-20-o',
+        //             'text' => 'Ajustes',
+        //             'href' => '/tickets/settings',
+        //             'enable' => $cuser->has('tickets:settings') || $cuser->isDev(),
+        //             'active' => request()->is('tickets/settings*'),
+        //             'active-icon' => 'fluentui-settings-20',
         //         ],
         //     ],
         // ],
@@ -291,7 +288,6 @@
         [
             'icon' => 'fluentui-data-bar-vertical-add-20-o',
             'text' => 'Gestión Reportes',
-            'badge' => 'New',
             'href' => '/reports',
             'active' => request()->is('reports*'),
             'active-icon' => 'fluentui-data-bar-vertical-add-20',
@@ -356,6 +352,13 @@
                     'active' => request()->is('settings/business-units*'),
                     'active-icon' => 'fluentui-building-multiple-20',
                 ],
+                [
+                    'icon' => 'fluentui-handshake-20-o',
+                    'text' => 'Tipos de contrato',
+                    'href' => '/settings/contract_types',
+                    'active' => request()->is('settings/contract_types*'),
+                    'active-icon' => 'fluentui-handshake-20',
+                ],
             ],
         ],
     ];
@@ -383,7 +386,8 @@
         $otherItems[5]['enable'] ||
         $otherItems[6]['enable'] ||
         $otherItems[7]['enable'] ||
-        $otherItems[8]['enable']
+        $otherItems[8]['enable'] ||
+        $otherItems[9]['enable']
 )
     <nav class="py-2 border-t border-neutral-300 transition-all">
         @foreach ($otherItems as $item)
