@@ -88,6 +88,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password ?? $request->dni),
             'role' => $request->role,
             'email' => $constructEmail,
+            'contract_id' => $request->contract_id,
             'status' => true,
             'id_role' => $request->id_role,
             'id_role_user' => $request->id_role_user,
@@ -195,6 +196,7 @@ class UserController extends Controller
         $user->group_schedule_id = $request->group_schedule_id;
         $user->entry_date =  $request->entry_date;
         $user->exit_date =  $request->exit_date;
+        $user->contract_id = $request->contract_id;
         $user->updated_by = $cuser->id;
         $user->save();
 
