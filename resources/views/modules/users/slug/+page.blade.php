@@ -290,7 +290,8 @@
                                 </form>
                                 <footer>
                                     <button data-modal-hide="dialog" type="button">Cancelar</button>
-                                    <button form="form-change-password" type="submit" class="primary">Filtrar</button>
+                                    <button form="form-change-password" type="submit" class="primary">Actualizar
+                                        contraseña</button>
                                 </footer>
                             </div>
                         </div>
