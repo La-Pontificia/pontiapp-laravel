@@ -1,4 +1,5 @@
 @php
+
     $bgs = [
         'bg-stone-100',
         'bg-red-100',
@@ -30,6 +31,7 @@
     }
 
 @endphp
+
 <div class="rounded-full overflow-hidden aspect-square {{ $className }}">
     @if ($src)
         <img src={{ $src }} class="w-full h-full object-cover" alt="{{ $alt }}">
@@ -38,8 +40,11 @@
             $name = explode(' ', $alt);
             $initials = strtoupper($name[0][0] . $name[1][0]);
         @endphp
-        <div class="w-full {{ $randomBg }} h-full pointer-events-none select-none grid place-content-center">
+        {{-- <div class="w-full {{ $randomBg }} h-full pointer-events-none select-none grid place-content-center">
             <span class="font-semibold tracking-tight text-stone-600 {{ $altClass }}">{{ $initials }}</span>
+        </div> --}}
+        <div class="aspect-square w-full h-full text-stone-400 p-1.5 bg-stone-50 rounded-full border-2 border-stone-300">
+            @svg('fluentui-person-20-o', 'w-full h-full')
         </div>
     @endif
 </div>
