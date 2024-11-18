@@ -6,7 +6,7 @@
                 <div class="absolute inset-y-0 z-[21] flex items-center px-2 pointer-events-none">
                     @svg('fluentui-search-28-o', 'w-5 h-5 text-blue-600')
                 </div>
-                <input type="search" id="search-input" placeholder="Buscar" style="border: 0"
+                <input autocomplete="off" type="search" id="search-input" placeholder="Buscar" style="border: 0"
                     class="rounded-lg md:w-[500px] w-full z-20 pl-9 max-w-full drop-shadow-[0_1px_1px_rgba(0,0,0,.20)] hover:shadow-[0_1px_5px_rgba(0,0,0,.10)] border">
             </div>
             <template id="search-item-template">
