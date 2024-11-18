@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\JobPosition;
 use App\Models\Branch;
 use App\Models\BusinessUnit;
+use App\Models\ContractType;
 use App\Models\Department;
 use App\Models\GroupSchedule;
 use App\Models\Schedule;
@@ -15,6 +16,7 @@ use App\Models\UserRole;
 use App\services\AssistsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -127,26 +129,28 @@ class UserController extends Controller
     public function create()
     {
 
-        $cuser = User::find(auth()->user()->id);
+        $cuser = User::find(Auth::id());
         $user_roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'asc')->get();
 
         $job_positions = JobPosition::all();
+        $contracts = ContractType::all();
         $roles = Role::all();
         $users = User::all();
         $branches = Branch::all();
         $group_schedules = GroupSchedule::all();
         $terminals = AssistTerminal::all();
         $business_units = BusinessUnit::all();
-        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'user_roles', 'group_schedules', 'terminals', 'users', 'business_units'));
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'contracts', 'user_roles', 'group_schedules', 'terminals', 'users', 'business_units'));
     }
 
     public function slug($id)
     {
         $user = User::find($id);
-        $cuser = User::find(auth()->user()->id);
+        $cuser = User::find(Auth::id());
         $user_roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'asc')->get();
 
         $group_schedules = GroupSchedule::all();
+        $contracts = ContractType::all();
         $job_positions = JobPosition::all();
         $roles = Role::all();
         $terminals = AssistTerminal::all();
@@ -161,7 +165,7 @@ class UserController extends Controller
         $branches = Branch::all();
 
         if (!$user) return view('+500', ['error' => 'User not found']);
-        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'job_positions', 'roles', 'branches', 'terminals', 'users', 'business_units'));
+        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'contracts', 'job_positions', 'roles', 'branches', 'terminals', 'users', 'business_units'));
     }
 
     public function slug_details($id)
