@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssistTerminal;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AssistTerminalController extends Controller
 {
@@ -24,27 +25,27 @@ class AssistTerminalController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $request->validate(AssistTerminal::$rules);
-        $data = $request->all();
+        $req->validate(AssistTerminal::$rules);
+        $data = $req->all();
 
         $exists = AssistTerminal::where('database_name', $data['database_name'])->first();
         if ($exists) {
             return redirect()->back()->with('error', 'Database name already exists');
         }
 
-        $data['created_by'] = auth()->id();
-        $data['updated_by'] = auth()->id();
+        $data['created_by'] = Auth::id();
+        $data['updated_by'] = Auth::id();
         AssistTerminal::create($data);
 
 
-        $this->auditService->registerAudit('Terminal registrada', 'Se ha registrado una terminal', 'assists', 'create', $request);
+        $this->auditService->registerAudit('Terminal registrada', 'Se ha registrado una terminal', 'assists', 'create', $req);
 
         return response()->json('Terminal registrada.');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
         $terminal = AssistTerminal::find($id);
 
@@ -52,18 +53,18 @@ class AssistTerminalController extends Controller
             return response()->json('Terminal not found', 404);
         }
 
-        $request->validate(AssistTerminal::$rules);
-        $data = $request->all();
+        $req->validate(AssistTerminal::$rules);
+        $data = $req->all();
 
         $exists = AssistTerminal::where('database_name', $data['database_name'])->where('id', '!=', $id)->first();
         if ($exists) {
             return redirect()->back()->with('error', 'Database name already exists');
         }
 
-        $data['updated_by'] = auth()->id();
+        $data['updated_by'] = Auth::id();
         $terminal->update($data);
 
-        $this->auditService->registerAudit('Terminal actualizada', 'Se ha actualizado una terminal', 'assists', 'update', $request);
+        $this->auditService->registerAudit('Terminal actualizada', 'Se ha actualizado una terminal', 'assists', 'update', $req);
 
         return response()->json('Terminal actualizada.');
     }
