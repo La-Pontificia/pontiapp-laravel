@@ -117,19 +117,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
             });
         }, 250);
+
+        Cookies.set("showedBirthdayModal", "true", {
+            expires: 1,
+            path: "/",
+        });
     }
 
     $$(".close-birthday-modal").forEach((el) => {
         el.addEventListener("click", function () {
             $("#birthday-modal").remove();
             $("#birthday-modal-overlay").remove();
-
-            console.log(Cookies.get("showedBirthdayModal"));
-
-            Cookies.set("showedBirthdayModal", "true", {
-                expires: 1,
-                path: "/",
-            });
         });
     });
 });
