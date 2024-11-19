@@ -333,6 +333,8 @@
             ],
         ],
     ];
+
+    $userBirthday = request()->attributes->get('birthdayUsers') ?? [];
 @endphp
 
 
@@ -399,4 +401,24 @@
             </div>
         @endforeach
     </nav>
+@endif
+
+@if (count($userBirthday) > 0)
+    <div class="border-t border-neutral-30 px-3">
+        <h1 class="text-xs font-semibold py-2">
+            Cumpleaños
+        </h1>
+        <div class="flex gap-2 items-start">
+            <img class="w-[25px]" src="/birthday-gift.webp" alt="birthday-gift">
+            <p class="font-normal">
+                @foreach ($userBirthday as $user)
+                    <a class="font-semibold hover:underline" href="/users/{{ $user->id }}">
+                        {{ $user->names() }}{{ !$loop->last ? ', ' : '' }}
+                    </a>
+                @endforeach
+                {{ count($userBirthday) > 1 ? 'cumplen' : 'cumple' }}
+                años hoy.
+            </p>
+        </div>
+    </div>
 @endif

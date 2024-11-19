@@ -102,6 +102,67 @@
                                 </div>
                             </div>
                         @endif
+                        @if (request()->attributes->get('showBirthdayModal'))
+                            {{-- id="birthday-modal" --}}
+                            <div id="birthday-modal-overlay" class="bg-white/80 fixed close-birthday-modal inset-0 z-[999]">
+                            </div>
+                            <div id="birthday-modal"
+                                class="fixed z-[9999] p-10 inset-0 grid place-content-center pointer-events-none">
+                                <div role="dialog"
+                                    class="bg-white relative overflow-auto animate-fade-in p-10 drop-shadow-[0_0_15px_rgba(0,0,0,.3)] rounded-2xl pointer-events-auto">
+                                    <button class="absolute close-birthday-modal top-5 right-5 rotate-45">
+                                        @svg('fluentui-add-20-o', 'h-7 w-7')
+                                    </button>
+                                    <div class="pb-5">
+                                        <h2 class="text-2xl mx-auto pb-2 justify-center font-bold flex items-center">
+                                            ¡
+                                            <span class="text-green-600">H</span>
+                                            <span class="text-red-600">a</span>
+                                            <span class="text-yellow-600">p</span>
+                                            <span class="text-green-600">p</span>
+                                            <span class="text-blue-600">y</span>
+                                            <span class="text-purple-600 px-0.5 block"> </span>
+                                            <span class="text-yellow-600">B</span>
+                                            <span class="text-red-600">i</span>
+                                            <span class="text-yellow-600">r</span>
+                                            <span class="text-green-600">t</span>
+                                            <span class="text-blue-600">h</span>
+                                            <span class="text-purple-600">d</span>
+                                            <span class="text-red-600">a</span>
+                                            <span class="text-yellow-600">y</span>
+                                            !
+                                        </h2>
+                                        <p class="text-center opacity-80">
+                                            Hoy es el cumpleaños de los siguientes compañeros:
+                                        </p>
+                                    </div>
+                                    <div class="flex justify-center flex-wrap gap-3">
+                                        @foreach (request()->attributes->get('birthdayUsers') as $user)
+                                            <div class="p-2 gap-3 flex flex-col items-center">
+                                                @include('commons.avatar', [
+                                                    'src' => $user->profile,
+                                                    'className' =>
+                                                        'w-[150px] outline outline-offset-4 outline-blue-500',
+                                                    'alt' => $user->names(),
+                                                ])
+                                                <div>
+                                                    <h2 class="text-center font-semibold">
+                                                        {{ $user->names() }}
+                                                    </h2>
+                                                    <p class="text-center text-sm opacity-80">
+                                                        {{ $user->role_position->name }}
+                                                    </p>
+                                                    <p class="text-center text-sm opacity-80">
+                                                        {{ $user->role_position->department->area->name }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         @yield('content')
                     </div>
                 </main>
