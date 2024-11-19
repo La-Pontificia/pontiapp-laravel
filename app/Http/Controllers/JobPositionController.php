@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\JobPosition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JobPositionController extends Controller
 {
 
     // job positions 
-    public function index(Request $request)
+    public function index(Request $req)
     {
         $match = JobPosition::orderBy('level', 'asc');
-        $query = $request->get('query');
-        $level = $request->get('level');
+        $query = $req->get('query');
+        $level = $req->get('level');
 
         if ($query) {
             $match->where('name', 'like', '%' . $query . '%')
@@ -36,14 +37,14 @@ class JobPositionController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $jobs->perPage());
     }
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'level' => ['required', 'numeric'],
         ]);
 
-        $alreadyExistCode = JobPosition::where('code', $request->code)->first();
+        $alreadyExistCode = JobPosition::where('code', $req->code)->first();
         if ($alreadyExistCode) {
             return response()->json('Ya existe un registro con el mismo código.', 500);
         }
@@ -56,33 +57,33 @@ class JobPositionController extends Controller
 
         $new = new JobPosition();
         $new->code = $code;
-        $new->name = $request->name;
-        $new->level = $request->level;
-        $new->created_by = auth()->user()->id;
+        $new->name = $req->name;
+        $new->level = $req->level;
+        $new->created_by = Auth::id();
         $new->save();
 
         return response()->json('Puesto de trabajo creado correctamente', 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'code' => 'required',
             'level' => ['required', 'numeric'],
         ]);
 
-        $alreadyExistCode = JobPosition::where('code', $request->code)->first();
+        $alreadyExistCode = JobPosition::where('code', $req->code)->first();
 
         if ($alreadyExistCode && $alreadyExistCode->id != $id) {
             return response()->json('Ya existe un registro con el mismo código.', 500);
         }
 
         $update = JobPosition::find($id);
-        $update->code = $request->code;
-        $update->name = $request->name;
-        $update->level = $request->level;
-        $update->updated_by = auth()->user()->id;
+        $update->code = $req->code;
+        $update->name = $req->name;
+        $update->level = $req->level;
+        $update->updated_by = Auth::id();
         $update->save();
 
         return response()->json('Puesto de trabajo actualizado correctamente.', 200);

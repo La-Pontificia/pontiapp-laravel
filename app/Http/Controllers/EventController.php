@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\services\AuditService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -16,10 +17,10 @@ class EventController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function index(Request $request)
+    public function index(Request $req)
     {
 
-        $query = $request->get('query');
+        $query = $req->get('query');
 
         $match = Event::orderBy('created_at', 'desc');
 
@@ -32,9 +33,9 @@ class EventController extends Controller
         return view('modules.events.+page', compact('events'))->with('i', (request()->input('page', 1) - 1) * $events->perPage());
     }
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $validated = $request->validate([
+        $validated = $req->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'start_date' => 'required|date',
@@ -46,18 +47,18 @@ class EventController extends Controller
             'description' => $validated['description'],
             'start_date' => Carbon::parse($validated['start_date']),
             'end_date' => Carbon::parse($validated['end_date']),
-            'created_by' => auth()->id(),
-            'updated_by' => auth()->id(),
+            'created_by' => Auth::id(),
+            'updated_by' => Auth::id(),
         ]);
 
-        $this->auditService->registerAudit('Evento creado', 'Se ha creado un evento', 'events', 'create', $request);
+        $this->auditService->registerAudit('Evento creado', 'Se ha creado un evento', 'events', 'create', $req);
 
         return response()->json('Evento creado correctamente');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $validated = $request->validate([
+        $validated = $req->validate([
             'name' => 'required|max:255',
             'description' => 'required',
             'start_date' => 'required|date',
@@ -71,10 +72,10 @@ class EventController extends Controller
             'description' => $validated['description'],
             'start_date' => Carbon::parse($validated['start_date']),
             'end_date' => Carbon::parse($validated['end_date']),
-            'updated_by' => auth()->id(),
+            'updated_by' => Auth::id(),
         ]);
 
-        $this->auditService->registerAudit('Evento actualizado', 'Se ha actualizado un evento', 'events', 'update', $request);
+        $this->auditService->registerAudit('Evento actualizado', 'Se ha actualizado un evento', 'events', 'update', $req);
 
         return response()->json('Evento actualizado correctamente');
     }

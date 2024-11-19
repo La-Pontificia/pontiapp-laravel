@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Branch;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BranchController extends Controller
 {
@@ -16,10 +17,10 @@ class BranchController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function index(Request $request)
+    public function index(Request $req)
     {
         $match = Branch::orderBy('created_at', 'asc');
-        $query = $request->get('query');
+        $query = $req->get('query');
         if ($query) {
             $match->where('name', 'like', '%' . $query . '%')
                 ->orWhere('code', 'like', '%' . $query . '%')
@@ -32,38 +33,38 @@ class BranchController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $branches->perPage());
     }
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'address' => 'required',
         ]);
 
         $branch = new Branch();
-        $branch->name = $request->name;
-        $branch->address = $request->address;
-        $branch->created_by = auth()->user()->id;
+        $branch->name = $req->name;
+        $branch->address = $req->address;
+        $branch->created_by = Auth::id();
         $branch->save();
 
-        $this->auditService->registerAudit('Sede creado', 'Se ha creado una sede', 'maintenances', 'create', $request);
+        $this->auditService->registerAudit('Sede creado', 'Se ha creado una sede', 'maintenances', 'create', $req);
 
         return response()->json('Sede creado correctamente.', 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'address' => 'required',
         ]);
 
         $branch = Branch::find($id);
-        $branch->name = $request->name;
-        $branch->address = $request->address;
-        $branch->updated_by = auth()->user()->id;
+        $branch->name = $req->name;
+        $branch->address = $req->address;
+        $branch->updated_by = Auth::id();
         $branch->save();
 
-        $this->auditService->registerAudit('Sede actualizado', 'Se ha actualizado una sede', 'maintenances', 'update', $request);
+        $this->auditService->registerAudit('Sede actualizado', 'Se ha actualizado una sede', 'maintenances', 'update', $req);
 
         return response()->json('Sede actualizado correctamente.', 200);
     }

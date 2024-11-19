@@ -12,21 +12,22 @@ use App\Models\User;
 use App\Models\UserRole;
 use App\Models\Year;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EdaController  extends Controller
 {
 
 
-    public function index(Request $request, $isExport = false)
+    public function index(Request $req, $isExport = false)
     {
-        $cuser = User::find(auth()->user()->id);
+        $cuser = User::find(Auth::id());
         $match = Eda::orderBy('created_at', 'desc');
-        $query = $request->get('q');
-        $status = $request->get('status');
-        $year_id = $request->get('year');
+        $query = $req->get('q');
+        $status = $req->get('status');
+        $year_id = $req->get('year');
 
-        $job_position = $request->get('job_position');
-        $department = $request->get('department');
+        $job_position = $req->get('job_position');
+        $department = $req->get('department');
 
         if ($status && $status == 'sent') {
             $match->where('sent', '!=', null);
@@ -97,11 +98,11 @@ class EdaController  extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $edas->perPage());
     }
 
-    public function export(Request $request)
+    public function export(Request $req)
     {
-        $match = $this->index($request, true);
+        $match = $this->index($req, true);
         $all = $match->get();
-        $type = $request->type;
+        $type = $req->type;
 
         $edas = [];
 
@@ -235,15 +236,15 @@ class EdaController  extends Controller
         return response()->json($edas);
     }
 
-    public function collaborators(Request $request)
+    public function collaborators(Request $req)
     {
-        $role = $request->get('role');
-        $cuser = User::find(auth()->user()->id);
+        $role = $req->get('role');
+        $cuser = User::find(Auth::id());
         $match = User::orderBy('created_at', 'desc');
-        $query = $request->get('q');
-        $job_position = $request->get('job_position');
-        $status = $request->get('status');
-        $department = $request->get('department');
+        $query = $req->get('q');
+        $job_position = $req->get('job_position');
+        $status = $req->get('status');
+        $department = $req->get('department');
         $job_positions = JobPosition::all();
         $user_roles = UserRole::all();
 
@@ -304,7 +305,7 @@ class EdaController  extends Controller
 
     public function me()
     {
-        $user = auth()->user();
+        $user = User::find(Auth::id());
         $year = Year::orderBy('name', 'desc')->first();
         if (!$year) return view('pages.404');
         return redirect('/edas/' . $user->id . '/eda/' . $year->id);

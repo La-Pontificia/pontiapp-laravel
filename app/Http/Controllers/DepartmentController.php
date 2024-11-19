@@ -18,11 +18,11 @@ class DepartmentController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function index(Request $request)
+    public function index(Request $req)
     {
-        $area = $request->get('area');
+        $area = $req->get('area');
         $match = Department::orderBy('created_at', 'asc');
-        $query = $request->get('query');
+        $query = $req->get('query');
         $areas = Area::orderBy('created_at', 'asc')->get();
 
         if ($area) {
@@ -47,15 +47,15 @@ class DepartmentController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $departments->perPage());
     }
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'code' => 'required',
             'id_area' => ['required', 'uuid',  'max:36', 'min:36'],
         ]);
 
-        $alreadyExistCode = Department::where('code', $request->code)->first();
+        $alreadyExistCode = Department::where('code', $req->code)->first();
         if ($alreadyExistCode) {
             return response()->json('Ya existe un registro con el mismo código.', 500);
         }
@@ -67,38 +67,38 @@ class DepartmentController extends Controller
         }
 
         $department = new Department();
-        $department->name = $request->name;
+        $department->name = $req->name;
         $department->code = $code;
-        $department->id_area = $request->id_area;
+        $department->id_area = $req->id_area;
         $department->created_by = Auth::id();
         $department->save();
 
-        $this->auditService->registerAudit('Departamento creado', 'Se ha creado un departamento', 'maintenances', 'create', $request);
+        $this->auditService->registerAudit('Departamento creado', 'Se ha creado un departamento', 'maintenances', 'create', $req);
 
         return response()->json('Departamento creado correctamente.', 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'code' => 'required',
             'id_area' => ['required', 'uuid',  'max:36', 'min:36'],
         ]);
 
-        $alreadyExistCode = Department::where('code', $request->code)->first();
+        $alreadyExistCode = Department::where('code', $req->code)->first();
         if ($alreadyExistCode && $alreadyExistCode->id != $id) {
             return response()->json('Ya existe un registro con el mismo código.', 500);
         }
 
         $department = Department::find($id);
-        $department->code = $request->code;
-        $department->name = $request->name;
-        $department->id_area = $request->id_area;
+        $department->code = $req->code;
+        $department->name = $req->name;
+        $department->id_area = $req->id_area;
         $department->updated_by = Auth::id();
         $department->save();
 
-        $this->auditService->registerAudit('Departamento actualizado', 'Se ha actualizado un departamento', 'maintenances', 'update', $request);
+        $this->auditService->registerAudit('Departamento actualizado', 'Se ha actualizado un departamento', 'maintenances', 'update', $req);
 
         return response()->json('Departamento actualizado correctamente.', 200);
     }

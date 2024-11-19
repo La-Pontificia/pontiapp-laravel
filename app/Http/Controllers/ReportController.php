@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -13,12 +14,12 @@ class ReportController extends Controller
         return redirect('/reports/files');
     }
 
-    public function files(Request $request)
+    public function files(Request $req)
     {
 
-        $query = $request->get('query');
+        $query = $req->get('query');
 
-        $cuser = User::find(auth()->id());
+        $cuser = User::find(Auth::id());
 
         $hasAll = $cuser->has('reports:files:all') || $cuser->isDev();
 
@@ -42,10 +43,10 @@ class ReportController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $reports->perPage());
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
         $report = Report::find($id);
-        $report->title = $request->title;
+        $report->title = $req->title;
         $report->save();
 
         return response()->json('Reporte actualizado');

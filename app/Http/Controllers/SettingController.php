@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $req)
     {
         $match = Area::orderBy('created_at', 'desc');
-        $query = $request->get('query');
+        $query = $req->get('query');
 
         if ($query) {
             $match->where('code', 'like', '%' . $query . '%')

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Http;
 class EventAssistController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $req)
     {
         $events = Event::all();
         $match = AssistEvent::orderBy('created_at', 'desc');
@@ -27,10 +27,10 @@ class EventAssistController extends Controller
             ->groupBy('institution')
             ->get();
 
-        $event_id = $request->get('event');
-        $career = $request->get('career');
-        $period = $request->get('period');
-        $institution = $request->get('institution');
+        $event_id = $req->get('event');
+        $career = $req->get('career');
+        $period = $req->get('period');
+        $institution = $req->get('institution');
 
         if ($event_id) $match->where('event_id', $event_id);
         if ($career) $match->where('career', $career);
@@ -42,23 +42,23 @@ class EventAssistController extends Controller
         return view('modules.events.assists.+page', compact('events', 'assists', 'careers', 'periods', 'institutions'));
     }
 
-    public function create(Request $request)
+    public function create(Request $req)
     {
 
-        $query = $request->input('query');
-        $institution = $request->input('institution');
+        $query = $req->input('query');
+        $institution = $req->input('institution');
 
         if (!$institution) return response()->json('Institución no encontrada', 404);
 
 
         // logic to search the person by api: http://localhost:8000/api/people/74360982
-        // $dni = $request->dni;
+        // $dni = $req->dni;
         // $response = Http::get("http://localhost:8000/api/people/$dni");
         // if ($response->status() != 200) return response()->json('Persona no encontrada', 404);
         // $person = $response->json();
         // if (!$person) return response()->json('Persona no encontrada', 404);
 
-        $event = Event::find($request->input('event'));
+        $event = Event::find($req->input('event'));
 
         if (!$event) return response()->json('Evento no encontrado', 404);
 
@@ -89,9 +89,9 @@ class EventAssistController extends Controller
         return response()->json($assist);
     }
 
-    public function report(Request $request)
+    public function report(Request $req)
     {
-        AssistEventJob::dispatch($request->get('event'), $request->get('career'), $request->get('period'), $request->get('institution'), Auth::id());
+        AssistEventJob::dispatch($req->get('event'), $req->get('career'), $req->get('period'), $req->get('institution'), Auth::id());
         $user = User::find(Auth::id());
         return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $user->email . ' O tambien visualizar en la sección de descargas.');
     }
