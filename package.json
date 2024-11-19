@@ -22,6 +22,7 @@
     "dependencies": {
         "@midudev/tailwind-animations": "^0.1.0",
         "array-move": "^4.0.0",
+        "canvas-confetti": "^1.9.3",
         "flowbite": "^1.8.1",
         "html5sortable": "^0.14.0",
         "install": "^0.13.0",
