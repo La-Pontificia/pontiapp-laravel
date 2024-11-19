@@ -18,6 +18,17 @@
         ],
     ];
 
+    $simpleStatus = [
+        1 => [
+            'label' => 'Activo',
+            'className' => 'bg-green-100 text-green-800 border-green-400',
+        ],
+        0 => [
+            'label' => 'Inactivo',
+            'className' => 'bg-red-100 text-red-800 border-red-400',
+        ],
+    ];
+
 @endphp
 
 @section('layout.users')
@@ -122,11 +133,17 @@
                         <table>
                             <thead>
                                 <tr class="border-b text-sm">
-                                    <td class="w-full"></td>
+                                    <td class="w-full">
+                                        Usuario
+                                    </td>
+                                    <td>
+                                        <p class="font-semibold p-1">Estado</p>
+                                    </td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        <p class="font-semibold p-1">Supervisado por</p>
+                                    </td>
                                     <td></td>
                                 </tr>
                             </thead>
@@ -146,7 +163,7 @@
                                                     'altClass' => 'text-xl',
                                                 ])
                                                 <div class="flex-grow">
-                                                    <p class="text-nowrap">
+                                                    <p>
                                                         {{ $user->last_name . ', ' . $user->first_name }}
                                                         @if ($user->isDev())
                                                             <span class="text-blue-500">
@@ -154,25 +171,27 @@
                                                             </span>
                                                         @endif
                                                     </p>
+                                                    <p class="text-xs">
+                                                        {{ $user->role_position->name }} -
+                                                        {{ $user->role_position->department->area->name }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="flex items-center gap-2">
-                                                <span
-                                                    class="{{ $user->status ? 'bg-green-400' : 'bg-red-400' }} w-2 aspect-square rounded-full">
-                                                </span>
-                                                {{ $user->status ? 'Activo' : 'Inactivo' }}
-                                            </div>
+                                            <span
+                                                class="text-xs font-medium me-2 px-2.5 py-0.5 rounded border {{ $simpleStatus[$user->status]['className'] }}">
+                                                {{ $simpleStatus[$user->status]['label'] }}
+                                            </span>
                                         </td>
                                         <td>
-                                            <p
+                                            {{-- <p
                                                 class="text-nowrap bg-white w-fit shadow-sm group-hover:shadow-lg p-3 rounded-lg flex items-center">
                                                 {{ $user->email }}
-                                            </p>
+                                            </p> --}}
                                         </td>
                                         <td>
-                                            <p class="text-nowrap text-sm font-medium flex items-center gap-1">
+                                            <p class="text-nowrap text-sm flex items-center gap-1">
                                                 @svg('fluentui-person-circle-24-o', 'w-5 h-5')
                                                 {{ $user->role->title }}
                                             </p>
@@ -183,35 +202,22 @@
                                                 {{ $cuser->has('users:asign-supervisor') || $cuser->isDev() ? '' : 'disabled' }}
                                                 type="button" data-modal-target="dialog-{{ $user->id }}"
                                                 data-modal-toggle="dialog-{{ $user->id }}"
-                                                tip="Asignar o Editar supervisor" class="secondary justify-start">
+                                                tip="Asignar o Editar supervisor" class="justify-start text-sm text-nowrap">
                                                 @if ($user->supervisor)
-                                                    <div class="flex items-center text-left gap-2">
-                                                        @includeIf('commons.avatar', [
-                                                            'src' => $user->supervisor->profile,
-                                                            'className' => 'w-10',
-                                                            'key' => $user->supervisor->id,
-                                                            'alt' =>
-                                                                $user->supervisor->first_name .
-                                                                ' ' .
-                                                                $user->supervisor->last_name,
-                                                            'altClass' => 'text-lg',
-                                                        ])
-                                                        <div>
-                                                            <p class="text-xs opacity-60">
-                                                                Bajo la supervisión de
-                                                            </p>
-                                                            <p class="text-nowrap">
-                                                                {{ $user->supervisor->first_name }}
-                                                                {{ $user->supervisor->last_name }}
-                                                            </p>
-                                                        </div>
-                                                    </div>
+                                                    <span
+                                                        class="bg-purple-100 hover:bg-purple-200 flex items-center text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-purple-400">
+                                                        @svg('fluentui-person-accounts-20', 'w-3.5 h-3.5 me-1')
+                                                        {{ $user->supervisor->names() }}
+                                                    </span>
                                                 @elseif($cuser->has('users:asign-supervisor') || $cuser->isDev())
-                                                    @svg('fluentui-person-add-20-o', 'w-6 h-6')
-                                                    Asignar supervisor
+                                                    <span
+                                                        class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded me-2 border border-gray-500 ">
+                                                        @svg('fluentui-person-add-20', 'w-4 h-4 me-1.5')
+                                                        Asignar supervisor
+                                                    </span>
                                                 @else
                                                     <p class="text-neutral-500">
-                                                        Sin supervisor
+                                                        -
                                                     </p>
                                                 @endif
                                             </button>
