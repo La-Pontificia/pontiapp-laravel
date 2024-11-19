@@ -7,13 +7,10 @@ use App\Jobs\AssistsWithoutCalculating;
 use App\Models\Area;
 use App\Models\AssistTerminal;
 use App\Models\Department;
-use App\Models\GroupSchedule;
-use App\Models\User;
 use App\services\AssistsService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -22,67 +19,23 @@ class AssistsController extends Controller
 {
     protected $assistsService;
 
-    public $timeout = 1200;
-
     public function __construct(AssistsService $assistsService)
     {
         $this->assistsService = $assistsService;
     }
 
-    public function index(Request $request, $isExport = false)
+    // CENTRALIZED
+    public function index(Request $req)
     {
+        ini_set('max_execution_time', 3600);
+        ini_set('memory_limit', '2G');
+        $terminalsIds = $req->get('assist_terminals') ? explode(',', $req->get('assist_terminals')) : [];
+        $query = $req->get('query');
+        $startDate = $req->get('start');
+        $endDate = $req->get('end');
 
-        $terminals = AssistTerminal::all();
-
-        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
-
-        $query = $request->get('query');
-
-        $force_calculation = $request->get('force_calculation');
-
-        // current date
-        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
-
-        $match = User::orderBy('created_at', 'desc');
-
-        $area_id = $request->get('area');
-        $department_id = $request->get('department');
-
-        if ($area_id) {
-            $match->whereHas('role_position', function ($q) use ($area_id) {
-                $q->whereHas('department', function ($qq) use ($area_id) {
-                    $qq->where('id_area', $area_id);
-                });
-            });
-        }
-
-        if ($department_id) {
-            $match->whereHas('role_position', function ($q) use ($department_id) {
-                $q->where('id_department', $department_id);
-            });
-        }
-
-        if ($query) {
-            $match->where('first_name', 'like', '%' . $query . '%')
-                ->orWhere('last_name', 'like', '%' . $query . '%')
-                ->orWhere('dni', 'like', '%' . $query . '%')
-                ->get();
-        }
-
-        if (count($terminalsIds) > 0) {
-            $match->whereHas('assistTerminals', function ($q) use ($terminalsIds) {
-                $q->whereIn('assist_terminal_id', $terminalsIds);
-            });
-        }
-
-        $users = [];
-
-        if (count($terminalsIds) < 1) {
-            $users = $match->limit(2)->get();
-        } else {
-            $users = $match->get();
-        }
+        $area_id = $req->get('area');
+        $department_id = $req->get('department');
 
         $areas = Area::all();
         $departments = Department::all();
@@ -92,245 +45,134 @@ class AssistsController extends Controller
             $departments = Department::where('id_area', $area_id)->get();
         }
 
-        $allAssists = collect([]);
-
-        foreach ($users as $user) {
-            $allAssists =  $allAssists->concat($this->assistsService->assistsByUser($user, $terminalsIds, $startDate, $endDate, $force_calculation));
-        }
-
-
-        if ($isExport) {
-            return $allAssists;
-        }
-
-        $perPage = 25;
-        $currentPage = $request->get('page', 1);
-
-        $assists = $allAssists->forPage($currentPage, $perPage);
-
-        $paginatedAssists = new LengthAwarePaginator(
-            $assists,
-            isset($allAssists) ? $allAssists->count() : 0,
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        $build =  $this->assistsService->centralized($query, $terminalsIds, $startDate, $endDate, $area_id, $department_id);
 
         return view('modules.assists.+page', [
             'areas' => $areas,
             'departments' => $departments,
-            'users' => $users,
-            'assists' => $paginatedAssists,
+            'assists' => $build['assists'],
+            'totalAssists' => $build['total'],
+            'totalUsers' => $build['totalUsers'],
+            'totalUserShown' => $build['usersShown'],
             'terminals' => $terminals,
         ]);
     }
 
-    public function snSchedules(Request $request, $isExport = false)
+    public function centralizedReport(Request $req)
+    {
+        return response()->json('El reporte de asistencias centralizada aun no esta disponible');
+    }
+
+    // CENTRALIZED WITHOUT CALCULATING
+    public function centralizedWithoutCalculating(Request $req)
     {
 
+        $area_id = $req->get('area');
+        $department_id = $req->get('department');
+        $terminalsIds = $req->get('assist_terminals') ? explode(',', $req->get('assist_terminals')) : [];
+
+        $startDate = $req->get('start');
+        $endDate = $req->get('end');
+        $query = $req->get('query');
 
         $terminals = AssistTerminal::all();
-        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
+        $areas = Area::all();
+        $departments = Department::all();
 
-        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
-        $query = $request->get('query');
-
-        $assists = Collect([]);
-        $perPage = 25;
-        $currentPage = $request->get('page', 1);
-
-        $allAssists = $this->assistsService->assists($query, $terminalsIds, $startDate, $endDate, $isExport);
-        $assists = $allAssists->forPage($currentPage, $perPage);
-
-        $terminals = AssistTerminal::all();
-
-        if ($isExport) {
-            return $allAssists;
+        if ($area_id) {
+            $departments = Department::where('id_area', $area_id)->get();
         }
 
-        $paginatedAssists = new LengthAwarePaginator(
-            $assists,
-            isset($allAssists) ? $allAssists->count() : 0,
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
+        $built = $this->assistsService->centralizedWithoutCalculating($query, $terminalsIds, $startDate, $endDate, $area_id, $department_id);
         return view(
-            'modules.assists.sn-schedules.+page',
+            'modules.assists.centralized-without-calculating.+page',
             [
                 'terminals' => $terminals,
-                'assists' => $paginatedAssists
+                'assists' => $built['assists'],
+                'total' => $built['total'],
+                'departments' => $departments,
+                'areas' => $areas,
             ]
         );
     }
 
-    public function withoutCalculating(Request $request)
+    public function centralizedWithoutCalculatingReport(Request $req)
+    {
+
+        $terminalsIds = $req->get('assist_terminals') ? explode(',', $req->get('assist_terminals')) : [];
+        $startDate = $req->get('start');
+        $endDate = $req->get('end');
+        $query = $req->get('query');
+
+        if (!$startDate || !$endDate) {
+            return response()->json('Debe seleccionar una fecha de inicio y una fecha de fin');
+        }
+
+        if (count($terminalsIds) == 0) {
+            return response()->json('Debe seleccionar al menos un terminal');
+        }
+
+        $user = Auth::user();
+
+
+        AssistsSnSchedules::dispatch($query, $terminalsIds, $startDate, $endDate, Auth::id());
+
+        return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $user->email . ' O tambien ver el archivo en la sección de reportes / descargas');
+    }
+
+    // SINGLE
+    public function withoutCalculating(Request $req)
     {
 
         $terminals = AssistTerminal::all();
-        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
+        $terminalsIds = $req->get('assist_terminals') ? explode(',', $req->get('assist_terminals')) : [];
 
-        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
-        $query = $request->get('query');
-
-        $assists = Collect();
-        $perPage = 25;
-        $currentPage = $request->get('page', 1);
-
-        $allAssists = $this->assistsService->assistsSnUser($query, $terminalsIds, $startDate, $endDate);
-        $assists = $allAssists->forPage($currentPage, $perPage);
-
+        $startDate = $req->get('start');
+        $endDate = $req->get('end');
+        $query = $req->get('query');
+        $built = $this->assistsService->withoutCalculating($query, $terminalsIds, $startDate, $endDate);
         $terminals = AssistTerminal::all();
-
-        $paginatedAssists = new LengthAwarePaginator(
-            $assists,
-            isset($allAssists) ? $allAssists->count() : 0,
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
         return view(
             'modules.assists.without-calculating.+page',
             [
                 'terminals' => $terminals,
-                'assists' => $paginatedAssists,
+                'assists' => $built['assists'],
+                'total' => $built['total'],
             ]
         );
     }
 
-    public function withoutCalculatingExport(Request $request)
+    public function withoutCalculatingReport(Request $req)
     {
-        $query = $request->get('query');
-        $estrategy = $request->get('estrategy', 'body');
+        $query = $req->get('query');
+        $terminalsIds = $req->get('assist_terminals') ? explode(',', $req->get('assist_terminals')) : [];
+        $startDate = $req->get('start');
+        $endDate = $req->get('end');
 
-        $isParams = $estrategy === 'params';
-
-        $customEmail = $request->get('email');
-        $terminalsIds = $isParams ? ($request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : []) : $request->input('assist_terminals', []);
-        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
-
-
-        AssistsWithoutCalculating::dispatch($query, $terminalsIds, $startDate, $endDate, Auth::id(), $customEmail);
-
-        return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $customEmail . ' O tambien ver el archivo en la sección de reportes / descargas');
-    }
-
-    public function snSchedulesReport(Request $request)
-    {
-
-        $estrategy = $request->get('estrategy', 'body');
-
-        $isParams = $estrategy === 'params';
-        $customEmail = $request->get('email');
-        $terminalsIds = $isParams ? ($request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : []) : $request->input('assist_terminals', []);
-
-        $startDate = $request->get('start', Carbon::now()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
-        $query = $request->get('query');
-
-
-        AssistsSnSchedules::dispatch($query, $terminalsIds, $startDate, $endDate, $customEmail, Auth::id());
-
-        return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $customEmail . ' O tambien ver el archivo en la sección de reportes / descargas');
-    }
-
-    public function peerSchedule(Request $request, $isExport = false)
-    {
-        $terminals = AssistTerminal::all();
-        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
-
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
-        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
-        $query = $request->get('query');
-        $group = $request->get('group');
-
-        $users = [];
-
-        if ($query) {
-            $users = $this->assistsService->employee($query, $terminal);
+        if (!$startDate || !$endDate) {
+            return response()->json('Debe seleccionar una fecha de inicio y una fecha de fin');
         }
 
-        $allSchedules = collect([]);
-
-        $perPage = 25;
-        $currentPage = $request->get('page', 1);
-
-        if ($group) {
-            foreach ($users as $user) {
-                $allSchedules = $allSchedules->concat($this->assistsService->assistsByEmployee($user, $group, $terminal, $startDate, $endDate));
-            }
-        }
-        $groups = GroupSchedule::all();
-        $terminals = AssistTerminal::all();
-
-        $schedules = $allSchedules->forPage($currentPage, $perPage);
-
-        $paginatedSchedules = new LengthAwarePaginator(
-            $schedules,
-            isset($allSchedules) ? $allSchedules->count() : 0,
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
-        if ($isExport) {
-            return $allSchedules;
+        if (count($terminalsIds) == 0) {
+            return response()->json('Debe seleccionar al menos un terminal');
         }
 
-        return view(
-            'modules.assists.peer-schedule.+page',
-            [
-                'terminals' => $terminals,
-                'schedules' => $paginatedSchedules,
-                'groups' => $groups,
-                'users' => $users,
-            ]
-        );
+        $user = Auth::user();
+
+        AssistsWithoutCalculating::dispatch($query, $terminalsIds, $startDate, $endDate, Auth::id());
+
+        return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $user->email . ' O tambien ver el archivo en la sección de reportes / descargas');
     }
 
-    public function peerScheduleExport(Request $request)
-    {
-        return $this->peerSchedule($request, true);
-    }
 
-    public function centralizedExport(Request $request)
-    {
-        $assists = $this->index($request, true);
-        foreach ($assists as $assist) {
-            $assist['date'] = Carbon::parse($assist['date'])->format('d/m/Y');
-        }
-
-        return $assists;
-    }
-
-    public function peerUserExport(Request $request, $id)
-    {
-        $user = User::find($id);
-        if (!$user) return view('+500', ['error' => 'User not found']);
-        $terminals = AssistTerminal::all();
-        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
-
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('d/m/Y'));
-        $endDate = $request->get('end', Carbon::now()->format('d/m/Y'));
-
-        $schedules = $this->assistsService->assistsByUser($user->id, $terminal, $startDate, $endDate, false);
-
-        return $schedules;
-    }
-
-    public function singleSummary(Request $request)
+    public function singleSummary(Request $req)
     {
 
         $terminals = AssistTerminal::all();
-        $terminal = $request->get('terminal') ?? $terminals[0]->database_name;
+        $terminal = $req->get('terminal') ?? $terminals[0]->database_name;
 
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
+        $startDate = $req->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $req->get('end', Carbon::now()->format('Y-m-d'));
 
         $assists = collect([]);
         if ($startDate && $endDate) {
