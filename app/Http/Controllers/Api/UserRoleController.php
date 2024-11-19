@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\UserRole;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserRoleController extends Controller
 {
@@ -17,26 +19,26 @@ class UserRoleController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function create(Request $request)
+    public function create(Request $req)
     {
         request()->validate(UserRole::$rules);
 
-        $privileges = $request->input('privileges', []);
+        $privileges = $req->input('privileges', []);
 
         UserRole::create([
-            'title' => $request->title,
-            'level' => $request->level,
+            'title' => $req->title,
+            'level' => $req->level,
             'privileges' => $privileges,
             'status' => true,
-            'created_by' => auth()->user()->id,
+            'created_by' => Auth::id(),
         ]);
 
-        $this->auditService->registerAudit('Rol creado', 'Se ha creado un rol', 'users', 'create', $request);
+        $this->auditService->registerAudit('Rol creado', 'Se ha creado un rol', 'users', 'create', $req);
 
         return response()->json('Rol creado correctamente', 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
         $role = UserRole::find($id);
 
@@ -46,16 +48,16 @@ class UserRoleController extends Controller
 
         request()->validate(UserRole::$rules);
 
-        $privileges = $request->input('privileges', []);
+        $privileges = $req->input('privileges', []);
         $role->update([
-            'title' => $request->title,
+            'title' => $req->title,
             'privileges' => $privileges,
-            'level' => $request->level,
-            'status' => $request->status,
-            'updated_by' => auth()->user()->id,
+            'level' => $req->level,
+            'status' => $req->status,
+            'updated_by' => Auth::id(),
         ]);
 
-        $this->auditService->registerAudit('Rol actualizado', 'Se ha actualizado un rol', 'users', 'update', $request);
+        $this->auditService->registerAudit('Rol actualizado', 'Se ha actualizado un rol', 'users', 'update', $req);
 
         return response()->json('Rol actualizado correctamente', 200);
     }
