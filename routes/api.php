@@ -32,8 +32,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->get('/user', function (Request $req) {
+    return $req->user();
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -135,9 +135,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('questionnaire-templates/{id}/use/{for}', [QuestionnaireTemplateController::class, 'use']);
 
     // assists routes
-    Route::get('assists/export', [AssistsController::class, 'peerScheduleExport']);
-    Route::post('assists/sn-schedules/report', [AssistsController::class, 'snSchedulesReport']);
-    Route::post('assists/without-calculating/report', [AssistsController::class, 'withoutCalculatingExport']);
+    Route::post('assists/centralized/report', [AssistsController::class, 'centralizedReport']);
+    Route::post('assists/centralized-without-calculating/report', [AssistsController::class, 'centralizedWithoutCalculatingReport']);
+    Route::post('assists/without-calculating/report', [AssistsController::class, 'withoutCalculatingReport']);
 
     Route::get('assists/peer-user/{id}/export', [AssistsController::class, 'peerUserExport']);
     Route::get('assists/centralized/export', [AssistsController::class, 'centralizedExport']);
@@ -154,18 +154,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('years/delete/{id}', [YearController::class, 'delete']);
 
     // Schedules routes
-    Route::post('schedules/delete/{id}', [ScheduleController::class, 'remove']);
+    Route::post('schedules/delete/{id}', [ScheduleController::class, 'delete']);
     Route::post('schedules/archive/{id}', [ScheduleController::class, 'archive']);
-
-    Route::get('schedules/group/{id}', [ScheduleController::class, 'groupSchedules']);
-    Route::post('schedules/group/default/{id}', [ScheduleController::class, 'groupDefault']);
-    Route::post('schedules/group', [ScheduleController::class, 'group']);
-    Route::post('schedules/group/{id}', [ScheduleController::class, 'groupUpdate']);
-    Route::post('schedules/group/delete/{id}', [ScheduleController::class, 'groupDelete']);
+    Route::post('schedules/archive/all/{user_id}', [ScheduleController::class, 'archiveAll']);
     Route::post('schedules/group/{id}/add', [ScheduleController::class, 'add']);
-
+    Route::post('schedules/add/{user_id}', [ScheduleController::class, 'add']);
     Route::post('schedules/{id}', [ScheduleController::class, 'update']);
-    Route::get('schedules/user/{id}', [ScheduleController::class, 'by_user']);
 
     // Events routes
     Route::post('events', [EventController::class, 'store']);
@@ -177,7 +171,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Reports routes
     Route::post('reports/{id}', [ReportController::class, 'update']);
-
     Route::get('person/{document_id}', [UtilsController::class, 'person']);
 
     // Audit routes

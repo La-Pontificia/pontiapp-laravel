@@ -20,7 +20,6 @@ use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\QuestionnaireTemplateController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\YearController;
@@ -40,44 +39,16 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/home', [HomeController::class, 'index']);
 
-    // Module routes
-    Route::get('/', [HomeController::class, 'index']);
-
     // User roles routes
     Route::get('users/user-roles', [UserRoleController::class, 'index']);
-    Route::get('users/user-roles/create', [UserRoleController::class, 'create']);
-    Route::get('users/user-roles/{id}', [UserRoleController::class, 'slug']);
 
     // Users routes
     Route::get('users', [UserController::class, 'index']);
-
-    // Route::get('users/schedules/create', [ScheduleController::class, 'create']);
-    // Route::get('users/schedules/{id}', [ScheduleController::class, 'schedule']);
-
-    Route::get('users/emails-access', [UserController::class, 'emails_access']);
-
-    Route::get('users/domains', [UserController::class, 'domains']);
-
     Route::get('users/create', [UserController::class, 'create']);
-    Route::get('users/edit/{id}', [UserController::class, 'edit']);
-
-    Route::get('users/{id}/details', [UserController::class, 'slug_details']);
-    Route::get('users/{id}/segurity-access', [UserController::class, 'slug_segurity_access']);
     Route::get('users/{id}/organization', [UserController::class, 'slug_organization']);
     Route::get('users/{id}/schedules', [UserController::class, 'slug_schedules']);
-    Route::get('users/{id}/assists', [UserController::class, 'slug_assists']);
-    Route::get('users/{id}/contract', [UserController::class, 'slug_contract']);
-
 
     Route::get('users/{id}', [UserController::class, 'slug']);
-
-
-    // schedules routes
-
-    Route::get('schedules', [ScheduleController::class, 'index']);
-    Route::get('schedules/{id}', [ScheduleController::class, 'slug']);
-    Route::get('schedules/external', [ScheduleController::class, 'external']);
-
 
     // Edas routes
     Route::get('edas', [EdaController::class, 'index']);
@@ -99,11 +70,10 @@ Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Assists routes
     Route::get('assists', [AssistsController::class, 'index']);
-    Route::get('assists/terminals', [AssistTerminalController::class, 'index']);
-    Route::get('assists/sn-schedules', [AssistsController::class, 'snSchedules']);
-    Route::get('assists/peer-schedule', [AssistsController::class, 'peerSchedule']);
-    Route::get('assists/single-summary', [AssistsController::class, 'singleSummary']);
+    Route::get('assists/centralized-without-calculating', [AssistsController::class, 'centralizedWithoutCalculating']);
     Route::get('assists/without-calculating', [AssistsController::class, 'withoutCalculating']);
+    Route::get('assists/single-summary', [AssistsController::class, 'singleSummary']);
+    Route::get('assists/terminals', [AssistTerminalController::class, 'index']);
 
 
     Route::post('assists/terminals', [AssistTerminalController::class, 'store']);
@@ -146,7 +116,6 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::get('tickets/settings/business-units', [TicketController::class, 'settingsBusinessUnits']);
 
     // Contract types
-
     Route::post('contract-types', [ContractTypeController::class, 'store']);
     Route::post('contract-types/{id}', [ContractTypeController::class, 'update']);
     Route::post('contract-types/delete/{id}', [ContractTypeController::class, 'delete']);
