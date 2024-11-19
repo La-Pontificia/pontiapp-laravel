@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Year;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class YearController extends Controller
 {
@@ -19,10 +20,10 @@ class YearController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function index(Request $request)
+    public function index(Request $req)
     {
         $match = Year::orderBy('name', 'asc');
-        $q = $request->get('q');
+        $q = $req->get('q');
 
         if ($q) {
             $match->where('name', 'like', '%' . $q . '%')->get();
@@ -34,25 +35,25 @@ class YearController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $years->perPage());
     }
 
-    public function create(Request $request)
+    public function create(Request $req)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
         ]);
 
-        $alreadyExistCode = Year::where('name', $request->name)->first();
-        $createAllEdas = $request->input('create-all-edas') ? true : false;
+        $alreadyExistCode = Year::where('name', $req->name)->first();
+        $createAllEdas = $req->input('create-all-edas') ? true : false;
         if ($alreadyExistCode) {
             return response()->json('Ya existe un registro con el mismo nombre.', 500);
         }
 
         $year = new Year();
-        $year->name = $request->name;
-        $year->status = $request->status ? true : false;
-        $year->created_by = auth()->user()->id;
+        $year->name = $req->name;
+        $year->status = $req->status ? true : false;
+        $year->created_by = Auth::id();
         $year->save();
 
-        $this->auditService->registerAudit('Año creado', 'Se ha creado un año', 'edas', 'create', $request);
+        $this->auditService->registerAudit('Año creado', 'Se ha creado un año', 'edas', 'create', $req);
 
         if ($createAllEdas) {
             $users = User::where('status', true)->get();
@@ -69,7 +70,7 @@ class YearController extends Controller
         $eda = Eda::create([
             'id_user' => $user->id,
             'id_year' => $year->id,
-            'created_by' => auth()->user()->id,
+            'created_by' => Auth::id(),
         ]);
 
         $this->auditService->registerAudit('EDA creado', 'Se ha creado un EDA', 'edas', 'create', request());
@@ -82,24 +83,24 @@ class YearController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
         ]);
 
-        $alreadyExistCode = Year::where('name', $request->name)->first();
+        $alreadyExistCode = Year::where('name', $req->name)->first();
         if ($alreadyExistCode && $alreadyExistCode->id != $id) {
             return response()->json('Ya existe un registro con el mismo nombre.', 500);
         }
 
         $year = Year::find($id);
-        $year->name = $request->name;
-        $year->status = $request->status ? true : false;
-        $year->updated_by = auth()->user()->id;
+        $year->name = $req->name;
+        $year->status = $req->status ? true : false;
+        $year->updated_by = Auth::id();
         $year->save();
 
-        $this->auditService->registerAudit('Año actualizado', 'Se ha actualizado un año', 'edas', 'update', $request);
+        $this->auditService->registerAudit('Año actualizado', 'Se ha actualizado un año', 'edas', 'update', $req);
 
         return response()->json($year, 200);
     }
