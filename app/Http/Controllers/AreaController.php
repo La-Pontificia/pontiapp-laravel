@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AreaController extends Controller
 {
@@ -15,10 +16,10 @@ class AreaController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function index(Request $request)
+    public function index(Request $req)
     {
         $match = Area::orderBy('created_at', 'asc');
-        $query = $request->get('query');
+        $query = $req->get('query');
 
         if ($query) {
             $match->where('name', 'like', '%' . $query . '%')
@@ -37,14 +38,14 @@ class AreaController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $areas->perPage());
     }
 
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'code' => 'required',
         ]);
 
-        $alreadyExistCode = Area::where('code', $request->code)->first();
+        $alreadyExistCode = Area::where('code', $req->code)->first();
         if ($alreadyExistCode) {
             return response()->json('Ya existe un registro con el mismo código.', 500);
         }
@@ -56,35 +57,35 @@ class AreaController extends Controller
         }
 
         $area = new Area();
-        $area->name = $request->name;
+        $area->name = $req->name;
         $area->code = $code;
-        $area->created_by = auth()->user()->id;
+        $area->created_by = Auth::id();
         $area->save();
 
-        $this->auditService->registerAudit('Area creada', 'Se ha creado un área', 'maintenances', 'create', $request);
+        $this->auditService->registerAudit('Area creada', 'Se ha creado un área', 'maintenances', 'create', $req);
 
         return response()->json('Area creada correctamente.', 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'name' => 'required',
             'code' => 'required',
         ]);
 
-        $alreadyExistCode = Area::where('code', $request->code)->first();
+        $alreadyExistCode = Area::where('code', $req->code)->first();
         if ($alreadyExistCode && $alreadyExistCode->id != $id) {
             return response()->json('Ya existe un registro con el mismo código.', 500);
         }
 
         $area = Area::find($id);
-        $area->name = $request->name;
-        $area->code = $request->code;
-        $area->updated_by = auth()->user()->id;
+        $area->name = $req->name;
+        $area->code = $req->code;
+        $area->updated_by = Auth::id();
         $area->save();
 
-        $this->auditService->registerAudit('Area actualizada', 'Se ha actualizado un área', 'maintenances', 'update', $request);
+        $this->auditService->registerAudit('Area actualizada', 'Se ha actualizado un área', 'maintenances', 'update', $req);
 
         return response()->json('Area actualizada correctamente.', 200);
     }
