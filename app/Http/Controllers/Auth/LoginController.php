@@ -45,21 +45,21 @@ class LoginController extends Controller
         return redirect('/');
     }
 
-    protected function authenticated(Request $request, $user)
+    protected function authenticated(Request $req, $user)
     {
         if ($user->status) return redirect()->intended($this->redirectPath());
         Auth::logout();
         return redirect('/login')->with('error', 'Tu cuenta no está activa. Comunícate con el administrador.');
     }
 
-    public function login(Request $request)
+    public function login(Request $req)
     {
-        //  $credentials = $request->only('email', 'password')
+        //  $credentials = $req->only('email', 'password')
         //  if (Auth::attempt($credentials)) {
         //      return redirect()->intended('/');
         //  }
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $req->only('email', 'password');
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user) {
