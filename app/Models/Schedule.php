@@ -20,23 +20,18 @@ class Schedule extends Model
         'id',
         'created_at',
         'updated_at',
-        'group_id',
         'user_id',
         'from',
         'to',
         'title',
         'created_by',
         'updated_by',
+        'terminal_id',
         'title',
         'days',
         'start_date',
         'end_date',
-        'background',
         'archived',
-        'from_start',
-        'from_end',
-        'to_start',
-        'to_end',
     ];
 
     protected $casts = [
@@ -54,13 +49,13 @@ class Schedule extends Model
         return $this->hasOne(User::class, 'id', 'updated_by');
     }
 
-    public function groupSchedules()
-    {
-        return $this->hasOne(GroupSchedule::class, 'id', 'group_id');
-    }
-
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function terminal()
+    {
+        return $this->hasOne(AssistTerminal::class, 'id', 'terminal_id');
     }
 }
