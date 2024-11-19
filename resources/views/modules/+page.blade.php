@@ -10,9 +10,7 @@
         </h1>
         <div class="max-w-5xl mx-auto overflow-x-auto">
             <h2 class="px-4 text-sm font-semibold flex items-center gap-2 opacity-70">
-                svg'bx-group', [
-                'class' => 'w-6 h-6',
-                ])
+
                 Usuarios registrados recientemente
             </h2>
             <div class="relative">
