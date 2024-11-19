@@ -15,9 +15,9 @@ class LoginController extends Controller
     use AuthenticatesUsers;
     protected $redirectTo = '/';
 
-    public function login(Request $request)
+    public function login(Request $req)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $req->only('email', 'password');
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user) {
@@ -30,7 +30,7 @@ class LoginController extends Controller
 
         // verify the password
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            $req->session()->regenerate();
             //        // if (Auth::attempt($credentials)) {
             // //     return redirect()->intended('/');
             // // }
@@ -41,7 +41,7 @@ class LoginController extends Controller
         return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
     }
 
-    protected function authenticated(Request $request, $user)
+    protected function authenticated(Request $req, $user)
     {
         if ($user->status) return redirect()->intended($this->redirectPath());
         Auth::logout();
