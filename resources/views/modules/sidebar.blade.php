@@ -64,35 +64,6 @@
             ],
         ],
         [
-            'icon' => 'fluentui-calendar-ltr-20-o',
-            'text' => 'Gestión Horarios',
-            'href' => '/schedules',
-            'active' => request()->is('schedules*'),
-            'active-icon' => 'fluentui-calendar-ltr-20',
-            'enable' => $cuser->has('schedules:create') || $cuser->has('schedules:show') || $cuser->isDev(),
-            'subItems' => [
-                [
-                    'icon' => 'fluentui-calendar-ltr-20-o',
-                    'text' => 'Horarios',
-                    'href' => '/schedules',
-                    'active' => request()->is('schedules*') && !request()->is('schedules/external*'),
-                    'active-icon' => 'fluentui-calendar-ltr-20',
-                    'enable' => $cuser->has('schedules:create') || $cuser->has('schedules:show') || $cuser->isDev(),
-                ],
-                [
-                    'icon' => 'fluentui-calendar-toolbox-20-o',
-                    'text' => 'Horarios externos',
-                    'href' => '/schedules/external',
-                    'active' => request()->is('schedules/external*'),
-                    'active-icon' => 'fluentui-calendar-toolbox-20',
-                    'enable' =>
-                        $cuser->has('schedules:external:create') ||
-                        $cuser->has('schedules:external:show') ||
-                        $cuser->isDev(),
-                ],
-            ],
-        ],
-        [
             'icon' => 'fluentui-folder-people-20-o',
             'text' => 'Gestión Edas',
             'href' => '/edas/collaborators',
@@ -169,9 +140,9 @@
                 [
                     'icon' => 'fluentui-calculator-arrow-clockwise-20-o',
                     'text' => 'Centralizadas (Sin calc)',
-                    'enable' => $cuser->has('assists:sn-schedules') || $cuser->isDev(),
-                    'href' => '/assists/sn-schedules',
-                    'active' => request()->is('assists/sn-schedules*'),
+                    'enable' => $cuser->has('assists:centralized-without-calculating') || $cuser->isDev(),
+                    'href' => '/assists/centralized-without-calculating',
+                    'active' => request()->is('assists/centralized-without-calculating*'),
                     'active-icon' => 'fluentui-calculator-arrow-clockwise-20',
                 ],
                 [
@@ -386,8 +357,7 @@
         $otherItems[5]['enable'] ||
         $otherItems[6]['enable'] ||
         $otherItems[7]['enable'] ||
-        $otherItems[8]['enable'] ||
-        $otherItems[9]['enable']
+        $otherItems[8]['enable']
 )
     <nav class="py-2 border-t border-neutral-300 transition-all">
         @foreach ($otherItems as $item)
