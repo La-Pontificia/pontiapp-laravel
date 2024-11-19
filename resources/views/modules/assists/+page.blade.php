@@ -10,10 +10,10 @@
 @section('layout.assists')
     <div class="space-y-2 flex flex-col flex-grow">
         <div class="flex-grow flex items-center flex-wrap">
-            <form class="dinamic-form-to-params p-1 px-2 flex items-end flex-grow gap-2 flex-wrap">
+            <div class=" p-1 px-2 flex items-end flex-grow gap-2 flex-wrap">
                 <label>
                     <span class="block">Area:</span>
-                    <select name="area" class="bg-white">
+                    <select name="area" class="bg-white dinamic-to-url max-w-[150px]">
                         <option value>Todas las areas</option>
                         @foreach ($areas as $area)
                             <option {{ request()->query('area') === $area->id ? 'selected' : '' }}
@@ -24,7 +24,7 @@
                 </label>
                 <label>
                     <span class="block">Departamento:</span>
-                    <select name="department" class="bg-white">
+                    <select name="department" class="bg-white max-w-[200px] dinamic-to-url">
                         <option value>Todos los departamentos</option>
                         @foreach ($departments as $department)
                             <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
@@ -33,15 +33,15 @@
                     </select>
                 </label>
 
-                <div class="flex date-range items-center gap-1">
+                <div class="flex items-center gap-1">
                     <label for="">
                         <span class="block">Desde:</span>
-                        <input class="w-[100px] bg-white" readonly {{ $start ? "data-default=$start" : '' }} type="text"
+                        <input value="{{ $start }}" class="bg-white dinamic-input-to-url" type="date"
                             name="start" placeholder="-">
                     </label>
                     <label for="">
                         <span class="block">Hasta:</span>
-                        <input class="w-[100px] bg-white" readonly {{ $end ? "data-default=$end" : '' }} type="text"
+                        <input value="{{ $end }}" class="bg-white dinamic-input-to-url" type="date"
                             name="end" placeholder="-">
                     </label>
                 </div>
@@ -63,7 +63,7 @@
                                 @endphp
                                 <label class="flex p-2 rounded-lg hover:bg-stone-100 items-center gap-2">
                                     <input {{ $checked ? 'checked' : '' }} type="checkbox" name="assist_terminals[]"
-                                        value="{{ $terminal->id }}">
+                                        value="{{ $terminal->id }}" class="dinamic-checkbox-to-url">
                                     <div>
                                         <span class="block"> {{ $terminal->name }} </span>
                                         <p class="flex items-center gap-2">
@@ -89,16 +89,18 @@
                         @svg('fluentui-search-28-o', 'w-5 h-5')
                     </div>
                     <input value="{{ request()->get('query') }}" name="query" placeholder="Filtrar usuarios..."
-                        type="search" class="pl-9 w-full bg-white">
+                        type="search" class="pl-9 w-full dinamic-input-to-url bg-white">
                 </label>
-                <button type="submit" class="primary mt-2 filter-button">Filtrar</button>
-            </form>
-            @if (count($assists) !== 0)
-                <button type="button" id="button-export-assists-centralized" class="secondary mt-7">
-                    @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
-                    <span>Exportar</span>
-                </button>
-            @endif
+                <button type="submit" class="primary mt-2 refresh-page">Filtrar</button>
+            </div>
+            <button type="button" data-alert="¿Estas seguro(a) de generar el reporte?"
+                data-description="Verifica los filtros y rango de fechas antes de ejecutar esta acción."
+                data-url="/api/assists/centralized/report" class="secondary dinamic-request mt-6">
+                @svg('fluentui-document-table-arrow-right-20-o', 'w-5 h-5')
+                <span>
+                    Generar reporte
+                </span>
+            </button>
         </div>
         <nav class="flex items-center gap-2 px-2">
             @foreach ($terminalsInQuery as $term)
@@ -109,7 +111,17 @@
         </nav>
         <div class="flex flex-col h-full">
             <div class="h-full overflow-auto">
-                @if (count($assists) === 0)
+                <p>
+                    Total usuarios: {{ $totalUsers }}
+                </p>
+                <p>
+                    Total usuarios mostrados: {{ $totalUserShown }}
+                </p>
+                <p>
+                    Total asistencias: {{ $totalAssists }}
+                </p>
+
+                {{-- @if (count($assists) === 0)
                     <div class="grid h-full w-full place-content-center">
                         <img src="/empty-meetingList.webp" class="mx-auto" alt="">
                         <p class="text-center text-xs max-w-[40ch] mx-auto">
@@ -244,10 +256,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <footer>
-                        {!! $assists->links() !!}
-                    </footer>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>
