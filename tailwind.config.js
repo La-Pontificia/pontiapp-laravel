@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import animations from "@midudev/tailwind-animations";
 
 export default {
     content: [
@@ -10,8 +11,9 @@ export default {
         "./public/**/*.blade.php",
         "./node_modules/flowbite/**/*.js",
     ],
-    darkMode: "media",
+    darkMode: "class",
     plugins: [
+        animations,
         require("flowbite/plugin")({
             charts: false,
             forms: false,
