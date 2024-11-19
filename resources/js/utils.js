@@ -1,4 +1,3 @@
-import Autocomplete from "@trevoreyre/autocomplete-js";
 import axios from "axios";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -6,16 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const $$ = document.querySelectorAll.bind(document);
 
     const queryInputs = $$(".dinamic-search");
-    const dinamicSelects = $$(".dinamic-select");
     const dinamicForms = $$(".dinamic-form");
-    const $autocompletes = $$(".autocomplete");
     const $dinamicFormToParams = $$(".dinamic-form-to-params");
 
     const dinamicAlerts = $$(".dinamic-alert");
 
-    const dinamicFormAcumulate = $$(".dinamic-form-acumulate");
-
-    const $dinamicToUrl = $$(".dinamic-to-url");
     const $refreshPage = $$(".refresh-page");
     const $dinamicRequests = $$(".dinamic-request");
     const $dinamicDownloadFile = $$(".dinamic-download-file");
@@ -38,11 +32,33 @@ document.addEventListener("DOMContentLoaded", function () {
         f.addEventListener("click", async () => {
             f.disabled = true;
             const method = f.getAttribute("data-method") ?? "POST";
+            const alert = f.getAttribute("data-alert");
+            const description = f.getAttribute("data-description");
             const url = f.getAttribute("data-url");
             const current_url = new URL(window.location.href);
             const searchParams = current_url.searchParams;
 
             try {
+                if (alert) {
+                    const result = await Swal.fire({
+                        title: alert,
+                        text:
+                            description ??
+                            "¿Estás seguro de realizar esta acción?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d33",
+                        cancelButtonColor: "#3085d6",
+                        confirmButtonText: "Sí, confirmar",
+                        cancelButtonText: "Cancelar",
+                    });
+
+                    if (!result.isConfirmed) {
+                        f.disabled = false;
+                        return;
+                    }
+                }
+
                 const { data } = await axios({
                     method,
                     url: `${url}?${searchParams.toString()}`,
@@ -77,9 +93,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $refreshPage?.forEach((f) => {
         f.addEventListener("click", function () {
+            $("#loading").setAttribute("data-open", "");
             window.location.reload();
         });
     });
+
+    const $dinamicToUrl = $$(".dinamic-to-url");
+    const $dinamicInputToUrl = $$(".dinamic-input-to-url");
+    const $dinamicCheckboxToUrl = $$(".dinamic-checkbox-to-url");
 
     $dinamicToUrl?.forEach((f) => {
         f.addEventListener("change", function (e) {
@@ -94,14 +115,53 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    dinamicSelects?.forEach((f) => {
+    $dinamicInputToUrl?.forEach((f) => {
+        f.addEventListener("input", function (e) {
+            const value = e.target.value;
+            const name = e.target.name;
+            const params = new URLSearchParams(window.location.search);
+            if (value !== "") params.set(name, value);
+            else params.delete(name);
+
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.history.replaceState({}, "", newUrl);
+        });
+    });
+
+    $dinamicCheckboxToUrl?.forEach((f) => {
         f.addEventListener("change", function (e) {
             const value = e.target.value;
             const name = e.target.name;
             const params = new URLSearchParams(window.location.search);
-            if (value !== "0") params.set(name, value);
-            else params.delete(name);
-            window.location.search = params.toString();
+
+            if (name.includes("[]")) {
+                const realName = name.replace("[]", "");
+                const currentValue = params.get(realName);
+                const values = currentValue?.split(",") ?? [];
+                const has = values.includes(value);
+
+                const newValue = has
+                    ? values.filter((v) => v !== value)
+                    : [...values, value];
+
+                if (newValue.length) params.set(realName, newValue.join(","));
+                else params.delete(realName);
+
+                const newUrl = `${
+                    window.location.pathname
+                }?${params.toString()}`;
+                window.history.replaceState({}, "", newUrl);
+            } else {
+                const already = params.get(name);
+
+                if (!already) params.set(name, value);
+                else params.delete(name);
+
+                const newUrl = `${
+                    window.location.pathname
+                }?${params.toString()}`;
+                window.history.replaceState({}, "", newUrl);
+            }
         });
     });
 
@@ -205,53 +265,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // autocompletes
-    $autocompletes?.forEach((f) => {
-        const param = f.getAttribute("data-param");
-        const atitle = f.getAttribute("data-atitle");
-        const avalue = f.getAttribute("data-value");
-        const adescription = f.getAttribute("data-adescription");
-
-        const input = f.querySelector("input");
-        new Autocomplete(f, {
-            search: async (input) => {
-                const url = `${param}?query=${encodeURI(input)}`;
-
-                return new Promise((resolve) => {
-                    if (input.length < 3) {
-                        return resolve([]);
-                    }
-                    fetch(url)
-                        .then((response) => response.json())
-                        .then((data) => {
-                            const results = data.map((result, index) => {
-                                return { ...result, index };
-                            });
-                            resolve(results);
-                        });
-                });
-            },
-
-            renderResult: (result, props) => {
-                return `
-                    <li ${props}>
-                        <div class="autocomplete-title">
-                        ${result[atitle]}
-                        </div>
-                        <div class="autocomplete-snippet">
-                        ${result[adescription]}
-                        </div>
-                    </li>
-                 `;
-            },
-            getResultValue: (result) => result[atitle],
-
-            onSubmit: (result) => {
-                input.setAttribute("data-value", result[avalue]);
-            },
-        });
-    });
-
     // Dinamic alerts
     dinamicAlerts?.forEach((f) => {
         f.onclick = async () => {
@@ -302,45 +315,6 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     });
 
-    // Dinamic form acumulate
-    dinamicFormAcumulate?.forEach((form) => {
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-
-            const array = [];
-            formData.forEach((value, key) => {
-                array.push(value);
-            });
-
-            const params = new URLSearchParams(window.location.search);
-            params.set("terminals", array.join(","));
-            window.location.search = params.toString();
-        });
-    });
-
-    // TOOLTIP
-    Array.from($$("[tip]")).forEach((el) => {
-        let tip = document.createElement("div");
-        tip.classList.add("tooltip");
-        tip.innerText = el.getAttribute("tip");
-        let delay = el.getAttribute("tip-delay");
-        if (delay) {
-            tip.style.transitionDelay = delay + "s";
-        }
-        tip.style.transform =
-            "translate(" +
-            (el.hasAttribute("tip-left") ? "calc(-100% - 5px)" : "15px") +
-            ", " +
-            (el.hasAttribute("tip-top") ? "-100%" : "0") +
-            ")";
-        el.appendChild(tip);
-        el.onmousemove = (e) => {
-            tip.style.left = e.clientX + "px";
-            tip.style.top = e.clientY + "px";
-        };
-    });
-
     // DINAMIC FORM TO PARAMS
     $dinamicFormToParams?.forEach((f) => {
         if (f instanceof HTMLFormElement) {
@@ -376,13 +350,5 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             };
         }
-    });
-
-    // dinamic date range
-    const $inputDateRange = $$("input[name='datefilter']");
-    $inputDateRange.forEach(($dateInput) => {
-        $dateInput.daterangepicker({
-            opens: "left",
-        });
     });
 });

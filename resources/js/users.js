@@ -1,6 +1,4 @@
 import axios from "axios";
-import ExcelJS from "exceljs";
-import moment from "moment";
 
 const regexDni = /^[0-9]{8}$/;
 
@@ -84,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             roles.forEach((role) => {
                 const option = document.createElement("option");
                 option.value = role.id;
-                option.textContent = `Cargo: ${role.name}`;
+                option.textContent = `${role.name}`;
                 RoleSelect.appendChild(option);
             });
         } catch (error) {
@@ -171,68 +169,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // supervisor assign
-    // add supervisor to user
-    const inputs = document.querySelectorAll(".supervisor-input");
-    const itemSupervisorTemplate = $("#item-supervisor-template")?.content;
-    inputs.forEach((f) => {
-        f.addEventListener(
-            "input",
-            window.debounce(async (e) => {
-                const id = f.getAttribute("data-id");
-                const value = e.target.value;
-                const resultContainer = $(`#result-${id}`);
-
-                if (!value)
-                    return (resultContainer.innerHTML = `<p class="p-10 text-neutral-500">
-                         No se encontraron resultados o no se ha realizado una búsqueda.
-                     </p>`);
-
-                const { data: users } = await axios.get(
-                    `/api/users/supervisor/${id}/search?query=${value}`
-                );
-
-                resultContainer.innerHTML = "";
-                users.forEach((user) => {
-                    const clone = document.importNode(
-                        itemSupervisorTemplate,
-                        true
-                    );
-
-                    clone.querySelector(
-                        ".result-title"
-                    ).textContent = `${user.last_name}, ${user.first_name}`;
-
-                    clone.querySelector(".result-email").textContent =
-                        user.email;
-
-                    if (user.profile) {
-                        clone.querySelector("img").src = user.profile;
-                    } else {
-                        clone.querySelector("img").remove();
-                    }
-
-                    clone
-                        .querySelector("button")
-                        .addEventListener("click", async () => {
-                            clone.disabled = true;
-
-                            await window.mutation(
-                                `/api/users/supervisor/assign/${id}`,
-                                {
-                                    supervisor_id: user.id,
-                                }
-                            );
-
-                            clone.disabled = false;
-                        });
-
-                    resultContainer.appendChild(clone);
-                });
-            }, 300)
-        );
-    });
-
     // change password
     const formChangePassword = $("#form-change-password");
     formChangePassword?.addEventListener("submit", async (e) => {
@@ -261,5 +197,78 @@ document.addEventListener("DOMContentLoaded", async () => {
         await window.mutation(action, Object.fromEntries(formData));
 
         window.enabledFormChildren(formChangePassword);
+    });
+
+    // add schedule in user form
+    const $formSchedule = $("#schedule-form-create-user");
+    const $schedulesUser = $("#schedules-user");
+    const $scheduleUserItem = $("#schedule-user-item");
+    $formSchedule?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+
+        const days = {
+            1: "Lunes",
+            2: "Martes",
+            3: "Miércoles",
+            4: "Jueves",
+            5: "Viernes",
+            6: "Sábado",
+            7: "Domingo",
+        };
+
+        const start_date = form.get("start_date");
+        const from = form.get("from");
+        const to = form.get("to");
+        const terminal = form.get("terminal");
+
+        const $terminalSelect = $formSchedule.querySelector(".terminal-select");
+        const $timesSelect = $formSchedule.querySelector(".times-select");
+
+        const $times = Array.from(
+            $timesSelect.querySelectorAll("option")
+        ).reduce((acc, option) => {
+            acc[option.value] = option.textContent.trim();
+            return acc;
+        }, {});
+
+        const terminals = Array.from(
+            $terminalSelect.querySelectorAll("option")
+        ).reduce((acc, option) => {
+            acc[option.value] = option.textContent.trim();
+            return acc;
+        }, {});
+
+        const name = "schedule[]";
+        const dayValue = form.getAll("day[]");
+        const dayNames = dayValue.map((day) => days[day]).join(", ");
+        const value = JSON.stringify({
+            days: dayValue,
+            start_date,
+            from,
+            to,
+            terminal_id: terminal,
+        });
+        const terminalName = terminals[terminal];
+
+        const $item = document.importNode(
+            $scheduleUserItem.content,
+            true
+        ).firstElementChild;
+
+        $item.querySelector(
+            "h2"
+        ).textContent = `${$times[from]} - ${$times[to]} (${terminalName})`;
+        $item.querySelector("p").textContent = dayNames;
+        $item.querySelector("input").setAttribute("name", name);
+        $item.querySelector("input").setAttribute("value", value);
+        $item.querySelector("input").setAttribute("form", "form-user");
+        const $appendedItem = $schedulesUser.appendChild($item);
+        $appendedItem.querySelector("button").addEventListener("click", (e) => {
+            e.preventDefault();
+            $appendedItem.remove();
+        });
+
+        $('[data-modal-hide="dialog"]')?.click();
     });
 });

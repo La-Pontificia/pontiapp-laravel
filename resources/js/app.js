@@ -1,8 +1,7 @@
 import "./bootstrap.js";
 import "./user_roles.js";
-import "./schedules.js";
+// import "./schedules.js";
 import "./users.js";
-import "./slug_user.js";
 import "./edas.js";
 import "./goals.js";
 import "./utils.js";
