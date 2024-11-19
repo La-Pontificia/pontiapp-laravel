@@ -36,7 +36,7 @@
                 </div>
                 <label>
                     <span class="block">Area:</span>
-                    <select name="area" class="bg-white dinamic-to-url">
+                    <select name="area" class="bg-white dinamic-to-url max-w-[150px]">
                         <option value>-- Todas --</option>
                         @foreach ($areas as $area)
                             <option {{ request()->query('area') === $area->id ? 'selected' : '' }}
@@ -47,7 +47,7 @@
                 </label>
                 <label>
                     <span class="block">Departamento:</span>
-                    <select name="department" class="bg-white dinamic-to-url">
+                    <select name="department" class="bg-white dinamic-to-url max-w-[150px]">
                         <option value>-- Todos --</option>
                         @foreach ($departments as $department)
                             <option {{ request()->query('department') === $department->id ? 'selected' : '' }}
@@ -107,9 +107,11 @@
         </div>
         <nav class="flex items-center gap-2 px-2">
             @foreach ($terminalsInQuery as $term)
-                <div class="text-sm py-1 px-2 rounded-full bg-orange-500/10 text-orange-500">
+                <span
+                    class="bg-violet-100 text-violet-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded border border-violet-400">
+                    @svg('fluentui-database-window-20', 'w-4 h-4 mr-1')
                     {{ $term->name }}
-                </div>
+                </span>
             @endforeach
         </nav>
         <div class="overflow-auto flex flex-col h-full">
@@ -165,15 +167,11 @@
                                         </p>
                                     </td>
                                     <td>
-                                        <div>
-                                            <span class="block"> {{ $assist['terminal']->name }} </span>
-                                            <p class="flex items-center gap-2">
-                                                @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
-                                                <span class="text-sm font-normal">
-                                                    {{ $assist['terminal']->database_name }}
-                                                </span>
-                                            </p>
-                                        </div>
+                                        <span
+                                            class="bg-violet-100 text-violet-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded border border-violet-400">
+                                            @svg('fluentui-database-window-20', 'w-4 h-4 mr-1')
+                                            {{ $assist['terminal']->database_name }}
+                                        </span>
                                     </td>
                                     <td class="bg-yellow-100">
                                         <p class="text-nowrap text-center">
