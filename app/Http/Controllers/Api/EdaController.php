@@ -25,16 +25,16 @@ class EdaController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function createIndependent(Request $request)
+    public function createIndependent(Request $req)
     {
 
-        $request->validate([
+        $req->validate([
             'year_id' => 'required|uuid',
             'user_id' => 'required|uuid',
         ]);
 
-        $year_id = $request->year_id;
-        $user_id = $request->user_id;
+        $year_id = $req->year_id;
+        $user_id = $req->user_id;
         $cuser = User::find(Auth::id());
         $user = User::find($user_id);
         $year = Year::find($year_id);
@@ -65,7 +65,7 @@ class EdaController extends Controller
             ]);
         }
 
-        $this->auditService->registerAudit('Eda creado', 'Se ha creado un eda', 'edas', 'create', $request);
+        $this->auditService->registerAudit('Eda creado', 'Se ha creado un eda', 'edas', 'create', $req);
 
         return response()->json('Eda creado correctamente.', 200);
     }
@@ -99,9 +99,9 @@ class EdaController extends Controller
         return response()->json('Eda creado correctamente.', 200);
     }
 
-    public function close(Request $request)
+    public function close(Request $req)
     {
-        $eda = Eda::find($request->id);
+        $eda = Eda::find($req->id);
 
         if (!$eda) return response()->json('La eda no existe', 404);
 
@@ -113,14 +113,14 @@ class EdaController extends Controller
 
         $eda->save();
 
-        $this->auditService->registerAudit('Eda cerrado', 'Se ha cerrado un eda', 'edas', 'update', $request);
+        $this->auditService->registerAudit('Eda cerrado', 'Se ha cerrado un eda', 'edas', 'update', $req);
 
         return response()->json('Eda cerrado correctamente. Se habilitó la posibilidad de resolver los cuestionarios asignados.', 200);
     }
 
-    public function restart(Request $request)
+    public function restart(Request $req)
     {
-        $eda = Eda::find($request->id);
+        $eda = Eda::find($req->id);
 
         if (!$eda) return response()->json('La eda no existe', 404);
 
@@ -139,7 +139,7 @@ class EdaController extends Controller
 
         $eda->save();
 
-        $this->auditService->registerAudit('Eda reiniciado', 'Se ha reiniciado un eda', 'edas', 'update', $request);
+        $this->auditService->registerAudit('Eda reiniciado', 'Se ha reiniciado un eda', 'edas', 'update', $req);
 
         foreach ($evaluationArray as $evaluation) {
             Evaluation::create([
@@ -151,23 +151,23 @@ class EdaController extends Controller
         return response()->json('El eda se ha reiniciado correctamente.', 200);
     }
 
-    public function questionnaire(Request $request, $id)
+    public function questionnaire(Request $req, $id)
     {
         $eda = Eda::find($id);
         if (!$eda) return response()->json('La eda no existe', 404);
         if (!$eda->closed) return response()->json('La eda no esta cerrada', 404);
-        $request->validate([
+        $req->validate([
             'answers' => 'required|array',
         ]);
         $rulePerAnswer = [
             'question_id' => ['required', 'uuid'],
             'answer' => ['required', 'string'],
         ];
-        foreach ($request->answers as $answer) {
+        foreach ($req->answers as $answer) {
             $validator = validator($answer, $rulePerAnswer);
             if ($validator->fails()) return response()->json($validator->errors()->first(), 400);
         }
-        $firstQuestion = Question::find($request->answers[0]['question_id']);
+        $firstQuestion = Question::find($req->answers[0]['question_id']);
         $questionnaire_template = QuestionnaireTemplate::find($firstQuestion->template_id);
 
         if (!$questionnaire_template) return response()->json('La plantilla no existe', 404);
@@ -177,7 +177,7 @@ class EdaController extends Controller
             'answered_by' => Auth::id(),
         ]);
 
-        foreach ($request->answers as $answer) {
+        foreach ($req->answers as $answer) {
             QuestionnaireAnswer::create([
                 'answer' => $answer['answer'],
                 'question_id' => $answer['question_id'],
