@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Question;
 use App\Models\QuestionnaireTemplate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionnaireTemplateController extends Controller
 {
@@ -17,14 +18,14 @@ class QuestionnaireTemplateController extends Controller
                 'order' => $index + 1,
                 'question' => $question['question'],
                 'template_id' => $template->id,
-                'created_by' => auth()->user()->id,
+                'created_by' => Auth::id(),
             ]);
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $req)
     {
-        $request->validate([
+        $req->validate([
             'title' => 'required',
             'questions' => 'required|array',
         ]);
@@ -33,7 +34,7 @@ class QuestionnaireTemplateController extends Controller
             'question' => ['required', 'string', 'max:500'],
         ];
 
-        $questions = $request->questions;
+        $questions = $req->questions;
 
         // validate each quesions
         foreach ($questions as $question) {
@@ -44,8 +45,8 @@ class QuestionnaireTemplateController extends Controller
         }
 
         $template = QuestionnaireTemplate::create([
-            'title' => $request->title,
-            'created_by' => auth()->user()->id,
+            'title' => $req->title,
+            'created_by' => Auth::id(),
         ]);
 
         $this->createQuestions($questions, $template);
@@ -53,9 +54,9 @@ class QuestionnaireTemplateController extends Controller
         return response()->json('Plantilla creada correctamente.', 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'title' => 'required',
             'questions' => 'required|array',
             'deleteIds' => 'array',
@@ -68,14 +69,14 @@ class QuestionnaireTemplateController extends Controller
         $template = QuestionnaireTemplate::find($id);
         if (!$template) return response()->json('Plantilla no encontrada.', 404);
 
-        if ($request->questions) {
-            foreach ($request->questions as $question) {
+        if ($req->questions) {
+            foreach ($req->questions as $question) {
                 $validator = validator($question, $rulePerQuestion);
                 if ($validator->fails()) return response()->json($validator->errors()->first(), 400);
             }
         }
 
-        foreach ($request->questions as $i => $question) {
+        foreach ($req->questions as $i => $question) {
             $order = $i + 1;
             if (isset($question['id'])) {
                 $questionToUpdate = Question::find($question['id']);
@@ -89,21 +90,21 @@ class QuestionnaireTemplateController extends Controller
                     'order' => $order,
                     'question' => $question['question'],
                     'template_id' => $template->id,
-                    'created_by' => auth()->user()->id,
+                    'created_by' => Auth::id(),
                 ]);
             }
         }
 
-        if ($request->deleteIds) {
-            foreach ($request->deleteIds as $id) {
+        if ($req->deleteIds) {
+            foreach ($req->deleteIds as $id) {
                 $question = Question::find($id);
                 $question->archived = true;
                 $question->save();
             }
         }
 
-        $template->title = $request->title;
-        $template->updated_by = auth()->user()->id;
+        $template->title = $req->title;
+        $template->updated_by = Auth::id();
         $template->save();
 
         return response()->json('Plantilla actualizado correctamente.', 200);
