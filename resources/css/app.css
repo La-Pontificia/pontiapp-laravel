@@ -43,7 +43,7 @@ button[disabled] {
     overflow-x: hidden;
     padding: 10px;
     & > .content {
-        border-radius: 0.5rem;
+        border-radius: 1rem;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -159,9 +159,10 @@ a.secondary {
     display: flex;
     gap: 3px;
     text-align: center;
+    align-items: center;
     text-decoration: none;
     width: fit-content;
-    border-radius: 999px;
+    border-radius: 10px;
     padding: 6px 12px;
     font-size: 0.9rem;
     font-weight: 600;
@@ -175,7 +176,8 @@ a.primary {
     &:hover {
         background-color: #2468d5;
     }
-    &.gradient-btn {
+    &.gradient-btn,
+    &.gradient {
         background: linear-gradient(90deg, #0b57d0 0%, #5f24d5 100%);
         color: white;
         &:hover {
@@ -510,50 +512,56 @@ th.fc-col-header-cell {
 
 /* // loader */
 .loader {
-    width: 30px;
-    height: 30px;
+    color: #000000;
+    font-size: 45px;
+    text-indent: -9999em;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
     border-radius: 50%;
     position: relative;
-    animation: rotate 1s linear infinite;
-}
-.loader::before {
-    content: "";
-    box-sizing: border-box;
-    position: absolute;
-    inset: 0px;
-    border-radius: 50%;
-    border: 3px solid #000000;
-    animation: prixClipFix 2s linear infinite;
+    transform: translateZ(0);
+    animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
 }
 
-@keyframes rotate {
+@keyframes mltShdSpin {
+    0% {
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+            0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    5%,
+    95% {
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+            0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+    10%,
+    59% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em,
+            -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em,
+            -0.297em -0.775em 0 -0.477em;
+    }
+    20% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em,
+            -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em,
+            -0.749em -0.34em 0 -0.477em;
+    }
+    38% {
+        box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em,
+            -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em,
+            -0.82em -0.09em 0 -0.477em;
+    }
+    100% {
+        box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+            0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+    }
+}
+
+@keyframes round {
+    0% {
+        transform: rotate(0deg);
+    }
     100% {
         transform: rotate(360deg);
-    }
-}
-
-@keyframes prixClipFix {
-    0% {
-        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
-    }
-    25% {
-        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
-    }
-    50% {
-        clip-path: polygon(
-            50% 50%,
-            0 0,
-            100% 0,
-            100% 100%,
-            100% 100%,
-            100% 100%
-        );
-    }
-    75% {
-        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
-    }
-    100% {
-        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
     }
 }
 
@@ -643,4 +651,8 @@ th.fc-col-header-cell {
     100% {
         clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
     }
+}
+
+.datepicker {
+    border-radius: 0px !important;
 }
