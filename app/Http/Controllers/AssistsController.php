@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AssistsCentralizedWithoutCalculating;
 use App\Jobs\AssistsSnSchedules;
 use App\Jobs\AssistsWithoutCalculating;
 use App\Models\Area;
@@ -115,7 +116,7 @@ class AssistsController extends Controller
         $user = Auth::user();
 
 
-        AssistsSnSchedules::dispatch($query, $terminalsIds, $startDate, $endDate, Auth::id());
+        AssistsCentralizedWithoutCalculating::dispatch($query, $terminalsIds, $startDate, $endDate, Auth::id());
 
         return response()->json('Una vez finalizado el proceso se le notificará al correo electrónico: ' . $user->email . ' O tambien ver el archivo en la sección de reportes / descargas');
     }
