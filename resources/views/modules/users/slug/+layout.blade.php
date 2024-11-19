@@ -6,6 +6,8 @@
     $profileDefault = 'https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg';
     $profile = $user ? ($user->profile ? $user->profile : $profileDefault) : $profileDefault;
 
+    $now = now();
+
     $items = [
         [
             'title' => 'Descripción general',
@@ -27,16 +29,18 @@
         ],
         [
             'title' => 'Asistencias',
-            'href' => '/users/' . $user->id . '/assists',
+            'href' =>
+                '/assists?query=' .
+                $user->dni .
+                '&assist_terminals=' .
+                ($user->schedules->isNotEmpty() ? $user->schedules->pluck('terminal_id')->join(',') : '') .
+                '&start=' .
+                $now->startOfMonth()->toDateString() .
+                '&end=' .
+                $now->endOfMonth()->toDateString(),
             'active' => request()->is('users/' . $user->id . '/assists'),
-            'enabled' => $cuser->has('assists:show') || $cuser->id === $user->id || $cuser->isDev(),
+            'enabled' => $user->schedules->isNotEmpty(),
         ],
-        // [
-        //     'title' => 'Seguridad y acceso',
-        //     'href' => '/users/' . $user->id . '/segurity-access',
-        //     'active' => request()->is('users/' . $user->id . '/segurity-access'),
-        //     'enabled' => true,
-        // ],
     ];
 
     $hasChangePhoto = $cuser->has('users:edit') || $cuser->id === $user->id || $cuser->isDev();
@@ -45,7 +49,7 @@
 @section('layout.users')
     <div class="text-black pt-4 pb-2 w-full flex-col flex-grow flex overflow-y-auto">
         <div class="w-full h-full flex-grow flex flex-col">
-            <header class="mb-2 p-3 rounded-xl max-w-7xl w-full mx-auto">
+            <header class="p-3 rounded-xl max-w-7xl w-full mx-auto">
                 <div class="flex gap-4 items-center overflow-hidden">
                     <div class="relative group w-fit overflow-hidden rounded-full">
                         <div class="flex items-center gap-4">

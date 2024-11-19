@@ -33,11 +33,10 @@
                 </button>
             </div>
             <div class="p-5 flex-grow mt-2 w-full overflow-y-auto ">
-                <form data-redirect-to-response action="/api/users" method="POST" class="grid dinamic-form gap-4 w-full"
-                    role="form">
+                <div class="grid gap-4 w-full" role="form">
                     <div class="flex items-center gap-4">
                         <div class="relative rounded-full overflow-hidden w-24 aspect-square">
-                            <input type="file" id="input-profile" name="profile"
+                            <input type="file" id="input-profile" form="form-user" name="profile"
                                 class="opacity-0 absolute peer inset-0 w-full h-full cursor-pointer" accept="image/*">
                             <img id="preview-profile" class="w-full peer-data-[fill]:block hidden h-full object-cover"
                                 src="https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg"
@@ -59,24 +58,24 @@
                             <div class="col-span-2 grid grid-cols-2">
                                 <label class="label">
                                     <span>Documento de Identidad</span>
-                                    <input pattern="[0-9]{8}" name="dni" id="dni-input" autocomplete="off"
-                                        value="" required type="number">
+                                    <input form="form-user" pattern="[0-9]{8}" name="dni" id="dni-input"
+                                        autocomplete="off" value="" required type="number">
                                 </label>
                             </div>
                             <label class="label">
                                 <span>Apellidos</span>
-                                <input autocomplete="off" value="" name="last_name" id="last_name-input" required
+                                <input form="form-user"t autocomplete="off" name="last_name" id="last_name-input" required
                                     type="text">
                             </label>
                             <label class="label">
                                 <span>Nombres</span>
-                                <input autocomplete="off" value="" name="first_name" id="first_name-input" required
+                                <input form="form-user" autocomplete="off" name="first_name" id="first_name-input" required
                                     type="text">
                             </label>
                             <label class="label">
                                 <span>Fecha de nacimiento</span>
                                 <div class="w-full grid grid-cols-3 gap-2">
-                                    <select name="date_of_birth_day">
+                                    <select form="form-user" name="date_of_birth_day">
                                         <option value="" selected disabled>
                                             - Día -
                                         </option>
@@ -87,7 +86,7 @@
                                         @endforeach
                                     </select>
 
-                                    <select name="date_of_birth_month">
+                                    <select form="form-user" name="date_of_birth_month">
                                         <option value="" selected disabled>
                                             - Mes -
                                         </option>
@@ -98,7 +97,7 @@
                                         @endforeach
                                     </select>
 
-                                    <select name="date_of_birth_year">
+                                    <select form="form-user" name="date_of_birth_year">
                                         <option value="" selected disabled>
                                             - Año -
                                         </option>
@@ -121,7 +120,7 @@
                                 <span>
                                     Puesto de Trabajo
                                 </span>
-                                <select name="id_job_position" id="job-position-select" required>
+                                <select form="form-user" name="id_job_position" id="job-position-select" required>
                                     <option disabled selected value="">
                                         -- Seleccione un puesto de trabajo --
                                     </option>
@@ -139,7 +138,7 @@
                                 <span>
                                     Cargo
                                 </span>
-                                <select name="id_role" id="role-select" required>
+                                <select form="form-user" name="id_role" id="role-select" required>
                                     <option disabled selected value="">
                                         -- Seleccione un cargo --
                                     </option>
@@ -157,7 +156,7 @@
                                 <span>
                                     Sede
                                 </span>
-                                <select name="id_branch" required>
+                                <select form="form-user" name="id_branch" required>
                                     <option disabled selected value="">
                                         -- Seleccione una sede --
                                     </option>
@@ -168,28 +167,12 @@
                                 </select>
                             </label>
                             <label class="label">
-                                <span>Grupo de horario</span>
-                                <div class="relative">
-                                    <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
-                                        @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
-                                    </div>
-                                    <select class="w-full" style="padding-left: 35px" name="group_schedule_id">
-                                        <option disabled selected value="">
-                                            -- Seleccione un grupo de horario --
-                                        </option>
-                                        @foreach ($group_schedules as $scheldule)
-                                            <option value="{{ $scheldule->id }}">{{ $scheldule->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </label>
-                            <label class="label">
                                 <span>Tipo de contrato</span>
                                 <div class="relative">
                                     <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
                                         @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
                                     </div>
-                                    <select class="w-full" style="padding-left: 35px" name="contract_id">
+                                    <select form="form-user" class="w-full" style="padding-left: 35px" name="contract_id">
                                         <option disabled selected value="">
                                             -- Seleccione un tipo --
                                         </option>
@@ -201,39 +184,63 @@
                             </label>
                             <div class="label col-span-2">
                                 <span>
-                                    Terminales de asistencia
+                                    Horarios de trabajo
                                 </span>
-                                <div class="grid grid-cols-2 text-sm font-medium">
-                                    @foreach ($terminals as $terminal)
-                                        <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
-                                            <input type="checkbox" name="assist_terminals[]" value="{{ $terminal->id }}">
-                                            <div>
-                                                <span class="block"> {{ $terminal->name }} </span>
-                                                <p class="flex items-center gap-2">
-                                                    @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
-                                                    <span class="text-sm font-normal"> {{ $terminal->database_name }}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                        </label>
-                                    @endforeach
+                                <button type="button" data-modal-target="dialog" data-modal-toggle="dialog"
+                                    class="form-control flex items-center gap-2" type="button">
+                                    @svg('fluentui-calendar-person-20-o', 'w-5 h-5')
+                                    <span>Agregar horario</span>
+                                </button>
+                                <div id="dialog" tabindex="-1" aria-hidden="true" class="dialog hidden">
+                                    <div class="content lg:max-w-lg max-w-full">
+                                        <header>
+                                            Agregar horario
+                                        </header>
+                                        <form class="p-4 pt-0 grid gap-4" id="schedule-form-create-user">
+                                            @include('modules.users.create.schedule-form')
+                                        </form>
+                                        <footer>
+                                            <button data-modal-hide="dialog" type="button">Cancelar</button>
+                                            <button data-dialog="dialog" form="schedule-form-create-user"
+                                                type="submit">Agregar</button>
+                                        </footer>
+                                    </div>
                                 </div>
+                                <template id="schedule-user-item">
+                                    <div
+                                        class="flex schedule-item items-center gap-2 bg-white shadow-sm border p-2 rounded-xl">
+                                        @svg('fluentui-calendar-ltr-20-o', 'w-6 h-6')
+                                        <input type="hidden">
+                                        <div class="flex-grow">
+                                            <h2>Unknown</h2>
+                                            <p class="text-sm text-stone-700">
+                                                Unknown
+                                            </p>
+                                        </div>
+                                        <div class="px-4 flex items-center">
+                                            <button type="button">
+                                                @svg('fluentui-delete-24-o', 'w-5 h-5')
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div id="schedules-user" class="py-2 flex flex-col gap-2"></div>
                             </div>
                             <div class="col-span-2 grid grid-cols-2 gap-4">
                                 <label class="label">
                                     <span>Fecha de ingreso</span>
-                                    <input autocomplete="off" type="date" name="entry_date">
+                                    <input form="form-user" autocomplete="off" type="date" name="entry_date">
                                 </label>
                                 <label class="label">
                                     <span>Fecha de Cese</span>
-                                    <input autocomplete="off" type="date" name="exit_date">
+                                    <input form="form-user" autocomplete="off" type="date" name="exit_date">
                                 </label>
                             </div>
                             <div class="col-span-2 grid label grid-cols-2">
                                 <span>
                                     Jefe inmediato
                                 </span>
-                                <select name="immediate_boss" id="">
+                                <select form="form-user" name="immediate_boss" id="">
                                     <option value="" selected disabled>
                                         -- Seleccione un jefe inmediato --
                                     </option>
@@ -254,7 +261,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <label class="label w-[200px]">
                                 <span>Rol</span>
-                                <select required name="id_role_user">
+                                <select form="form-user" required name="id_role_user">
                                     <option value="" selected disabled>
                                         -- Seleccione un rol --
                                     </option>
@@ -272,7 +279,7 @@
                             </p>
                         </div>
                         <div class="grid gap-3">
-                            <div class="label">
+                            {{-- <div class="label">
                                 <span>
                                     Unidad de negocio
                                 </span>
@@ -290,22 +297,24 @@
                                         </label>
                                     @endforeach
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="label w-full">
                                 <span>Correo institucional</span>
                                 <div class="relative">
                                     <div class="absolute z-10 inset-y-0 flex items-center left-3">
                                         @svg('fluentui-mail-20-o', 'w-5 h-5 opacity-50')
                                     </div>
-                                    <input pattern="^[a-zA-Z0-9_]*$" value="" required type="text"
-                                        name="username" class="w-full pl-10" placeholder="Nombre de usuario">
+                                    <input form="form-user" pattern="^[a-zA-Z0-9_]*$" value="" required
+                                        type="text" name="username" class="w-full pl-10"
+                                        placeholder="Nombre de usuario">
                                     <div class="absolute inset-y-0 flex gap-1 items-center right-2">
                                         <div class="opacity-50">
                                             @
                                         </div>
                                         <div class="label">
-                                            <select style="background-color: transparent; border: 0px; padding: 0px;"
-                                                required name="domain">
+                                            <select form="form-user"
+                                                style="background-color: transparent; border: 0px; padding: 0px;" required
+                                                name="domain">
                                                 @foreach ($domains as $domain)
                                                     <option value="{{ $domain }}">
                                                         {{ $domain }}
@@ -324,7 +333,7 @@
                                     <div class="absolute z-10 inset-y-0 flex items-center left-3">
                                         @svg('fluentui-person-key-20-o', 'w-5 h-5 opacity-50')
                                     </div>
-                                    <input name="password" placeholder="Opcional" class="w-full pl-10">
+                                    <input form="form-user" name="password" placeholder="Opcional" class="w-full pl-10">
                                 </div>
                                 <p class="text-xs">
                                     La contraseña por defecto será el documento de identidad del usuario.
@@ -334,16 +343,19 @@
                     </div>
                     <div class="border-t pt-2 border-neutral-300">
                         <div class="max-w-2xl mx-auto flex gap-2">
-                            <button type="submit" class="primary">
-                                @svg('fluentui-person-add-20-o', 'w-5 h-5')
-                                Registrar
-                            </button>
+                            <form data-redirect-to-response id="form-user" action="/api/users" method="POST"
+                                class="grid dinamic-form gap-4 w-full" role="form">
+                                <button type="submit" class="primary">
+                                    @svg('fluentui-person-add-20-o', 'w-5 h-5')
+                                    Registrar
+                                </button>
+                            </form>
                             <button onclick="window.history.back()" type="button" class="secondary">
                                 Cancelar
                             </button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     @else

@@ -8,50 +8,14 @@
     $hasEdit = ($cuser->has('users:edit') && !$user->isDev()) || $cuser->isDev();
 
     $daysMatch = [
-        [
-            'name' => 'Lu',
-            'value' => 'monday',
-            'key' => 1,
-            'short' => 'L',
-        ],
-        [
-            'name' => 'Ma',
-            'value' => 'tuesday',
-            'key' => 2,
-            'short' => 'M',
-        ],
-        [
-            'name' => 'Mi',
-            'value' => 'wednesday',
-            'key' => 3,
-            'short' => 'M',
-        ],
-        [
-            'name' => 'Ju',
-            'value' => 'thursday',
-            'key' => 4,
-            'short' => 'J',
-        ],
-        [
-            'name' => 'Vi',
-            'value' => 'friday',
-            'key' => 5,
-            'short' => 'V',
-        ],
-        [
-            'name' => 'Sá',
-            'value' => 'saturday',
-            'key' => 6,
-            'short' => 'S',
-        ],
-        [
-            'name' => 'Do',
-            'value' => 'sunday',
-            'key' => 7,
-            'short' => 'D',
-        ],
+        1 => 'Lun',
+        2 => 'Mar',
+        3 => 'Mié',
+        4 => 'Jue',
+        5 => 'Vie',
+        6 => 'Sáb',
+        7 => 'Dom',
     ];
-
     $days = range(1, 31);
 
     $months = [
@@ -88,31 +52,35 @@
     <div class="max-w-7xl p-2 text-stone-700 h-full flex flex-col flex-grow mx-auto w-full">
         @if (!$isEdit)
             <div class="p-1 pt-2 flex flex-grow flex-col gap-4">
-                @if (count($user->summarySchedules()) !== 0)
+                @if (count($user->schedules) !== 0)
                     <div>
-                        <div class="grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-3 grid-cols-1 gap-2">
-                            @foreach ($user->summarySchedules() as $schedule)
+                        <span class="text-sm font-semibold opacity-70">
+                            Horarios
+                        </span>
+                        <div class="grid xl:grid-cols-3 mt-2 md:grid-cols-2 grid-cols-1 gap-2">
+                            @foreach ($user->schedules as $schedule)
                                 @php
                                     $from = date('h:i A', strtotime($schedule->from));
                                     $to = date('h:i A', strtotime($schedule->to));
                                 @endphp
-                                <div class="flex p-2 rounded-lg bg-blue-600 text-white text-sm gap-2 items-center">
-                                    @svg('fluentui-clock-16-o', 'w-5 h-5 opacity-60')
-                                    <div class="">
-                                        <p class="font-semibold">
-                                            {{ $from }} - {{ $to }}
-                                        </p>
-                                        <div class="flex ">
+                                <div class="flex schedule-item items-center gap-2 bg-white shadow-sm border p-2 rounded-xl">
+                                    @svg('fluentui-calendar-ltr-20-o', 'w-6 h-6')
+                                    <div class="flex-grow">
+                                        <h2>{{ $from }} - {{ $to }}</h2>
+                                        <p class="text-sm text-stone-700">
                                             @foreach ($daysMatch as $key => $day)
-                                                @if (in_array($day['key'], $schedule->days))
-                                                    <span class="text-stone-100">
-                                                        {{ $day['name'] }}
-                                                        {{ $key < count($schedule->days) - 1 ? ',' : '' }}
-                                                    </span>
+                                                @if (in_array($key, $schedule->days))
+                                                    {{ $day }}
+                                                    {{ $key < count($schedule->days) ? ',' : '' }}
                                                 @endif
                                             @endforeach
-                                        </div>
+                                        </p>
                                     </div>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-nowrap text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded border border-blue-400">
+                                        @svg('fluentui-database-window-20', 'w-4 h-4 mr-1')
+                                        {{ $schedule->terminal->name }}
+                                    </span>
                                 </div>
                             @endforeach
                         </div>
@@ -121,6 +89,12 @@
                                 Ver todos los horarios
                             </a>
                         </div>
+                    </div>
+                @else
+                    <div class="p-2 rounded-lg bg-white shadow-md">
+                        <p class="text-center font-semibold text-sm">
+                            No se ha asignado ningún horario a este usuario.
+                        </p>
                     </div>
                 @endif
                 {{-- // User details --}}
@@ -180,9 +154,8 @@
                                 <span>
                                     Supervisor
                                 </span>
-                                <a class="hover:bg-white rounded-lg p-2 text-center shadow-md hover:shadow-lg]"
+                                <a class="bg-white rounded-lg p-2 text-center shadow-md hover:shadow-lg"
                                     href="/users/{{ $user->supervisor->id }}">
-
                                     <div class="py-2">
                                         @include('commons.avatar', [
                                             'src' => $user->supervisor->profile,
@@ -208,7 +181,7 @@
                                 </span>
                                 <div class="grid {{ $user->supervisor ? 'grid-cols-3' : 'grid-cols-4' }} gap-2">
                                     @foreach ($user->people->take($user->supervisor ? 3 : 4) as $person)
-                                        <a class="hover:bg-white rounded-lg p-2 text-center shadow-md hover:shadow-lg]"
+                                        <a class="bg-white rounded-lg p-2 text-center shadow-md hover:shadow-lg"
                                             href="/users/{{ $person->id }}">
                                             <div class="py-2">
                                                 @include('commons.avatar', [
@@ -300,7 +273,7 @@
             </div>
         @endif
         @if ($hasEdit && $isEdit)
-            <div class="grid gap-4">
+            <div class="grid gap-4 max-w-xl">
                 <button onclick="window.history.back()" class="flex gap-2 items-center text-gray-900 ">
                     @svg('fluentui-arrow-left-20', 'w-5 h-5')
                     Atras
@@ -429,7 +402,7 @@
                                 @endforeach
                             </select>
                         </label>
-                        <label class="label">
+                        {{-- <label class="label">
                             <span>Grupo de horario</span>
                             <div class="relative">
                                 <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
@@ -443,7 +416,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </label>
+                        </label> --}}
                         <label class="label">
                             <span>Tipo de contrato</span>
                             <div class="relative">
@@ -461,7 +434,7 @@
                                 </select>
                             </div>
                         </label>
-                        <div class="label col-span-2">
+                        {{-- <div class="label col-span-2">
                             <span>
                                 Terminales de asistencia
                             </span>
@@ -486,7 +459,7 @@
                                     </label>
                                 @endforeach
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-span-2">
                             <div class="flex gap-2 items-end">
                                 <div class="grid grid-cols-2 gap-4 w-full">
@@ -620,7 +593,7 @@
                     </div>
                     <form method="POST" action="/api/users/{{ $user->id }}/segurity-access"
                         class="grid w-full dinamic-form pb-5 gap-3">
-                        <div class="label col-span-2">
+                        {{-- <div class="label col-span-2">
                             <span>
                                 Unidad de negocio
                             </span>
@@ -644,7 +617,7 @@
                                     </label>
                                 @endforeach
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="label w-full col-span-2">
                             <span>Correo institucional</span>
                             <div class="relative w-full">
