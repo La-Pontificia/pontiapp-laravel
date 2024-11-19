@@ -15,14 +15,14 @@ class AuditController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function index(Request $request)
+    public function index(Request $req)
     {
 
         $match = Audit::orderBy('created_at', 'desc')->limit(20);
 
-        $query = $request->get('query');
-        $action = $request->get('action');
-        $module = $request->get('module');
+        $query = $req->get('query');
+        $action = $req->get('action');
+        $module = $req->get('module');
 
         if ($query) {
             $match->whereHas('user', function ($q) use ($query) {
