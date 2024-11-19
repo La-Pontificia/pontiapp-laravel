@@ -4,9 +4,9 @@ namespace App\services;
 
 use App\Models\AssistTerminal;
 use App\Models\Attendance;
-use App\Models\AttendanceEmp;
 use App\Models\Schedule;
 use App\Models\User;
+use App\Models\UserTerminal;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -14,358 +14,190 @@ use Illuminate\Support\Facades\DB;
 class AssistsService
 {
 
-    public static function generateSchedules($user, $startDate, $endDate)
+    public static function getUsers($query, $area_id, $department_id, $limit = 10)
     {
-        $userSchedules = Schedule::where('user_id', $user->id)->where('start_date', '<=', $endDate)->where('end_date', '>=', $startDate)->get();
-        $groupSchedules = Schedule::where('group_id', $user->group_schedule_id)->where('start_date', '<=', $endDate)->where('end_date', '>=', $startDate)->get();
+        $match = User::orderBy('created_at', 'desc')->where('status', true);
 
-        $allSchedules = $groupSchedules->merge($userSchedules);
-
-        $schedulesGenerated = [];
-
-        foreach ($allSchedules as $schedule) {
-            $start = Carbon::parse($schedule->start_date);
-            $end = Carbon::parse($schedule->end_date);
-            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
-                if (in_array($date->dayOfWeekIso, $schedule->days)) {
-                    $schedulesGenerated[] = [
-                        'id' => $schedule->id,
-                        'dni' => $user->dni,
-                        'full_name' => $user->last_name . ', ' . $user->first_name,
-                        'group_id' => $schedule->group_id,
-                        'user_id' => $schedule->user_id,
-                        'user' => $user,
-                        'job_position' => $user->role_position->job_position->name,
-                        'role' => $user->role_position->name,
-                        'day' => $date->isoFormat('dddd'),
-                        'turn' => Carbon::parse($schedule->from)->hour >= 12 ? 'TT' : 'TM',
-                        'title' => $schedule->title,
-                        'date' => $date->format('Y-m-d'),
-                        'from' => Carbon::parse($schedule->from)->setDateFrom($date)->format('Y-m-d H:i:s'),
-                        'from_start' => Carbon::parse($schedule->from_start)->setDateFrom($date)->format('Y-m-d H:i:s'),
-                        'from_end' => Carbon::parse($schedule->from_end)->setDateFrom($date)->format('Y-m-d H:i:s'),
-                        'to' => Carbon::parse($schedule->to)->setDateFrom($date)->format('Y-m-d H:i:s'),
-                        'to_start' => Carbon::parse($schedule->to_start)->setDateFrom($date)->format('Y-m-d H:i:s'),
-                        'to_end' => Carbon::parse($schedule->to_end)->setDateFrom($date)->format('Y-m-d H:i:s'),
-                        'created_at' => $schedule->created_at,
-                        'updated_at' => $schedule->updated_at,
-                    ];
-                }
-            }
+        if ($area_id) {
+            $match->whereHas('role_position', function ($q) use ($area_id) {
+                $q->whereHas('department', function ($qq) use ($area_id) {
+                    $qq->where('id_area', $area_id);
+                });
+            });
         }
 
-        $schedules = array_filter($schedulesGenerated, function ($schedule) use ($startDate, $endDate) {
-            $date = Carbon::parse($schedule['date']);
-            return $date->between(Carbon::parse($startDate), Carbon::parse($endDate));
-        });
-
-        usort($schedules, function ($a, $b) {
-            return strcmp($a['date'], $b['date']);
-        });
-
-        return $schedules;
-    }
-
-    public static function generateSchedulesByGroup($user, $group_id, $startDate, $endDate)
-    {
-        $allSchedules = Schedule::where('group_id', $group_id)->where('start_date', '<=', $endDate)->where('end_date', '>=', $startDate)->get();
-
-        $schedulesGenerated = [];
-
-        foreach ($allSchedules as $schedule) {
-            $start = Carbon::parse($schedule->start_date);
-            $end = Carbon::parse($schedule->end_date);
-            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
-                if (in_array($date->dayOfWeekIso, $schedule->days)) {
-                    $schedulesGenerated[] = [
-                        'id' => $schedule->id,
-                        'dni' => $user->emp_code,
-                        'full_name' => $user->last_name . ', ' . $user->first_name,
-                        'group_id' => $schedule->group_id,
-                        'user_id' => $schedule->user_id,
-                        'title' => $schedule->title,
-                        'date' => $date->format('d/m/Y'),
-                        'day' => $date->isoFormat('dddd'),
-                        'turn' => Carbon::parse($schedule->from)->hour >= 12 ? 'TT' : 'TM',
-                        'from' => Carbon::parse($schedule->from)->setDateFrom($date)->format('d/m/Y H:i:s'),
-                        'from_start' => Carbon::parse($schedule->from_start)->setDateFrom($date)->format('d/m/Y H:i:s'),
-                        'from_end' => Carbon::parse($schedule->from_end)->setDateFrom($date)->format('d/m/Y H:i:s'),
-                        'to' => Carbon::parse($schedule->to)->setDateFrom($date)->format('d/m/Y H:i:s'),
-                        'to_start' => Carbon::parse($schedule->to_start)->setDateFrom($date)->format('d/m/Y H:i:s'),
-                        'to_end' => Carbon::parse($schedule->to_end)->setDateFrom($date)->format('d/m/Y H:i:s'),
-                        'created_at' => $schedule->created_at,
-                        'updated_at' => $schedule->updated_at,
-                    ];
-                }
-            }
+        if ($department_id) {
+            $match->whereHas('role_position', function ($q) use ($department_id) {
+                $q->where('id_department', $department_id);
+            });
         }
-
-        $schedules = $schedulesGenerated;
-        usort($schedules, function ($a, $b) {
-            return strcmp($a['date'], $b['date']);
-        });
-
-        $schedules = array_filter($schedules, function ($schedule) use ($startDate, $endDate) {
-            $date = Carbon::parse($schedule['date']);
-            return $date->between(Carbon::parse($startDate), Carbon::parse($endDate));
-        });
-
-        return $schedules;
-    }
-
-    public static function assistsByUser($user, $terminalsIds, $startDate, $endDate, $force_calculation)
-    {
-
-        $terminals = collect([]);
-
-        if (count($terminalsIds) > 0) {
-            foreach ($terminalsIds as $terminalId) {
-                $terminals[] = AssistTerminal::find($terminalId);
-            }
-        } else if ($user->assistTerminals->count() > 0) {
-            foreach ($user->assistTerminals as $terminal) {
-                $terminals[] = $terminal->assistTerminal;
-            }
-        } else if ($force_calculation) {
-            $terminals = AssistTerminal::limit(1)->get();
-        }
-
-        $schedules = self::generateSchedules($user, $startDate, $endDate);
-
-        $assists = [];
-        foreach ($terminals as $terminal) {
-
-            if (!$terminal) {
-                continue;
-            }
-
-            // conection to the terminal
-            $data = (new Attendance())
-                ->setConnection($terminal->database_name)
-                ->where('emp_code', $user->dni)
-                ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
-                ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
-                ->orderBy('punch_time', 'asc')
-                ->get();
-
-            $list = [];
-            $schedules = self::generateSchedules($user, $startDate, $endDate);
-
-            foreach ($schedules as $schedule) {
-                $from = Carbon::parse($schedule['from']);
-                $fromStart = Carbon::parse($schedule['from_start']);
-                $fromEnd = Carbon::parse($schedule['from_end']);
-                $to = Carbon::parse($schedule['to']);
-                $toStart = Carbon::parse($schedule['to_start']);
-                $toEnd = Carbon::parse($schedule['to_end']);
-
-                // Find the nearest entry within the range
-                $entryKey = $data->filter(function ($assistance) use ($fromStart, $fromEnd) {
-                    $time = Carbon::parse($assistance->punch_time);
-                    return $time->between($fromStart, $fromEnd);
-                })->sortBy(function ($assistance) use ($from) {
-                    return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($from));
-                })->keys()->first();
-
-                // Extract the entry from the array
-                $entry = $entryKey !== null ? $data->pull($entryKey) : null;
-
-                // Find the nearest exit within range
-                $exitKey = $data->filter(function ($assistance) use ($toStart, $toEnd) {
-                    $time = Carbon::parse($assistance->punch_time);
-                    return $time->between($toStart, $toEnd);
-                })->sortBy(function ($assistance) use ($to) {
-                    return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($to));
-                })->keys()->first();
-
-                // Extract the exit from the array
-                $exit = $exitKey !== null ? $data->pull($exitKey) : null;
-
-
-                $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
-                $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
-                $schedule['terminal'] = $terminal;
-
-                // Observations & Owes Time
-                $observations = [];
-                $owesTime = null;
-
-                if (!$entry) {
-                    $observations[] = 'No marcó entrada';
-                } elseif (Carbon::parse($entry->punch_time)->gt($from)) {
-                    $observations[] = 'Tardanza';
-                }
-
-                if (!$exit) {
-                    $observations[] = 'No marcó salida';
-                } elseif (Carbon::parse($exit->punch_time)->lt($to)) {
-                    $observations[] = 'Salida Temprana';
-                }
-
-                if ($entry && $exit) {
-                    if (Carbon::parse($entry->punch_time)->lte($from) && Carbon::parse($exit->punch_time)->gte($to)) {
-                        $observations[] = null;
-                        $owesTime = 0;
-                    } else {
-                        if (Carbon::parse($entry->punch_time)->gt($from)) {
-                            $owesTime = Carbon::parse($entry->punch_time)->diffInMinutes($from);
-                        } else $owesTime = 0;
-                        if (Carbon::parse($exit->punch_time)->lt($to)) {
-                            $owesTime += $to->diffInMinutes(Carbon::parse($exit->punch_time));
-                        }
-                    }
-                }
-                $schedule['observations'] = implode(', ', $observations);
-                $schedule['owes_time'] = is_numeric($owesTime) ? gmdate('H:i:s', $owesTime * 60) : null;
-
-                $list[] = $schedule;
-            }
-
-            // concatenar la list a la lista de asistencias
-            $assists = array_merge($assists, $list);
-        }
-
-        return $assists;
-    }
-
-    public static function assistsByEmployee($user, $group_id, $terminal, $startDate, $endDate)
-    {
-        $schedules = self::generateSchedulesByGroup($user, $group_id, $startDate, $endDate);
-
-        $match = (new Attendance())
-            ->setConnection($terminal ?? 'PL-Alameda')
-            ->where('emp_code', $user->emp_code)
-            ->whereRaw("CAST(punch_time AS DATE) >= ?", [$startDate])
-            ->whereRaw("CAST(punch_time AS DATE) <= ?", [$endDate])
-            ->orderBy('punch_time', 'asc');
-
-        $assists = $match->get();
-
-        foreach ($schedules as &$schedule) {
-            $date = Carbon::parse($schedule['date']);
-            $from = Carbon::parse($schedule['from']);
-            $fromStart = Carbon::parse($schedule['from_start']);
-            $fromEnd = Carbon::parse($schedule['from_end']);
-            $to = Carbon::parse($schedule['to']);
-            $toStart = Carbon::parse($schedule['to_start']);
-            $toEnd = Carbon::parse($schedule['to_end']);
-
-            // Find the nearest entry within the range
-            $entryKey = $assists->filter(function ($assistance) use ($fromStart, $fromEnd) {
-                $time = Carbon::parse($assistance->punch_time);
-                return $time->between($fromStart, $fromEnd);
-            })->sortBy(function ($assistance) use ($from) {
-                return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($from));
-            })->keys()->first();
-
-            // Extract the entry from the array
-            $entry = $entryKey !== null ? $assists->pull($entryKey) : null;
-
-            // Find the nearest exit within range
-            $exitKey = $assists->filter(function ($assistance) use ($toStart, $toEnd) {
-                $time = Carbon::parse($assistance->punch_time);
-                return $time->between($toStart, $toEnd);
-            })->sortBy(function ($assistance) use ($to) {
-                return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($to));
-            })->keys()->first();
-
-            // Extract the exit from the array
-            $exit = $exitKey !== null ? $assists->pull($exitKey) : null;
-
-            // set values
-            $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
-            $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
-            $schedule['terminal'] = $entry ? $entry->terminal_alias : ($exit ? $exit->terminal_alias : null);
-
-            // Observations & Owes Time
-            $observations = [];
-            $owesTime = null;
-
-            if (!$entry) {
-                $observations[] = 'No marcó entrada';
-            } elseif (Carbon::parse($entry->punch_time)->gt($from)) {
-                $observations[] = 'Tardanza';
-            }
-
-            if (!$exit) {
-                $observations[] = 'No marcó salida';
-            } elseif (Carbon::parse($exit->punch_time)->lt($to)) {
-                $observations[] = 'Salida Temprana';
-            }
-
-            if ($entry && $exit) {
-                if (Carbon::parse($entry->punch_time)->lte($from) && Carbon::parse($exit->punch_time)->gte($to)) {
-                    $observations[] = null;
-                    $owesTime = 0;
-                } else {
-                    if (Carbon::parse($entry->punch_time)->gt($from)) {
-                        $owesTime = Carbon::parse($entry->punch_time)->diffInMinutes($from);
-                    } else $owesTime = 0;
-                    if (Carbon::parse($exit->punch_time)->lt($to)) {
-                        $owesTime += $to->diffInMinutes(Carbon::parse($exit->punch_time));
-                    }
-                }
-            }
-            $schedule['observations'] = implode(', ', $observations);
-            $schedule['owes_time'] = is_numeric($owesTime) ? gmdate('H:i:s', $owesTime * 60) : null;
-        }
-
-        return $schedules;
-    }
-
-    public static function employee($query, $terminal)
-    {
-
-        $match = (new AttendanceEmp())
-            ->setConnection($terminal ?? 'PL-Alameda')
-            ->where('first_name', 'like', '%' . $query . '%')
-            ->orWhere('last_name', 'like', '%' . $query . '%')
-            ->orWhere('emp_code', 'like', '%' . $query . '%')
-            ->orderBy('id', 'desc')
-            ->get();
-
-        $users = [];
-
-        if (!$query) {
-            $users = $match->limit(25)->get();
-        } else {
-            $users = $match->get();
-        }
-
-        return $users;
-    }
-
-    public static function assists($query, $terminalsIds, $startDate, $endDate, $isExport = false)
-    {
-
-        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
-        $users = Collect([]);
 
         if ($query) {
-            $users = User::where('first_name', 'like', '%' . $query . '%')
-                ->orWhere('last_name', 'like', '%' . $query . '%')
-                ->orWhere('dni', 'like', '%' . $query . '%')
-                ->get();
-        } else {
-            $users = User::all();
+            $match->where('full_name', 'like', '%' . $query . '%')
+                ->orWhere('dni', 'like', '%' . $query . '%');
         }
 
+        return [
+            'getLimited' => $match->limit($limit)->get(),
+            'total' => $match->count()
+        ];
+    }
+
+    public static function centralized($query, $terminalsIds, $startDate, $endDate, $area_id, $department_id)
+    {
+
+
+        if (count($terminalsIds) == 0) {
+            session()->flash('warning', 'Por favor seleccione al menos un terminal.');
+            return ['assists' => [], 'total' => 0, 'totalUsers' => 0, 'usersShown' => 0];
+        }
+
+        if (!$startDate || !$endDate) {
+            session()->flash('warning', 'Por favor seleccione un rango de fechas.');
+            return ['assists' => [], 'total' => 0, 'totalUsers' => 0, 'usersShown' => 0];
+        }
+
+        $userTerminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
+        $users = self::getUsers($query, $area_id, $department_id);
+        $userIds = $users['getLimited']->pluck('id')->toArray();
+
+        $allUserTerminals = UserTerminal::whereIn('user_id', $userIds)->get()->map(function ($item) {
+            return $item->assistTerminal;
+        })->unique('assist_terminal_id');
+
+        $totalCount = 0;
+        $assists = [];
+
+        $attendances = [];
+        foreach ($allUserTerminals as $userTerminal) {
+            $attendances = array_merge($attendances, DB::connection($userTerminal->database_name)
+                ->table('iclock_transaction as it')
+                ->join('personnel_employee as pe', 'it.emp_code', '=', 'pe.emp_code')
+                ->select('it.id', 'it.punch_time', 'it.upload_time', 'pe.emp_code')
+                ->whereBetween(DB::raw('CAST(it.punch_time AS DATE)'), [$startDate, $endDate])
+                ->orderBy('it.punch_time', 'desc')
+                ->whereIn('pe.emp_code', $userIds)
+                ->get()->toArray());
+        }
+
+        foreach ($users['getLimited'] as $user) {
+            $schedules = self::generateSchedules($user, $startDate, $endDate);
+            // $matchets = [];
+            // foreach ($schedules as $schedule) {
+            //     $totalCount += 1;
+
+            //     // $from = $schedule['from'];
+            //     // $fromStart = $schedule['from_start'];
+            //     // $fromEnd = $schedule['from_end'];
+            //     // $to = $schedule['to'];
+            //     // $toStart = $schedule['to_start'];
+            //     // $toEnd = $schedule['to_end'];
+
+            //     // $entryKey = $attendances->filter(function ($assistance) use ($fromStart, $fromEnd) {
+            //     //     $time = Carbon::parse($assistance->punch_time);
+            //     //     return $time->between($fromStart, $fromEnd);
+            //     // })->sortBy(function ($assistance) use ($from) {
+            //     //     return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($from));
+            //     // })->keys()->first();
+
+            //     // $entry = $entryKey !== null ? $attendances->pull($entryKey) : null;
+
+            //     // $exitKey = $attendances->filter(function ($assistance) use ($toStart, $toEnd) {
+            //     //     $time = Carbon::parse($assistance->punch_time);
+            //     //     return $time->between($toStart, $toEnd);
+            //     // })->sortBy(function ($assistance) use ($to) {
+            //     //     return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($to));
+            //     // })->keys()->first();
+
+            //     // $exit = $exitKey !== null ? $attendances->pull($exitKey) : null;
+
+            //     // $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
+            //     // $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
+            //     $schedule['terminal'] = $terminal;
+
+            //     // $observations = [];
+            //     // $owesTime = null;
+
+            //     // if (!$entry) {
+            //     //     $observations[] = 'No marcó entrada';
+            //     // } elseif (Carbon::parse($entry->punch_time)->gt($from)) {
+            //     //     $observations[] = 'Tardanza';
+            //     // }
+
+            //     // if (!$exit) {
+            //     //     $observations[] = 'No marcó salida';
+            //     // } elseif (Carbon::parse($exit->punch_time)->lt($to)) {
+            //     //     $observations[] = 'Salida Temprana';
+            //     // }
+
+            //     // if ($entry && $exit) {
+            //     //     if (Carbon::parse($entry->punch_time)->lte($from) && Carbon::parse($exit->punch_time)->gte($to)) {
+            //     //         $observations[] = null;
+            //     //         $owesTime = 0;
+            //     //     } else {
+            //     //         if (Carbon::parse($entry->punch_time)->gt($from)) {
+            //     //             $owesTime = Carbon::parse($entry->punch_time)->diffInMinutes($from);
+            //     //         } else $owesTime = 0;
+            //     //         if (Carbon::parse($exit->punch_time)->lt($to)) {
+            //     //             $owesTime += $to->diffInMinutes(Carbon::parse($exit->punch_time));
+            //     //         }
+            //     //     }
+            //     // }
+            //     // $schedule['observations'] = implode(', ', $observations);
+            //     // $schedule['owes_time'] = is_numeric($owesTime) ? gmdate('H:i:s', $owesTime * 60) : null;
+            //     $matchets[] = $schedule;
+            // }
+            $assists = array_merge($assists, $schedules);
+        }
+
+
+        return [
+            'assists' => $assists,
+            'total' => count($assists),
+            'totalUsers' => $users['total'],
+            'usersShown' => $users['getLimited']->count(),
+        ];
+    }
+
+    public static function centralizedWithoutCalculating($query, $terminalsIds, $startDate, $endDate, $area_id, $department_id)
+    {
+
+
+        if (count($terminalsIds) == 0) {
+            session()->flash('warning', 'Por favor seleccione al menos un terminal.');
+            return ['assists' => [], 'total' => 0];
+        }
+
+        if (!$startDate || !$endDate) {
+            session()->flash('warning', 'Por favor seleccione un rango de fechas.');
+            return ['assists' => [], 'total' => 0];
+        }
+
+
+        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
+        $users = self::getUsers($query, $area_id, $department_id);
+        $usersIds =  $users['getLimited']->pluck('dni')->toArray();
         $assists = Collect([]);
+        $totalCount = 0;
 
         foreach ($terminals as $terminal) {
 
-            $ids = $users->pluck('dni')->toArray();
+            $attendanceQuery = DB::connection($terminal->database_name)
+                ->table('iclock_transaction as it')
+                ->join('personnel_employee as pe', 'it.emp_code', '=', 'pe.emp_code')
+                ->select('it.id', 'it.punch_time', 'it.upload_time', 'pe.emp_code')
+                ->whereBetween(DB::raw('CAST(it.punch_time AS DATE)'), [$startDate, $endDate])
+                ->orderBy('it.punch_time', 'desc')
+                ->whereIn('pe.emp_code', $usersIds);
 
-            $match = (new Attendance())
-                ->setConnection($terminal->database_name)
-                ->whereBetween(DB::raw('CAST(punch_time AS DATE)'), [$startDate, $endDate])
-                ->whereIn('emp_code', $ids)
-                ->orderBy('punch_time', 'desc');
+            $matched = $attendanceQuery->get();
 
-            $matched = $match->get();
+            $totalCount += count($matched);
 
-            foreach ($matched as $item) {
-                $user = User::where('dni', $item->emp_code)->first();
+            $firstFive = $attendanceQuery->limit(5)->get();
+
+            foreach ($firstFive as $item) {
+                $user = $users['getLimited']->where('dni', $item->emp_code)->first();
                 if (!$user) continue;
                 $assists[] = [
                     'id' => $item->id,
@@ -382,15 +214,32 @@ class AssistsService
             }
         }
 
-        return $assists;
+        return [
+            'assists' => $assists,
+            'total' => $totalCount
+        ];
     }
 
-
-    public static function assistsSnUser($query, $terminalsIds, $startDate, $endDate)
+    public static function withoutCalculating($query, $terminalsIds, $startDate, $endDate)
     {
+
+
+        if (count($terminalsIds) == 0) {
+            session()->flash('warning', 'Por favor seleccione al menos un terminal.');
+            return ['assists' => [], 'total' => 0];
+        }
+
+        if (!$startDate || !$endDate) {
+            session()->flash('warning', 'Por favor seleccione un rango de fechas.');
+            return ['assists' => [], 'total' => 0];
+        }
+
+
         $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
 
         $assists = collect();
+
+        $totalCount = 0;
 
         foreach ($terminals as $terminal) {
             $attendanceQuery = DB::connection($terminal->database_name)
@@ -400,7 +249,7 @@ class AssistsService
                 ->whereBetween(DB::raw('CAST(it.punch_time AS DATE)'), [$startDate, $endDate])
                 ->orderBy('it.punch_time', 'desc');
 
-            if (!empty($query)) {
+            if ($query) {
                 $attendanceQuery->where(function ($q) use ($query) {
                     $q->where('pe.first_name', 'like', '%' . $query . '%')
                         ->orWhere('pe.last_name', 'like', '%' . $query . '%')
@@ -408,9 +257,13 @@ class AssistsService
                 });
             }
 
-            $matched = !empty($query) ? $attendanceQuery->get() : $attendanceQuery->paginate(10);
+            $matched = $attendanceQuery->get();
 
-            $assists = $assists->merge($matched->map(function ($item) use ($terminal) {
+            $totalCount += count($matched);
+
+            $firstFive = $attendanceQuery->limit(5)->get();
+
+            $assists = $assists->merge($firstFive->map(function ($item) use ($terminal) {
                 $punchTime = Carbon::parse($item->punch_time);
                 return [
                     'id' => $item->id,
@@ -425,13 +278,21 @@ class AssistsService
             }));
         }
 
-        return $assists;
+        return [
+            'assists' => $assists,
+            'total' => $totalCount
+        ];
     }
-
 
     public static function singleSummary($terminal, $startDate, $endDate)
     {
-        $dates = self::generateDateRange($startDate, $endDate);
+        $dates = [];
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        for ($date = $end; $date->gte($start); $date->subDay()) {
+            $dates[] = $date->toDateString();
+        }
 
         $assists = (new Attendance())
             ->setConnection($terminal ?? 'PL-Alameda')
@@ -455,17 +316,63 @@ class AssistsService
         return $summary;
     }
 
-    private static function generateDateRange($startDate, $endDate)
+    public static function generateSchedules($user, $startDate, $endDate)
     {
-        $dates = [];
-        $start = Carbon::parse($startDate);
-        $end = Carbon::parse($endDate);
+        $schedules = Schedule::where('user_id', $user->id)->where('start_date', '<=', $endDate)->where('end_date', '>=', $startDate)->get();
 
-        // Decrementar el día en cada iteración para generar las fechas en orden descendente
-        for ($date = $end; $date->gte($start); $date->subDay()) {
-            $dates[] = $date->toDateString();
+        $schedulesGenerated = [];
+
+        foreach ($schedules as $schedule) {
+            $start = Carbon::parse($schedule->start_date);
+            $end = Carbon::parse($schedule->end_date);
+            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+                if (in_array($date->dayOfWeekIso, $schedule->days)) {
+                    $schedulesGenerated[] = [
+                        'id' => $schedule->id,
+                        'dni' => $user->dni,
+                        'full_name' => $user->last_name . ', ' . $user->first_name,
+                        'group_id' => $schedule->group_id,
+                        'user_id' => $schedule->user_id,
+                        'user' => $user,
+                        'job_position' => $user->role_position->job_position->name,
+                        'role' => $user->role_position->name,
+                        'day' => $date->isoFormat('dddd'),
+                        // 'turn' => $schedule->from->hour >= 12 ? 'TT' : 'TM',
+                        'turn' => 'TM',
+                        'title' => $schedule->title,
+                        'date' => $date,
+                        'marked_in' => null,
+                        'marked_out' => null,
+                        'terminal' => null,
+                        'observations' => null,
+                        'owes_time' => null,
+                        // 'from' => $schedule->from->setDateFrom($date),
+                        // 'from_start' => $schedule->from_start->setDateFrom($date),
+                        // 'from_end' => $schedule->from_end->setDateFrom($date),
+                        // 'to' => $schedule->to->setDateFrom($date),
+                        // 'to_start' => $schedule->to_start->setDateFrom($date),
+                        // 'to_end' => $schedule->to_end->setDateFrom($date),
+                        'from' => $schedule->from,
+                        'from_start' => $schedule->from_start,
+                        'from_end' => $schedule->from_end,
+                        'to' => $schedule->to,
+                        'to_start' => $schedule->to_start,
+                        'to_end' => $schedule->to_end,
+                        'created_at' => $schedule->created_at,
+                        'updated_at' => $schedule->updated_at,
+                    ];
+                }
+            }
         }
 
-        return $dates;
+        // $schedules = array_filter($schedulesGenerated, function ($schedule) use ($startDate, $endDate) {
+        //     return $schedule['date']->between($startDate, $endDate);
+        // });
+
+        // usort($schedules, function ($a, $b) {
+        //     return strcmp($a['date'], $b['date']);
+        // });
+
+        return  $schedulesGenerated;
     }
 }
