@@ -9,6 +9,7 @@ use App\Models\GoalEvaluation;
 use App\services\AuditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class GoalController extends Controller
 {
@@ -31,7 +32,7 @@ class GoalController extends Controller
                 'description' => $goal['description'],
                 'indicators' => $goal['indicators'],
                 'percentage' => $goal['percentage'],
-                'created_by' => auth()->user()->id,
+                'created_by' => Auth::id(),
             ]);
 
             $evaluations = $eda->evaluations;
@@ -44,7 +45,7 @@ class GoalController extends Controller
         }
     }
 
-    public function sent(Request $request, $id)
+    public function sent(Request $req, $id)
     {
         $eda = Eda::find($id);
 
@@ -52,11 +53,11 @@ class GoalController extends Controller
             return response()->json('Eda no encontrado', 404);
         }
 
-        $request->validate([
+        $req->validate([
             'goals' => ['required', 'array'],
         ]);
 
-        $goals = $request->goals;
+        $goals = $req->goals;
 
         $rulePerGoal = [
             'title' => ['required', 'string', 'max:500'],
@@ -76,10 +77,10 @@ class GoalController extends Controller
         $this->createGoals($goals, $eda);
 
         $eda->sent = now();
-        $eda->sent_by = auth()->user()->id;
+        $eda->sent_by = Auth::id();
         $eda->save();
 
-        $this->auditService->registerAudit('Objetivos enviados', 'Se han enviado los objetivos', 'edas', 'sent', $request);
+        $this->auditService->registerAudit('Objetivos enviados', 'Se han enviado los objetivos', 'edas', 'sent', $req);
 
         // send emails
 
@@ -107,10 +108,10 @@ class GoalController extends Controller
         return response()->json($goals, 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $req, $id)
     {
 
-        $request->validate([
+        $req->validate([
             'goals' => ['required', 'array'],
             'goals_to_delete' => ['array'],
         ]);
@@ -128,22 +129,22 @@ class GoalController extends Controller
         ];
 
         // validate each goal
-        foreach ($request->goals as $goal) {
+        foreach ($req->goals as $goal) {
             $validator = validator($goal, $rulePerGoal);
             if ($validator->fails()) {
                 return response()->json($validator->errors()->first(), 400);
             }
         }
 
-        $goals_to_create = array_filter($request->goals, function ($goal) {
+        $goals_to_create = array_filter($req->goals, function ($goal) {
             return !isset($goal['id']) || $goal['id'] === null;
         });
 
-        $goals_to_update = array_filter($request->goals, function ($goal) {
+        $goals_to_update = array_filter($req->goals, function ($goal) {
             return isset($goal['id']) && $goal['id'] !== null;
         });
 
-        $goals_to_delete = $request->goals_to_delete;
+        $goals_to_delete = $req->goals_to_delete;
 
         // delete each goal
         if ($goals_to_delete) {
@@ -178,7 +179,7 @@ class GoalController extends Controller
                     $goalToUpdate->indicators = $goal['indicators'];
                     $goalToUpdate->percentage = $goal['percentage'];
                     $goalToUpdate->comments = $goal['comments'];
-                    $goalToUpdate->updated_by = auth()->user()->id;
+                    $goalToUpdate->updated_by = Auth::id();
                     $goalToUpdate->save();
                 }
             }
@@ -192,7 +193,7 @@ class GoalController extends Controller
             });
         }
 
-        $this->auditService->registerAudit('Objetivos actualizados', 'Se han actualizado los objetivos', 'edas', 'update', $request);
+        $this->auditService->registerAudit('Objetivos actualizados', 'Se han actualizado los objetivos', 'edas', 'update', $req);
 
         return response()->json('Objetivos actualizados correctamente.', 201);
     }
@@ -204,7 +205,7 @@ class GoalController extends Controller
         if (!$eda) return response()->json('Eda not found', 404);
 
         $eda->approved = now();
-        $eda->approved_by = auth()->user()->id;
+        $eda->approved_by = Auth::id();
         $eda->save();
 
         $this->auditService->registerAudit('Objetivos aprobados', 'Se han aprobado los objetivos', 'edas', 'approve', request());
