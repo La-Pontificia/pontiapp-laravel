@@ -8,6 +8,7 @@ use App\Models\Evaluation;
 use App\Models\GoalEvaluation;
 use App\services\AuditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EvaluationController extends Controller
 {
@@ -19,14 +20,14 @@ class EvaluationController extends Controller
         $this->auditService = $auditService;
     }
 
-    public function selfqualify(Request $request, $id)
+    public function selfqualify(Request $req, $id)
     {
 
-        $request->validate([
+        $req->validate([
             'items' => 'required|array',
         ]);
 
-        $items = $request->items;
+        $items = $req->items;
         $evaluation = Evaluation::find($id);
 
         if (!$evaluation) return response()->json('Evaluatión not found', 404);
@@ -57,21 +58,21 @@ class EvaluationController extends Controller
 
         $evaluation->self_qualification = $totalSelfQualification;
         $evaluation->self_rated_at = now();
-        $evaluation->self_rated_by = auth()->user()->id;
+        $evaluation->self_rated_by = Auth::id();
         $evaluation->save();
 
-        $this->auditService->registerAudit('Objetivos autocalificados', 'Se han autocalificado los objetivos', 'edas', 'selfqualify', $request);
+        $this->auditService->registerAudit('Objetivos autocalificados', 'Se han autocalificado los objetivos', 'edas', 'selfqualify', $req);
 
         return response()->json('Objetivos autocalificados correctamente.', 200);
     }
 
-    public function qualify(Request $request, $id)
+    public function qualify(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'items' => 'required|array',
         ]);
 
-        $items = $request->items;
+        $items = $req->items;
         $evaluation = Evaluation::find($id);
 
         if (!$evaluation) return response()->json('Evaluatión not found', 404);
@@ -102,10 +103,10 @@ class EvaluationController extends Controller
 
         $evaluation->qualification = $totalQualify;
         $evaluation->qualified_at = now();
-        $evaluation->qualified_by = auth()->user()->id;
+        $evaluation->qualified_by = Auth::id();
         $evaluation->save();
 
-        $this->auditService->registerAudit('Objetivos calificados', 'Se han calificado los objetivos', 'edas', 'qualify', $request);
+        $this->auditService->registerAudit('Objetivos calificados', 'Se han calificado los objetivos', 'edas', 'qualify', $req);
 
         return response()->json('Objetivos calificados correctamente.', 200);
     }
@@ -119,7 +120,7 @@ class EvaluationController extends Controller
             return response()->json('Eda not found', 404);
 
         $evaluation->closed = now();
-        $evaluation->closed_by = auth()->user()->id;
+        $evaluation->closed_by = Auth::id();
         $evaluation->save();
 
         $this->auditService->registerAudit('Evaluación cerrada', 'Se ha cerrado una evaluación', 'edas', 'close', request());
@@ -127,9 +128,9 @@ class EvaluationController extends Controller
         return response()->json('Evaluación cerrada correctamente', 200);
     }
 
-    public function feedback(Request $request, $id)
+    public function feedback(Request $req, $id)
     {
-        $request->validate([
+        $req->validate([
             'feedback' => 'string|nullable',
             'feedback_score' => 'required|numeric|max:5|min:1',
         ]);
@@ -139,13 +140,13 @@ class EvaluationController extends Controller
         if (!$evaluation)
             return response()->json('Evaluation not found', 404);
 
-        $evaluation->feedback = $request->feedback;
-        $evaluation->feedback_by = auth()->user()->id;
-        $evaluation->feedback_score = $request->feedback_score;
+        $evaluation->feedback = $req->feedback;
+        $evaluation->feedback_by = Auth::id();
+        $evaluation->feedback_score = $req->feedback_score;
         $evaluation->feedback_at = now();
         $evaluation->save();
 
-        $this->auditService->registerAudit('Feedback enviado', 'Se ha enviado un feedback', 'edas', 'feedback', $request);
+        $this->auditService->registerAudit('Feedback enviado', 'Se ha enviado un feedback', 'edas', 'feedback', $req);
 
         return response()->json('Feedback enviado correctamente', 200);
     }
