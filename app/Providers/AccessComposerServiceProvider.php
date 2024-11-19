@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -77,31 +78,6 @@ class AccessComposerServiceProvider extends ServiceProvider
                                 'users:roles:create' => 'Agregar cargos',
                                 'users:roles:edit' => 'Actualizar cargos',
                                 'users:roles:delete' => 'Eliminar cargos',
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'name' => 'Gestión Horarios',
-                    'items' => [
-                        [
-                            'name' => 'Horarios',
-                            'privileges' => [
-                                'schedules:show' => 'Ver horarios',
-                                'schedules:create' => 'Agregar horarios',
-                                'schedules:create_unique' => 'Agregar horarios únicos',
-                                'schedules:edit' => 'Actualizar horarios',
-                                'schedules:delete' => 'Eliminar horarios',
-                            ],
-                        ],
-                        [
-                            'name' => 'Horarios externos',
-                            'privileges' => [
-                                'schedules:external:show' => 'Ver horarios externos',
-                                'schedules:external:create' => 'Agregar horarios externos',
-                                'schedules:external:create_unique' => 'Agregar horarios únicos externos',
-                                'schedules:external:edit' => 'Actualizar horarios externos',
-                                'schedules:external:delete' => 'Eliminar horarios externos',
                             ],
                         ],
                     ],
@@ -240,30 +216,30 @@ class AccessComposerServiceProvider extends ServiceProvider
                         ],
                     ],
                 ],
-                [
-                    'name' => 'Gestion Tickets',
-                    'items' => [
-                        [
-                            'name' => 'Tickets',
-                            'privileges' => [
-                                'tickets:show' => 'Ver eventos',
-                                'tickets:edit' => 'Editar eventos',
-                                'tickets:create' => 'Crear eventos',
-                                'tickets:delete' => 'Eliminar eventos',
-                            ],
-                        ],
-                        [
-                            "name" => 'Real Time',
-                            'privileges' => [
-                                'tickets:real-time:show' => 'Ver Real Time',
-                                'tickets:real-time:edit' => 'Editar Real Time',
-                                'tickets:real-time:create' => 'Crear Real Time',
-                                'tickets:real-time:delete' => 'Eliminar Real Time',
-                            ],
-                        ]
+                // [
+                //     'name' => 'Gestion Tickets',
+                //     'items' => [
+                //         [
+                //             'name' => 'Tickets',
+                //             'privileges' => [
+                //                 'tickets:show' => 'Ver eventos',
+                //                 'tickets:edit' => 'Editar eventos',
+                //                 'tickets:create' => 'Crear eventos',
+                //                 'tickets:delete' => 'Eliminar eventos',
+                //             ],
+                //         ],
+                //         [
+                //             "name" => 'Real Time',
+                //             'privileges' => [
+                //                 'tickets:real-time:show' => 'Ver Real Time',
+                //                 'tickets:real-time:edit' => 'Editar Real Time',
+                //                 'tickets:real-time:create' => 'Crear Real Time',
+                //                 'tickets:real-time:delete' => 'Eliminar Real Time',
+                //             ],
+                //         ]
 
-                    ],
-                ],
+                //     ],
+                // ],
                 [
                     'name' => 'Auditoria',
                     'items' => [
@@ -321,7 +297,7 @@ class AccessComposerServiceProvider extends ServiceProvider
                 ]
             ];
 
-            $user = auth()->user();
+            $user = Auth::user();
 
             $business_services = [
                 'pontisis' => 'Sistema Académico',
