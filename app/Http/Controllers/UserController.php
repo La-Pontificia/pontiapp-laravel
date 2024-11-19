@@ -9,12 +9,10 @@ use App\Models\Branch;
 use App\Models\BusinessUnit;
 use App\Models\ContractType;
 use App\Models\Department;
-use App\Models\GroupSchedule;
 use App\Models\Schedule;
 use App\Models\User;
 use App\Models\UserRole;
 use App\services\AssistsService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,15 +26,15 @@ class UserController extends Controller
         $this->assistsService = $assistsService;
     }
 
-    public function index(Request $request, $isExport = false, $onlyMatch = false)
+    public function index(Request $req, $isExport = false, $onlyMatch = false)
     {
 
         $match = User::orderBy('created_at', 'desc');
-        $query = $request->get('query');
-        $job_position = $request->get('job_position');
-        $status = $request->get('status');
-        $role = $request->get('role');
-        $department = $request->get('department');
+        $query = $req->get('query');
+        $job_position = $req->get('job_position');
+        $status = $req->get('status');
+        $role = $req->get('role');
+        $department = $req->get('department');
         $job_positions = JobPosition::all();
         $user_roles = UserRole::all();
         $users = [];
@@ -91,44 +89,8 @@ class UserController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
-    public function export(Request $request)
-    {
-        $match =  $this->index($request, false, true);
-
-        $users = $match->get();
-
-        $business_units = BusinessUnit::all();
-        foreach ($users as $user) {
-            $user->role = $user->role;
-            $user->area = $user->role_position->department->area;
-            $user->department = $user->role_position->department;
-            $user->role_position = $user->role_position;
-            $user->job_position = $user->role_position->job_position;
-            $user->branch = $user->branch;
-            $user->supervisor = $user->supervisor;
-            $user->schedule = $user->groupSchedule;
-            $user->business_units = $user->businessUnits->pluck('business_unit_id');
-            $user->created_by = $user->createdBy;
-            $user->updated_by = $user->updatedBy;
-        }
-        return response()->json([
-            'users' => $users,
-            'business_units' => $business_units
-        ]);
-    }
-
-    public function exportEmailAccess(Request $request)
-    {
-        $users =  $this->index($request, true);
-
-        foreach ($users as $user) {
-        }
-        return response()->json($users);
-    }
-
     public function create()
     {
-
         $cuser = User::find(Auth::id());
         $user_roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'asc')->get();
 
@@ -137,10 +99,9 @@ class UserController extends Controller
         $roles = Role::all();
         $users = User::all();
         $branches = Branch::all();
-        $group_schedules = GroupSchedule::all();
         $terminals = AssistTerminal::all();
         $business_units = BusinessUnit::all();
-        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'contracts', 'user_roles', 'group_schedules', 'terminals', 'users', 'business_units'));
+        return view('modules.users.create.+page', compact('job_positions', 'roles', 'branches', 'contracts', 'user_roles', 'terminals', 'users', 'business_units'));
     }
 
     public function slug($id)
@@ -149,7 +110,7 @@ class UserController extends Controller
         $cuser = User::find(Auth::id());
         $user_roles = UserRole::where('level', '>=', $cuser->role->level)->orderBy('level', 'asc')->get();
 
-        $group_schedules = GroupSchedule::all();
+        $schedules = Schedule::where('user_id', $user->id)->where('archived', false)->get();
         $contracts = ContractType::all();
         $job_positions = JobPosition::all();
         $roles = Role::all();
@@ -165,39 +126,7 @@ class UserController extends Controller
         $branches = Branch::all();
 
         if (!$user) return view('+500', ['error' => 'User not found']);
-        return view('modules.users.slug.+page', compact('user', 'user_roles', 'group_schedules', 'contracts', 'job_positions', 'roles', 'branches', 'terminals', 'users', 'business_units'));
-    }
-
-    public function slug_details($id)
-    {
-        $user = User::find($id);
-        $user_roles = UserRole::all();
-        $group_schedules = GroupSchedule::all();
-        if (!$user) return view('+500', ['error' => 'User not found']);
-
-        return view('modules.users.slug.details.+page', compact('user', 'user_roles', 'group_schedules'));
-    }
-
-    public function slug_segurity_access($id)
-    {
-        $user = User::find($id);
-        if (!$user) return view('+500', ['error' => 'User not found']);
-        return view('modules.users.slug.segurity-access.+page', compact('user'));
-    }
-
-    public function slug_organization($id)
-    {
-        $user = User::find($id);
-        if (!$user) return view('+500', ['error' => 'User not found']);
-
-        return view('modules.users.slug.organization.+page', compact('user'));
-    }
-
-    public function slug_contract($id)
-    {
-        $user = User::find($id);
-        if (!$user) return view('+500', ['error' => 'User not found']);
-        return view('modules.users.slug.contract.+page', compact('user'));
+        return view('modules.users.slug.+page', compact('user', 'user_roles', 'schedules', 'contracts', 'job_positions', 'roles', 'branches', 'terminals', 'users', 'business_units'));
     }
 
     public function slug_schedules($id)
@@ -206,54 +135,16 @@ class UserController extends Controller
 
         if (!$user) return view('+500', ['error' => 'User not found']);
 
-        $groupSchedules = $user->group_schedule_id ? $user->groupSchedule->schedules : collect();
-
-        $userSchedules = Schedule::where('user_id', $user->id)->where('archived', false)->get();
-
-        $schedules =  $groupSchedules->merge($userSchedules);
-
-        return view('modules.users.slug.schedules.+page', compact('user',  'schedules'));
+        $schedules = Schedule::where('user_id', $user->id)->where('archived', false)->get();
+        $terminals = AssistTerminal::all();
+        return view('modules.users.slug.schedules.+page', compact('user', 'schedules', 'terminals'));
     }
 
-    public function slug_assists(Request $request, $id)
+    public function slug_organization($id)
     {
         $user = User::find($id);
         if (!$user) return view('+500', ['error' => 'User not found']);
-        $terminals = AssistTerminal::all();
 
-        $terminalsIds = $request->get('assist_terminals') ? explode(',', $request->get('assist_terminals')) : [];
-
-        $startDate = $request->get('start', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end', Carbon::now()->format('Y-m-d'));
-
-        $assists = $this->assistsService->assistsByUser($user, $terminalsIds, $startDate, $endDate, false);
-
-        usort($assists, function ($a, $b) {
-            return strcmp($b['date'], $a['date']);
-        });
-
-        $terminals = AssistTerminal::all();
-        return view('modules.users.slug.assists.+page', compact('user', 'assists', 'terminals'));
-    }
-
-    // schedules
-    public function schedules()
-    {
-        return view('modules.users.schedules.+page');
-    }
-
-    // emails
-    public function emails_access(Request $request)
-    {
-
-        $res =  $this->index($request, false, true);
-        $business_units = BusinessUnit::all();
-        $users = $res->paginate();
-
-        return view('modules.users.emails-access.+page', [
-            'users' => $users,
-            'business_units' => $business_units
-        ])
-            ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
+        return view('modules.users.slug.organization.+page', compact('user'));
     }
 }
