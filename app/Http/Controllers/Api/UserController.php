@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ImageUploadController;
-use App\Models\BusinessUnit;
-use App\Models\GroupSchedule;
 use App\Models\HistoryUserEntry;
 use App\Models\Role;
+use App\Models\Schedule;
 use App\Models\User;
 use App\Models\UserBusinessUnit;
 use App\Models\UserTerminal;
@@ -29,45 +28,31 @@ class UserController extends Controller
     }
 
 
-    public function create(Request $request)
+    public function create(Request $req)
     {
         request()->validate(User::$rules);
-        $alreadyByDni = User::where('dni', $request->dni)->first();
-
+        $alreadyByDni = User::where('dni', $req->dni)->first();
 
         if ($alreadyByDni)
             return response()->json('El usuario con el dni ingresado ya existe', 400);
 
-        $constructEmail = $request->username . '@' . $request->domain;
+        $constructEmail = $req->username . '@' . $req->domain;
         $alreadyByEmail = User::where('email', $constructEmail)->get();
 
         if ($alreadyByEmail->count() > 0)
             return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
 
-        $defaultSchedule = GroupSchedule::where('default', true)->first();
-
         // construct and validate date of birth
-        $year = $request->date_of_birth_year;
-        $month = $request->date_of_birth_month;
-        $day = $request->date_of_birth_day;
+        $year = $req->date_of_birth_year;
+        $month = $req->date_of_birth_month;
+        $day = $req->date_of_birth_day;
 
-        if ($year || $month || $day) {
-            if (!checkdate($month, $day, $year))
-                return response()->json('La fecha de nacimiento no es valida', 400);
-            $dateOfBirth = $year . '-' . $month . '-' . $day;
-            $date = new \DateTime($dateOfBirth);
-            $now = new \DateTime();
-            $interval = $now->diff($date);
-            $age = $interval->y;
-
-            if ($age < 13)
-                return response()->json('El usuario debe ser mayor de 13 años', 400);
-        }
+        $dateOfBirth = $year . '-' . $month . '-' . $day;
 
         // validate immediate_boss
-        if ($request->immediate_boss) {
-            $role_position = Role::find($request->id_role);
-            $supervisor = User::find($request->immediate_boss);
+        if ($req->immediate_boss) {
+            $role_position = Role::find($req->id_role);
+            $supervisor = User::find($req->immediate_boss);
 
             if (!$supervisor)
                 return response()->json('El supervisor no existe', 400);
@@ -77,32 +62,32 @@ class UserController extends Controller
                 return response()->json('El jefe inmediato no puede ser de un nivel inferior al usuario', 400);
         }
 
-        $url = $this->imageUploadService->upload($request->file('profile'));
+        $url = $this->imageUploadService->upload($req->file('profile'));
 
         $user = User::create([
             'profile' => $url,
-            'dni' => $request->dni,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'full_name' => $request->first_name . ' ' . $request->last_name,
-            'password' => bcrypt($request->password ?? $request->dni),
-            'role' => $request->role,
+            'dni' => $req->dni,
+            'first_name' => $req->first_name,
+            'last_name' => $req->last_name,
+            'full_name' => $req->first_name . ' ' . $req->last_name,
+            'password' => bcrypt($req->password ?? $req->dni),
+            'role' => $req->role,
             'email' => $constructEmail,
-            'contract_id' => $request->contract_id,
+            'contract_id' => $req->contract_id,
             'status' => true,
-            'id_role' => $request->id_role,
-            'id_role_user' => $request->id_role_user,
-            'group_schedule_id' => $request->group_schedule_id ?? $defaultSchedule->id,
-            'id_branch' => $request->id_branch,
-            'supervisor_id' => $request->immediate_boss,
-            'entry_date' => $request->entry_date,
-            'exit_date' => $request->exit_date,
-            'username' => $request->username,
+            'id_role' => $req->id_role,
+            'id_role_user' => $req->id_role_user,
+            'id_branch' => $req->id_branch,
+            'supervisor_id' => $req->immediate_boss,
+            'entry_date' => $req->entry_date,
+            'exit_date' => $req->exit_date,
+            'username' => $req->username,
+            'date_of_birth' => checkdate($month, $day, $year) ? $dateOfBirth : null,
             'created_by' => Auth::id(),
         ]);
 
         // business_units
-        $business_units = $request->input('business_units', []);
+        $business_units = $req->input('business_units', []);
         foreach ($business_units as $business_unit) {
             UserBusinessUnit::create([
                 'user_id' => $user->id,
@@ -110,16 +95,27 @@ class UserController extends Controller
             ]);
         }
 
-        // terminals
-        $assist_terminals = $request->input('assist_terminals', []);
-        foreach ($assist_terminals as $terminal) {
-            UserTerminal::create([
+        // create schedules
+        $schedules = collect($req->input('schedule', []))
+            ->map(function ($schedule) {
+                return json_decode($schedule);
+            })->toArray();
+
+        foreach ($schedules as $schedule) {
+            Schedule::create([
                 'user_id' => $user->id,
-                'terminal_id' => $terminal,
+                'from' => $schedule->from,
+                'to' => $schedule->to,
+                'days' => $schedule->days,
+                'title' => $schedule->title ?? 'Horario laboral',
+                'terminal_id' => $schedule->terminal_id,
+                'start_date' => $schedule->start_date ?? Carbon::now(),
+                'end_date' => $schedule->end_date ?? null,
+                'created_by' => Auth::id(),
             ]);
         }
 
-        $this->auditService->registerAudit('Usuario creado', 'Se ha creado un usuario', 'users', 'create', $request);
+        $this->auditService->registerAudit('Usuario creado', 'Se ha creado un usuario', 'users', 'create', $req);
 
         return response()->json(
             '/users/' . $user->id,
@@ -127,13 +123,13 @@ class UserController extends Controller
         );
     }
 
-    public function updateDetails(Request $request, $id)
+    public function updateDetails(Request $req, $id)
     {
         $user = User::find($id);
 
         request()->validate(User::$details);
 
-        $already = User::where('dni', $request->dni)->first();
+        $already = User::where('dni', $req->dni)->first();
 
         if ($already && $already->id !== $id)
             return response()->json('El usuario con el dni ingresado ya existe', 400);
@@ -141,37 +137,26 @@ class UserController extends Controller
         $cuser = Auth::user();
 
         // construct and validate date of birth
-        $year = $request->date_of_birth_year;
-        $month = $request->date_of_birth_month;
-        $day = $request->date_of_birth_day;
-
-        if (!checkdate($month, $day, $year))
-            return response()->json('La fecha de nacimiento no es valida', 400);
+        $year = $req->date_of_birth_year;
+        $month = $req->date_of_birth_month;
+        $day = $req->date_of_birth_day;
 
         $dateOfBirth = $year . '-' . $month . '-' . $day;
 
-        $date = new \DateTime($dateOfBirth);
-        $now = new \DateTime();
-        $interval = $now->diff($date);
-        $age = $interval->y;
-
-        if ($age < 13)
-            return response()->json('El usuario debe ser mayor de 13 años', 400);
-
-        $user->date_of_birth = $dateOfBirth;
-        $user->dni = $request->dni;
-        $user->first_name = $request->first_name;
-        $user->full_name = $request->first_name . ' ' . $request->last_name;
-        $user->last_name = $request->last_name;
+        $user->date_of_birth = checkdate($month, $day, $year) ? $dateOfBirth : null;
+        $user->dni = $req->dni;
+        $user->first_name = $req->first_name;
+        $user->full_name = $req->first_name . ' ' . $req->last_name;
+        $user->last_name = $req->last_name;
         $user->updated_by = $cuser->id;
         $user->save();
 
-        $this->auditService->registerAudit('Detalles de usuario actualizados', 'Se han actualizado los detalles de un usuario', 'users', 'update', $request);
+        $this->auditService->registerAudit('Detalles de usuario actualizados', 'Se han actualizado los detalles de un usuario', 'users', 'update', $req);
 
         return response()->json('Detalles actualizados correctamente.', 200);
     }
 
-    public function updateOrganization(Request $request, $id)
+    public function updateOrganization(Request $req, $id)
     {
 
         $user = User::find($id);
@@ -181,7 +166,7 @@ class UserController extends Controller
         // terminals
         UserTerminal::where('user_id', $user->id)->delete();
 
-        $assist_terminals = $request->input('assist_terminals', []);
+        $assist_terminals = $req->input('assist_terminals', []);
         foreach ($assist_terminals as $terminal) {
             UserTerminal::create([
                 'user_id' => $user->id,
@@ -189,18 +174,17 @@ class UserController extends Controller
             ]);
         }
 
-
-        $user->id_role = $request->id_role;
-        $user->supervisor_id = $request->supervisor_id;
-        $user->id_branch = $request->id_branch;
-        $user->group_schedule_id = $request->group_schedule_id;
-        $user->entry_date =  $request->entry_date;
-        $user->exit_date =  $request->exit_date;
-        $user->contract_id = $request->contract_id;
+        $user->id_role = $req->id_role;
+        $user->supervisor_id = $req->supervisor_id;
+        $user->id_branch = $req->id_branch;
+        $user->group_schedule_id = $req->group_schedule_id;
+        $user->entry_date =  $req->entry_date;
+        $user->exit_date =  $req->exit_date;
+        $user->contract_id = $req->contract_id;
         $user->updated_by = $cuser->id;
         $user->save();
 
-        $this->auditService->registerAudit('Detalles de la organización actualizados', 'Se han actualizado los detalles de la organización de un usuario', 'users', 'update', $request);
+        $this->auditService->registerAudit('Detalles de la organización actualizados', 'Se han actualizado los detalles de la organización de un usuario', 'users', 'update', $req);
 
         return response()->json('Detalles de la organización actualizados correctamente.', 200);
     }
@@ -229,27 +213,27 @@ class UserController extends Controller
         return response()->json('Fechas actualizadas actualizadas correctamente.', 200);
     }
 
-    public function updateRolPrivileges(Request $request, $id)
+    public function updateRolPrivileges(Request $req, $id)
     {
         $user = User::find($id);
         request()->validate(User::$rol);
 
-        $user->id_role_user = $request->id_role_user;
+        $user->id_role_user = $req->id_role_user;
         $user->save();
 
-        $this->auditService->registerAudit('Rol y privilegios actualizados', 'Se han actualizado el rol y los privilegios de un usuario', 'users', 'update', $request);
+        $this->auditService->registerAudit('Rol y privilegios actualizados', 'Se han actualizado el rol y los privilegios de un usuario', 'users', 'update', $req);
 
         return response()->json('Privilegios actualizados correctamente.', 200);
     }
 
 
-    public function updateSegurityAccess(Request $request, $id)
+    public function updateSegurityAccess(Request $req, $id)
     {
         $user = User::find($id);
 
         request()->validate(User::$segurityAccess);
 
-        $constructEmail = $request->username . '@' . $request->domain;
+        $constructEmail = $req->username . '@' . $req->domain;
         $alreadyByEmail = User::where('email', $constructEmail)->get();
         $first = $alreadyByEmail->first();
 
@@ -261,7 +245,7 @@ class UserController extends Controller
             return response()->json('El correo ingresado no es valido', 400);
 
         // business_units
-        $business_units = $request->input('business_units', []);
+        $business_units = $req->input('business_units', []);
         $user->businessUnits()->delete();
         foreach ($business_units as $business_unit) {
             UserBusinessUnit::create([
@@ -270,16 +254,16 @@ class UserController extends Controller
             ]);
         }
 
-        $user->username = $request->username;
+        $user->username = $req->username;
         $user->email = $constructEmail;
         $user->save();
 
-        $this->auditService->registerAudit('Correo y accesos actualizados', 'Se han actualizado el correo y los accesos de un usuario', 'users', 'update', $request);
+        $this->auditService->registerAudit('Correo y accesos actualizados', 'Se han actualizado el correo y los accesos de un usuario', 'users', 'update', $req);
 
         return response()->json('Correo y accesos actualizado correctamente.', 200);
     }
 
-    public function profile(Request $request, $id)
+    public function profile(Request $req, $id)
     {
         $user = User::find($id);
 
@@ -287,19 +271,19 @@ class UserController extends Controller
             return response()->json('El usuario no existe', 400);
 
 
-        if (!$request->profile)
+        if (!$req->profile)
             return response()->json('No se ha enviado la imagen', 400);
 
         $user->update([
-            'profile' => $request->profile,
+            'profile' => $req->profile,
         ]);
 
         return response()->json('Foto de perfil actualizado correctamente.', 200);
     }
 
-    public function search(Request $request)
+    public function search(Request $req)
     {
-        $query = $request->query('query');
+        $query = $req->query('query');
         $list = User::where('full_name', 'like', '%' . $query . '%')
             ->orWhere('dni', 'like', '%' . $query . '%')
             ->orWhere('email', 'like', '%' . $query . '%')
@@ -314,9 +298,9 @@ class UserController extends Controller
         return response()->json($users, 200);
     }
 
-    public function quickSearch(Request $request)
+    public function quickSearch(Request $req)
     {
-        $query = $request->query('query');
+        $query = $req->query('query');
         $cacheKey = 'quickSearch_' . md5($query);
 
         $users = Cache::remember($cacheKey, Carbon::now()->addMinutes(60), function () use ($query) {
@@ -341,7 +325,7 @@ class UserController extends Controller
     }
 
 
-    public function searchSupervisor(Request $request, $id)
+    public function searchSupervisor(Request $req, $id)
     {
 
         $user = User::find($id);
@@ -349,7 +333,7 @@ class UserController extends Controller
             return response()->json([], 200);
 
         // role_position
-        $query = $request->query('query');
+        $query = $req->query('query');
 
         $match = User::orderBy('created_at', 'desc')->limit(10);
 
@@ -368,7 +352,7 @@ class UserController extends Controller
         return response()->json($users, 200);
     }
 
-    public function removeSupervisor(Request $request, $id)
+    public function removeSupervisor(Request $req, $id)
     {
         $user = User::find($id);
         if (!$user)
@@ -377,15 +361,15 @@ class UserController extends Controller
         $user->supervisor_id = null;
         $user->save();
 
-        $this->auditService->registerAudit('Supervisor removido', 'Se ha removido el supervisor de un usuario', 'users', 'update', $request);
+        $this->auditService->registerAudit('Supervisor removido', 'Se ha removido el supervisor de un usuario', 'users', 'update', $req);
 
         return response()->json('Supervisor removido correctamente', 200);
     }
 
-    public function assignSupervisor(Request $request, $id)
+    public function assignSupervisor(Request $req, $id)
     {
         $user = User::find($id);
-        $supervisor = User::find($request->supervisor_id);
+        $supervisor = User::find($req->supervisor_id);
 
         if (!$user)
             return response()->json('El usuario no existe', 400);
@@ -400,16 +384,16 @@ class UserController extends Controller
         $user->supervisor_id = $supervisor->id;
         $user->save();
 
-        $this->auditService->registerAudit('Supervisor asignado', 'Se ha asignado un supervisor a un usuario', 'users', 'update', $request);
+        $this->auditService->registerAudit('Supervisor asignado', 'Se ha asignado un supervisor a un usuario', 'users', 'update', $req);
 
         return response()->json('Supervisor asignado correctamente', 200);
     }
 
-    public function updateEmailAccess(Request $request, $id)
+    public function updateEmailAccess(Request $req, $id)
     {
         $user = User::find($id);
-        $username = $request->username;
-        $access = $request->input('access', []);
+        $username = $req->username;
+        $access = $req->input('access', []);
 
         if (!$username)
             return response()->json('El nombre de usuario no puede estar vacio', 400);
@@ -439,10 +423,10 @@ class UserController extends Controller
         return response()->json('Contraseña restablecida correctamente', 200);
     }
 
-    public function changePassword(Request $request, $id)
+    public function changePassword(Request $req, $id)
     {
 
-        $request->validate([
+        $req->validate([
             'old_password' => ['required', 'string'],
             'new_password' =>  ['required', 'string', 'min:8'],
         ]);
@@ -456,11 +440,11 @@ class UserController extends Controller
             return response()->json('No tienes permisos para cambiar la contraseña de este usuario', 400);
         }
 
-        if (!password_verify($request->old_password, $user->password)) {
+        if (!password_verify($req->old_password, $user->password)) {
             return response()->json('La contraseña actual no coincide', 400);
         }
 
-        $user->password = bcrypt($request->new_password);
+        $user->password = bcrypt($req->new_password);
         $user->save();
 
         return response()->json('Contraseña actualizada correctamente', 200);
