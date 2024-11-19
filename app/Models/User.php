@@ -32,7 +32,6 @@ class User extends Authenticatable
         'status',
         'id_role',
         'id_branch',
-        'group_schedule_id',
         'supervisor_id',
         'email_access',
         'username',
@@ -69,7 +68,6 @@ class User extends Authenticatable
         'date_of_birth_year' => 'numeric|nullable',
         'id_role_user' => 'uuid|required',
         'id_branch' => 'uuid|required',
-        'group_schedule_id' => 'uuid',
         'entry_date' => 'date|nullable',
         'exit_date' => 'date|nullable',
         'contract_id' => 'uuid|nullable',
@@ -78,7 +76,6 @@ class User extends Authenticatable
     static $organization = [
         'id_role' => 'uuid|required',
         'id_branch' => 'uuid|required',
-        'group_schedule_id' => 'uuid|nullable',
         'entry_date' => 'date|nullable',
         'exit_date' => 'date|nullable',
         'supervisor_id' => 'uuid|nullable',
@@ -199,10 +196,6 @@ class User extends Authenticatable
         return $this->has('development');
     }
 
-    public function groupSchedule()
-    {
-        return $this->hasOne(GroupSchedule::class, 'id', 'group_schedule_id');
-    }
 
     public function supervisor()
     {
@@ -249,42 +242,6 @@ class User extends Authenticatable
 
     public function schedules()
     {
-        $schedulesMatched = $this->groupSchedule->schedules;
-        $customSchedules = Schedule::where('user_id', $this->id)->get();
-        $allSchedules = $schedulesMatched->merge($customSchedules);
-
-        $schedulesGenerated = [];
-
-        foreach ($allSchedules as $schedule) {
-            for ($date = Carbon::parse($schedule->start_date); $date->lte(Carbon::parse($schedule->end_date)); $date->addDay()) {
-
-                $dayOfWeek = $date->dayOfWeek + 1;
-
-                if ($dayOfWeek == 8) $dayOfWeek = 1;
-
-                if (in_array((string)$dayOfWeek, $schedule->days)) {
-
-                    $schedulesGenerated[] = [
-                        'title' => $schedule->title,
-                        'from' => Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day)->format('d/m/Y H:i:s'),
-                        'to' => Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day)->format('d/m/Y H:i:s'),
-                    ];
-                }
-            }
-        }
-
-        return $schedulesGenerated;
-    }
-
-    public function summarySchedules()
-    {
-        $schedules = null;
-
-        $schedules = $this->groupSchedule->schedules;
-        $customSchedules = Schedule::where('user_id', $this->id)->get();
-
-        $schedules = $schedules->merge($customSchedules);
-
-        return $schedules;
+        return $this->hasMany(Schedule::class, 'user_id', 'id')->where('archived', false);
     }
 }
