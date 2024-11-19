@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class MiddlewareAuth
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $req, Closure $next)
     {
         if (Auth::check()) {
-            return $next($request);
+            return $next($req);
         }
         return redirect('/login');
     }
