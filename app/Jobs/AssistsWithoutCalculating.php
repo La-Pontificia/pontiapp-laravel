@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\AssistTerminal;
 use App\Models\Report;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,19 +24,17 @@ class AssistsWithoutCalculating implements ShouldQueue
     public $startDate;
     public $endDate;
     public $userId;
-    public $customEmail;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($query, $terminalsIds, $startDate, $endDate, $userId, $customEmail)
+    public function __construct($query, $terminalsIds, $startDate, $endDate, $userId)
     {
         $this->query = $query;
         $this->terminalsIds = $terminalsIds;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->userId = $userId;
-        $this->customEmail = $customEmail;
     }
 
 
@@ -132,7 +131,7 @@ class AssistsWithoutCalculating implements ShouldQueue
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save(public_path($filePath));
 
-        $email = $this->customEmail;
+        $email = User::find($this->userId)->email;
         Mail::raw('Hola, el reporte de Asistencias ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, function ($message) use ($email) {
             $message->to($email)
                 ->subject('Reporte de Asistencias Generado');
