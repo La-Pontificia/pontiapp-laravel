@@ -134,7 +134,7 @@
                     'text' => 'Centralizadas',
                     'href' => '/assists',
                     'active' => request()->is('assists'),
-                    'enable' => $cuser->has('assists:show') || $cuser->isDev(),
+                    'enable' => $cuser->has('assists:centralized') || $cuser->isDev(),
                     'active-icon' => 'fluentui-document-text-clock-24',
                 ],
                 [
