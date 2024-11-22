@@ -177,7 +177,6 @@ class UserController extends Controller
         $user->id_role = $req->id_role;
         $user->supervisor_id = $req->supervisor_id;
         $user->id_branch = $req->id_branch;
-        $user->group_schedule_id = $req->group_schedule_id;
         $user->entry_date =  $req->entry_date;
         $user->exit_date =  $req->exit_date;
         $user->contract_id = $req->contract_id;

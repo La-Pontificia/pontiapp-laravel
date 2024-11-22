@@ -17,7 +17,7 @@
 @section('layout.users.slug')
     <div class="max-w-7xl grid xl:grid-cols-2 w-full mx-auto gap-3 px-4">
         <div class="w-full border-neutral-200">
-            @if (($cuser->has('users:edit') && $cuser->id !== $user->id && !$user->isDev()) || $cuser->isDev())
+            @if (($cuser->has('users:edit') && !$user->isDev()) || $cuser->isDev())
                 <button type="button" data-modal-target="dialog" data-modal-toggle="dialog" class="primary mb-2">
                     @svg('fluentui-calendar-person-20-o', 'w-5 h-5')
                     <span>Agregar horario</span>
@@ -72,7 +72,7 @@
                                 {{ $schedule->terminal->name }}
                             </span>
                         </div>
-                        @if (($cuser->has('users:edit') && $schedule->user_id === $cuser->id) || $cuser->isDev())
+                        @if (($cuser->has('users:edit') && !$user->isDev()) || $cuser->isDev())
                             <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $schedule->id }}">
                                 @svg('fluentui-more-vertical-16-o', 'w-5 h-5')
