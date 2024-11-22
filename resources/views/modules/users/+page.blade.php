@@ -136,6 +136,7 @@
                                     <td class="w-full">
                                         Usuario
                                     </td>
+                                    <td>Horarios</td>
                                     <td>
                                         <p class="font-semibold p-1">Estado</p>
                                     </td>
@@ -177,6 +178,12 @@
                                                     </p>
                                                 </div>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="text-xs font-medium me-2 px-2.5 py-0.5 rounded border bg-violet-100 text-violet-800 border-violet-400">
+                                                {{ $user->schedules->count() }}
+                                            </span>
                                         </td>
                                         <td>
                                             <span
