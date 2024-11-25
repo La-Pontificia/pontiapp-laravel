@@ -42,7 +42,8 @@ class User extends Authenticatable
         'exit_date',
         'date_of_birth',
         'default_assist_terminal_id',
-        'contract_id'
+        'contract_id',
+        'phone_number'
     ];
 
     protected $keyType = 'string';
@@ -71,6 +72,7 @@ class User extends Authenticatable
         'entry_date' => 'date|nullable',
         'exit_date' => 'date|nullable',
         'contract_id' => 'uuid|nullable',
+        'phone_number' => 'nullable|numeric|digits:9',
     ];
 
     static $organization = [
@@ -93,6 +95,7 @@ class User extends Authenticatable
         'date_of_birth_year' => 'required|numeric',
         'first_name' => 'required',
         'last_name' => 'required',
+        'phone_number' => 'nullable|numeric|digits:9',
     ];
 
     static $organizationRules = [
