@@ -30,14 +30,14 @@
                             </p>
                         </div>
                         <div class="flex justify-center pb-10">
-                            <img src="/elp.webp" class="w-[80px]" alt="">
+                            <img src="/lp.webp" class="w-[80px]" alt="">
                         </div>
                     </div>
 
                     <aside id="sidebar"
                         class="flex peer flex-col max-lg:bg-[#fcfcfc] pt-2 max-lg:top-0 max-lg:pt-0 min-w-[270px] text-sm font-medium max-lg:-translate-x-full data-[expanded]:translate-x-0 max-lg:shadow-lg max-lg:fixed data-[expanded]:z-40 transition-all h-full overflow-y-auto">
                         <div class="p-5 pb-3 lg:hidden block">
-                            <a href="/"><img src="/elp.webp" class="w-24" /></a>
+                            <a href="/"><img src="/lp.webp" class="w-24" /></a>
                         </div>
                         <div class="flex-grow px-4 overflow-y-auto transition-all">
                             @include('modules.sidebar')
