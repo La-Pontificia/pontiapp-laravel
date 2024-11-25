@@ -3,18 +3,19 @@
     $userItems = [
         [
             'icon' => 'fluentui-home-48-o',
+            'imageURL' => $cuser->profile,
             'active-icon' => 'fluentui-home-48',
             'text' => $cuser->names(),
             'href' => '/users/' . $cuser->id,
             'active' => request()->is('users/' . $cuser->id . '*'),
         ],
-        [
-            'icon' => 'fluentui-folder-person-20-o',
-            'active-icon' => 'fluentui-folder-person-20',
-            'text' => 'Mis edas',
-            'href' => '/edas/me',
-            'active' => request()->is('edas/' . $cuser->id . '*'),
-        ],
+        // [
+        //     'icon' => 'fluentui-folder-person-20-o',
+        //     'active-icon' => 'fluentui-folder-person-20',
+        //     'text' => 'Mis edas',
+        //     'href' => '/edas/me',
+        //     'active' => request()->is('edas/' . $cuser->id . '*'),
+        // ],
         [
             'icon' => 'fluentui-calendar-person-20-o',
             'active-icon' => 'fluentui-calendar-person-20',
@@ -344,7 +345,16 @@
         <a title="{{ $item['text'] }}" {{ isset($item['active']) && $item['active'] ? 'data-active' : '' }}
             class="flex group relative transition-all items-center data-[active]:font-semibold gap-3 p-2 px-2 data-[active]:text-[#115ea3] text-black hover:bg-stone-200 rounded-lg"
             href="{{ $item['href'] }}">
-            @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-[#115ea3]')
+            @if (isset($item['imageURL']))
+                @include('commons.avatar', [
+                    'src' => $item['imageURL'],
+                    'className' => 'w-7',
+                    'alt' => $item['text'],
+                    'altClass' => 'text-xl',
+                ])
+            @else
+                @svg($item['active'] ? $item['active-icon'] : $item['icon'], 'w-5 h-5 m-0.5 opacity-70 group-data-[active]:opacity-100 group-data-[active]:text-[#115ea3]')
+            @endif
             <span class="text-nowrap">{{ $item['text'] }}</span>
         </a>
     @endforeach
