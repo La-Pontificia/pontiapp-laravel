@@ -82,6 +82,7 @@ class UserController extends Controller
             'entry_date' => $req->entry_date,
             'exit_date' => $req->exit_date,
             'username' => $req->username,
+            'phone_number' => $req->phone_number,
             'date_of_birth' => checkdate($month, $day, $year) ? $dateOfBirth : null,
             'created_by' => Auth::id(),
         ]);
@@ -148,6 +149,7 @@ class UserController extends Controller
         $user->first_name = $req->first_name;
         $user->full_name = $req->first_name . ' ' . $req->last_name;
         $user->last_name = $req->last_name;
+        $user->phone_number = $req->phone_number;
         $user->updated_by = $cuser->id;
         $user->save();
 
@@ -224,7 +226,6 @@ class UserController extends Controller
 
         return response()->json('Privilegios actualizados correctamente.', 200);
     }
-
 
     public function updateSegurityAccess(Request $req, $id)
     {
@@ -322,7 +323,6 @@ class UserController extends Controller
 
         return response()->json($users, 200);
     }
-
 
     public function searchSupervisor(Request $req, $id)
     {
