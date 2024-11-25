@@ -109,6 +109,17 @@
                                     </select>
                                 </div>
                             </label>
+                            <div class="col-span-2 grid grid-cols-2 gap-4">
+                                <label class="label">
+                                    <span>
+                                        Numero de celular
+                                        <small
+                                            class="inline-block py-0 ml-1 select-none px-2 text-blue-700 bg-blue-500/20 border border-blue-500 rounded-full font-medium">Nuevo</small>
+                                    </span>
+                                    <input type="number" pattern="[0-9]{9}" form="form-user" name="phone_number" required
+                                        placeholder="">
+                                </label>
+                            </div>
                         </div>
                         <div class="border-t pt-2 text-lg">
                             <p>

@@ -136,7 +136,9 @@
                                     <td class="w-full">
                                         Usuario
                                     </td>
-                                    <td>Horarios</td>
+                                    <td>
+                                        <p class="font-semibold p-1">Horarios</p>
+                                    </td>
                                     <td>
                                         <p class="font-semibold p-1">Estado</p>
                                     </td>
@@ -153,7 +155,6 @@
                                     <tr class="relative group border-b [&>td]:hover:bg-white [&>td]:p-3">
                                         <td class="rounded-l-2xl">
                                             <a class="absolute inset-0" href="/users/{{ $user->id }}">
-
                                             </a>
                                             <div class="flex items-center gap-2">
                                                 @include('commons.avatar', [
