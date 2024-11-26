@@ -2,13 +2,14 @@
     <div id="search"
         class="max-md:absolute hidden w-full data-[open]:block md:block max-md:p-2 max-md:inset-0 max-md:w-full max-md:overflow-y-auto">
         <div class="flex flex-col max-md:h-svh max-md:overflow-y-auto">
-            <div class="relative">
+            <label class="relative">
                 <div class="absolute inset-y-0 z-[21] flex items-center px-2 pointer-events-none">
                     @svg('fluentui-search-28-o', 'w-5 h-5 text-blue-600')
                 </div>
-                <input autocomplete="off" type="search" id="search-input" placeholder="Buscar" style="border: 0"
-                    class="rounded-lg md:w-[500px] w-full z-20 pl-9 max-w-full drop-shadow-[0_1px_1px_rgba(0,0,0,.20)] hover:shadow-[0_1px_5px_rgba(0,0,0,.10)] border">
-            </div>
+                <input autocomplete="off" type="search" id="search-input" placeholder="Buscar"
+                    style="border: 0; padding-left: 35px"
+                    class="rounded-lg md:w-[500px] w-full z-20 max-w-full drop-shadow-[0_1px_1px_rgba(0,0,0,.20)] hover:shadow-[0_1px_5px_rgba(0,0,0,.10)] border">
+            </label>
             <template id="search-item-template">
                 <div>
                     <a href=""
