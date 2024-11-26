@@ -23,13 +23,21 @@
             'href' => '/users/' . $cuser->id . '/schedules',
             'active' => request()->is('users/' . $cuser->id . '/schedules'),
         ],
-        [
-            'icon' => 'fluentui-person-clock-20-o',
-            'active-icon' => 'fluentui-person-clock-20',
-            'text' => 'Mis asistencias',
-            'href' => '/users/' . $cuser->id . '/assists',
-            'active' => request()->is('users/' . $cuser->id . '/assists'),
-        ],
+        // [
+        //     'icon' => 'fluentui-person-clock-20-o',
+        //     'active-icon' => 'fluentui-person-clock-20',
+        //     'text' => 'Mis asistencias',
+        //     'href' =>
+        //         '/assists?query=' .
+        //         $cuser->dni .
+        //         '&assist_terminals=' .
+        //         ($cuser->schedules->isNotEmpty() ? $cuser->schedules->pluck('terminal_id')->join(',') : '') .
+        //         '&start=' .
+        //         now()->startOfMonth()->toDateString() .
+        //         '&end=' .
+        //         now()->endOfMonth()->toDateString(),
+        //     'active' => request()->is('users/' . $cuser->id . '/assists'),
+        // ],
     ];
 
     $otherItems = [
