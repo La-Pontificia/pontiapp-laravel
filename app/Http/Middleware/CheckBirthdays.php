@@ -18,9 +18,10 @@ class CheckBirthdays
         $showedBirthdayModal = $request->cookie($showedKey);
         $currentDateCookie = $request->cookie($dateKey);
 
-        $today = Carbon::today()->format('Y-m-d');
+        $now = Carbon::now()->format('Y-m-d');
+
         $todayFormatted = Carbon::today()->format('m-d');
-        $showedToday = $showedBirthdayModal == 'true' && $currentDateCookie == $today;
+        $showedToday = $showedBirthdayModal == 'true' && $currentDateCookie == $now;
         $birthdays = User::whereRaw("DATE_FORMAT(date_of_birth, '%m-%d') = ?", [$todayFormatted])->get();
         $request->attributes->set('birthdayUsers', $birthdays);
 
@@ -33,7 +34,7 @@ class CheckBirthdays
             $request->attributes->set('showBirthdayModal', true);
             $response = $next($request);
             $response->headers->setCookie(new Cookie($showedKey, 'false', time() + 86400, '/', null, false, false));
-            $response->headers->setCookie(new Cookie($dateKey, $today, time() + 86400, '/', null, false, false));
+            $response->headers->setCookie(new Cookie($dateKey, $now, time() + 86400, '/', null, false, false));
 
             return $response;
         }
