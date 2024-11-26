@@ -12,6 +12,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BusinessUnitController;
 use App\Http\Controllers\ContractTypeController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DocsController;
 use App\Http\Controllers\EdaController;
 use App\Http\Controllers\EventAssistController;
 use App\Http\Controllers\EventController;
@@ -119,6 +120,12 @@ Route::group(['middleware' => 'authMiddleware'], function () {
     Route::post('contract-types', [ContractTypeController::class, 'store']);
     Route::post('contract-types/{id}', [ContractTypeController::class, 'update']);
     Route::post('contract-types/delete/{id}', [ContractTypeController::class, 'delete']);
+
+    // docs routes
+
+    Route::get('docs/feedbacks/send', [DocsController::class, 'sendFeedback']);
+    Route::get('docs/feedbacks/success', [DocsController::class, 'feedbackSuccess']);
+    Route::get('docs', [DocsController::class, 'index']);
 
     // routes if no route is found
     Route::fallback(function () {
