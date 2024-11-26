@@ -62,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
         $sidebarOverlay.removeAttribute("data-expanded");
     });
 
-    const $itemsSidebar = $sidebar.querySelectorAll(".sidebar-item");
-    const $itemContents = $sidebar.querySelectorAll(".sidebar-item-content");
+    const $itemsSidebar = $sidebar?.querySelectorAll(".sidebar-item");
+    const $itemContents = $sidebar?.querySelectorAll(".sidebar-item-content");
 
     $itemsSidebar?.forEach(($item) => {
         const $button = $item.querySelector(".sidebar-item-button");
