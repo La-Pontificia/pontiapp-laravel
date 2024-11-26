@@ -83,6 +83,7 @@ class UserController extends Controller
             'exit_date' => $req->exit_date,
             'username' => $req->username,
             'phone_number' => $req->phone_number,
+            'display_name' => $req->display_name,
             'date_of_birth' => checkdate($month, $day, $year) ? $dateOfBirth : null,
             'created_by' => Auth::id(),
         ]);
@@ -149,6 +150,7 @@ class UserController extends Controller
         $user->first_name = $req->first_name;
         $user->full_name = $req->first_name . ' ' . $req->last_name;
         $user->last_name = $req->last_name;
+        $user->display_name = $req->display_name;
         $user->phone_number = $req->phone_number;
         $user->updated_by = $cuser->id;
         $user->save();
