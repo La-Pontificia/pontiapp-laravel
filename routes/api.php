@@ -24,6 +24,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Api\TicketController as ApiTicketController;
+use App\Http\Controllers\GlobalController;
+use App\Http\Controllers\SystemController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\YearController;
 use Illuminate\Http\Request;
@@ -182,4 +184,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('tickets/settings/modules', [ApiTicketController::class, 'settingModule']);
     Route::post('tickets/settings/modules/{id}', [ApiTicketController::class, 'settingModuleUpdate']);
     Route::post('tickets/settings/modules/delete/{id}', [ApiTicketController::class, 'settingModuleDelete']);
+
+    Route::post('tickets/settings/modules/delete/{id}', [ApiTicketController::class, 'settingModuleDelete']);
+
+    // system apis
+
+    Route::post('system/feedback', [SystemController::class, 'storeSystemFeedback']);
 });
