@@ -16,20 +16,15 @@
             <button class="max-md:block hidden" id="search-button">
                 @svg('fluentui-search-28-o', 'w-6 h-6')
             </button>
-            {{-- <a title="Guía del usuario" href="/docs/user-guide"
-                class="md:p-2 md:py-1 md:hover:bg-blue-500/10 font-semibold text-sm text-nowrap flex items-center gap-1 rounded-md border-blue-500 text-blue-600 md:border">
-                @svg('fluentui-book-contacts-20-o', 'w-6 h-6')
-                <p class="max-md:hidden">
-                    Guia
-                </p>
-            </a> --}}
-            <button title="Enviar bug o sugerencia">
+            <a href='/docs/feedbacks/send' title="Enviar bug o sugerencia">
                 @svg('fluentui-person-feedback-20-o', 'w-6 h-6')
-            </button>
+            </a>
+
             <button title="Notificaciones" id="user-notify-button" aria-expanded="false"
                 data-dropdown-toggle="user-notify" data-dropdown-placement="bottom">
                 @svg('fluentui-alert-28-o', 'w-6 h-6')
             </button>
+
             <div class="z-50 hidden p-2" id="user-notify">
                 <div
                     class="p-5 rounded-lg h-[300px] w-[320px] text-black bg-white overflow-hidden pointer-events-auto text-sm  shadow-2xl">
@@ -53,6 +48,7 @@
                     'altClass' => 'text-sm',
                 ])
             </button>
+
             <div class="z-50 hidden p-2" id="user-dropdown">
                 <div
                     class="w-[320px] rounded-lg text-black bg-white overflow-hidden pointer-events-auto text-sm shadow-2xl">
@@ -90,3 +86,27 @@
         </nav>
     </div>
 </nav>
+
+{{-- @section('portal')
+    <div id="dialog-feedback" tabindex="-1" aria-hidden="true" class="dialog hidden">
+        <div class="content lg:max-w-lg max-w-full">
+            <header>
+                <h2 class="font-semibold text-lg">
+                    Enviar bug o sugerencia
+                </h2>
+                <p>
+                    Ayúdanos a mejorar el sistema enviando un reporte de error o una sugerencia.
+                </p>
+            </header>
+            <form action="/api/system/feedback" method="POST" id="dialog-form" class="dinamic-form body grid gap-4">
+                @include('modules.global.form-feedback')
+            </form>
+            <footer>
+                <button data-modal-hide="dialog-feedback" type="button">Cancelar</button>
+                <button form="dialog-form" type="submit">
+                    Enviar
+                </button>
+            </footer>
+        </div>
+    </div>
+@endsection --}}
