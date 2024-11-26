@@ -112,10 +112,10 @@ button[disabled] {
     }
 }
 
-input,
-textarea,
-select,
-.form-control {
+input:not([data-no-styles]),
+textarea:not([data-no-styles]),
+select:not([data-no-styles]),
+.form-control:not([data-no-styles]) {
     border-radius: 9px;
     padding: 6px 12px;
     background-color: white;
