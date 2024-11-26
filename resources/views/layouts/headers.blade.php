@@ -16,6 +16,7 @@
 
 <body class="bg-[#f4f3f5] text-[15px]">
     @yield('app')
+    @yield('portal')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
