@@ -418,7 +418,7 @@
         <h1 class="text-xs font-semibold py-2">
             Cumpleaños
         </h1>
-        <div class="flex gap-2 items-start">
+        <div class="flex gap-2 max max-w-[270px] items-start">
             <img class="w-[25px]" src="/birthday-gift.webp" alt="birthday-gift">
             <p class="font-normal">
                 @foreach ($userBirthday as $user)
