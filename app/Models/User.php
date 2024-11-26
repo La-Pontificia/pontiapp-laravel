@@ -43,7 +43,8 @@ class User extends Authenticatable
         'date_of_birth',
         'default_assist_terminal_id',
         'contract_id',
-        'phone_number'
+        'phone_number',
+        'display_name',
     ];
 
     protected $keyType = 'string';
@@ -212,6 +213,10 @@ class User extends Authenticatable
 
     public function names()
     {
+        if ($this->display_name) {
+            return $this->display_name;
+        }
+
         $firstNameParts = explode(' ', trim($this->first_name));
         $firstName = $firstNameParts[0];
 
