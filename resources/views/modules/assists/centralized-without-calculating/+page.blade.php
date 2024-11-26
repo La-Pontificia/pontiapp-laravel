@@ -92,7 +92,7 @@
                         @svg('fluentui-search-28-o', 'w-5 h-5')
                     </div>
                     <input value="{{ request()->get('query') }}" name="query" placeholder="Filtrar usuarios..."
-                        type="search" class="pl-9 w-full dinamic-input-to-url bg-white">
+                        style="padding-left: 35px" type="search" class="pl-9 w-full dinamic-input-to-url bg-white">
                 </label>
                 <button type="submit" class="primary refresh-page mt-2">Filtrar</button>
             </div>

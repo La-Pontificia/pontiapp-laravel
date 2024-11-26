@@ -11,7 +11,7 @@
                     @svg('fluentui-search-28-o', 'w-5 h-5')
                 </div>
                 <input value="{{ request()->get('query') }}" name="query" placeholder="Filtrar..." type="search"
-                    class="pl-9 w-full bg-white">
+                    class="pl-9 w-full bg-white" style="padding-left: 35px">
             </label>
             <button class="primary mt-6">
                 Filtrar
