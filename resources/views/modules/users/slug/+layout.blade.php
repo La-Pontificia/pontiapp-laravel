@@ -56,8 +56,9 @@
                             <div class="relative rounded-full overflow-hidden w-28 aspect-square">
                                 <input data-notoutline-styles data-userid="{{ $user->id }}" class="hidden" type="file"
                                     name="profile" id="input-profile" accept="image/*">
-                                <img id="preview-profile" class="w-full h-full object-cover" src={{ $profile }}
-                                    alt="{{ $profile }}">
+                                <img id="preview-profile" class="w-full h-full object-cover peer-data-[fill]:block hidden"
+                                    src={{ $profile }} alt="{{ $profile }}">
+                                @svg('fluentui-person-circle-20-o', 'w-full peer-data-[fill]:hidden block h-full opacity-50')
                             </div>
                         </div>
                         @if ($hasChangePhoto)
