@@ -305,6 +305,15 @@
                             <input value="{{ $user->first_name }}" autocomplete="off" value="" name="first_name"
                                 id="first_name-input" required type="text">
                         </label>
+                        <label class="label col-span-2">
+                            <span>Display name (Opcional)<small
+                                    class="inline-block py-0 ml-1 select-none px-2 text-blue-700 bg-blue-500/20 border border-blue-500 rounded-full font-medium">Nuevo</small></span>
+                            <input value="{{ $user->display_name ?? $user->names() }}" autocomplete="off"
+                                name="display_name" type="text">
+                            <p>
+                                Este nombre será visible en la plataforma.
+                            </p>
+                        </label>
                         <label class="label">
                             <span>Fecha de nacimiento</span>
                             <div class="w-full">
@@ -351,7 +360,7 @@
                                         class="inline-block py-0 ml-1 select-none px-2 text-blue-700 bg-blue-500/20 border border-blue-500 rounded-full font-medium">Nuevo</small>
                                 </span>
                                 <input value="{{ $user->phone_number }}" type="number" pattern="[0-9]{9}"
-                                    name="phone_number" required placeholder="">
+                                    name="phone_number" placeholder="">
                             </label>
                         </div>
                         <div class="col-span-2">
@@ -413,21 +422,7 @@
                                 @endforeach
                             </select>
                         </label>
-                        {{-- <label class="label">
-                            <span>Grupo de horario</span>
-                            <div class="relative">
-                                <div class="absolute top-0 z-10 inset-y-0 grid place-content-center left-3">
-                                    @svg('fluentui-calendar-ltr-24-o', 'w-4 text-stone-500')
-                                </div>
-                                <select class="w-full" style="padding-left: 35px" name="group_schedule_id">
-                                    <option selected value="" disabled>Grupo de horario</option>
-                                    @foreach ($group_schedules as $scheldule)
-                                        <option {{ $user->group_schedule_id === $scheldule->id ? 'selected' : '' }}
-                                            value="{{ $scheldule->id }}">{{ $scheldule->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </label> --}}
+
                         <label class="label">
                             <span>Tipo de contrato</span>
                             <div class="relative">
@@ -445,32 +440,7 @@
                                 </select>
                             </div>
                         </label>
-                        {{-- <div class="label col-span-2">
-                            <span>
-                                Terminales de asistencia
-                            </span>
-                            <div class="grid grid-cols-2 text-sm font-medium">
-                                @foreach ($terminals as $terminal)
-                                    @php
-                                        $checked = $user->assistTerminals
-                                            ->pluck('assist_terminal_id')
-                                            ->contains($terminal->id);
-                                    @endphp
-                                    <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
-                                        <input {{ $checked ? 'checked' : '' }} type="checkbox" name="assist_terminals[]"
-                                            value="{{ $terminal->id }}">
-                                        <div>
-                                            <span class="block"> {{ $terminal->name }} </span>
-                                            <p class="flex items-center gap-2">
-                                                @svg('fluentui-task-list-square-database-20-o', 'w-5 h-5 opacity-70')
-                                                <span class="text-sm font-normal"> {{ $terminal->database_name }}
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div> --}}
+
                         <div class="col-span-2">
                             <div class="flex gap-2 items-end">
                                 <div class="grid grid-cols-2 gap-4 w-full">
@@ -604,39 +574,15 @@
                     </div>
                     <form method="POST" action="/api/users/{{ $user->id }}/segurity-access"
                         class="grid w-full dinamic-form pb-5 gap-3">
-                        {{-- <div class="label col-span-2">
-                            <span>
-                                Unidad de negocio
-                            </span>
-                            <div class="grid grid-cols-2 text-sm font-medium">
-                                @foreach ($business_units as $business)
-                                    @php
-                                        $checked = $user->businessUnits
-                                            ->pluck('business_unit_id')
-                                            ->contains($business->id);
-                                    @endphp
-                                    <label class="flex p-2 rounded-lg hover:bg-white items-center gap-2">
-                                        <input {{ $checked ? 'checked' : '' }} type="checkbox" name="business_units[]"
-                                            value="{{ $business->id }}">
-                                        <div>
-                                            <span class="block"> {{ $business->name }} </span>
-                                            <p class="flex items-center gap-2">
-                                                @svg('fluentui-globe-20-o', 'w-5 h-5 opacity-70')
-                                                <span class="text-sm font-normal"> {{ $business->domain }} </span>
-                                            </p>
-                                        </div>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div> --}}
                         <div class="label w-full col-span-2">
                             <span>Correo institucional</span>
                             <div class="relative w-full">
                                 <div class="absolute z-10 inset-y-0 flex items-center left-3">
                                     @svg('fluentui-mail-20-o', 'w-5 h-5 opacity-50')
                                 </div>
-                                <input pattern="^[a-zA-Z0-9_]*$" value="{{ explode('@', $user->email)[0] }}" required
-                                    type="text" name="username" class="w-full pl-10" placeholder="Nombre de usuario">
+                                <input pattern="^[a-zA-Z0-9_]*$" value="{{ explode('@', $user->email)[0] }}"
+                                    style="padding-left:40px" required type="text" name="username"
+                                    class="w-full pl-10" placeholder="Nombre de usuario">
                                 <div class="absolute inset-y-0 flex gap-1 items-center right-2">
                                     <div class="opacity-50">
                                         @

@@ -36,7 +36,7 @@
                 <div class="grid gap-4 w-full" role="form">
                     <div class="flex items-center gap-4">
                         <div class="relative rounded-full overflow-hidden w-24 aspect-square">
-                            <input type="file" id="input-profile" form="form-user" name="profile"
+                            <input type="file" data-no-styles id="input-profile" form="form-user" name="profile"
                                 class="opacity-0 absolute peer inset-0 w-full h-full cursor-pointer" accept="image/*">
                             <img id="preview-profile" class="w-full peer-data-[fill]:block hidden h-full object-cover"
                                 src="https://res.cloudinary.com/dc0t90ahb/image/upload/v1706396604/gxhlhgd1aa7scbneae3s.jpg"
@@ -71,6 +71,14 @@
                                 <span>Nombres</span>
                                 <input form="form-user" autocomplete="off" name="first_name" id="first_name-input" required
                                     type="text">
+                            </label>
+                            <label class="label col-span-2">
+                                <span>Display name (Opcional)<small
+                                        class="inline-block py-0 ml-1 select-none px-2 text-blue-700 bg-blue-500/20 border border-blue-500 rounded-full font-medium">Nuevo</small></span>
+                                <input form="form-user" autocomplete="off" name="display_name" type="text">
+                                <p>
+                                    Este nombre será visible en la plataforma.
+                                </p>
                             </label>
                             <label class="label">
                                 <span>Fecha de nacimiento</span>
@@ -116,7 +124,7 @@
                                         <small
                                             class="inline-block py-0 ml-1 select-none px-2 text-blue-700 bg-blue-500/20 border border-blue-500 rounded-full font-medium">Nuevo</small>
                                     </span>
-                                    <input type="number" pattern="[0-9]{9}" form="form-user" name="phone_number" required
+                                    <input type="number" pattern="[0-9]{9}" form="form-user" name="phone_number"
                                         placeholder="">
                                 </label>
                             </div>
@@ -316,7 +324,7 @@
                                         @svg('fluentui-mail-20-o', 'w-5 h-5 opacity-50')
                                     </div>
                                     <input form="form-user" pattern="^[a-zA-Z0-9_]*$" value="" required
-                                        type="text" name="username" class="w-full pl-10"
+                                        type="text" name="username" class="w-full" style="padding-left: 40px"
                                         placeholder="Nombre de usuario">
                                     <div class="absolute inset-y-0 flex gap-1 items-center right-2">
                                         <div class="opacity-50">
@@ -344,7 +352,8 @@
                                     <div class="absolute z-10 inset-y-0 flex items-center left-3">
                                         @svg('fluentui-person-key-20-o', 'w-5 h-5 opacity-50')
                                     </div>
-                                    <input form="form-user" name="password" placeholder="Opcional" class="w-full pl-10">
+                                    <input form="form-user" name="password" placeholder="Opcional" class="w-full"
+                                        style="padding-left: 40px">
                                 </div>
                                 <p class="text-xs">
                                     La contraseña por defecto será el documento de identidad del usuario.
