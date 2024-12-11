@@ -73,7 +73,7 @@ class AssistsWithoutCalculating implements ShouldQueue
                     'date' => $punchTime->format('d-m-Y'),
                     'day' => $punchTime->isoFormat('dddd'),
                     'employee_code' => $item->emp_code,
-                    'employee_name' => $item->first_name . ' ' . $item->last_name,
+                    'employee_name' => $item->last_name . ', ' . $item->first_name,
                     'time' => $punchTime->format('H:i:s'),
                     'sync_date' => Carbon::parse($item->upload_time)->format('d-m-Y H:i:s'),
                     'terminal' => $terminal,
