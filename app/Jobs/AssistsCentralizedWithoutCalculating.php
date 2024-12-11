@@ -118,7 +118,7 @@ class AssistsCentralizedWithoutCalculating implements ShouldQueue
                         $worksheet->setCellValue('B' . $rr, $rr - 3); // Número de asistencia
                         $worksheet->setCellValue('C' . $rr, $assist['terminal']->name);
                         $worksheet->setCellValue('D' . $rr, $assist['user']->dni ?? "");
-                        $worksheet->setCellValue('E' . $rr, $assist['user']->first_name . ' ' . $assist['user']->last_name ?? "");
+                        $worksheet->setCellValue('E' . $rr, $assist['user']->last_name . ', ' .  $assist['user']->first_name ?? "");
                         $worksheet->setCellValue('F' . $rr, $assist['user']->role_position->name ?? "");
                         $worksheet->setCellValue('G' . $rr, $assist['user']->role_position->job_position->name ?? "");
 
