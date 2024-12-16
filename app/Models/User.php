@@ -2,49 +2,42 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+    use HasApiTokens, HasFactory, HasUuids;
 
     protected $table = 'users';
 
-    protected $perPage = 15;
+    protected $perPage = 25;
 
     protected $fillable = [
         'id',
-        'profile',
-        'dni',
-        'first_name',
-        'last_name',
+        'photoURL',
+        'documentId',
+        'firstNames',
+        'lastNames',
         'email',
         'password',
-        'id_role_user',
-        'privileges',
+        'userRoleId',
+        'customPrivileges',
         'status',
-        'id_role',
-        'id_branch',
-        'supervisor_id',
-        'email_access',
+        'roleId',
+        'branchId',
+        'managerId',
         'username',
-        'created_by',
-        'updated_by',
-        'entry_date',
-        'full_name',
-        'exit_date',
-        'date_of_birth',
-        'default_assist_terminal_id',
-        'contract_id',
-        'phone_number',
-        'display_name',
+        'createdBy',
+        'updatedBy',
+        'entryDate',
+        'fullName',
+        'birthdate',
+        'contractId',
+        'displayName',
+        'contacts',
     ];
 
     protected $keyType = 'string';
@@ -56,126 +49,76 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-
     static $rules = [
-        'dni' => 'required|numeric|digits:8',
-        'first_name' => 'required',
-        'immediate_boss' => 'uuid|nullable',
+        'documentId' => 'string|required',
+        'firstNames' => 'string|required',
+        'lastNames' => 'string|required',
+        'managerId' => 'uuid|nullable',
+        'email' => 'required|email',
         'username' => 'required',
-        'domain' => 'required',
-        'last_name' => 'required',
-        'id_role' => 'uuid|required',
-        'date_of_birth_day' => 'numeric|nullable',
-        'date_of_birth_month' => 'numeric|nullable',
-        'date_of_birth_year' => 'numeric|nullable',
-        'id_role_user' => 'uuid|required',
-        'id_branch' => 'uuid|required',
-        'entry_date' => 'date|nullable',
-        'exit_date' => 'date|nullable',
-        'contract_id' => 'uuid|nullable',
-        'phone_number' => 'nullable|numeric|digits:9',
-    ];
-
-    static $organization = [
-        'id_role' => 'uuid|required',
-        'id_branch' => 'uuid|required',
-        'entry_date' => 'date|nullable',
-        'exit_date' => 'date|nullable',
-        'supervisor_id' => 'uuid|nullable',
-        'contract_id' => 'uuid|nullable',
-    ];
-
-    static $rol = [
-        'id_role_user' => 'uuid|required',
-    ];
-
-    static $details = [
-        'dni' => 'required|numeric|digits:8',
-        'date_of_birth_day' => 'required|numeric',
-        'date_of_birth_month' => 'required|numeric',
-        'date_of_birth_year' => 'required|numeric',
-        'first_name' => 'required',
-        'last_name' => 'required',
-        'phone_number' => 'nullable|numeric|digits:9',
-    ];
-
-    static $organizationRules = [
-        'id_branch' => 'uuid|required',
-        'id_role' => 'uuid|required',
-    ];
-
-    static $segurityAccess = [
-        'username' => 'required',
-        'domain' => 'required',
+        'roleId' => 'uuid|required',
+        'birthdate' => 'date|nullable',
+        'userRoleId' => 'uuid|required',
+        'entryDate' => 'date|nullable',
+        'contractTypeId' => 'uuid|required',
+        'password' => 'required|min:8',
+        'status' => 'boolean|required',
+        'photoURL' => 'string|nullable',
+        'customPrivileges' => 'array|nullable',
+        'contacts' => 'array|nullable',
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'email_access' => 'array',
-        'entry_date' => 'date',
-        'exit_date' => 'date',
-        'date_of_birth' => 'date',
+        'entryDate' => 'date',
+        'birthdate' => 'date',
+        'contacts' => 'array',
+        'customPrivileges' => 'array',
     ];
-
-    public function businessUnits()
-    {
-        return $this->hasMany(UserBusinessUnit::class, 'user_id', 'id');
-    }
-
-    public function assistTerminals()
-    {
-        return $this->hasMany(UserTerminal::class, 'user_id', 'id');
-    }
 
     public function historyEntries()
     {
-        return $this->hasMany(HistoryUserEntry::class, 'user_id', 'id')->orderBy('created_at', 'desc');
-    }
-
-    public function defaultTerminal()
-    {
-        return $this->hasOne(AssistTerminal::class, 'id', 'default_assist_terminal_id');
-    }
-
-    public function role_position()
-    {
-        return $this->hasOne(Role::class, 'id', 'id_role');
-    }
-
-    public function job_position()
-    {
-        return $this->role_position->job_position;
-    }
-
-    public function department()
-    {
-        return $this->role_position->department;
-    }
-
-    public function area()
-    {
-        return $this->role_position->department->area;
-    }
-
-    public function branch()
-    {
-        return $this->hasOne(Branch::class, 'id', 'id_branch');
-    }
-
-    public function createdBy()
-    {
-        return $this->hasOne(User::class, 'id', 'created_by');
-    }
-
-    public function updatedBy()
-    {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasMany(HistoryUserEntry::class, 'roleId', 'id')->orderBy('created_at', 'desc');
     }
 
     public function role()
     {
-        return $this->hasOne(UserRole::class, 'id', 'id_role_user');
+        return $this->hasOne(Role::class, 'id', 'roleId');
+    }
+
+    public function job()
+    {
+        return $this->role->job;
+    }
+
+    public function department()
+    {
+        return $this->role->department;
+    }
+
+    public function area()
+    {
+        return $this->role->department->area;
+    }
+
+    public function branch()
+    {
+        return $this->hasOne(Branch::class, 'id', 'branchId');
+    }
+
+    public function createdUser()
+    {
+        return $this->hasOne(User::class, 'id', 'createdBy');
+    }
+
+    public function updatedUser()
+    {
+        return $this->hasOne(User::class, 'id', 'updatedBy');
+    }
+
+    public function userRole()
+    {
+        return $this->hasOne(UserRole::class, 'id', 'userRoleId');
     }
 
     public function privileges()
@@ -200,56 +143,43 @@ class User extends Authenticatable
         return $this->has('development');
     }
 
-
-    public function supervisor()
+    public function manager()
     {
-        return $this->hasOne(User::class, 'id', 'supervisor_id');
+        return $this->hasOne(User::class, 'id', 'managerId');
     }
 
     public function edas()
     {
-        return $this->hasMany(Eda::class, 'id_user', 'id');
+        return $this->hasMany(Eda::class, 'userId', 'id');
     }
 
-    public function names()
+    public function subordinates()
     {
-        if ($this->display_name) {
-            return $this->display_name;
-        }
-
-        $firstNameParts = explode(' ', trim($this->first_name));
-        $firstName = $firstNameParts[0];
-
-        $lastNameParts = explode(' ', trim($this->last_name));
-
-        $lastName = $lastNameParts[0];
-        if (count($lastNameParts) > 1) {
-            $lastName = implode(' ', array_slice($lastNameParts, 0, -1));
-        }
-        return $firstName . ' ' . $lastName;
+        return $this->hasMany(User::class, 'managerId', 'id');
     }
 
-    public function people()
+    public function coworkers($limitCoworkers = 10)
     {
-        return $this->hasMany(User::class, 'supervisor_id', 'id');
-    }
-
-    public function companions()
-    {
-        $level = $this->role_position->job_position->level;
-        $companions = User::whereHas('role_position', function ($query) use ($level) {
-            $query->whereHas('job_position', function ($query) use ($level) {
+        $level = $this->role->job->level;
+        $coworkers = User::whereHas('role', function ($query) use ($level) {
+            $query->whereHas('job', function ($query) use ($level) {
                 $query->where('level', $level);
             });
         })
             ->where('id', '!=', $this->id)
+            ->limit($limitCoworkers)
             ->get();
 
-        return $companions;
+        return $coworkers;
     }
 
     public function schedules()
     {
-        return $this->hasMany(Schedule::class, 'user_id', 'id')->where('archived', false);
+        return $this->hasMany(Schedule::class, 'userId', 'id')->where('archived', false);
+    }
+
+    public function contractType()
+    {
+        return $this->hasOne(ContractType::class, 'id', 'contractTypeId');
     }
 }

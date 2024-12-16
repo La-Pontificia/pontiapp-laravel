@@ -8,7 +8,7 @@
 
 @section('layout.users.slug')
     <div class="flex items-center gap-3 font-medium p-2">
-        <a href="/users/{{ $user->id }}" class="text-neutral-800 flex p-1 hover:bg-neutral-200 rounded-full">
+        <a href="/users/{{ $user->id }}" class="text-neutral-800 flex p-1 hover:bg-stone-200 rounded-full">
             svg'bx-left-arrow-alt', 'w-6 h-6 opacity-70')
         </a>
         Contratación

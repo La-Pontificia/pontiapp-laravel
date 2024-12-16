@@ -116,7 +116,7 @@
                         </thead>
                         <tbody class="divide-y divide-neutral-300 z-[0]">
                             @foreach ($assists as $assist)
-                                <tr class="[&>td]:py-3 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
+                                <tr class="[&>td]:py-3 even:bg-stone-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
                                     <td>
                                         <div class="flex items-center gap-2">
                                             <div>

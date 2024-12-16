@@ -271,14 +271,14 @@
                                         </td>
                                         <td class="rounded-r-2xl relative">
                                             @if ($cuser->has('audit:delete') || $cuser->isDev())
-                                                <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
+                                                <button class="rounded-full p-2 hover:bg-stone-200 transition-colors"
                                                     data-dropdown-toggle="dropdown-{{ $record->id }}">
                                                     @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                                                 </button>
                                                 <div id="dropdown-{{ $record->id }}" class="dropdown-content hidden">
                                                     <button data-atitle="¿Estás seguro de eliminar?" data-adescription=""
                                                         data-param="/api/audit/{{ $record->id }}/delete"
-                                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Eliminar
                                                     </button>
                                                 </div>

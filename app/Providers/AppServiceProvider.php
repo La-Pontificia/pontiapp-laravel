@@ -2,10 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Colaboradore;
-use App\Models\Objetivo;
-use App\Models\Supervisore;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,5 +15,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        date_default_timezone_set('America/Lima');
+        Carbon::setLocale('es');
     }
 }

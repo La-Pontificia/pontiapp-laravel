@@ -41,7 +41,7 @@
             @endif
             <div class="flex flex-col divide-y">
                 @forelse ($events as $event)
-                    <div class="flex relative hover:bg-neutral-100 items-center p-2.5 gap-2">
+                    <div class="flex relative hover:bg-stone-100 items-center p-2.5 gap-2">
                         @svg('fluentui-megaphone-loud-20-o', 'w-5 h-5 mr-2')
                         <div class="flex-grow">
                             <p class="font-medium">{{ $event->name }}</p>
@@ -52,7 +52,7 @@
                         @if ($cuser->has('events:edit') || $cuser->isDev())
                             <button type="button" data-modal-target="dialog-{{ $event->id }}"
                                 data-modal-toggle="dialog-{{ $event->id }}"
-                                class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
+                                class="rounded-full p-2 hover:bg-stone-200 transition-colors">
                                 @svg('fluentui-edit-20', 'w-5 h-5')
                             </button>
                             <div id="dialog-{{ $event->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -77,7 +77,7 @@
                             </div>
                         @endif
                         @if ($cuser->has('events:delete') || $cuser->isDev())
-                            <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
+                            <button class="rounded-full p-2 hover:bg-stone-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $event->id }}">
                                 @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                             </button>
@@ -85,7 +85,7 @@
                                 <button data-atitle="¿Estás seguro de eliminar?"
                                     data-adescription="Se eliminarán todos los registros que asistieron a este evento."
                                     data-param="/api/events/{{ $event->id }}/delete"
-                                    class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                    class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                     Eliminar
                                 </button>
                             </div>

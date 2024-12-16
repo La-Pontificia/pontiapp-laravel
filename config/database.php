@@ -78,165 +78,178 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        // PL Alameda
-        'PL-Alameda' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'PL-Alameda',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
+        'sqlsrv_dynamic' => [
+            'driver'   => 'sqlsrv',
+            'host'     => env('SQLSRV_HOST', 'default_host'),
+            'port'     => env('SQLSRV_PORT', '1433'),
+            'database' => env('SQLSRV_DATABASE', 'default_database'),
+            'username' => env('SQLSRV_USERNAME', 'default_username'),
+            'password' => env('SQLSRV_PASSWORD', 'default_password'),
+            'charset'  => 'utf8',
+            'prefix'   => '',
             'prefix_indexes' => true,
-            'trust_server_certificate' => true,
-
+            'trust_server_certificate' => true
         ],
 
-        // PL Andahuaylas
-        'PL-Andahuaylas' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'PL-Andahuaylas',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // PL Alameda
+        // 'PL-Alameda' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'PL-Alameda',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // PL Casuarina
-        'PL-Casuarina' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'PL-Casuarina',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // PL Andahuaylas
+        // 'PL-Andahuaylas' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'PL-Andahuaylas',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // PL Cybernet
-        'PL-CYBERNET' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'PL-CYBERNET',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // PL Casuarina
+        // 'PL-Casuarina' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'PL-Casuarina',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // PL Jazmines
-        'PL-Jazmines' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'PL-Jazmines',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // PL Cybernet
+        // 'PL-CYBERNET' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'PL-CYBERNET',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // RH Alameda
-        'RH-Alameda' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'RH-Alameda',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // PL Jazmines
+        // 'PL-Jazmines' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'PL-Jazmines',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // RH Andahuaylas
-        'RH-Andahuaylas' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'RH-Andahuaylas',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // RH Alameda
+        // 'RH-Alameda' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'RH-Alameda',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // RH Casuarina
-        'RH-Casuarina' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'RH-Casuarina',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // RH Andahuaylas
+        // 'RH-Andahuaylas' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'RH-Andahuaylas',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // PL Cybernet
-        'RH-Cybernet' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'RH-Cybernet',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // RH Casuarina
+        // 'RH-Casuarina' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'RH-Casuarina',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
 
-        // RH Jazmines
-        'RH-Jazmines' => [
-            'driver' => 'sqlsrv',
-            'url' => env('ASSIST_DATABASE_URL'),
-            'host' => env('ASSIST_DB_HOST', 'localhost'),
-            'port' => env('ASSIST_DB_PORT', '1433'),
-            'database' => 'RH-Jazmines',
-            'username' => env('ASSIST_DB_USERNAME', 'forge'),
-            'password' => env('ASSIST_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'trust_server_certificate' => true,
+        // // PL Cybernet
+        // 'RH-Cybernet' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'RH-Cybernet',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
 
-        ],
+        // ],
+
+        // // RH Jazmines
+        // 'RH-Jazmines' => [
+        //     'driver' => 'sqlsrv',
+        //     'url' => env('ASSIST_DATABASE_URL'),
+        //     'host' => env('ASSIST_DB_HOST', 'localhost'),
+        //     'port' => env('ASSIST_DB_PORT', '1433'),
+        //     'database' => 'RH-Jazmines',
+        //     'username' => env('ASSIST_DB_USERNAME', 'forge'),
+        //     'password' => env('ASSIST_DB_PASSWORD', ''),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'prefix_indexes' => true,
+        //     'trust_server_certificate' => true,
+
+        // ],
 
     ],
 

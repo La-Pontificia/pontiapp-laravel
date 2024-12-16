@@ -1,7 +1,7 @@
 <header class="p-4 shadow-md rounded-xl">
     <nav class="flex gap-3 flex-wrap">
         <select name="area"
-            class="bg-neutral-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[200px]">
+            class="bg-stone-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[200px]">
             <option selected value="">Area</option>
             @foreach ($areas as $area)
                 <option {{ $areaRecover == $area->id ? 'selected' : '' }} value="{{ $area->id }}">
@@ -10,7 +10,7 @@
             @endforeach
         </select>
         <select name="departamento"
-            class="bg-neutral-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
+            class="bg-stone-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
             <option selected value="">Departamento</option>
             @foreach ($departamentos as $departamento)
                 <option {{ $departamentoRecover == $departamento->id ? 'selected' : '' }}
@@ -20,7 +20,7 @@
             @endforeach
         </select>
         <select name="cargo"
-            class="bg-neutral-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
+            class="bg-stone-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
             <option selected value="">Cargo</option>
             @foreach ($cargos as $cargo)
                 <option {{ $cargoRecover == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
@@ -29,7 +29,7 @@
             @endforeach
         </select>
         <select name="puesto"
-            class="bg-neutral-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
+            class="bg-stone-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
             <option selected value="">Puesto</option>
             @foreach ($puestos as $puesto)
                 <option {{ $puestoRecover == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
@@ -38,7 +38,7 @@
             @endforeach
         </select>
         <select name="estado"
-            class="bg-neutral-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[130px]">
+            class="bg-stone-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[130px]">
             <option selected value="">Estado</option>
             <option {{ $estadoRecover == 1 ? 'selected' : '' }} value="1">
                 Activos

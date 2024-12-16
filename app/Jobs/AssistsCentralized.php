@@ -159,9 +159,10 @@ class AssistsCentralized implements ShouldQueue
 
         Report::create([
             'title' => 'Asistencias Centralizadas Sin Calcular',
-            'file_url' => $filePath,
-            'download_link' => $downloadLink,
-            'generated_by' => $this->userId,
+            'fileUrl' => $filePath,
+            'downloadLink' => $downloadLink,
+            'generatedBy' => $this->userId,
+            'module' => 'assists'
         ]);
     }
 }

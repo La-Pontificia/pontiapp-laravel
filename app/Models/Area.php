@@ -12,33 +12,27 @@ class Area extends Model
 
   use HasUuids;
 
-  static $rules = [
-    'name' => 'required',
-  ];
-
-  protected $table = 'areas';
-
+  protected $table = 'user_areas';
 
   protected $perPage = 20;
 
-
-  protected $fillable = ['code', 'name', 'updated_by', 'created_by'];
+  protected $fillable = ['codePrefix', 'name', 'updatedBy', 'createdBy'];
   protected $keyType = 'string';
   public $incrementing = false;
 
 
   public function departments()
   {
-    return $this->hasMany(Department::class, 'id_area', 'id');
+    return $this->hasMany(Department::class, 'areaId', 'id');
   }
 
-  public function createdBy()
+  public function createdUser()
   {
-    return $this->hasOne(User::class, 'id', 'created_by');
+    return $this->hasOne(User::class, 'id', 'createdBy');
   }
 
-  public function updatedBy()
+  public function updatedUser()
   {
-    return $this->hasOne(User::class, 'id', 'updated_by');
+    return $this->hasOne(User::class, 'id', 'updatedBy');
   }
 }

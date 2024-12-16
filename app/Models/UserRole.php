@@ -22,9 +22,9 @@ class UserRole extends Model
         'title',
         'privileges',
         'status',
-        'created_by',
+        'createdBy',
         'level',
-        'updated_by',
+        'updatedBy',
     ];
 
     protected $casts = [
@@ -33,16 +33,21 @@ class UserRole extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'id_role_user', 'id');
+        return $this->hasMany(User::class, 'userRoleId', 'id');
     }
 
-    public function createdBy()
+    public function usersCount()
     {
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasMany(User::class, 'userRoleId', 'id')->count();
     }
 
-    public function updatedBy()
+    public function createdUser()
     {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'createdBy');
+    }
+
+    public function updatedUser()
+    {
+        return $this->hasOne(User::class, 'id', 'updatedBy');
     }
 }

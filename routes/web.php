@@ -24,16 +24,17 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\YearController;
+use App\Http\Controllers\Api\LoginController as ApiLoginController;
 
-// -------------------------------- AUTH ROUTES ---------------------------
 
-Route::get('login/azure', [LoginController::class, 'redirectToAzure']);
+Route::get('auth/login/id', [ApiLoginController::class, 'loginAzure']);
+Route::get('auth/login/callback', [ApiLoginController::class, 'callbackAzure']);
+
+
 Route::post('login', [LoginController::class, 'login']);
-Route::get('login/azure/callback', [LoginController::class, 'handleAzureCallback']);
+// Route::get('login/azure', [LoginController::class, 'redirectToAzure']);
+// Route::get('login/azure/callback', [LoginController::class, 'handleAzureCallback']);
 Auth::routes();
-
-// -------------------------------- DASHBOARD ROUTES ---------------------------
-
 Route::group(['middleware' => 'authMiddleware'], function () {
 
     // Home routes

@@ -45,7 +45,7 @@
 
                             <button type="button" data-modal-target="dialog-{{ $year->id }}"
                                 data-modal-toggle="dialog-{{ $year->id }}"
-                                class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
+                                class="rounded-full p-2 hover:bg-stone-200 transition-colors">
                                 @svg('fluentui-document-edit-20-o', 'w-5 h-5')
                             </button>
 
@@ -68,7 +68,7 @@
                                     </footer>
                                 </div>
                             </div>
-                            <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
+                            <button class="rounded-full p-2 hover:bg-stone-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $year->id }}">
                                 @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                             </button>
@@ -77,7 +77,7 @@
                                     <button data-atitle="Abrir o cerrar año"
                                         data-adescription="¿Estas seguro de {{ $year->status ? 'cerrar' : 'abrir' }} el año?"
                                         data-param="/api/years/{{ $year->id }}/close-or-open"
-                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                         {{ $year->status ? 'Cerrar' : 'Abrir' }} año
                                     </button>
                                 @endif
@@ -85,7 +85,7 @@
                                     <button data-atitle="¿Eliminar año?"
                                         data-adescription="Todos los edas, evaluaciones, cuestionarios de este año serán eliminados. ¿Estás seguro de eliminar este año?"
                                         data-param="/api/years/{{ $year->id }}/delete"
-                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                         Eliminar año
                                     </button>
                                 @endif
@@ -100,7 +100,7 @@
                             <p>
                                 {{ $template->questions->count() }} preguntas
                             </p>
-                            <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
+                            <button class="rounded-full p-2 hover:bg-stone-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $template->id }}">
                                 svg'bx-dots-vertical-rounded', 'w-5 h-5')
                             </button>
@@ -109,13 +109,13 @@
                                     <button data-atitle="¿Usar como cuestionario para colaboradores?"
                                         data-adescription="Todos los colaboradores tendrán este cuestionario en sus edas."
                                         data-param="/api/questionnaire-templates/{{ $template->id }}/use/collaborators"
-                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                         Usar para colaboradores
                                     </button>
                                     <button data-atitle="¿Usar como cuestionario para supervisores?"
                                         data-adescription="Todos los supervisores tendrán este cuestionario en sus edas."
                                         data-param="/api/questionnaire-templates/{{ $template->id }}/use/supervisors"
-                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                         Usar para supervisores
                                     </button>
                                 @endif
@@ -270,7 +270,7 @@
                                             </p>
 
                                             <button data-dropdown-toggle="dropdown-year-{{ $year->id }}"
-                                                class="group-hover:opacity-100 relative opacity-0 hover:bg-neutral-200/80 rounded-md p-1">
+                                                class="group-hover:opacity-100 relative opacity-0 hover:bg-stone-200/80 rounded-md p-1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -287,7 +287,7 @@
                                                     data-atitle="{{ $year->status ? 'Cerrar' : 'Abrir' }} año"
                                                     data-adescription="¿Estas seguro de {{ $year->status ? 'cerrar' : 'abrir' }} el año?"
                                                     data-param="/api/years/{{ $year->status ? 'close' : 'open' }}/{{ $year->id }}"
-                                                    class="p-2 text-left dinamic-alert hover:bg-neutral-100 w-full block rounded-md text-red-500 hover:bg-gray-10">
+                                                    class="p-2 text-left dinamic-alert hover:bg-stone-100 w-full block rounded-md text-red-500 hover:bg-gray-10">
                                                     {{ $year->status ? 'Cerrar' : 'Abrir' }} eda
                                                 </button>
                                             </div>

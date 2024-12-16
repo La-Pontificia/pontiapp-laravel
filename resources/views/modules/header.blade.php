@@ -1,6 +1,6 @@
 <nav class="bg-[#f5f0f0] shadow-md shadow-black/20 text-blue-700 h-14 w-full z-30">
     <div class="flex w-full justify-between gap-5 items-center h-full px-3">
-        <div class="flex-grow basis-0 flex ml-14 max-lg:ml-0 text-neutral-800 items-center gap-3">
+        <div class="flex-grow basis-0 flex ml-10 max-lg:ml-0 text-neutral-800 items-center gap-3">
             <button class="lg:hidden block" id="sidebar-button">
                 @svg('fluentui-line-horizontal-3-20', 'w-6 h-6')
             </button>

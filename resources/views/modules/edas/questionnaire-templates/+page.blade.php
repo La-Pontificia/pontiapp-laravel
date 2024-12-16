@@ -16,7 +16,7 @@
             <div class="flex flex-col divide-y">
                 @if ($cuser->has('edas:questionnaire-templates:show') || $cuser->isDev())
                     @forelse ($templates as $template)
-                        <div class="flex relative items-center hover:bg-neutral-100 p-3 gap-2">
+                        <div class="flex relative items-center hover:bg-stone-100 p-3 gap-2">
                             @svg('fluentui-book-contacts-20-o', 'w-6 h-6 mr-1')
                             <div class="flex-grow">
                                 <p>{{ $template->title }}</p>
@@ -30,7 +30,7 @@
                             <p>
                                 {{ $template->questions->count() }} preguntas
                             </p>
-                            <button class="rounded-full p-2 hover:bg-neutral-200 relative transition-colors"
+                            <button class="rounded-full p-2 hover:bg-stone-200 relative transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $template->id }}">
                                 @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                             </button>
@@ -39,13 +39,13 @@
                                     <button data-atitle="¿Usar como cuestionario para colaboradores?"
                                         data-adescription="Todos los colaboradores tendrán este cuestionario en sus edas."
                                         data-param="/api/questionnaire-templates/{{ $template->id }}/use/collaborators"
-                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                         Usar para colaboradores
                                     </button>
                                     <button data-atitle="¿Usar como cuestionario para supervisores?"
                                         data-adescription="Todos los supervisores tendrán este cuestionario en sus edas."
                                         data-param="/api/questionnaire-templates/{{ $template->id }}/use/supervisors"
-                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                         Usar para supervisores
                                     </button>
                                 @endif

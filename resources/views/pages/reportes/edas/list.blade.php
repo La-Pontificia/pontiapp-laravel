@@ -15,7 +15,7 @@
         </th>
         <td class="px-3 py-0">
             <div class="font-semibold flex gap-2">
-                <div class="w-[40px] h-[40px] min-w-[40px] bg-neutral-100 border rounded-xl overflow-hidden">
+                <div class="w-[40px] h-[40px] min-w-[40px] bg-stone-100 border rounded-xl overflow-hidden">
                     @if ($eda->colaborador->perfil)
                         <img class="w-full h-full object-cover" src="{{ $eda->colaborador->perfil }}" alt="">
                     @endif

@@ -22,7 +22,7 @@ class CheckBirthdays
 
         $todayFormatted = Carbon::today()->format('m-d');
         $showedToday = $showedBirthdayModal == 'true' && $currentDateCookie == $now;
-        $birthdays = User::whereRaw("DATE_FORMAT(date_of_birth, '%m-%d') = ?", [$todayFormatted])->get();
+        $birthdays = User::whereRaw("DATE_FORMAT(birthdate, '%m-%d') = ?", [$todayFormatted])->get();
         $request->attributes->set('birthdayUsers', $birthdays);
 
         if ($showedToday) {

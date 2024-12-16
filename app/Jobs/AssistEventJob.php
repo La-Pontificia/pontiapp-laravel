@@ -92,10 +92,11 @@ class AssistEventJob implements ShouldQueue
 
         Report::create([
             'title' => 'Asistencias a eventos',
-            'file_url' => $filePath,
-            'download_link' => $downloadLink,
+            'fileUrl' => $filePath,
+            'downloadLink' => $downloadLink,
             'ext' => 'xlsx',
-            'generated_by' => $this->userId,
+            'generatedBy' => $this->userId,
+            'module' => 'assists'
         ]);
     }
 }

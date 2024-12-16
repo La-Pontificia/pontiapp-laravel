@@ -73,25 +73,25 @@
                             </span>
                         </div>
                         @if (($cuser->has('users:edit') && !$user->isDev()) || $cuser->isDev())
-                            <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
+                            <button class="rounded-full p-2 hover:bg-stone-200 transition-colors"
                                 data-dropdown-toggle="dropdown-{{ $schedule->id }}">
                                 @svg('fluentui-more-vertical-16-o', 'w-5 h-5')
                             </button>
                             <div id="dropdown-{{ $schedule->id }}" class="dropdown-content hidden">
                                 <button data-modal-target="dialog-{{ $schedule->id }}"
                                     data-modal-toggle="dialog-{{ $schedule->id }}"
-                                    class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                    class="p-2 hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                     Editar
                                 </button>
                                 <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el horario?"
                                     data-adescription="Se aliminará completamente el horario y no se podrá recuperar."
                                     data-param="/api/schedules/delete/{{ $schedule->id }}"
-                                    class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                    class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                     Eliminar
                                 </button>
                                 <button data-modal-target="dialog-archived-{{ $schedule->id }}"
                                     data-modal-toggle="dialog-archived-{{ $schedule->id }}"
-                                    class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                    class="p-2 hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                     Archivar
                                 </button>
                             </div>

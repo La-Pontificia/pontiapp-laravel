@@ -14,14 +14,14 @@ class Report extends Model
 
     protected $perPage = 25;
 
-    protected $fillable = ['id', 'title', 'file_url', 'ext', 'download_link', 'generated_by'];
+    protected $fillable = ['id', 'title', 'fileUrl', 'ext', 'downloadLink', 'generatedBy', 'module'];
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    public function generatedBy()
+    public function user()
     {
-        return $this->hasOne(User::class, 'id',  'generated_by');
+        return $this->hasOne(User::class, 'id',  'generatedBy');
     }
 }

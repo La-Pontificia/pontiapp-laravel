@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -46,5 +47,19 @@ class LoginController extends Controller
         if ($user->status) return redirect()->intended($this->redirectPath());
         Auth::logout();
         return redirect('/login')->with('error', 'Tu cuenta no está activa. Comunícate con el administrador.');
+    }
+
+    public function loginAzure()
+    {
+        session(['origin_url' => url()->previous()]);
+        return Socialite::driver('azure')->redirect();
+    }
+
+    public function callbackAzure(Request $req)
+    {
+        $originUrl = $req->session()->get('origin_url');
+        $azureUser = Socialite::driver('azure')->user();
+        $user = User::where('email', $azureUser->getEmail())->first();
+        return redirect('http://localhost:3000/login');
     }
 }

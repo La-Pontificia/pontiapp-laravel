@@ -494,7 +494,7 @@
                                                     </td>
                                                     <td>
                                                         <button type="button"
-                                                            class="rounded-full relative p-2 hover:bg-neutral-200 transition-colors"
+                                                            class="rounded-full relative p-2 hover:bg-stone-200 transition-colors"
                                                             data-dropdown-toggle="dropdown-{{ $history->id }}">
                                                             @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                                                         </button>
@@ -503,7 +503,7 @@
                                                             <button type="button" data-atitle="Eliminar historial"
                                                                 data-adescription="No podrás deshacer esta acción."
                                                                 data-param="/api/users/history-entries/{{ $history->id }}"
-                                                                class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10 {{ $user->status ? 'text-red-600' : 'text-green-600' }}">
+                                                                class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10 {{ $user->status ? 'text-red-600' : 'text-green-600' }}">
                                                                 Eliminar
                                                             </button>
                                                         </div>

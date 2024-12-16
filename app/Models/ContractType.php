@@ -10,29 +10,34 @@ class ContractType extends Model
 {
     use HasUuids, HasFactory;
 
-    protected $table = 'contract_types';
+    protected $table = 'user_contract_types';
 
     protected $perPage = 20;
 
     protected $fillable = [
         'name',
         'description',
-        'created_by',
-        'updated_by',
+        'createdBy',
+        'updatedBy',
     ];
 
     public function createdBy()
     {
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'createdBy');
     }
 
     public function updatedBy()
     {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updatedBy');
     }
 
     public function users()
     {
-        return $this->hasMany(User::class, 'contract_id', 'id');
+        return $this->hasMany(User::class, 'contractTypeId', 'id');
+    }
+
+    public function usersCount()
+    {
+        return $this->users()->count();
     }
 }

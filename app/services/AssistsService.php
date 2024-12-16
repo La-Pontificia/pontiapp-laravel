@@ -177,6 +177,7 @@ class AssistsService
         $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
         $users = self::getUsers($query, $area_id, $department_id);
         $usersIds =  $users['getLimited']->pluck('dni')->toArray();
+        
         $assists = Collect([]);
         $totalCount = 0;
 

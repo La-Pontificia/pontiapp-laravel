@@ -13,13 +13,13 @@ class Role extends Model
 
     static $rules = [
         'name' => 'required',
-        'id_department' => 'required',
-        'id_job_position' => 'required',
+        'departmentId' => 'required',
+        'jobId' => 'required',
     ];
 
-    protected $perPage = 25;
+    protected $perPage = 20;
 
-    protected $fillable = ['id', 'code', 'name', 'id_department', 'id_job_position'];
+    protected $fillable = ['id', 'codePrefix', 'name', 'departmentId', 'jobId'];
 
     protected $keyType = 'string';
 
@@ -27,7 +27,7 @@ class Role extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'id_role', 'id');
+        return $this->hasMany(User::class, 'roleId', 'id');
     }
 
     public function isDev()
@@ -35,23 +35,28 @@ class Role extends Model
         return $this->id === '9b342044-7a95-4b10-b19f-cc968516b81e';
     }
 
+    public function usersCount()
+    {
+        return $this->hasMany(User::class, 'roleId', 'id')->count();
+    }
+
     public function department()
     {
-        return $this->hasOne(Department::class, 'id', 'id_department');
+        return $this->hasOne(Department::class, 'id', 'departmentId');
     }
 
-    public function job_position()
+    public function job()
     {
-        return $this->hasOne(JobPosition::class, 'id', 'id_job_position');
+        return $this->hasOne(Job::class, 'id', 'jobId');
     }
 
-    public function createdBy()
+    public function createdUser()
     {
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'createdBy');
     }
 
-    public function updatedBy()
+    public function updatedUser()
     {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updatedBy');
     }
 }

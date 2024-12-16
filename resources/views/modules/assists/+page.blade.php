@@ -88,8 +88,8 @@
                     <div class="absolute inset-y-0 z-10 text-neutral-400 grid place-content-center left-2">
                         @svg('fluentui-search-28-o', 'w-5 h-5')
                     </div>
-                    <input value="{{ request()->get('query') }}" name="query" placeholder="Filtrar usuarios..."
-                        type="search" class="pl-9 w-full dinamic-input-to-url bg-white">
+                    <input style="padding-left: 35px" value="{{ request()->get('query') }}" name="query"
+                        placeholder="Filtrar usuarios..." type="search" class="pl-9 w-full dinamic-input-to-url bg-white">
                 </label>
                 <button type="submit" class="primary mt-2 refresh-page">Filtrar</button>
             </div>
@@ -171,7 +171,7 @@
                                     $currentWeek = $weekNumber;
                                 @endphp
 
-                                <tr class="[&>td]:py-2 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
+                                <tr class="[&>td]:py-2 even:bg-stone-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
                                     <td>
                                         <div class="flex items-center gap-2">
                                             @include('commons.avatar', [

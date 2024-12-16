@@ -12,7 +12,7 @@ class Schedule extends Model
 
     use HasFactory;
 
-    protected $table = 'schedules';
+    protected $table = 'user_schedules';
 
     protected $perPage = 20;
 
@@ -20,42 +20,43 @@ class Schedule extends Model
         'id',
         'created_at',
         'updated_at',
-        'user_id',
+        'userId',
         'from',
         'to',
         'title',
-        'created_by',
-        'updated_by',
-        'terminal_id',
+        'createdBy',
+        'updatedBy',
+        'assistTerminalId',
         'title',
         'days',
-        'start_date',
-        'end_date',
+        'startDate',
+        'endDate',
         'archived',
     ];
 
     protected $casts = [
         'days' => 'array',
+
     ];
 
 
-    public function createdBy()
+    public function createdUser()
     {
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'createdBy');
     }
 
-    public function updatedBy()
+    public function updatedUser()
     {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updatedBy');
     }
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'userId');
     }
 
     public function terminal()
     {
-        return $this->hasOne(AssistTerminal::class, 'id', 'terminal_id');
+        return $this->hasOne(AssistTerminal::class, 'id', 'assistTerminalId');
     }
 }

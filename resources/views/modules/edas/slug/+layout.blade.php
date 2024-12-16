@@ -82,7 +82,7 @@
                                         <button data-alertvariant="warning" data-atitle="¿Estás seguro de eliminar el rol?"
                                             data-adescription="No podrás deshacer esta acción." 
                                             data-param="/api/user-roles/delete/"
-                                            class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md">
+                                            class="p-2 text-sm font-normal dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md">
                                             Exportar EDA
                                         </button>
                                     @endif --}}
@@ -90,7 +90,7 @@
                                         <button data-alertvariant="warning" data-atitle="¿Estás seguro de reiniciar el eda?"
                                             data-adescription="Todos los objetivos y cuestionarios serán eliminados. No podrás deshacer esta acción."
                                             data-param="/api/edas/{{ $eda->id }}/restart"
-                                            class="p-2 text-sm font-normal dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md text-red-600">
+                                            class="p-2 text-sm font-normal dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md text-red-600">
                                             Reiniciar EDA
                                         </button>
                                     @endif

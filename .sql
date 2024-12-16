@@ -1,1 +1,3 @@
-CREATE TABLE `assist_events` (`id` char(36) NOT NULL,`document_id` char(8) DEFAULT NULL,`first_name` varchar(255) DEFAULT NULL,`first_surname` varchar(255) DEFAULT NULL,`second_surname` varchar(255) DEFAULT NULL,`career` varchar(255) DEFAULT NULL,`event_id` char(36) DEFAULT NULL,`institution` varchar(255) DEFAULT NULL,`created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,`updated_at` timestamp NULL DEFAULT NULL,`sex` varchar(255) DEFAULT NULL,`period` varchar(255) DEFAULT NULL,`email` varchar(255) DEFAULT NULL,PRIMARY KEY (`id`),KEY `events_assists_relation_1` (`event_id`),CONSTRAINT `events_assists_relation_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE) 
+-- add column phone_number is char(9) nullable in table users
+
+ALTER TABLE users ADD COLUMN display_name VARCHAR(255) NULL;

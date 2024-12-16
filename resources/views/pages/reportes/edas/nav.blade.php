@@ -9,7 +9,7 @@ $cuestionario = request()->query('cuestionario');
 
 <nav class="flex gap-2 flex-wrap items-center">
     <div class="flex gap-2 items-center rounded-full border p-1">
-        <select class="bg-neutral-200 rounded-full combobox-dinamic border-neutral-400 w-[120px]" name="desde">
+        <select class="bg-stone-200 rounded-full combobox-dinamic border-neutral-400 w-[120px]" name="desde">
             <option value="" selected>Año</option>
             @foreach ($edasList as $edaLi)
                 <option {{ $desde == $edaLi->año ? 'selected' : '' }} value="{{ $edaLi->año }}">
@@ -18,7 +18,7 @@ $cuestionario = request()->query('cuestionario');
             @endforeach
         </select>
         <span class="text-neutral-400">Hasta</span>
-        <select class="bg-neutral-200 rounded-full combobox-dinamic border-neutral-400 w-[120px]" name="hasta">
+        <select class="bg-stone-200 rounded-full combobox-dinamic border-neutral-400 w-[120px]" name="hasta">
             <option value="" selected>Año</option>
             @foreach ($edasList as $edaLi)
                 <option {{ $hasta == $edaLi->año ? 'selected' : '' }} value="{{ $edaLi->año }}">
@@ -28,7 +28,7 @@ $cuestionario = request()->query('cuestionario');
         </select>
     </div>
     <div class="">
-        <select name="estado" class="bg-neutral-200 combobox-dinamic rounded-full border-neutral-400 w-[150px]">
+        <select name="estado" class="bg-stone-200 combobox-dinamic rounded-full border-neutral-400 w-[150px]">
             <option value="" selected>Estado</option>
             <option {{ $estado == '1' ? 'selected' : '' }} value="1">Sin aprobar</option>
             <option {{ $estado == '2' ? 'selected' : '' }} value="2">Aprobados</option>
@@ -36,7 +36,7 @@ $cuestionario = request()->query('cuestionario');
         </select>
     </div>
     <div class="">
-        <select name="cuestionario" class="bg-neutral-200 combobox-dinamic rounded-full border-neutral-400 w-[150px]">
+        <select name="cuestionario" class="bg-stone-200 combobox-dinamic rounded-full border-neutral-400 w-[150px]">
             <option value="" selected>Cuestionario</option>
             <option {{ $cuestionario == '1' ? 'selected' : '' }} value="1">Enviados</option>
             <option {{ $cuestionario == '2' ? 'selected' : '' }} value="2">No enviados</option>

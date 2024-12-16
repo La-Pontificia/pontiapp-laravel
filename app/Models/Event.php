@@ -17,24 +17,33 @@ class Event extends Model
     protected $fillable = [
         'name',
         'description',
-        'start_date',
-        'end_date',
-        'created_by',
-        'updated_by',
+        'date',
+        'creatorId',
+        'updaterId',
     ];
 
     protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'startDate' => 'datetime',
+        'endDate' => 'datetime',
     ];
 
-    public function createdBy()
+    public function creator()
     {
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'creatorId');
     }
 
-    public function updatedBy()
+    public function updater()
     {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updaterId');
+    }
+
+    public function records()
+    {
+        return $this->hasMany(EventRecord::class, 'eventId', 'id');
+    }
+
+    public function recordsCount()
+    {
+        return $this->records()->count();
     }
 }

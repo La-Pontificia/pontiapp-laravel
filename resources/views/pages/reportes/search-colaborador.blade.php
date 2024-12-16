@@ -30,14 +30,14 @@
                 </div>
                 <div class="flex justify-end">
                     <button
-                        class="bg-neutral-200 min-w-max rounded-lg w-[100px] m-2 ml-auto border-neutral-400 border p-2 px-5">
+                        class="bg-stone-200 min-w-max rounded-lg w-[100px] m-2 ml-auto border-neutral-400 border p-2 px-5">
                         Cerrar
                     </button>
                 </div>
             </div>
         </div>
         <select name="cargo"
-            class="bg-neutral-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
+            class="bg-stone-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
             <option selected value="">Cargo</option>
             @foreach ($cargos as $cargo)
                 <option {{ $cargoRecover == $cargo->id ? 'selected' : '' }} value="{{ $cargo->id }}">
@@ -46,7 +46,7 @@
             @endforeach
         </select>
         <select name="puesto"
-            class="bg-neutral-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
+            class="bg-stone-200 combobox-dinamic font-semibold rounded-full border-neutral-400 w-[180px]">
             <option selected value="">Puesto</option>
             @foreach ($puestos as $puesto)
                 <option {{ $puestoRecover == $puesto->id ? 'selected' : '' }} value="{{ $puesto->id }}">
@@ -69,7 +69,7 @@
                 <span class="text-neutral-300"><b>Puesto:</b> {{ $colaborador->cargo->puesto->nombre }}</span>
             </div>
             <button onclick="removeColaboradorParam()"
-                class="w-10 h-10 p-2 text-neutral-300 rounded-full bg-neutral-200/30 hover:bg-neutral-200/40 absolute top-3 right-3">
+                class="w-10 h-10 p-2 text-neutral-300 rounded-full bg-stone-200/30 hover:bg-stone-200/40 absolute top-3 right-3">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 4L20 20M20 4L4 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round"></path>

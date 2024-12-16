@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.3",
         "barryvdh/laravel-dompdf": "^3.0",
+        "cloudinary-labs/cloudinary-laravel": "^2.2",
         "codeat3/blade-fluentui-system-icons": "^1.33",
         "guzzlehttp/guzzle": "^7.2",
         "jenssegers/agent": "^2.6",

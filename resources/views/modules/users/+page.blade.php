@@ -34,8 +34,8 @@
 @section('layout.users')
     <template id="item-supervisor-template">
         <button title="Seleccionar supervisor"
-            class="flex w-full disabled:opacity-50 disabled:pointer-events-none text-left items-center gap-2 p-2 rounded-lg hover:bg-neutral-200">
-            <div class="bg-neutral-300 overflow-hidden rounded-full w-8 h-8 aspect-square">
+            class="flex w-full disabled:opacity-50 disabled:pointer-events-none text-left items-center gap-2 p-2 rounded-lg hover:bg-stone-200">
+            <div class="bg-stone-300 overflow-hidden rounded-full w-8 h-8 aspect-square">
                 <img src="" class="object-cover w-full h-full" alt="">
             </div>
             <div class="text-sm">
@@ -288,34 +288,34 @@
                                         <td class="rounded-r-2xl">
                                             <div class="flex items-center gap-2">
                                                 <button
-                                                    class="rounded-full relative p-2 hover:bg-neutral-200 transition-colors"
+                                                    class="rounded-full relative p-2 hover:bg-stone-200 transition-colors"
                                                     data-dropdown-toggle="dropdown-{{ $user->id }}">
                                                     @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                                                 </button>
                                                 <div id="dropdown-{{ $user->id }}" class="dropdown-content hidden">
                                                     <a href="/users/{{ $user->id }}"
-                                                        class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                        class="p-2 hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver perfil
                                                     </a>
                                                     @if (($cuser->has('users:edit') || $cuser->isDev()) && !$user->isDev())
                                                         <a href="/users/{{ $user->id }}?view=edit"
-                                                            class="p-2 hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                            class="p-2 hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                             Editar usuario
                                                         </a>
                                                     @endif
                                                     <a href="/users/{{ $user->id }}/schedules"
-                                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver Horarios
                                                     </a>
                                                     <a href="/users/{{ $user->id }}/assists"
-                                                        class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                        class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                         Ver Asistencias
                                                     </a>
                                                     @if (($cuser->has('users:reset-password') && !$user->isDev()) || $cuser->isDev())
                                                         <button data-atitle="Restablecer contraseña"
                                                             data-adescription="Al confimar la contraseña se restablecerá al DNI del usuario: {{ $user->dni }}. ¿Desea continuar?"
                                                             data-param="/api/users/reset-password/{{ $user->id }}"
-                                                            class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                                            class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                                             Restablecer contraseña
                                                         </button>
                                                     @endif
@@ -324,7 +324,7 @@
                                                             data-atitle="{{ $user->status ? 'Desactivar' : 'Activar' }} usuario"
                                                             data-adescription="No podrás deshacer esta acción."
                                                             data-param="/api/users/toggle-status/{{ $user->id }}"
-                                                            class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10 {{ $user->status ? 'text-red-600' : 'text-green-600' }}">
+                                                            class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10 {{ $user->status ? 'text-red-600' : 'text-green-600' }}">
                                                             {{ $user->status ? 'Desactivar' : 'Activar' }}
                                                         </button>
                                                     @endif

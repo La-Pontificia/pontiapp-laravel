@@ -92,7 +92,7 @@
                                     </td>
                                 </tr>
                                 {{-- <tr data-dni="{{ $assist->emp_code }}"
-                                    class="[&>td]:py-2 even:bg-neutral-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
+                                    class="[&>td]:py-2 even:bg-stone-100 [&>td>p]:text-nowrap relative group [&>td]:px-3">
                                     <td>
                                         {{ $assist->emp_code }}
                                     </td>

@@ -39,7 +39,7 @@
             </div>
             <div class="flex flex-col divide-y">
                 @forelse ($branches as $branch)
-                    <div class="flex relative hover:bg-neutral-100 items-start p-2.5 gap-2">
+                    <div class="flex relative hover:bg-stone-100 items-start p-2.5 gap-2">
                         @svg('fluentui-location-20-o', 'w-6 h-6 mr-2')
                         <div class="flex-grow">
                             <p class="font-semibold">{{ $branch->name }}</p>
@@ -49,7 +49,7 @@
                         </div>
                         <button type="button" data-modal-target="dialog-{{ $branch->id }}"
                             data-modal-toggle="dialog-{{ $branch->id }}"
-                            class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
+                            class="rounded-full p-2 hover:bg-stone-200 transition-colors">
                             @svg('fluentui-edit-20', 'w-5 h-5')
                         </button>
                         <div id="dialog-{{ $branch->id }}" tabindex="-1" aria-hidden="true" class="dialog hidden">
@@ -71,7 +71,7 @@
                                 </footer>
                             </div>
                         </div>
-                        <button class="rounded-full p-2 hover:bg-neutral-200 transition-colors"
+                        <button class="rounded-full p-2 hover:bg-stone-200 transition-colors"
                             data-dropdown-toggle="dropdown-{{ $branch->id }}">
                             @svg('fluentui-more-horizontal-20-o', 'w-5 h-5')
                         </button>
@@ -79,7 +79,7 @@
                             <button data-atitle="¿Estás seguro de eliminar?"
                                 data-adescription="Esta acción no se puede deshacer."
                                 data-param="/api/branches/delete/{{ $branch->id }}"
-                                class="p-2 dinamic-alert hover:bg-neutral-100 text-left w-full block rounded-md hover:bg-gray-10">
+                                class="p-2 dinamic-alert hover:bg-stone-100 text-left w-full block rounded-md hover:bg-gray-10">
                                 Eliminar
                             </button>
                         </div>

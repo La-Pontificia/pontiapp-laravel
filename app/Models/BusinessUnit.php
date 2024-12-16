@@ -18,30 +18,20 @@ class BusinessUnit extends Model
         'name',
         'acronym',
         'domain',
-        'services',
-        'created_by',
-        'updated_by',
-    ];
-
-    protected $casts = [
-        'services' => 'array',
-    ];
-
-    static $rules = [
-        'name' => 'required',
-        'domain' => 'required',
+        'creatorId',
+        'updaterId',
     ];
 
     protected $keyType = 'string';
     public $incrementing = false;
 
-    public function createdBy()
+    public function creator()
     {
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'creatorId');
     }
 
-    public function updatedBy()
+    public function updater()
     {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updaterId');
     }
 }

@@ -49,7 +49,7 @@
                             </div>
                             <button type="button" data-modal-target="dialog-{{ $user->id }}"
                                 data-modal-toggle="dialog-{{ $user->id }}"
-                                class="rounded-full p-2 hover:bg-neutral-200 transition-colors">
+                                class="rounded-full p-2 hover:bg-stone-200 transition-colors">
                                 svg'bx-pencil', 'w-5 h-5')
                             </button>
                             {{-- <form action="/api/users/email-access/{{ $user->id }}"

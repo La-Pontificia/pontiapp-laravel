@@ -16,42 +16,28 @@ class TicketListUpdated implements ShouldBroadcast
 
     public $tickets;
 
-    /**
-     * Create a new event instance.
-     *
-     * @param \Illuminate\Database\Eloquent\Collection $tickets
-     */
+
     public function __construct($tickets)
     {
         $this->tickets = $tickets;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel
-     */
     public function broadcastOn()
     {
-        // Usamos el canal público o privado según las necesidades
         return new Channel('tickets');
     }
 
-    /**
-     * El nombre del evento que será escuchado por el cliente.
-     */
+
     public function broadcastAs()
     {
         return 'ticketListUpdated';
     }
 
-    /**
-     * La data que será enviada al cliente WebSocket.
-     */
+
     public function broadcastWith()
     {
         return [
-            'tickets' => $this->tickets->toArray(),
+            'tickets' => $this->tickets,
         ];
     }
 }

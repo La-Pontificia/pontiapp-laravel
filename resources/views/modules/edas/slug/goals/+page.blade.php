@@ -36,7 +36,7 @@
             class="data-[state=open]:translate-x-0 flex translate-x-full transition-transform fixed px-5 overflow-y-auto flex-col z-50 bg-white top-0 right-0 w-[600px] shadow-[0_0_20px_rgba(10,10,10,.1)] h-full max-md:w-full">
             <div class="border-b py-4 flex items-center">
                 <h2 class="font-semibold flex-grow">Objetivo</h2>
-                <button id="goal-sheet-close" class="bg-neutral-200 rounded-full aspect-square p-1">
+                <button id="goal-sheet-close" class="bg-stone-200 rounded-full aspect-square p-1">
                     @svg('fluentui-add-16-o', 'w-5 h-5 -rotate-45')
                 </button>
             </div>

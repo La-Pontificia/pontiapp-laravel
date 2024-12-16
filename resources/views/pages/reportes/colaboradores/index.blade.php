@@ -68,7 +68,7 @@
                                     <td>
                                         <div class="font-semibold flex gap-2">
                                             <div
-                                                class="w-[40px] h-[40px] min-w-[40px] bg-neutral-100 border rounded-xl overflow-hidden">
+                                                class="w-[40px] h-[40px] min-w-[40px] bg-stone-100 border rounded-xl overflow-hidden">
                                                 @if ($colaborador->perfil)
                                                     <img class="w-full h-full object-cover" src="{{ $colaborador->perfil }}"
                                                         alt="">
@@ -92,7 +92,7 @@
                                             @endphp
                                             <div class="font-semibold flex gap-2">
                                                 <div
-                                                    class="w-[40px] min-w-[40px] h-[40px] bg-neutral-100 border rounded-xl overflow-hidden">
+                                                    class="w-[40px] min-w-[40px] h-[40px] bg-stone-100 border rounded-xl overflow-hidden">
                                                     @if ($supervisor->perfil)
                                                         <img class="w-full h-full object-cover"
                                                             src="{{ $supervisor->perfil }}" alt="">

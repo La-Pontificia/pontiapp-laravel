@@ -16,7 +16,7 @@ class AssistTerminal extends Model
 
     protected $fillable = [
         'name',
-        'database_name',
+        'databaseName',
         'created_by',
         'updated_by',
     ];
@@ -29,13 +29,13 @@ class AssistTerminal extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    public function createdBy()
+    public function createdUser()
     {
-        return $this->hasOne(User::class, 'id', 'created_by');
+        return $this->hasOne(User::class, 'id', 'createdBy');
     }
 
-    public function updatedBy()
+    public function updatedUser()
     {
-        return $this->hasOne(User::class, 'id', 'updated_by');
+        return $this->hasOne(User::class, 'id', 'updatedBy');
     }
 }

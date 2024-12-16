@@ -8,7 +8,7 @@ $eva = request()->query('eva');
 
 <nav class="flex gap-3 divide-x">
     <div class="flex gap-2 items-center ">
-        <select id="desde" class="bg-neutral-200 rounded-lg border-neutral-400 w-[120px]" name="">
+        <select id="desde" class="bg-stone-200 rounded-lg border-neutral-400 w-[120px]" name="">
             <option value="" selected>Año</option>
             @foreach ($edas as $eda)
                 <option {{ $desde == $eda->id ? 'selected' : '' }} value="{{ $eda->id }}">
@@ -17,7 +17,7 @@ $eva = request()->query('eva');
             @endforeach
         </select>
         <span class="text-neutral-400">Hasta</span>
-        <select id="hasta" class="bg-neutral-200 rounded-lg border-neutral-400 w-[120px]" name="">
+        <select id="hasta" class="bg-stone-200 rounded-lg border-neutral-400 w-[120px]" name="">
             <option value="" selected>Año</option>
             @foreach ($edas as $eda)
                 <option {{ $hasta == $eda->id ? 'selected' : '' }} value="{{ $eda->id }}">
@@ -27,14 +27,14 @@ $eva = request()->query('eva');
         </select>
     </div>
     <div class="pl-2 flex gap-2">
-        <select id="eva" class="bg-neutral-200 rounded-lg border-neutral-400 w-[150px]" name="">
+        <select id="eva" class="bg-stone-200 rounded-lg border-neutral-400 w-[150px]" name="">
             <option value="" selected>Evaluacion</option>
             <option {{ $eva == '1' ? 'selected' : '' }} value="1">Eva 01</option>
             <option {{ $eva == '2' ? 'selected' : '' }} value="2">Eva 02</option>
         </select>
     </div>
     <div class="pl-2">
-        <select id="estado" class="bg-neutral-200 rounded-lg border-neutral-400 w-[150px]" name=""
+        <select id="estado" class="bg-stone-200 rounded-lg border-neutral-400 w-[150px]" name=""
             id="">
             <option value="" selected>Estado</option>
             <option {{ $estado == '1' ? 'selected' : '' }} value="1">Sin aprobar</option>

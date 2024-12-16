@@ -27,7 +27,7 @@ class LoginController extends Controller
         return Socialite::driver('azure')->redirect();
     }
 
-    public function handleAzureCallback()
+    public function handleAzureCallback(Request $req)
     {
         $azureUser = Socialite::driver('azure')->user();
         $user = User::where('email', $azureUser->getEmail())->first();
@@ -42,7 +42,7 @@ class LoginController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect('http://localhost:3000');
     }
 
     protected function authenticated(Request $req, $user)

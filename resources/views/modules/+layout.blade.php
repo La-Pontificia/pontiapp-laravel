@@ -172,8 +172,8 @@
 
     <template id="item-supervisor-template">
         <button title="Seleccionar supervisor"
-            class="flex w-full disabled:opacity-50 disabled:pointer-events-none text-left items-center gap-2 p-2 rounded-lg hover:bg-neutral-200">
-            <div class="bg-neutral-300 overflow-hidden rounded-full w-8 h-8 aspect-square">
+            class="flex w-full disabled:opacity-50 disabled:pointer-events-none text-left items-center gap-2 p-2 rounded-lg hover:bg-stone-200">
+            <div class="bg-stone-300 overflow-hidden rounded-full w-8 h-8 aspect-square">
                 <img src="" class="object-cover w-full h-full" alt="">
             </div>
             <div class="text-sm">

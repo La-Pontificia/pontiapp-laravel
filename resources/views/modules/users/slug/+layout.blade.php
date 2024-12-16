@@ -88,7 +88,7 @@
                             @continue
                         @endif
                         <a href="{{ $item['href'] }}" {{ $item['active'] ? 'data-current="true"' : '' }}
-                            class="p-2 hover:bg-neutral-100 hover:text-stone-800 data-[current]:font-semibold border-b-2 border-transparent data-[current]:border-blue-500">
+                            class="p-2 hover:bg-stone-100 hover:text-stone-800 data-[current]:font-semibold border-b-2 border-transparent data-[current]:border-blue-500">
                             {{ $item['title'] }}
                         </a>
                     @endforeach
