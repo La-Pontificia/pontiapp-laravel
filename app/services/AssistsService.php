@@ -194,7 +194,7 @@ class AssistsService
 
             $totalCount += count($matched);
 
-            $firstFive = $attendanceQuery->limit(5)->get();
+            $firstFive = $attendanceQuery->limit(50)->get();
 
             foreach ($firstFive as $item) {
                 $user = $users['getLimited']->where('dni', $item->emp_code)->first();
