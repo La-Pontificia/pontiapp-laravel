@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class AssistsService
 {
 
-    public static function getUsers($query, $area_id, $department_id, $limit = 100)
+    public static function getUsers($query, $area_id, $department_id, $limit = 10)
     {
         $match = User::orderBy('created_at', 'desc')->where('status', true);
 
