@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api\Assist;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\AssistsWithoutUsers;
+use App\Jobs\AssistsWithUsers;
 use App\Models\AssistTerminal;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
 
 class AssistController extends Controller
 {
@@ -86,26 +89,20 @@ class AssistController extends Controller
         $userOnlyDocumentIds = $users->pluck('documentId')->toArray();
 
         foreach ($terminals as $terminal) {
-            $databaseName = $terminal->databaseName;
             $query = "
                 SELECT 
                     it.punch_time AS datetime, 
                     pe.emp_code AS documentId, 
                     '$terminal->id' AS terminalId
                     FROM 
-                        [$databaseName].dbo.iclock_transaction AS it
+                        [$terminal->database].dbo.iclock_transaction AS it
                     JOIN 
-                        [$databaseName].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
+                        [$terminal->database].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
                     WHERE 
                         it.punch_time >= '$plainStartDate' 
                         AND it.punch_time < '$plainEndDate'
                         AND pe.emp_code IN (" . implode(',', $userOnlyDocumentIds) . ")
                 ";
-
-            if ($q) {
-                $query .= " AND (pe.first_name LIKE '%$q%' OR pe.last_name LIKE '%$q%' OR pe.emp_code LIKE '%$q%')";
-            }
-
             $unionQueries[] = $query;
         }
 
@@ -118,6 +115,32 @@ class AssistController extends Controller
         }
 
         return response()->json($results);
+    }
+    public function withUsersReport(Request $req)
+    {
+
+        $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
+        $startDate = $req->get('startDate');
+        $endDate = $req->get('endDate');
+        $q = $req->get('q');
+        $jobId = $req->get('jobId');
+        $areaId = $req->get('areaId');
+
+        if (empty($terminalsIds) || !$startDate || !$endDate) {
+            return response()->json('Invalid parameters', 400);
+        }
+
+        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
+
+        if ($terminals->isEmpty())
+            return response()->json('No terminals found', 404);
+
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
+
+        AssistsWithUsers::dispatch($q, $terminalsIds, $startDate, $endDate, Auth::id(), $jobId, $areaId);
+
+        return response()->json('The report is being processed, you will be notified by email once it is ready');
     }
 
     // WithoutUsers methods
@@ -144,24 +167,21 @@ class AssistController extends Controller
         $plainEndDate = $endDate . 'T23:59:59.999';
 
         foreach ($terminals as $terminal) {
-            $databaseName = $terminal->databaseName;
-            // Construir la consulta base
             $query = "
-        SELECT 
-            it.punch_time AS datetime, 
-            pe.emp_code AS documentId, 
-            pe.first_name AS firstNames, 
-            pe.last_name AS lastNames,
-            '$databaseName' AS databaseName,
-            '$terminal->id' AS terminalId
-            FROM 
-                [$databaseName].dbo.iclock_transaction AS it
-            JOIN 
-                [$databaseName].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
-            WHERE 
-                it.punch_time >= '$plainStartDate' 
-                AND it.punch_time < '$plainEndDate'
-        ";
+                SELECT 
+                    it.punch_time AS datetime, 
+                    pe.emp_code AS documentId, 
+                    pe.first_name AS firstNames, 
+                    pe.last_name AS lastNames,
+                    '$terminal->id' AS terminalId
+                    FROM 
+                        [$terminal->database].dbo.iclock_transaction AS it
+                    JOIN 
+                        [$terminal->database].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
+                    WHERE 
+                        it.punch_time >= '$plainStartDate' 
+                        AND it.punch_time < '$plainEndDate'
+                ";
 
             if ($q) {
                 $query .= " AND (pe.first_name LIKE '%$q%' OR pe.last_name LIKE '%$q%' OR pe.emp_code LIKE '%$q%')";
@@ -196,5 +216,79 @@ class AssistController extends Controller
         AssistsWithoutUsers::dispatch($q, $terminalsIds, $startDate, $endDate, Auth::id());
 
         return response()->json('The report is being processed, you will be notified by email once it is ready');
+    }
+
+    // Summary methods
+    public function singleSummary(Request $req)
+    {
+
+        $assistTerminal = $req->get('assistTerminal');
+        $startDate = $req->get('startDate', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $endDate = $req->get('endDate', Carbon::now()->format('Y-m-d'));
+
+        $terminal = AssistTerminal::find($assistTerminal);
+
+        if (!$terminal) return response()->json('Terminal not found', 404);
+
+        $dates = [];
+
+        $currentDate = Carbon::parse($startDate);
+        while ($currentDate <= Carbon::parse($endDate)) {
+            $dates[] = $currentDate->format('Y-m-d');
+            $currentDate->addDay();
+        }
+
+        $query = "
+            WITH DateRange AS (
+                SELECT CAST('$startDate' AS DATE) AS date
+                UNION ALL
+                SELECT DATEADD(DAY, 1, date)
+                FROM DateRange
+                WHERE date < '$endDate'
+            )
+            SELECT 
+                d.date,
+                COUNT(t.punch_time) AS count
+            FROM 
+                DateRange d
+            LEFT JOIN 
+                [$terminal->database].dbo.iclock_transaction t ON CONVERT(DATE, t.punch_time) = d.date
+            GROUP BY 
+                d.date
+            ORDER BY 
+                d.date
+            OPTION (MAXRECURSION 0);
+        ";
+
+        $result = DB::connection('sqlsrv_dynamic')->select($query);
+
+        $summary = collect($result)->map(function ($item) use ($terminal) {
+            $item->terminal = $terminal;
+            return $item;
+        });
+
+        return response()->json($summary);
+    }
+
+
+    // get all databases
+    public function allDatabases()
+    {
+        $query = "
+            SELECT 
+            name AS name,
+            state_desc AS state,
+            recovery_model_desc AS recoveryModel,
+            compatibility_level AS compatibilityLevel,
+            collation_name AS collation,
+            create_date AS created_at
+        FROM 
+            sys.databases
+        WHERE 
+            name NOT IN ('master', 'model', 'msdb', 'tempdb', 'ReportServer', 'ReportServerTempDB', '_sc');
+        ";
+
+        $databases = DB::connection('sqlsrv_dynamic')->select($query);
+        return response()->json($databases);
     }
 }
