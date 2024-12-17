@@ -87,6 +87,4 @@ class AuthController extends Controller
         $user->save();
         return response()->json($url, 200);
     }
-
-    // auth/changeProfile
 }

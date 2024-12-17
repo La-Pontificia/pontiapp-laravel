@@ -8,6 +8,6 @@ class VerifyCsrfToken extends Middleware
 {
 
     protected $except = [
-        'api/*',  // Excluir todas las rutas bajo "api"
+        'api/*',
     ];
 }
