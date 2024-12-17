@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\Assist\AssistController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
