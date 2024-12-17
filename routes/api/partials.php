@@ -10,11 +10,16 @@ use App\Http\Controllers\Api\Department\DepartmentController;
 use App\Http\Controllers\Api\Report\ReportController;
 use App\Http\Controllers\Api\UserRole\UserRoleController;
 use App\Http\Controllers\Api\UserTeam\UserTeamController;
-use App\Models\BusinessUnit;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('partials')->group(function () {
-    Route::get('assist-terminals/all', [AssistTerminalController::class, 'all']);
+
+    Route::prefix('assist-terminals')->group(function () {
+        Route::get('/all', [AssistTerminalController::class, 'all']);
+        Route::post('', [AssistTerminalController::class, 'store']);
+        Route::post('{id}', [AssistTerminalController::class, 'update']);
+        Route::post('{id}/delete', [AssistTerminalController::class, 'delete']);
+    });
 
     // teams
     Route::prefix('teams')->group(function () {

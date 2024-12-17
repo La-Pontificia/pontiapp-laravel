@@ -13,4 +13,11 @@ Route::prefix('assists')->group(function () {
         Route::get('', [AssistController::class, 'withUsers']);
         Route::get('/report', [AssistController::class, 'withUsersReport']);
     });
+    Route::prefix('singleSummary')->group(function () {
+        Route::get('', [AssistController::class, 'singleSummary']);
+    });
+
+    Route::prefix('databases')->group(function () {
+        Route::get('', [AssistController::class, 'allDatabases']);
+    });
 });
