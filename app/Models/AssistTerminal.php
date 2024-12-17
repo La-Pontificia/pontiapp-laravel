@@ -16,26 +16,26 @@ class AssistTerminal extends Model
 
     protected $fillable = [
         'name',
-        'databaseName',
+        'database',
         'created_by',
         'updated_by',
-    ];
-
-    static $rules = [
-        'name' => 'required',
-        'database_name' => 'required',
     ];
 
     protected $keyType = 'string';
     public $incrementing = false;
 
-    public function createdUser()
+    public function creator()
     {
         return $this->hasOne(User::class, 'id', 'createdBy');
     }
 
-    public function updatedUser()
+    public function updater()
     {
         return $this->hasOne(User::class, 'id', 'updatedBy');
+    }
+
+    public function schedulesCount()
+    {
+        return $this->hasMany(Schedule::class, 'assistTerminalId', 'id')->count();
     }
 }

@@ -48,19 +48,19 @@ class AssistsWithoutUsers implements ShouldQueue
         $plainEndDate = $endDate . 'T23:59:59.999';
 
         foreach ($terminals as $terminal) {
-            $databaseName = $terminal->databaseName;
+            $database = $terminal->database;
             $query = "
                     SELECT 
                         it.punch_time AS datetime, 
                         pe.emp_code AS documentId, 
                         pe.first_name AS firstNames, 
                         pe.last_name AS lastNames,
-                        '$databaseName' AS databaseName,
+                        '$database' AS database,
                         '$terminal->id' AS terminalId
                         FROM 
-                            [$databaseName].dbo.iclock_transaction AS it
+                            [$database].dbo.iclock_transaction AS it
                         JOIN 
-                            [$databaseName].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
+                            [$database].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
                         WHERE 
                             it.punch_time >= '$plainStartDate' 
                             AND it.punch_time < '$plainEndDate'
@@ -84,22 +84,22 @@ class AssistsWithoutUsers implements ShouldQueue
             return $assist['terminal']->id;
         })->map(function ($group) {
             return $group->groupBy('documentId')->map(function ($subGroup) {
-                return $subGroup->groupBy('date');
+                return $subGroup->groupBy('datetime');
             });
         });
 
-        $spreadsheet = IOFactory::load(public_path('templates/without-users.xlsx'));
+        $spreadsheet = IOFactory::load(public_path('templates/assists_without_users.xlsx'));
         $worksheet = $spreadsheet->getActiveSheet();
 
         $rr = 4;
         foreach ($groupedAssists as $terminalId => $employees) {
             foreach ($employees as $employeeCode => $dates) {
-                foreach ($dates as $date => $assists) {
+                foreach ($dates as $datetime => $assists) {
                     foreach ($assists as $assist) {
                         $lastNames = $assist['lastNames'] ? $assist['lastNames'] . ', ' : '';
                         $firstNames = $assist['firstNames'] ? $assist['firstNames'] : '';
                         $worksheet->setCellValue('B' . $rr, $rr - 3);
-                        $worksheet->setCellValue('C' . $rr, $assist['terminal']->name);
+                        $worksheet->setCellValue('C' . $rr, $assist['terminal']?->name);
                         $worksheet->setCellValue('D' . $rr, $assist['documentId'] ?? "");
                         $worksheet->setCellValue('E' . $rr, $lastNames . $firstNames);
                         $worksheet->setCellValue('F' . $rr, Carbon::parse($assist['datetime'])->format('d/m/Y'));
@@ -127,15 +127,15 @@ class AssistsWithoutUsers implements ShouldQueue
         $user = User::find($this->userId);
         $email = $user->email;
 
-        SendEmail::dispatch('Reporte de asistencias finalizado.', 'Hola, el reporte de Asistencias ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
+        SendEmail::dispatch('Reporte de asistencias finalizado.', 'Hola, el reporte de Asistencias sin usuarios del sistema ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
 
-        event(new UserNotice($user->id, "Reporte finalizado.", 'EL reporte de asistencias sin usuario ya esta listo.', [
+        event(new UserNotice($user->id, "Reporte finalizado.", 'EL reporte de asistencias sin usuarios del sistema ya esta listo.', [
             'Descargar' => $downloadLink,
             'Ver' => '/m/assists/report-files',
         ]));
 
         Report::create([
-            'title' => 'Registros de asistencias sin usuarios',
+            'title' => 'Registros de asistencias sin usuarios del sistema',
             'fileUrl' => $filePath,
             'downloadLink' => $downloadLink,
             'ext' => 'xlsx',
