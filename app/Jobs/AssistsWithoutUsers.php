@@ -41,8 +41,8 @@ class AssistsWithoutUsers implements ShouldQueue
 
         $assists = collect();
 
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->startDate)->format('Y-m-d');
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d',  $this->endDate)->format('Y-m-d');
+        $startDate = Carbon::createFromFormat('Y-m-d', $this->startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d',  $this->endDate)->format('Y-m-d');
 
         $plainStartDate = $startDate . 'T00:00:00.000';
         $plainEndDate = $endDate . 'T23:59:59.999';
@@ -55,7 +55,6 @@ class AssistsWithoutUsers implements ShouldQueue
                         pe.emp_code AS documentId, 
                         pe.first_name AS firstNames, 
                         pe.last_name AS lastNames,
-                        '$database' AS database,
                         '$terminal->id' AS terminalId
                         FROM 
                             [$database].dbo.iclock_transaction AS it

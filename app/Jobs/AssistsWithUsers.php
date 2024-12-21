@@ -24,20 +24,20 @@ class AssistsWithUsers implements ShouldQueue
     public $terminalsIds;
     public $startDate;
     public $endDate;
-    public $userId;
     public $jobId;
     public $areaId;
+    public $userId;
 
 
-    public function __construct($q, $terminalsIds, $startDate, $endDate, $userId, $jobId, $areaId)
+    public function __construct($q, $terminalsIds, $startDate, $endDate, $jobId, $areaId, $userId)
     {
         $this->q = $q;
         $this->terminalsIds = $terminalsIds;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
-        $this->userId = $userId;
         $this->jobId = $jobId;
         $this->areaId = $areaId;
+        $this->userId = $userId;
     }
 
 
@@ -45,8 +45,8 @@ class AssistsWithUsers implements ShouldQueue
     {
         $terminals = AssistTerminal::whereIn('id', $this->terminalsIds)->get();
         $assists = collect();
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $this->startDate)->format('Y-m-d');
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d',  $this->endDate)->format('Y-m-d');
+        $startDate = Carbon::createFromFormat('Y-m-d', $this->startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d',  $this->endDate)->format('Y-m-d');
 
         $plainStartDate = $startDate . 'T00:00:00.000';
         $plainEndDate = $endDate . 'T23:59:59.999';
