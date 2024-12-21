@@ -82,71 +82,41 @@ class AssistsService
 
         foreach ($users['getLimited'] as $user) {
             $schedules = self::generateSchedules($user, $startDate, $endDate);
-            // $matchets = [];
-            // foreach ($schedules as $schedule) {
-            //     $totalCount += 1;
+            $matchets = [];
+            foreach ($schedules as $schedule) {
+                $totalCount += 1;
 
-            //     // $from = $schedule['from'];
-            //     // $fromStart = $schedule['from_start'];
-            //     // $fromEnd = $schedule['from_end'];
-            //     // $to = $schedule['to'];
-            //     // $toStart = $schedule['to_start'];
-            //     // $toEnd = $schedule['to_end'];
+                $from = $schedule['from'];
+                $fromStart = $schedule['from_start'];
+                $fromEnd = $schedule['from_end'];
+                $to = $schedule['to'];
+                $toStart = $schedule['to_start'];
+                $toEnd = $schedule['to_end'];
 
-            //     // $entryKey = $attendances->filter(function ($assistance) use ($fromStart, $fromEnd) {
-            //     //     $time = Carbon::parse($assistance->punch_time);
-            //     //     return $time->between($fromStart, $fromEnd);
-            //     // })->sortBy(function ($assistance) use ($from) {
-            //     //     return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($from));
-            //     // })->keys()->first();
+                $entryKey = $attendances->filter(function ($assistance) use ($fromStart, $fromEnd) {
+                    $time = Carbon::parse($assistance->punch_time);
+                    return $time->between($fromStart, $fromEnd);
+                })->sortBy(function ($assistance) use ($from) {
+                    return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($from));
+                })->keys()->first();
 
-            //     // $entry = $entryKey !== null ? $attendances->pull($entryKey) : null;
+                $entry = $entryKey !== null ? $attendances->pull($entryKey) : null;
 
-            //     // $exitKey = $attendances->filter(function ($assistance) use ($toStart, $toEnd) {
-            //     //     $time = Carbon::parse($assistance->punch_time);
-            //     //     return $time->between($toStart, $toEnd);
-            //     // })->sortBy(function ($assistance) use ($to) {
-            //     //     return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($to));
-            //     // })->keys()->first();
+                $exitKey = $attendances->filter(function ($assistance) use ($toStart, $toEnd) {
+                    $time = Carbon::parse($assistance->punch_time);
+                    return $time->between($toStart, $toEnd);
+                })->sortBy(function ($assistance) use ($to) {
+                    return abs(Carbon::parse($assistance->punch_time)->diffInSeconds($to));
+                })->keys()->first();
 
-            //     // $exit = $exitKey !== null ? $attendances->pull($exitKey) : null;
+                $exit = $exitKey !== null ? $attendances->pull($exitKey) : null;
 
-            //     // $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
-            //     // $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
-            //     $schedule['terminal'] = $terminal;
+                $schedule['marked_in'] = $entry ? Carbon::parse($entry->punch_time)->format('H:i:s') : null;
+                $schedule['marked_out'] = $exit ? Carbon::parse($exit->punch_time)->format('H:i:s') : null;
+                $schedule['terminal'] = $terminal;
 
-            //     // $observations = [];
-            //     // $owesTime = null;
-
-            //     // if (!$entry) {
-            //     //     $observations[] = 'No marcó entrada';
-            //     // } elseif (Carbon::parse($entry->punch_time)->gt($from)) {
-            //     //     $observations[] = 'Tardanza';
-            //     // }
-
-            //     // if (!$exit) {
-            //     //     $observations[] = 'No marcó salida';
-            //     // } elseif (Carbon::parse($exit->punch_time)->lt($to)) {
-            //     //     $observations[] = 'Salida Temprana';
-            //     // }
-
-            //     // if ($entry && $exit) {
-            //     //     if (Carbon::parse($entry->punch_time)->lte($from) && Carbon::parse($exit->punch_time)->gte($to)) {
-            //     //         $observations[] = null;
-            //     //         $owesTime = 0;
-            //     //     } else {
-            //     //         if (Carbon::parse($entry->punch_time)->gt($from)) {
-            //     //             $owesTime = Carbon::parse($entry->punch_time)->diffInMinutes($from);
-            //     //         } else $owesTime = 0;
-            //     //         if (Carbon::parse($exit->punch_time)->lt($to)) {
-            //     //             $owesTime += $to->diffInMinutes(Carbon::parse($exit->punch_time));
-            //     //         }
-            //     //     }
-            //     // }
-            //     // $schedule['observations'] = implode(', ', $observations);
-            //     // $schedule['owes_time'] = is_numeric($owesTime) ? gmdate('H:i:s', $owesTime * 60) : null;
-            //     $matchets[] = $schedule;
-            // }
+                $matchets[] = $schedule;
+            }
             $assists = array_merge($assists, $schedules);
         }
 
@@ -177,7 +147,7 @@ class AssistsService
         $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
         $users = self::getUsers($query, $area_id, $department_id);
         $usersIds =  $users['getLimited']->pluck('dni')->toArray();
-        
+
         $assists = Collect([]);
         $totalCount = 0;
 
