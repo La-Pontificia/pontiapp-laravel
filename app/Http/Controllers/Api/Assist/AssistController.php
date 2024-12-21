@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Assist;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\Assists;
 use App\Jobs\AssistsWithoutUsers;
 use App\Jobs\AssistsWithUsers;
 use App\Models\AssistTerminal;
@@ -11,7 +12,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Collection;
 
 class AssistController extends Controller
 {
@@ -36,6 +36,221 @@ class AssistController extends Controller
         return $match;
     }
 
+    // Assists methods
+    public function index(Request $req)
+    {
+
+        $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
+        $startDate = $req->get('startDate');
+        $endDate = $req->get('endDate');
+        $q = $req->get('q');
+        $jobId = $req->get('jobId');
+        $areaId = $req->get('areaId');
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
+
+        if (empty($terminalsIds) || !$startDate || !$endDate) {
+            return response()->json('Invalid parameters', 400);
+        }
+
+        $queryUsers = self::relationShipUsers($req->get('relationship'), $req->get('limit'));
+
+        if ($areaId) {
+            $queryUsers->whereHas('role', function ($query) use ($areaId) {
+                $query->whereHas('department', function ($query) use ($areaId) {
+                    $query->where('areaId', $areaId);
+                });
+            });
+        }
+
+        if ($jobId) {
+            $queryUsers->whereHas('role', function ($query) use ($jobId) {
+                $query->where('jobId', $jobId);
+            });
+        }
+
+        if ($q) {
+            $queryUsers->where(function ($query) use ($q) {
+                $query->where('documentId', 'LIKE', "%$q%")
+                    ->orWhere('firstNames', 'LIKE', "%$q%")
+                    ->orWhere('lastNames', 'LIKE', "%$q%")
+                    ->orWhere('fullName', 'LIKE', "%$q%")
+                    ->orWhere('displayName', 'LIKE', "%$q%");
+            });
+        }
+
+        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
+        if ($terminals->isEmpty())
+            return response()->json('No terminals found', 404);
+
+        $queryUsers->whereHas('schedules', function ($query) use ($startDate, $endDate, $terminalsIds) {
+            $query->whereIn('assistTerminalId', $terminalsIds)
+                ->where('startDate', '<=', $startDate)
+                ->where(function ($query) use ($endDate) {
+                    $query->where('endDate', '>=', $endDate)
+                        ->orWhereNull('endDate');
+                });
+        });
+
+        $users = $queryUsers->with('schedules')
+            ->get();
+
+        if ($users->isEmpty()) return response()->json([]);
+
+        $plainStartDate = $startDate . 'T00:00:00.000';
+        $plainEndDate = $endDate . 'T23:59:59.999';
+
+        $userOnlyDocumentIds = $users->pluck('documentId')->toArray();
+
+        foreach ($terminals as $terminal) {
+            $query = "
+                    SELECT 
+                        it.id AS id,
+                        it.punch_time AS datetime, 
+                        pe.emp_code AS documentId, 
+                        '$terminal->id' AS terminalId
+                        FROM 
+                            [$terminal->database].dbo.iclock_transaction AS it
+                        JOIN 
+                            [$terminal->database].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
+                        WHERE 
+                            it.punch_time >= '$plainStartDate' 
+                            AND it.punch_time <= '$plainEndDate'
+                            AND pe.emp_code IN (" . implode(',', $userOnlyDocumentIds) . ")
+                    ";
+            $unionQueries[] = $query;
+        }
+
+        $finalSql = implode(" UNION ALL ", $unionQueries) . " ORDER BY datetime DESC";
+        $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql));
+
+        $schedules = $users->pluck('schedules')->flatten();
+
+        $firstAssistsBySchedules = collect([]);
+
+        foreach ($schedules as $schedule) {
+            $start = $startDate < $schedule->startDate ? Carbon::parse($schedule->startDate) : Carbon::parse($startDate);
+            $end = $schedule->endDate ? ($endDate > $schedule->endDate ? Carbon::parse($schedule->endDate) : Carbon::parse($endDate)) : Carbon::parse($endDate);
+
+            $days = collect($schedule->days);
+
+            $assists = $results->filter(function ($result) use ($schedule) {
+                return $result->documentId == $schedule->user->documentId && $result->terminalId == $schedule->assistTerminalId;
+            });
+
+            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+
+                // Si el día de la semana está en los días de la semana del horario
+                if ($days->contains($date->dayOfWeekIso)) {
+                    $from = Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day);
+                    $to = Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day);
+
+                    $entryRangeStart = $from->copy()->subHour(2);
+                    $entryRangeEnd = $from->copy()->addHour(2);
+
+                    $exitRangeStart = $to->copy()->subHour(2);
+                    $exitRangeEnd = $to->copy()->addHour(2);
+
+                    $dailyAssists = $assists->filter(function ($assist) use ($date) {
+                        return Carbon::parse($assist->datetime)->isSameDay($date);
+                    });
+
+
+                    // Buscar entrada más cercana al rango
+                    $entry = $dailyAssists->filter(function ($assist) use ($entryRangeStart, $entryRangeEnd) {
+                        $datetime = Carbon::parse($assist->datetime);
+                        return $datetime->between($entryRangeStart, $entryRangeEnd);
+                    })->sortBy(function ($assist) use ($from) {
+                        return abs(Carbon::parse($assist->datetime)->diffInSeconds($from));
+                    })->first();
+
+                    if ($entry) {
+                        $assists = $assists->reject(function ($assist) use ($entry) {
+                            return $assist->id === $entry->id;
+                        });
+                        $results = $results->reject(function ($result) use ($entry) {
+                            return $result->id === $entry->id;
+                        });
+                        $dailyAssists = $dailyAssists->reject(function ($assist) use ($entry) {
+                            return $assist->id === $entry->id;
+                        });
+                    }
+
+                    // Buscar salida más cercana al rango
+                    $exit = $dailyAssists->filter(function ($assist) use ($exitRangeStart, $exitRangeEnd) {
+                        $datetime = Carbon::parse($assist->datetime);
+                        return $datetime->between($exitRangeStart, $exitRangeEnd);
+                    })->sortBy(function ($assist) use ($to) {
+                        return abs(Carbon::parse($assist->datetime)->diffInSeconds($to));
+                    })->first();
+
+                    if ($exit) {
+                        $assists = $assists->reject(function ($assist) use ($exit) {
+                            return $assist->id === $exit->id;
+                        });
+                        $results = $results->reject(function ($result) use ($exit) {
+                            return $result->id === $exit->id;
+                        });
+
+                        $dailyAssists = $dailyAssists->reject(function ($assist) use ($exit) {
+                            return $assist->id === $exit->id;
+                        });
+                    }
+
+
+                    $firstAssistsBySchedules[] = [
+                        'date' => $date->copy(),
+                        'from' => $from,
+                        'to' => $to,
+                        'user' => $schedule->user,
+                        'terminal' => $terminals->where('id', $schedule->assistTerminalId)->first(),
+                        'markedIn' => $entry ? $entry->datetime : null,
+                        'markedOut' => $exit ? $exit->datetime : null,
+                    ];
+                }
+            }
+        }
+
+        // $firstAssistsBySchedules = collect($firstAssistsBySchedules)->shuffle();
+        $firstAssistsBySchedules = collect($firstAssistsBySchedules)->sortByDesc('date')->values();
+
+        $restAssists = $results->map(function ($assist) use ($terminals) {
+            $assist->terminal = $terminals->where('id', $assist->terminalId)->first();
+            $assist->user = User::where('documentId', $assist->documentId)->first();
+            return $assist;
+        });
+
+        return response()->json([
+            'matchedAssists' => $firstAssistsBySchedules,
+            'restAssists' => $restAssists->values(),
+        ]);
+    }
+    public function indexReport(Request $req)
+    {
+
+        $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
+        $startDate = $req->get('startDate');
+        $endDate = $req->get('endDate');
+        $q = $req->get('q');
+        $jobId = $req->get('jobId');
+        $areaId = $req->get('areaId');
+
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
+
+        if (empty($terminalsIds) || !$startDate || !$endDate) {
+            return response()->json('Invalid parameters', 400);
+        }
+
+        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
+
+        if ($terminals->isEmpty())
+            return response()->json('No terminals found', 404);
+
+        Assists::dispatch($q, $terminalsIds, $startDate, $endDate, $jobId, $areaId, Auth::id());
+
+        return response()->json('The report is being processed, you will be notified by email once it is ready');
+    }
 
     // WithUsers methods
     public function withUsers(Request $req)
@@ -81,8 +296,9 @@ class AssistController extends Controller
         $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
         if ($terminals->isEmpty())
             return response()->json('No terminals found', 404);
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
+
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
         $plainStartDate = $startDate . 'T00:00:00.000';
         $plainEndDate = $endDate . 'T23:59:59.999';
 
@@ -118,7 +334,6 @@ class AssistController extends Controller
     }
     public function withUsersReport(Request $req)
     {
-
         $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
         $startDate = $req->get('startDate');
         $endDate = $req->get('endDate');
@@ -135,10 +350,10 @@ class AssistController extends Controller
         if ($terminals->isEmpty())
             return response()->json('No terminals found', 404);
 
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
 
-        AssistsWithUsers::dispatch($q, $terminalsIds, $startDate, $endDate, Auth::id(), $jobId, $areaId);
+        AssistsWithUsers::dispatch($q, $terminalsIds, $startDate, $endDate, $jobId, $areaId, Auth::id());
 
         return response()->json('The report is being processed, you will be notified by email once it is ready');
     }
@@ -160,8 +375,8 @@ class AssistController extends Controller
         if ($terminals->isEmpty())
             return response()->json('No terminals found', 404);
 
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
 
         $plainStartDate = $startDate . 'T00:00:00.000';
         $plainEndDate = $endDate . 'T23:59:59.999';
@@ -210,8 +425,8 @@ class AssistController extends Controller
         if ($terminals->isEmpty())
             return response()->json('No terminals found', 404);
 
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
 
         AssistsWithoutUsers::dispatch($q, $terminalsIds, $startDate, $endDate, Auth::id());
 
@@ -269,7 +484,6 @@ class AssistController extends Controller
 
         return response()->json($summary);
     }
-
 
     // get all databases
     public function allDatabases()

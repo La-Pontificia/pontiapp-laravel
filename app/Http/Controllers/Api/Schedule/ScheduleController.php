@@ -32,8 +32,8 @@ class ScheduleController extends Controller
     {
         $req->validate([
             'userId' => 'required|exists:users,id',
-            'from' => 'required|date_format:H:i:s',
-            'to' => 'required|date_format:H:i:s',
+            'from' => 'required|date',
+            'to' => 'required|date',
             'assistTerminalId' => 'required',
             'days' => 'required|array',
             'startDate' => 'required|date',
@@ -55,8 +55,8 @@ class ScheduleController extends Controller
     {
         $req->validate([
             'userId' => 'required|exists:users,id',
-            'from' => 'required|date_format:H:i:s',
-            'to' => 'required|date_format:H:i:s',
+            'from' => 'required|date',
+            'to' => 'required|date',
             'assistTerminalId' => 'required',
             'days' => 'required|array',
             'startDate' => 'required|date',
