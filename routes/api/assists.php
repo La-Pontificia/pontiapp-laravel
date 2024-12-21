@@ -4,6 +4,11 @@ use App\Http\Controllers\Api\Assist\AssistController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('assists')->group(function () {
+
+    Route::get('', [AssistController::class, 'index']);
+    Route::get('report', [AssistController::class, 'indexReport']);
+
+
     Route::prefix('withoutUsers')->group(function () {
         Route::get('', [AssistController::class, 'withoutUsers']);
         Route::get('/report', [AssistController::class, 'withoutUsersReport']);
