@@ -181,11 +181,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // -------- TICKETS ROUTES ---------------------------
     Route::post('tickets', [TicketController::class, 'store']);
     Route::post('tickets/settings/business-units', [TicketController::class, 'SettingsBusinessUnitsUpdate']);
-    Route::post('tickets/settings/modules', [ApiTicketController::class, 'settingModule']);
-    Route::post('tickets/settings/modules/{id}', [ApiTicketController::class, 'settingModuleUpdate']);
-    Route::post('tickets/settings/modules/delete/{id}', [ApiTicketController::class, 'settingModuleDelete']);
-
-    Route::post('tickets/settings/modules/delete/{id}', [ApiTicketController::class, 'settingModuleDelete']);
 
     // system apis
 
