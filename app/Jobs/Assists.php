@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Events\UserNotice;
 use App\Models\AssistTerminal;
 use App\Models\Report;
+use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -70,22 +71,18 @@ class Assists implements ShouldQueue
                     ->orWhere('firstNames', 'LIKE', "%$q%")
                     ->orWhere('lastNames', 'LIKE', "%$q%")
                     ->orWhere('fullName', 'LIKE', "%$q%")
-                    ->orWhere('displayName', 'LIKE', "%$q%");
+                    ->orWhere('displayName', 'LIKE', "%$q%")
+                    ->orWhere('email', 'LIKE', "%$q%")
+                    ->orWhere('username', 'LIKE', "%$q%");
             });
         }
 
         $terminals = AssistTerminal::whereIn('id', $this->terminalIds)->get();
 
-        $queryUsers->whereHas('schedules', function ($query) use ($startDate, $endDate) {
-            $query->whereIn('assistTerminalId', $this->terminalIds)
-                ->where('startDate', '<=', $startDate)
-                ->where(function ($query) use ($endDate) {
-                    $query->where('endDate', '>=', $endDate)
-                        ->orWhereNull('endDate');
-                });
-        });
-
-        $users = $queryUsers->with('schedules')->get();
+        $users = $queryUsers
+            ->where('status', true)
+            ->whereHas('schedules')
+            ->get();
 
         if ($users->isEmpty()) {
             event(new UserNotice($user->id, "Reporte no realizado.", 'No se encontraron usuarios con horarios en el rango de fechas seleccionado.', [
@@ -119,11 +116,17 @@ class Assists implements ShouldQueue
             $finalSql = implode(" UNION ALL ", $unionQueries) . " ORDER BY datetime DESC";
             $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql));
 
+            $terminalsIds = $terminals->pluck('id')->toArray();
+            $userOnlyIds = $users->pluck('id')->toArray();
 
-            $schedules = $users->pluck('schedules')->flatten();
-
-            Log::info('Schedules: ' . $schedules);
-
+            $schedules = Schedule::whereIn('assistTerminalId', $terminalsIds)
+                ->whereIn('userId', $userOnlyIds)
+                ->where('startDate', '<=', $startDate)
+                ->where(function ($query) use ($endDate) {
+                    $query->where('endDate', '>=', $endDate)
+                        ->orWhereNull('endDate');
+                })
+                ->get();
 
             $firstAssistsBySchedules = collect([]);
 

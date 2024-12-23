@@ -77,11 +77,13 @@ class AssistsWithUsers implements ShouldQueue
                     ->orWhere('firstNames', 'LIKE', "%$q%")
                     ->orWhere('lastNames', 'LIKE', "%$q%")
                     ->orWhere('fullName', 'LIKE', "%$q%")
-                    ->orWhere('displayName', 'LIKE', "%$q%");
+                    ->orWhere('displayName', 'LIKE', "%$q%")
+                    ->orWhere('email', 'LIKE', "%$q%")
+                    ->orWhere('username', 'LIKE', "%$q%");
             });
         }
 
-        $users = $queryUsers->get();
+        $users = $queryUsers->where('status', true)->get();
 
         $userOnlyDocumentIds = $users->pluck('documentId')->toArray();
 
