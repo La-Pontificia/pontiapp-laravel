@@ -208,10 +208,8 @@ class UserController extends Controller
         }
 
         if ($req->managerId) {
-            $role = Role::find($user->roleId);
             $manager = User::find($req->managerId);
-
-            if ($manager->role->job->level <= $role->job->level)
+            if ($manager->role->job->level >= $user->role->job->level)
                 return response()->json('El jefe inmediato no puede ser de un nivel inferior al usuario', 400);
         }
 
