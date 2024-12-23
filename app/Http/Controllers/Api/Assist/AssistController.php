@@ -7,6 +7,7 @@ use App\Jobs\Assists;
 use App\Jobs\AssistsWithoutUsers;
 use App\Jobs\AssistsWithUsers;
 use App\Models\AssistTerminal;
+use App\Models\Schedule;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -70,37 +71,45 @@ class AssistController extends Controller
         }
 
         if ($q) {
-            $queryUsers->where(function ($query) use ($q) {
-                $query->where('documentId', 'LIKE', "%$q%")
-                    ->orWhere('firstNames', 'LIKE', "%$q%")
-                    ->orWhere('lastNames', 'LIKE', "%$q%")
-                    ->orWhere('fullName', 'LIKE', "%$q%")
-                    ->orWhere('displayName', 'LIKE', "%$q%");
-            });
+            $queryUsers->where('documentId', 'LIKE', "%$q%")
+                ->orWhere('firstNames', 'LIKE', "%$q%")
+                ->orWhere('lastNames', 'LIKE', "%$q%")
+                ->orWhere('fullName', 'LIKE', "%$q%")
+                ->orWhere('displayName', 'LIKE', "%$q%")
+                ->orWhere('email', 'LIKE', "%$q%")
+                ->orWhere('username', 'LIKE', "%$q%");
         }
 
         $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
         if ($terminals->isEmpty())
             return response()->json('No terminals found', 404);
 
-        $queryUsers->whereHas('schedules', function ($query) use ($startDate, $endDate, $terminalsIds) {
-            $query->whereIn('assistTerminalId', $terminalsIds)
-                ->where('startDate', '<=', $startDate)
-                ->where(function ($query) use ($endDate) {
-                    $query->where('endDate', '>=', $endDate)
-                        ->orWhereNull('endDate');
-                });
-        });
+        // $queryUsers->whereHas('schedules', function ($query) use ($startDate, $endDate, $terminalsIds) {
+        //     $query->whereIn('assistTerminalId', $terminalsIds)
+        //         ->where('startDate', '<=', $startDate)
+        //         ->where(function ($query) use ($endDate) {
+        //             $query->where('endDate', '>=', $endDate)
+        //                 ->orWhereNull('endDate');
+        //         });
+        // });
 
-        $users = $queryUsers->with('schedules')
+        $users = $queryUsers
+            ->whereHas('schedules')
+            ->where('status', true)
             ->get();
 
-        if ($users->isEmpty()) return response()->json([]);
+        if ($users->isEmpty()) return response()->json(
+            [
+                'matchedAssists' => [],
+                'restAssists' => []
+            ]
+        );
 
         $plainStartDate = $startDate . 'T00:00:00.000';
         $plainEndDate = $endDate . 'T23:59:59.999';
 
         $userOnlyDocumentIds = $users->pluck('documentId')->toArray();
+        $userOnlyIds = $users->pluck('id')->toArray();
 
         foreach ($terminals as $terminal) {
             $query = "
@@ -123,12 +132,20 @@ class AssistController extends Controller
 
         $finalSql = implode(" UNION ALL ", $unionQueries) . " ORDER BY datetime DESC";
         $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql));
-
-        $schedules = $users->pluck('schedules')->flatten();
-
+        $originalResultsCount = $results->count();
         $firstAssistsBySchedules = collect([]);
 
+        $schedules = Schedule::whereIn('assistTerminalId', $terminalsIds)
+            ->whereIn('userId', $userOnlyIds)
+            ->where('startDate', '<=', $startDate)
+            ->where(function ($query) use ($endDate) {
+                $query->where('endDate', '>=', $endDate)
+                    ->orWhereNull('endDate');
+            })
+            ->get();
+
         foreach ($schedules as $schedule) {
+
             $start = $startDate < $schedule->startDate ? Carbon::parse($schedule->startDate) : Carbon::parse($startDate);
             $end = $schedule->endDate ? ($endDate > $schedule->endDate ? Carbon::parse($schedule->endDate) : Carbon::parse($endDate)) : Carbon::parse($endDate);
 
@@ -202,8 +219,8 @@ class AssistController extends Controller
                         'date' => $date->copy(),
                         'from' => $from,
                         'to' => $to,
-                        'user' => $schedule->user,
-                        'terminal' => $terminals->where('id', $schedule->assistTerminalId)->first(),
+                        'user' => $schedule->user->only(['id', 'documentId', 'firstNames', 'lastNames', 'displayName', 'email', 'username', 'photoURL']),
+                        'terminal' => $terminals->where('id', $schedule->assistTerminalId)->first()->only(['id', 'name']),
                         'markedIn' => $entry ? $entry->datetime : null,
                         'markedOut' => $exit ? $exit->datetime : null,
                     ];
@@ -221,8 +238,9 @@ class AssistController extends Controller
         });
 
         return response()->json([
-            'matchedAssists' => $firstAssistsBySchedules,
-            'restAssists' => $restAssists->values(),
+            'schedules' => $firstAssistsBySchedules,
+            'remainingRecords' => $restAssists->values(),
+            'allRecords' => $originalResultsCount
         ]);
     }
     public function indexReport(Request $req)
@@ -284,11 +302,13 @@ class AssistController extends Controller
                     ->orWhere('firstNames', 'LIKE', "%$q%")
                     ->orWhere('lastNames', 'LIKE', "%$q%")
                     ->orWhere('fullName', 'LIKE', "%$q%")
-                    ->orWhere('displayName', 'LIKE', "%$q%");
+                    ->orWhere('displayName', 'LIKE', "%$q%")
+                    ->orWhere('email', 'LIKE', "%$q%")
+                    ->orWhere('username', 'LIKE', "%$q%");
             });
         }
 
-        $users = $queryUsers->get();
+        $users = $queryUsers->where('status', true)->get();
 
         if (empty($terminalsIds) || !$startDate || !$endDate) {
             return response()->json('Invalid parameters', 400);
@@ -326,8 +346,8 @@ class AssistController extends Controller
         $results = DB::connection('sqlsrv_dynamic')->select($finalSql);
 
         foreach ($results as $result) {
-            $result->user = $users->where('documentId', $result->documentId)->first();
-            $result->terminal = $terminals->where('id', $result->terminalId)->first();
+            $result->user = $users->where('documentId', $result->documentId)->first()->only(['id', 'documentId', 'firstNames', 'lastNames', 'displayName', 'email', 'username', 'photoURL']);
+            $result->terminal = $terminals->where('id', $result->terminalId)->first()->only(['id', 'name']);
         }
 
         return response()->json($results);
