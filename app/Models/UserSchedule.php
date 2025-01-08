@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Schedule extends Model
+class UserSchedule extends Model
 {
     use HasUuids;
 
@@ -32,11 +32,11 @@ class Schedule extends Model
         'startDate',
         'endDate',
         'archived',
+        'tolerance',
     ];
 
     protected $casts = [
         'days' => 'array',
-
     ];
 
 

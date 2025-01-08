@@ -86,10 +86,10 @@ class User extends Authenticatable
         return $this->hasOne(Role::class, 'id', 'roleId');
     }
 
-    public function job()
-    {
-        return $this->role->job;
-    }
+    // public function job()
+    // {
+    //     return $this->role->job;
+    // }
 
     public function department()
     {
@@ -175,11 +175,11 @@ class User extends Authenticatable
 
     public function schedules()
     {
-        return $this->hasMany(Schedule::class, 'userId', 'id')->where('archived', false);
+        return $this->hasMany(UserSchedule::class, 'userId', 'id')->where('archived', false);
     }
 
     public function contractType()
     {
-        return $this->hasOne(ContractType::class, 'id', 'contractTypeId');
+        return $this->hasOne(UserContractType::class, 'id', 'contractTypeId');
     }
 }

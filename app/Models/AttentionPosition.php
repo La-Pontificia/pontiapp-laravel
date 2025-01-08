@@ -21,11 +21,14 @@ class AttentionPosition extends Model
         'shortName',
         'creatorId',
         'updaterId',
-        'currentUserId'
+        'currentUserId',
+        'ui',
+        'background'
     ];
 
     protected $casts = [
         'available' => 'boolean',
+        'ui' => 'array'
     ];
 
 

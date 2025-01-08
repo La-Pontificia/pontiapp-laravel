@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TicketBusinessUnit extends Model
+class AttentionBusinessUnit extends Model
 {
-    use HasUuids, HasFactory;
+    use HasFactory, HasUuids;
 
-    protected $table = 'tickets_business_units';
+    protected $table = 'attentions_business_units';
 
-    protected $perPage = 20;
+    protected $perPage = 30;
 
     protected $fillable = [
-        'business_unit_id',
+        'businessUnitId',
     ];
 
     public function businessUnit()
     {
-        return $this->hasOne(BusinessUnit::class, 'id', 'business_unit_id');
+        return $this->hasOne(BusinessUnit::class, 'id', 'businessUnitId');
     }
 }
