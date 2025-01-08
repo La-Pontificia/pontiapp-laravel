@@ -27,4 +27,14 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+    {
+        // Si la excepción es una de tipo 404, devuelve una respuesta vacía.
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+            return response()->view('index');
+        }
+
+        return parent::render($request, $exception);
+    }
 }
