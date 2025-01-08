@@ -27,7 +27,14 @@ class AttentionPositionController extends Controller
 
         $positions = $paginate === 'true' ? $match->paginate() : $match->get();
 
-        return response()->json($positions);
+        return response()->json(
+            $paginate === 'true' ? [] :
+                $positions->map(function ($position) {
+                    return $position->only(['id', 'name', 'shortName', 'available', 'background']) + [
+                        'business' => $position->business?->only(['id', 'name', 'domain', 'acronym']),
+                    ];
+                })
+        );
     }
 
     public function store(Request $req)
@@ -36,6 +43,7 @@ class AttentionPositionController extends Controller
             'name' => 'required|string',
             'shortName' => 'required|string',
             'businessUnitId' => 'required|uuid',
+            'background' => 'string',
         ]);
 
         $position = AttentionPosition::create([
@@ -43,6 +51,7 @@ class AttentionPositionController extends Controller
             'shortName' => $req->shortName,
             'available' => $req->available ? true : false,
             'businessUnitId' => $req->businessUnitId,
+            'background' => $req->background,
             'creatorId' => Auth::id(),
         ]);
 
@@ -55,6 +64,7 @@ class AttentionPositionController extends Controller
             'name' => 'required|string',
             'shortName' => 'required|string',
             'businessUnitId' => 'required|uuid',
+            'background' => 'string',
         ]);
 
         $position = AttentionPosition::findOrFail($id);
@@ -63,10 +73,29 @@ class AttentionPositionController extends Controller
             'shortName' => $req->shortName,
             'available' => $req->available ? true : false,
             'businessUnitId' => $req->businessUnitId,
+            'background' => $req->background,
             'updaterId' => Auth::id(),
         ]);
 
         return response()->json($position);
+    }
+
+    public function updateUi(Request $req, $id)
+    {
+        $req->validate([
+            'x' => 'required|integer',
+            'y' => 'required|integer',
+        ]);
+
+        $position = AttentionPosition::findOrFail($id);
+        $position->update([
+            'ui' => [
+                'x' => $req->x,
+                'y' => $req->y,
+            ],
+        ]);
+
+        return response()->json('ok');
     }
 
     public function delete(Request $req, $id)

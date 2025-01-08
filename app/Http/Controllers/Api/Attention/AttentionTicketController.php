@@ -40,10 +40,10 @@ class AttentionTicketController extends Controller
             'personDocumentId' => 'required|string',
             'personFirstNames' => 'required|string',
             'personLastNames' => 'required|string',
-            'personGender' => 'required|string',
-            'personCareer' => 'required|string',
-            'personPeriodName' => 'required|string',
-            'personEmail' => 'required|email',
+            'personGender' => 'nullable|string',
+            'personCareer' => 'nullable|string',
+            'personPeriodName' => 'nullable|string',
+            'personEmail' => 'nullable|email',
         ]);
 
         $ticket =  new AttentionTicket();
@@ -60,5 +60,42 @@ class AttentionTicketController extends Controller
         $ticket->save();
 
         return response()->json($ticket, 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'attentionServiceId' => 'required|uuid',
+            'personDocumentId' => 'required|string',
+            'personFirstNames' => 'required|string',
+            'personLastNames' => 'required|string',
+            'personGender' => 'nullable|string',
+            'personCareer' => 'nullable|string',
+            'personPeriodName' => 'nullable|string',
+            'personEmail' => 'nullable|email',
+        ]);
+
+        $ticket = AttentionTicket::findOrFail($id);
+
+        $ticket->attentionServiceId = $request->attentionServiceId;
+        $ticket->personDocumentId = $request->personDocumentId;
+        $ticket->personFirstNames = $request->personFirstNames;
+        $ticket->personLastNames = $request->personLastNames;
+        $ticket->personGender = $request->personGender;
+        $ticket->personCareer = $request->personCareer;
+        $ticket->personPeriodName = $request->personPeriodName;
+        $ticket->personEmail = $request->personEmail;
+        $ticket->updaterId = Auth::id();
+        $ticket->save();
+
+        return response()->json($ticket);
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $ticket = AttentionTicket::findOrFail($id);
+        $ticket->delete();
+
+        return response()->json($ticket);
     }
 }

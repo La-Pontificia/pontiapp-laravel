@@ -71,12 +71,37 @@ class AttentionServiceController extends Controller
         return response()->json($position);
     }
 
-    public function byBusiness($businessId)
+    public function byBusinesses(Request $req)
     {
-        $services = AttentionService::whereHas('position', function ($q) use ($businessId) {
-            $q->where('businessUnitId', $businessId);
+
+        $businessIds = $req->get('ids') ? explode(',', $req->get('ids')) : [];
+        $relationShip = $req->get('relationship') ? explode(',', $req->get('relationship')) : [];
+
+        $query = AttentionService::orderBy('name', 'asc');
+
+        if (in_array('position', $relationShip)) $query->with('position');
+        if (in_array('position.business', $relationShip)) $query->with('position.business');
+
+        $services = $query->whereHas('position', function ($q) use ($businessIds) {
+            $q->whereIn('businessUnitId', $businessIds);
         })->get();
 
-        return response()->json($services);
+        return response()->json(
+            $services->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'name' => $service->name,
+                    'position' => [
+                        'id' => $service->position->id,
+                        'name' => $service->position->name,
+                        'shortName' => $service->position->shortName,
+                        'business' => [
+                            'id' => $service->position->business->id,
+                            'name' => $service->position->business->name,
+                        ],
+                    ],
+                ];
+            })
+        );
     }
 }
