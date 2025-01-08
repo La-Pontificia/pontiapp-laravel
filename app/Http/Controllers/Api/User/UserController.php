@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
-use App\Models\Schedule;
+use App\Models\UserSchedule;
 use App\Models\User;
-use App\Models\UserAudit;
 use App\services\AuditService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -168,7 +167,7 @@ class UserController extends Controller
         $schedules = collect($req->schedules)->toArray();
 
         foreach ($schedules as $schedule) {
-            Schedule::create([
+            UserSchedule::create([
                 'userId' => $user->id,
                 'from' =>  Carbon::parse($schedule['from']),
                 'to' => Carbon::parse($schedule['to']),
@@ -229,7 +228,11 @@ class UserController extends Controller
     public function one(Request $req, $math)
     {
         $user = $this->relationShipUser($req->query('relationship'), $math)->first();
-        return response()->json($user);
+        // return response()->json($user);
+        return response()->json(
+            $user->only(['id', 'firstNames', 'lastNames', 'contacts', 'displayName', 'photoURL', 'username', 'email', 'status', 'created_at', 'updated_at']) +
+                ['role' => $user->role?->only(['id', 'name']) + ['job' => $user->role?->job->only(['id', 'name'])] + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]]]
+        );
     }
 
     public function manager(Request $req, $slug)
@@ -277,13 +280,17 @@ class UserController extends Controller
     {
         $user =  $this->getUser($slug);
         $archived = $req->query('archived') ? true : false;
-        $match = Schedule::where('userId', $user->id)->orderBy('created_at', 'desc')->where('archived', $archived);
+        $match = UserSchedule::where('userId', $user->id)->orderBy('created_at', 'desc')->where('archived', $archived);
 
         $limit = $req->query('limit', 10);
         $includes = explode(',', $req->query('relationship'));
         if (in_array('terminal', $includes)) $match->with('terminal');
         $schedules = $match->limit($limit)->get();
-        return response()->json($schedules);
+        return response()->json(
+            $schedules->map(function ($schedule) {
+                return $schedule->only(['id', 'from', 'to', 'days', 'title', 'startDate']) + ['terminal' => $schedule->terminal?->only(['id', 'name'])];
+            })
+        );
     }
 
     public function getManager(Request $req, $slug)
@@ -330,47 +337,67 @@ class UserController extends Controller
         }
 
         return response()->json([
-            'coworkers' => $coworkers,
-            'subordinates' => $subordinates,
-            'manager' => $matchManager->first(),
+            'coworkers' => $coworkers->map(function ($coworker) {
+                return $coworker->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $coworker->role?->only(['name', 'id'])];
+            }),
+            'subordinates' => $subordinates->map(function ($subordinate) {
+                return $subordinate->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $subordinate->role?->only(['name', 'id'])];
+            }),
+            'manager' => $matchManager->first() ? $matchManager->first()->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $matchManager->first()->role?->only(['name', 'id'])]
+                : null
         ]);
     }
 
     public function organization(Request $req, $slug)
     {
-        $user =  $this->getUser($slug);
-        $limitCoworkers = $req->query('limitCoworkers');
+        $user = $this->getUser($slug);
+        $limitCoworkers = $req->query('limitCoworkers', 10);
         $limitSubordinates = $req->query('limitSubordinates', 10);
-        $user->role;
-        $currentUser = $user;
         $user->coworkers = $user->coworkers($limitCoworkers);
         $user->subordinates = $user->subordinates->take($limitSubordinates);
 
-        foreach ($user->subordinates as $subordinate) {
-            $subordinate->role;
-        }
-
-        foreach ($user->coworkers as $coworker) {
-            $coworker->role;
-        }
-
+        $currentUser = $user;
         while ($currentUser->manager) {
             $manager = $currentUser->manager;
 
-            foreach ($manager->getAttributes() as $key => $value) {
-                if (!array_key_exists($key, $currentUser->getAttributes())) {
-                    $currentUser->$key = $value;
-                }
-            }
+            $currentUser->fill(
+                collect($manager->getAttributes())
+                    ->filter(fn($value, $key) => !array_key_exists($key, $currentUser->getAttributes()))
+                    ->toArray()
+            );
 
+            $currentUser->role = $manager->role ?: $currentUser->role;
             $currentUser = $manager;
-
-            if ($manager->role) {
-                $currentUser->role = $manager->role;
-            }
         }
 
-        return response()->json($user);
+        $response = $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
+            'coworkers' => $user->coworkers->map(fn($coworker) => $this->formatUserWithRole($coworker)),
+            'subordinates' => $user->subordinates->map(fn($subordinate) => $this->formatUserWithRole($subordinate)),
+            'manager' => $user->manager ? $this->formatUserWithRole($user->manager) : null,
+            'role' => $user->role?->only(['id', 'name'])
+        ];
+
+        return response()->json($response);
+    }
+
+    private function formatUserWithRole($user)
+    {
+        return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
+            'role' => $user->role?->only(['id', 'name'])
+        ];
+    }
+
+    public function getProperties($slug)
+    {
+        $user =  $this->getUser($slug);
+        return response()->json([
+            'documentId' => $user->documentId,
+            'birthdate' => $user->birthdate,
+            'customPrivileges' => $user->customPrivileges,
+            'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'username']) : null,
+            'entryDate' => $user->entryDate,
+            'userRole' => $user->userRole ? $user->userRole->only(['id', 'title']) : null,
+        ]);
     }
 
     public function updateOrganization(Request $req, $slug)

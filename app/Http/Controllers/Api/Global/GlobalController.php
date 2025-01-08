@@ -6,41 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class GlobalController extends Controller
 {
     public function search(Request $req)
     {
         $q = $req->get('q');
+        $resultsUsers = User::where('displayName', 'like', "%$q%")
+            ->orWhere('firstNames', 'like', "%$q%")
+            ->orWhere('lastNames', 'like', "%$q%")
+            ->orWhere('username', 'like', "%$q%")
+            ->with('role');
 
-        // users
-        $matchUser = User::where('fullName', 'like', "%$q%")
-            ->orWhere('email', 'like', "%$q%")
-            ->orWhere('fullName', 'like', "%$q%")
-            ->orWhere('displayName', 'like', "%$q%")
-            ->orWhere('documentId', 'like', "%$q%")
-            ->orWhere('id', 'like', "%$q%");
+        $resultsReports = Report::where('title', 'like', "%$q%")
+            ->whereHas('user', function ($query) use ($q) {
+                $query->where('displayName', 'like', "%$q%")
+                    ->orWhere('firstNames', 'like', "%$q%")
+                    ->orWhere('lastNames', 'like', "%$q%")
+                    ->orWhere('username', 'like', "%$q%");
+            })->with('user');
 
-        // files
-        $matchFiles = Report::where('title', 'like', "%$q%")
-            ->orWhereHas('user', function ($query) use ($q) {
-                $query->where('fullName', 'like', "%$q%")
-                    ->orWhere('email', 'like', "%$q%")
-                    ->orWhere('fullName', 'like', "%$q%")
-                    ->orWhere('displayName', 'like', "%$q%")
-                    ->orWhere('documentId', 'like', "%$q%")
-                    ->orWhere('id', 'like', "%$q%");
-            });
-
-        $users = $q ?
-            $matchUser->orderBy('displayName', 'desc')->limit(5)->get() :
-            $matchUser->orderBy('created_at', 'desc')->limit(2)->get();
-
-        $files = $q ?
-            $matchFiles->orderBy('title', 'desc')->limit(5)->get() :
-            $matchFiles->orderBy('created_at', 'desc')->limit(2)->get();
-
+        $users = $q ? $resultsUsers->take(5)->get() : $resultsUsers->take(2)->get();
+        $reports = $q ? $resultsReports->take(5)->get() : $resultsReports->take(2)->get();
         $data = [
             'users' => $users->map(function ($user) {
                 return [
@@ -53,7 +40,7 @@ class GlobalController extends Controller
                     'role' => $user->role->only(['name']),
                 ];
             }),
-            'files' => $files->map(function ($file) {
+            'files' => $reports->map(function ($file) {
                 return [
                     'title' => $file->title,
                     'downloadLink' => $file->downloadLink,
@@ -62,8 +49,6 @@ class GlobalController extends Controller
                 ];
             }),
         ];
-
-        Cache::put('search_result_' . $q, $data, now()->addHours(1));
 
         return response()->json($data);
     }

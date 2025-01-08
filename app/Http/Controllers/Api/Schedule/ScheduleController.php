@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Schedule;
 
 use App\Http\Controllers\Controller;
-use App\Models\Schedule;
+use App\Models\UserSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +11,7 @@ class ScheduleController extends Controller
 {
     public function delete($id)
     {
-        $schedule = Schedule::find($id);
+        $schedule = UserSchedule::find($id);
         $schedule->delete();
         return response()->json('Schedule deleted successfully');
     }
@@ -21,7 +21,7 @@ class ScheduleController extends Controller
         $req->validate([
             'endDate' => 'date|required',
         ]);
-        $schedule = Schedule::find($id);
+        $schedule = UserSchedule::find($id);
         $schedule->archived = true;
         $schedule->endDate = $req->endDate;
         $schedule->save();
@@ -38,7 +38,7 @@ class ScheduleController extends Controller
             'days' => 'required|array',
             'startDate' => 'required|date',
         ]);
-        $schedule = new Schedule();
+        $schedule = new UserSchedule();
         $schedule->userId = $req->userId;
         $schedule->from = $req->from;
         $schedule->to = $req->to;
@@ -61,7 +61,7 @@ class ScheduleController extends Controller
             'days' => 'required|array',
             'startDate' => 'required|date',
         ]);
-        $schedule = Schedule::find($id);
+        $schedule = UserSchedule::find($id);
         $schedule->userId = $req->userId;
         $schedule->from = $req->from;
         $schedule->to = $req->to;
