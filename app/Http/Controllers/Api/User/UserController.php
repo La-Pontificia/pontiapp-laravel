@@ -329,11 +329,11 @@ class UserController extends Controller
         })
             ->where('id', '!=',  $user->id);
 
-        $subordinates = $matchSubordinates->get();
-        $coworkers = [];
+        $subordinates = collect($matchSubordinates->get());
+        $coworkers = collect();
 
         if ($req->query('dinamic', '') == 'true') {
-            $coworkers = $subordinates->count() < 3 ? $matchCoworkers->get() : [];
+            $coworkers = $subordinates->count() < 3 ? collect($matchCoworkers->get()) : collect();
         }
 
         return response()->json([
