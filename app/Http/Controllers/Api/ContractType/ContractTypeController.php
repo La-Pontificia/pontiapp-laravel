@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\ContractType;
 
 use App\Http\Controllers\Controller;
-use App\Models\ContractType;
+use App\Models\UserContractType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +11,7 @@ class ContractTypeController extends Controller
 {
     public function all(Request $req)
     {
-        $match = ContractType::orderBy('created_at', 'desc');
+        $match = UserContractType::orderBy('created_at', 'desc');
         $paginate = $req->query('paginate', 'false');
 
         $q = $req->query('q');
@@ -39,7 +39,7 @@ class ContractTypeController extends Controller
             'description' => 'required|string',
         ]);
 
-        $contract = new ContractType();
+        $contract = new UserContractType();
         $contract->name = $req->name;
         $contract->description = $req->description;
         $contract->createdBy = Auth::id();
@@ -55,7 +55,7 @@ class ContractTypeController extends Controller
             'description' => 'required|string',
         ]);
 
-        $contract = ContractType::find($id);
+        $contract = UserContractType::find($id);
         $contract->name = $req->name;
         $contract->description = $req->description;
         $contract->updatedBy = Auth::id();
@@ -66,7 +66,7 @@ class ContractTypeController extends Controller
 
     public function delete($id)
     {
-        $contract = ContractType::find($id);
+        $contract = UserContractType::find($id);
 
         if ($contract->usersCount() > 0) {
             return response()->json('Hay usuarios asociados a este tipo de contrato, por favor transfiera y vuelve a internarlo.', 400);
