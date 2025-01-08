@@ -7,9 +7,10 @@ use App\Jobs\Assists;
 use App\Jobs\AssistsWithoutUsers;
 use App\Jobs\AssistsWithUsers;
 use App\Models\AssistTerminal;
-use App\Models\Schedule;
+use App\Models\UserSchedule;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -40,17 +41,16 @@ class AssistController extends Controller
     // Assists methods
     public function index(Request $req)
     {
-
-        $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
         $startDate = $req->get('startDate');
         $endDate = $req->get('endDate');
         $q = $req->get('q');
         $jobId = $req->get('jobId');
+        $withUser = $req->get('withUser');
         $areaId = $req->get('areaId');
         $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
         $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
 
-        if (empty($terminalsIds) || !$startDate || !$endDate) {
+        if (!$startDate || !$endDate) {
             return response()->json('Invalid parameters', 400);
         }
 
@@ -80,28 +80,22 @@ class AssistController extends Controller
                 ->orWhere('username', 'LIKE', "%$q%");
         }
 
-        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
+        $terminals = AssistTerminal::all();
+
         if ($terminals->isEmpty())
             return response()->json('No terminals found', 404);
-
-        // $queryUsers->whereHas('schedules', function ($query) use ($startDate, $endDate, $terminalsIds) {
-        //     $query->whereIn('assistTerminalId', $terminalsIds)
-        //         ->where('startDate', '<=', $startDate)
-        //         ->where(function ($query) use ($endDate) {
-        //             $query->where('endDate', '>=', $endDate)
-        //                 ->orWhereNull('endDate');
-        //         });
-        // });
 
         $users = $queryUsers
             ->whereHas('schedules')
             ->where('status', true)
             ->get();
 
+
         if ($users->isEmpty()) return response()->json(
             [
                 'matchedAssists' => [],
-                'restAssists' => []
+                'restAssists' => [],
+                'originalResultsCount' => 0
             ]
         );
 
@@ -113,30 +107,28 @@ class AssistController extends Controller
 
         foreach ($terminals as $terminal) {
             $query = "
-                    SELECT 
-                        it.id AS id,
-                        it.punch_time AS datetime, 
-                        pe.emp_code AS documentId, 
-                        '$terminal->id' AS terminalId
-                        FROM 
-                            [$terminal->database].dbo.iclock_transaction AS it
-                        JOIN 
-                            [$terminal->database].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
-                        WHERE 
-                            it.punch_time >= '$plainStartDate' 
-                            AND it.punch_time <= '$plainEndDate'
-                            AND pe.emp_code IN (" . implode(',', $userOnlyDocumentIds) . ")
-                    ";
+                      SELECT 
+                          it.id AS id,
+                          it.punch_time AS datetime, 
+                          pe.emp_code AS documentId, 
+                          '$terminal->id' AS terminalId
+                          FROM 
+                              [$terminal->database].dbo.iclock_transaction AS it
+                          JOIN 
+                              [$terminal->database].dbo.personnel_employee AS pe ON it.emp_code = pe.emp_code
+                          WHERE 
+                              it.punch_time >= '$plainStartDate' 
+                              AND it.punch_time <= '$plainEndDate'
+                              AND pe.emp_code IN (" . implode(',', $userOnlyDocumentIds) . ")
+                      ";
             $unionQueries[] = $query;
         }
 
         $finalSql = implode(" UNION ALL ", $unionQueries) . " ORDER BY datetime DESC";
-        $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql));
+        $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql))->keyBy('id');
         $originalResultsCount = $results->count();
-        $firstAssistsBySchedules = collect([]);
 
-        $schedules = Schedule::whereIn('assistTerminalId', $terminalsIds)
-            ->whereIn('userId', $userOnlyIds)
+        $schedules = UserSchedule::whereIn('userId', $userOnlyIds)
             ->where('startDate', '<=', $startDate)
             ->where(function ($query) use ($endDate) {
                 $query->where('endDate', '>=', $endDate)
@@ -144,109 +136,194 @@ class AssistController extends Controller
             })
             ->get();
 
-        foreach ($schedules as $schedule) {
+        $generatedSchedules = collect($schedules)->flatMap(function ($schedule) use ($startDate, $endDate) {
+            $start = max(Carbon::parse($startDate), Carbon::parse($schedule->startDate));
+            $end = $schedule->endDate ? min(Carbon::parse($endDate), Carbon::parse($schedule->endDate)) : Carbon::parse($endDate);
 
-            $start = $startDate < $schedule->startDate ? Carbon::parse($schedule->startDate) : Carbon::parse($startDate);
-            $end = $schedule->endDate ? ($endDate > $schedule->endDate ? Carbon::parse($schedule->endDate) : Carbon::parse($endDate)) : Carbon::parse($endDate);
-
-            $days = collect($schedule->days);
-
-            $assists = $results->filter(function ($result) use ($schedule) {
-                return $result->documentId == $schedule->user->documentId && $result->terminalId == $schedule->assistTerminalId;
+            return collect(Carbon::parse($start)->daysUntil($end))->filter(function ($date) use ($schedule) {
+                return collect($schedule->days)->contains($date->dayOfWeekIso);
+            })->map(function ($date) use ($schedule) {
+                $from = Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day);
+                $to = Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day);
+                return [
+                    'date' => $date,
+                    'from' => $from->addMinutes($schedule->tolerance),
+                    'to' => $to,
+                    'userId' => $schedule->user->id,
+                    'userDocumentId' => $schedule->user->documentId
+                ];
             });
+        })->values();
 
-            for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+        $groupedSchedules = $generatedSchedules
+            ->groupBy('userId')
+            ->flatMap(function ($userSchedules) {
+                return $userSchedules->groupBy(fn($schedule) => $schedule['date']->format('Y-m-d'))
+                    ->map(function ($dailySchedules) {
+                        $firstSchedule = $dailySchedules->first();
+                        $timeSlots = $dailySchedules->reduce(function ($slots, $schedule) {
+                            $hour = $schedule['from']->format('H');
+                            if ($hour < 12) {
+                                $slots['morningFrom'] = $schedule['from'];
+                                $slots['morningTo'] = $schedule['to'];
+                            } else {
+                                $slots['afternoonFrom'] = $schedule['from'];
+                                $slots['afternoonTo'] = $schedule['to'];
+                            }
+                            return $slots;
+                        }, [
+                            'morningFrom' => null,
+                            'morningTo' => null,
+                            'afternoonFrom' => null,
+                            'afternoonTo' => null,
+                        ]);
 
-                // Si el día de la semana está en los días de la semana del horario
-                if ($days->contains($date->dayOfWeekIso)) {
-                    $from = Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day);
-                    $to = Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day);
+                        return array_merge([
+                            'date' => $firstSchedule['date']->format('Y-m-d'),
+                            'userId' => $firstSchedule['userId'],
+                            'userDocumentId' => $firstSchedule['userDocumentId']
+                        ], $timeSlots, [
+                            'morningMarkedIn' => null,
+                            'morningMarkedOut' => null,
+                            'afternoonMarkedIn' => null,
+                            'afternoonMarkedOut' => null
+                        ]);
+                    })->values();
+            })->values();
 
-                    $entryRangeStart = $from->copy()->subHour(2);
-                    $entryRangeEnd = $from->copy()->addHour(2);
+        $updatedSchedules = $groupedSchedules->map(function ($schedule) use ($results, $users, $withUser) {
+            $dailyResults = $results->filter(
+                fn($result) =>
+                $result->documentId === $schedule['userDocumentId'] &&
+                    Carbon::parse($result->datetime)->format('Y-m-d') === $schedule['date']
+            )->keyBy('id');
 
-                    $exitRangeStart = $to->copy()->subHour(2);
-                    $exitRangeEnd = $to->copy()->addHour(2);
+            $calculateAttendance = function ($timeFrom, $timeTo, $dailyResults, $results, $rangeModifier) {
+                if (!$timeFrom || !$timeTo) {
+                    return [null, null];
+                }
 
-                    $dailyAssists = $assists->filter(function ($assist) use ($date) {
-                        return Carbon::parse($assist->datetime)->isSameDay($date);
-                    });
+                $entryRangeStart = $timeFrom->copy()->sub($rangeModifier);
+                $entryRangeEnd = $timeFrom->copy()->add($rangeModifier);
+                $exitRangeStart = $timeTo->copy()->sub($rangeModifier);
+                $exitRangeEnd = $timeTo->copy()->add($rangeModifier);
 
+                $entry = $dailyResults->filter(
+                    fn($assist) =>
+                    Carbon::parse($assist->datetime)->between($entryRangeStart, $entryRangeEnd)
+                )->sortBy(
+                    fn($assist) =>
+                    abs(Carbon::parse($assist->datetime)->diffInSeconds($timeFrom))
+                )->first();
 
-                    // Buscar entrada más cercana al rango
-                    $entry = $dailyAssists->filter(function ($assist) use ($entryRangeStart, $entryRangeEnd) {
-                        $datetime = Carbon::parse($assist->datetime);
-                        return $datetime->between($entryRangeStart, $entryRangeEnd);
-                    })->sortBy(function ($assist) use ($from) {
-                        return abs(Carbon::parse($assist->datetime)->diffInSeconds($from));
-                    })->first();
+                if ($entry) {
+                    unset($dailyResults[$entry->id]);
+                    unset($results[$entry->id]);
+                }
 
-                    if ($entry) {
-                        $assists = $assists->reject(function ($assist) use ($entry) {
-                            return $assist->id === $entry->id;
-                        });
-                        $results = $results->reject(function ($result) use ($entry) {
-                            return $result->id === $entry->id;
-                        });
-                        $dailyAssists = $dailyAssists->reject(function ($assist) use ($entry) {
-                            return $assist->id === $entry->id;
-                        });
+                $exit = $dailyResults->filter(
+                    fn($assist) =>
+                    Carbon::parse($assist->datetime)->between($exitRangeStart, $exitRangeEnd)
+                )->sortBy(
+                    fn($assist) =>
+                    abs(Carbon::parse($assist->datetime)->diffInSeconds($timeTo))
+                )->first();
+
+                if ($exit) {
+                    unset($dailyResults[$exit->id]);
+                    unset($results[$exit->id]);
+                }
+
+                return [
+                    $entry ? Carbon::parse($entry->datetime) : null,
+                    $exit ? Carbon::parse($exit->datetime) : null,
+                ];
+            };
+
+            [$morningMarkedIn, $morningMarkedOut] = $calculateAttendance(
+                $schedule['morningFrom'],
+                $schedule['morningTo'],
+                $dailyResults,
+                $results,
+                CarbonInterval::minutes(120),
+
+            );
+
+            [$afternoonMarkedIn, $afternoonMarkedOut] = $calculateAttendance(
+                $schedule['afternoonFrom'],
+                $schedule['afternoonTo'],
+                $dailyResults,
+                $results,
+                CarbonInterval::minutes(120),
+            );
+
+            // If there are still assists left, try to match them with the schedule
+            if ((!$morningMarkedIn || !$morningMarkedOut || !$afternoonMarkedIn || !$afternoonMarkedOut) && $dailyResults->isNotEmpty()) {
+                $remainingEntry = $dailyResults->sortBy(
+                    fn($assist) => abs(Carbon::parse($assist->datetime)->diffInSeconds($schedule['morningFrom'] ?? $schedule['afternoonFrom']))
+                )->first();
+
+                if ($remainingEntry) {
+                    $entryTime = Carbon::parse($remainingEntry->datetime);
+
+                    if (!$morningMarkedIn && $entryTime < ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
+                        $morningMarkedIn = $entryTime;
+                    } elseif (!$morningMarkedOut && $entryTime < ($schedule['afternoonFrom'] ?? $schedule['morningTo'])) {
+                        $morningMarkedOut = $entryTime;
+                    } elseif (!$afternoonMarkedIn && $entryTime >= ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
+                        $afternoonMarkedIn = $entryTime;
+                    } elseif (!$afternoonMarkedOut) {
+                        $afternoonMarkedOut = $entryTime;
                     }
 
-                    // Buscar salida más cercana al rango
-                    $exit = $dailyAssists->filter(function ($assist) use ($exitRangeStart, $exitRangeEnd) {
-                        $datetime = Carbon::parse($assist->datetime);
-                        return $datetime->between($exitRangeStart, $exitRangeEnd);
-                    })->sortBy(function ($assist) use ($to) {
-                        return abs(Carbon::parse($assist->datetime)->diffInSeconds($to));
-                    })->first();
-
-                    if ($exit) {
-                        $assists = $assists->reject(function ($assist) use ($exit) {
-                            return $assist->id === $exit->id;
-                        });
-                        $results = $results->reject(function ($result) use ($exit) {
-                            return $result->id === $exit->id;
-                        });
-
-                        $dailyAssists = $dailyAssists->reject(function ($assist) use ($exit) {
-                            return $assist->id === $exit->id;
-                        });
-                    }
-
-
-                    $firstAssistsBySchedules[] = [
-                        'date' => $date->copy(),
-                        'from' => $from,
-                        'to' => $to,
-                        'user' => $schedule->user->only(['id', 'documentId', 'firstNames', 'lastNames', 'displayName', 'email', 'username', 'photoURL']),
-                        'terminal' => $terminals->where('id', $schedule->assistTerminalId)->first()->only(['id', 'name']),
-                        'markedIn' => $entry ? $entry->datetime : null,
-                        'markedOut' => $exit ? $exit->datetime : null,
-                    ];
+                    unset($dailyResults[$remainingEntry->id]);
+                    unset($results[$remainingEntry->id]);
                 }
             }
-        }
 
-        // $firstAssistsBySchedules = collect($firstAssistsBySchedules)->shuffle();
-        $firstAssistsBySchedules = collect($firstAssistsBySchedules)->sortByDesc('date')->values();
+            if ($morningMarkedIn && !$morningMarkedOut && !$afternoonMarkedIn && $afternoonMarkedOut) {
+                $morningMarkedOut = $schedule['morningTo'];
+                $afternoonMarkedIn = $schedule['afternoonFrom'];
+            }
 
-        $restAssists = $results->map(function ($assist) use ($terminals) {
-            $assist->terminal = $terminals->where('id', $assist->terminalId)->first();
-            $assist->user = User::where('documentId', $assist->documentId)->first();
-            return $assist;
+            $user = $withUser ? $users->find($schedule['userId']) : null;
+
+            return array_merge($schedule, [
+                'user' => $user ? $user->only(['id', 'documentId', 'firstNames', 'lastNames', 'displayName', 'email', 'username', 'photoURL']) : null,
+            ], [
+                'morningMarkedIn' => $morningMarkedIn,
+                'morningMarkedOut' => $morningMarkedOut,
+                'afternoonMarkedIn' => $afternoonMarkedIn,
+                'afternoonMarkedOut' => $afternoonMarkedOut,
+            ]);
         });
 
+
+        $restAssists = $results->map(function ($record) use ($terminals, $users) {
+            $user = $users->where('documentId', $record->documentId)->first();
+            $record->terminal = $terminals->where('id', $record->terminalId)->first();
+            $record->user = $user ? $user->only([
+                'id',
+                'documentId',
+                'firstNames',
+                'lastNames',
+                'displayName',
+                'email',
+                'username',
+                'photoURL'
+            ]) : null;
+            return $record;
+        })->values();
+
         return response()->json([
-            'schedules' => $firstAssistsBySchedules,
-            'remainingRecords' => $restAssists->values(),
-            'allRecords' => $originalResultsCount
+            'matchedAssists' => $updatedSchedules,
+            'restAssists' => $restAssists,
+            'originalResultsCount' => $originalResultsCount
         ]);
     }
+
     public function indexReport(Request $req)
     {
-
-        $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
         $startDate = $req->get('startDate');
         $endDate = $req->get('endDate');
         $q = $req->get('q');
@@ -256,16 +333,16 @@ class AssistController extends Controller
         $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
         $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
 
-        if (empty($terminalsIds) || !$startDate || !$endDate) {
+        if (!$startDate || !$endDate) {
             return response()->json('Invalid parameters', 400);
         }
 
-        $terminals = AssistTerminal::whereIn('id', $terminalsIds)->get();
+        $terminals = AssistTerminal::all();
 
         if ($terminals->isEmpty())
             return response()->json('No terminals found', 404);
 
-        Assists::dispatch($q, $terminalsIds, $startDate, $endDate, $jobId, $areaId, Auth::id());
+        Assists::dispatch($q, $startDate, $endDate, $jobId, $areaId, Auth::id());
 
         return response()->json('The report is being processed, you will be notified by email once it is ready');
     }
