@@ -10,8 +10,10 @@ Route::prefix('users')->group(function () {
     Route::get('{slug}/getManager', [UserController::class, 'getManager']);
     Route::get('{slug}/downOrganization', [UserController::class, 'downOrganization']);
     Route::get('{slug}/organization', [UserController::class, 'organization']);
+    Route::get('{slug}/getProperties', [UserController::class, 'getProperties']);
 
     Route::post('create', [UserController::class, 'create']);
+    Route::get('indexUsers', [UserController::class, 'indexUsers']);
     Route::get('{slug}', [UserController::class, 'one']);
     Route::post('{slug}/manager', [UserController::class, 'manager']);
     Route::post('{slug}/reset-password', [UserController::class, 'resetPassword']);
