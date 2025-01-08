@@ -337,13 +337,13 @@ class UserController extends Controller
         }
 
         return response()->json([
-            'coworkers' => $coworkers->map(function ($coworker) {
+            'coworkers' => $coworkers?->map(function ($coworker) {
                 return $coworker->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $coworker->role?->only(['name', 'id'])];
             }),
-            'subordinates' => $subordinates->map(function ($subordinate) {
+            'subordinates' => $subordinates?->map(function ($subordinate) {
                 return $subordinate->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $subordinate->role?->only(['name', 'id'])];
             }),
-            'manager' => $matchManager->first() ? $matchManager->first()->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $matchManager->first()->role?->only(['name', 'id'])]
+            'manager' => $matchManager?->first() ? $matchManager->first()->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $matchManager->first()->role?->only(['name', 'id'])]
                 : null
         ]);
     }
