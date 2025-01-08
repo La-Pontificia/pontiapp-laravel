@@ -10,7 +10,11 @@ Route::prefix('users')->group(function () {
     Route::get('{slug}/getManager', [UserController::class, 'getManager']);
     Route::get('{slug}/downOrganization', [UserController::class, 'downOrganization']);
     Route::get('{slug}/organization', [UserController::class, 'organization']);
+
     Route::get('{slug}/getProperties', [UserController::class, 'getProperties']);
+    Route::get('{slug}/getPropertiesEdit', [UserController::class, 'getPropertiesEdit']);
+    Route::get('{slug}/getAccount', [UserController::class, 'getAccount']);
+    Route::get('{slug}/getOrganization', [UserController::class, 'getOrganization']);
 
     Route::post('create', [UserController::class, 'create']);
     Route::get('indexUsers', [UserController::class, 'indexUsers']);
