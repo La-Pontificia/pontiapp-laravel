@@ -5,16 +5,16 @@ namespace App\Jobs;
 use App\Events\UserNotice;
 use App\Models\AssistTerminal;
 use App\Models\Report;
-use App\Models\Schedule;
+use App\Models\UserSchedule;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Assists implements ShouldQueue
@@ -22,17 +22,15 @@ class Assists implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $q;
-    public $terminalIds;
     public $startDate;
     public $endDate;
     public $jobId;
     public $areaId;
     public $userId;
 
-    public function __construct($q, $terminalIds, $startDate, $endDate, $jobId, $areaId, $userId)
+    public function __construct($q, $startDate, $endDate, $jobId, $areaId, $userId)
     {
         $this->q = $q;
-        $this->terminalIds = $terminalIds;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->jobId = $jobId;
@@ -77,7 +75,7 @@ class Assists implements ShouldQueue
             });
         }
 
-        $terminals = AssistTerminal::whereIn('id', $this->terminalIds)->get();
+        $terminals = AssistTerminal::all();
 
         $users = $queryUsers
             ->where('status', true)
@@ -93,6 +91,7 @@ class Assists implements ShouldQueue
             $plainEndDate = $endDate . 'T23:59:59.999';
 
             $userOnlyDocumentIds = $users->pluck('documentId')->toArray();
+            $userOnlyIds = $users->pluck('id')->toArray();
 
             foreach ($terminals as $terminal) {
                 $query = "
@@ -114,13 +113,9 @@ class Assists implements ShouldQueue
             }
 
             $finalSql = implode(" UNION ALL ", $unionQueries) . " ORDER BY datetime DESC";
-            $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql));
+            $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql))->keyBy('id');
 
-            $terminalsIds = $terminals->pluck('id')->toArray();
-            $userOnlyIds = $users->pluck('id')->toArray();
-
-            $schedules = Schedule::whereIn('assistTerminalId', $terminalsIds)
-                ->whereIn('userId', $userOnlyIds)
+            $schedules = UserSchedule::whereIn('userId', $userOnlyIds)
                 ->where('startDate', '<=', $startDate)
                 ->where(function ($query) use ($endDate) {
                     $query->where('endDate', '>=', $endDate)
@@ -128,185 +123,284 @@ class Assists implements ShouldQueue
                 })
                 ->get();
 
-            $firstAssistsBySchedules = collect([]);
+            $generatedSchedules = collect($schedules)->flatMap(function ($schedule) use ($startDate, $endDate) {
+                $start = max(Carbon::parse($startDate), Carbon::parse($schedule->startDate));
+                $end = $schedule->endDate ? min(Carbon::parse($endDate), Carbon::parse($schedule->endDate)) : Carbon::parse($endDate);
 
-            foreach ($schedules as $schedule) {
-                $start = $startDate < $schedule->startDate ? Carbon::parse($schedule->startDate) : Carbon::parse($startDate);
-                $end = $schedule->endDate ? ($endDate > $schedule->endDate ? Carbon::parse($schedule->endDate) : Carbon::parse($endDate)) : Carbon::parse($endDate);
-
-                $days = collect($schedule->days);
-
-                $assists = $results->filter(function ($result) use ($schedule) {
-                    return $result->documentId == $schedule->user->documentId && $result->terminalId == $schedule->assistTerminalId;
+                return collect(Carbon::parse($start)->daysUntil($end))->filter(function ($date) use ($schedule) {
+                    return collect($schedule->days)->contains($date->dayOfWeekIso);
+                })->map(function ($date) use ($schedule) {
+                    $from = Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day);
+                    $to = Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day);
+                    return [
+                        'date' => $date,
+                        'tolerence' => $schedule->tolerance,
+                        'from' => $from,
+                        'to' => $to,
+                        'userId' => $schedule->user->id,
+                        'userDocumentId' => $schedule->user->documentId
+                    ];
                 });
+            })->values();
 
-                for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $groupedSchedules = $generatedSchedules
+                ->groupBy('userId')
+                ->flatMap(function ($userSchedules) {
+                    return $userSchedules->groupBy(fn($schedule) => $schedule['date']->format('Y-m-d'))
+                        ->map(function ($dailySchedules) {
+                            $firstSchedule = $dailySchedules->first();
+                            $timeSlots = $dailySchedules->reduce(function ($slots, $schedule) {
+                                $hour = $schedule['from']->format('H');
+                                if ($hour < 12) {
+                                    $slots['morningFrom'] = $schedule['from'];
+                                    $slots['morningTo'] = $schedule['to'];
+                                } else {
+                                    $slots['afternoonFrom'] = $schedule['from'];
+                                    $slots['afternoonTo'] = $schedule['to'];
+                                }
+                                return $slots;
+                            }, [
+                                'morningFrom' => null,
+                                'morningTo' => null,
+                                'afternoonFrom' => null,
+                                'afternoonTo' => null,
+                            ]);
 
-                    // Si el día de la semana está en los días de la semana del horario
-                    if ($days->contains($date->dayOfWeekIso)) {
-                        $from = Carbon::parse($schedule->from)->setDate($date->year, $date->month, $date->day);
-                        $to = Carbon::parse($schedule->to)->setDate($date->year, $date->month, $date->day);
+                            return array_merge([
+                                'date' => $firstSchedule['date']->format('Y-m-d'),
+                                'tolerence' => $firstSchedule['tolerence'],
+                                'userId' => $firstSchedule['userId'],
+                                'userDocumentId' => $firstSchedule['userDocumentId']
+                            ], $timeSlots, [
+                                'morningMarkedIn' => null,
+                                'morningMarkedOut' => null,
+                                'afternoonMarkedIn' => null,
+                                'afternoonMarkedOut' => null
+                            ]);
+                        })->values();
+                })->values();
 
-                        $entryRangeStart = $from->copy()->subHour(2);
-                        $entryRangeEnd = $from->copy()->addHour(2);
+            $updatedSchedules = $groupedSchedules->map(function ($schedule) use ($results, $users) {
+                $dailyResults = $results->filter(
+                    fn($result) =>
+                    $result->documentId === $schedule['userDocumentId'] &&
+                        Carbon::parse($result->datetime)->format('Y-m-d') === $schedule['date']
+                )->keyBy('id');
 
-                        $exitRangeStart = $to->copy()->subHour(2);
-                        $exitRangeEnd = $to->copy()->addHour(2);
+                $calculateAttendance = function ($timeFrom, $timeTo, $dailyResults, $results, $rangeModifier) {
+                    if (!$timeFrom || !$timeTo) {
+                        return [null, null];
+                    }
 
-                        $dailyAssists = $assists->filter(function ($assist) use ($date) {
-                            return Carbon::parse($assist->datetime)->isSameDay($date);
-                        });
+                    $entryRangeStart = $timeFrom->copy()->sub($rangeModifier);
+                    $entryRangeEnd = $timeFrom->copy()->add($rangeModifier);
+                    $exitRangeStart = $timeTo->copy()->sub($rangeModifier);
+                    $exitRangeEnd = $timeTo->copy()->add($rangeModifier);
 
+                    $entry = $dailyResults->filter(
+                        fn($assist) =>
+                        Carbon::parse($assist->datetime)->between($entryRangeStart, $entryRangeEnd)
+                    )->sortBy(
+                        fn($assist) =>
+                        abs(Carbon::parse($assist->datetime)->diffInSeconds($timeFrom))
+                    )->first();
 
-                        // Buscar entrada más cercana al rango
-                        $entry = $dailyAssists->filter(function ($assist) use ($entryRangeStart, $entryRangeEnd) {
-                            $datetime = Carbon::parse($assist->datetime);
-                            return $datetime->between($entryRangeStart, $entryRangeEnd);
-                        })->sortBy(function ($assist) use ($from) {
-                            return abs(Carbon::parse($assist->datetime)->diffInSeconds($from));
-                        })->first();
+                    if ($entry) {
+                        unset($dailyResults[$entry->id]);
+                        unset($results[$entry->id]);
+                    }
 
-                        if ($entry) {
-                            $assists = $assists->reject(function ($assist) use ($entry) {
-                                return $assist->id === $entry->id;
-                            });
-                            $results = $results->reject(function ($result) use ($entry) {
-                                return $result->id === $entry->id;
-                            });
-                            $dailyAssists = $dailyAssists->reject(function ($assist) use ($entry) {
-                                return $assist->id === $entry->id;
-                            });
+                    $exit = $dailyResults->filter(
+                        fn($assist) =>
+                        Carbon::parse($assist->datetime)->between($exitRangeStart, $exitRangeEnd)
+                    )->sortBy(
+                        fn($assist) =>
+                        abs(Carbon::parse($assist->datetime)->diffInSeconds($timeTo))
+                    )->first();
+
+                    if ($exit) {
+                        unset($dailyResults[$exit->id]);
+                        unset($results[$exit->id]);
+                    }
+
+                    return [
+                        $entry ? Carbon::parse($entry->datetime) : null,
+                        $exit ? Carbon::parse($exit->datetime) : null,
+                    ];
+                };
+
+                [$morningMarkedIn, $morningMarkedOut] = $calculateAttendance(
+                    $schedule['morningFrom'],
+                    $schedule['morningTo'],
+                    $dailyResults,
+                    $results,
+                    CarbonInterval::minutes(120),
+
+                );
+
+                [$afternoonMarkedIn, $afternoonMarkedOut] = $calculateAttendance(
+                    $schedule['afternoonFrom'],
+                    $schedule['afternoonTo'],
+                    $dailyResults,
+                    $results,
+                    CarbonInterval::minutes(120),
+                );
+
+                // If there are still assists left, try to match them with the schedule
+                if ((!$morningMarkedIn || !$morningMarkedOut || !$afternoonMarkedIn || !$afternoonMarkedOut) && $dailyResults->isNotEmpty()) {
+                    $remainingEntry = $dailyResults->sortBy(
+                        fn($assist) => abs(Carbon::parse($assist->datetime)->diffInSeconds($schedule['morningFrom'] ?? $schedule['afternoonFrom']))
+                    )->first();
+
+                    if ($remainingEntry) {
+                        $entryTime = Carbon::parse($remainingEntry->datetime);
+
+                        if (!$morningMarkedIn && $entryTime < ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
+                            $morningMarkedIn = $entryTime;
+                        } elseif (!$morningMarkedOut && $entryTime < ($schedule['afternoonFrom'] ?? $schedule['morningTo'])) {
+                            $morningMarkedOut = $entryTime;
+                        } elseif (!$afternoonMarkedIn && $entryTime >= ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
+                            $afternoonMarkedIn = $entryTime;
+                        } elseif (!$afternoonMarkedOut) {
+                            $afternoonMarkedOut = $entryTime;
                         }
 
-                        // Buscar salida más cercana al rango
-                        $exit = $dailyAssists->filter(function ($assist) use ($exitRangeStart, $exitRangeEnd) {
-                            $datetime = Carbon::parse($assist->datetime);
-                            return $datetime->between($exitRangeStart, $exitRangeEnd);
-                        })->sortBy(function ($assist) use ($to) {
-                            return abs(Carbon::parse($assist->datetime)->diffInSeconds($to));
-                        })->first();
-
-                        if ($exit) {
-                            $assists = $assists->reject(function ($assist) use ($exit) {
-                                return $assist->id === $exit->id;
-                            });
-                            $results = $results->reject(function ($result) use ($exit) {
-                                return $result->id === $exit->id;
-                            });
-
-                            $dailyAssists = $dailyAssists->reject(function ($assist) use ($exit) {
-                                return $assist->id === $exit->id;
-                            });
-                        }
-
-
-                        $firstAssistsBySchedules[] = [
-                            'date' => $date->copy(),
-                            'from' => $from,
-                            'to' => $to,
-                            'user' => $schedule->user,
-                            'terminal' => $terminals->where('id', $schedule->assistTerminalId)->first(),
-                            'markedIn' => $entry ? $entry->datetime : null,
-                            'markedOut' => $exit ? $exit->datetime : null,
-                        ];
+                        unset($dailyResults[$remainingEntry->id]);
+                        unset($results[$remainingEntry->id]);
                     }
                 }
-            }
 
-            $firstAssistsBySchedules = collect($firstAssistsBySchedules)->sortByDesc('date')->values();
+                if ($morningMarkedIn && !$morningMarkedOut && !$afternoonMarkedIn && $afternoonMarkedOut) {
+                    $morningMarkedOut = $schedule['morningTo'];
+                    $afternoonMarkedIn = $schedule['afternoonFrom'];
+                }
 
-            $restAssists = $results->map(function ($assist) use ($terminals) {
-                $assist->terminal = $terminals->where('id', $assist->terminalId)->first();
-                $assist->user = User::where('documentId', $assist->documentId)->first();
-                return $assist;
+                return array_merge($schedule, [
+                    'user' => $users->find($schedule['userId'])
+                ], [
+                    'morningMarkedIn' => $morningMarkedIn,
+                    'morningMarkedOut' => $morningMarkedOut,
+                    'afternoonMarkedIn' => $afternoonMarkedIn,
+                    'afternoonMarkedOut' => $afternoonMarkedOut,
+                ]);
             });
 
-            $groupedAssists = $firstAssistsBySchedules->groupBy(function ($assist) {
-                return $assist['terminal']->id;
-            })->map(function ($group) {
-                return $group->groupBy(function ($assist) {
-                    return $assist['user']->documentId;
-                })->map(function ($subGroup) {
-                    return $subGroup->groupBy(function ($assist) {
-                        return $assist['date']->format('Y-m-d');
-                    });
-                });
+            $restAssists = $results->map(function ($record) use ($terminals, $users) {
+                $record->terminal = $terminals->where('id', $record->terminalId)->first();
+                $record->user = $users->where('documentId', $record->documentId)->first();
+                return $record;
+            })->values();
+
+            $groupedAssists = $updatedSchedules->groupBy('userId')->map(function ($userSchedules) {
+                return $userSchedules->groupBy('date');
             });
 
             $spreadsheet = IOFactory::load(public_path('templates/assists.xlsx'));
             $worksheet = $spreadsheet->getActiveSheet();
 
             $rr = 4;
-            foreach ($groupedAssists as $terminalId => $employees) {
-                foreach ($employees as $documentId => $dates) {
-                    foreach ($dates as $date => $assists) {
-                        foreach ($assists as $assist) {
 
-                            $arriveLate = Carbon::parse($assist['from'])->diffInMinutes(Carbon::parse($assist['markedIn']), false) > 0;
-                            $outBefore = Carbon::parse($assist['markedOut'])->lt(Carbon::parse($assist['to']));
 
-                            $worksheet->setCellValue('B' . $rr, $rr - 3);
-                            $worksheet->setCellValue('C' . $rr, $assist['terminal']?->name ?? "");
-                            $worksheet->setCellValue('D' . $rr, $assist['user']?->documentId);
-                            $worksheet->setCellValue('E' . $rr, $assist['user']?->lastNames . ', ' . $assist['user']?->firstNames);
-                            $worksheet->setCellValue('F' . $rr, $assist['user']?->role?->name ?? "");
-                            $worksheet->setCellValue('G' . $rr, $assist['user']?->role?->department?->area?->name ?? "");
-                            $worksheet->setCellValue('H' . $rr, Carbon::parse($assist['date'])->format('d/m/Y'));
-                            $worksheet->setCellValue('I' . $rr, Carbon::parse($assist['date'])->isoFormat('dddd'));
-                            $worksheet->getStyle('I' . $rr)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+            foreach ($groupedAssists as $userId => $dates) {
+                foreach ($dates as $date => $schedules) {
+                    foreach ($schedules as $schedule) {
+                        $morningArriveLate = Carbon::parse($schedule['morningFrom'])->diffInMinutes(Carbon::parse($schedule['morningMarkedIn']), false) > 0;
+                        $afternoonArriveLate = Carbon::parse($schedule['afternoonFrom'])->diffInMinutes(Carbon::parse($schedule['afternoonMarkedIn']), false) > 0;
+                        $formatParsed = Carbon::parse($schedule['date']);
+                        $morningFromMoreTolerence = $schedule['morningFrom'] ? Carbon::parse($schedule['morningFrom'])->addMinutes($schedule['tolerence']) : null;
+                        $afternoonFromMoreTolerence = $schedule['afternoonFrom'] ? Carbon::parse($schedule['afternoonFrom'])->addMinutes($schedule['tolerence']) : null;
 
-                            $worksheet->setCellValue('J' . $rr, Carbon::parse($assist['from'])->format('H:i'));
-                            $worksheet->getStyle('J' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $delayMorning = ($morningArriveLate && $schedule['morningMarkedIn']) ? Carbon::parse($schedule['morningMarkedIn'])->diff($morningFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
+                        $delayAfternoon = ($afternoonArriveLate && $schedule['afternoonMarkedIn']) ? Carbon::parse($schedule['afternoonMarkedIn'])->diff($afternoonFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
 
-                            $worksheet->setCellValue('K' . $rr, Carbon::parse($assist['to'])->format('H:i'));
-                            $worksheet->getStyle('K' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('A' . $rr, $rr - 3);
+                        $worksheet->setCellValue('B' . $rr, $schedule['user']?->branch?->name ?? "");
 
-                            $worksheet->setCellValue('L' . $rr, $assist['markedIn'] ? Carbon::parse($assist['markedIn'])->format('H:i:s') : "");
-                            $worksheet->getStyle('L' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                            if ($arriveLate) {
-                                $worksheet->getStyle('L' . $rr)->getFont()->getColor()->setARGB('ff9114');
-                            } else {
-                                $worksheet->getStyle('L' . $rr)->getFont()->getColor()->setARGB('006f39');
-                            }
+                        // nombre del mes
+                        $worksheet->setCellValue('C' . $rr, $formatParsed->isoFormat('MMMM'));
+                        $worksheet->setCellValue('D' . $rr, $formatParsed->format('d/m/Y'));
+                        $worksheet->getStyle('D' . $rr)->getNumberFormat()->setFormatCode('D/M/YYYY');
+                        $worksheet->setCellValue('E' . $rr, $schedule['user']?->documentId);
+                        $worksheet->setCellValue('F' . $rr, $schedule['user']?->lastNames . ', ' . $schedule['user']?->firstNames);
+                        $worksheet->setCellValue('G' . $rr, $schedule['user']?->role?->job?->name ?? "");
+                        $worksheet->setCellValue('H' . $rr, $schedule['user']?->role?->department?->area?->name ?? "");
 
-                            $worksheet->setCellValue('M' . $rr, $assist['markedOut'] ? Carbon::parse($assist['markedOut'])->format('H:i:s') : "");
-                            $worksheet->getStyle('M' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                            if ($outBefore) {
-                                $worksheet->getStyle('M' . $rr)->getFont()->getColor()->setARGB('ff9114');
-                            } else {
-                                $worksheet->getStyle('M' . $rr)->getFont()->getColor()->setARGB('006f39');
-                            }
+                        // Morning
+                        $worksheet->setCellValue('I' . $rr, $schedule['morningFrom'] ? $schedule['morningFrom']->format('H:i') : "");
+                        $worksheet->getStyle('I' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('J' . $rr, $morningFromMoreTolerence ? $morningFromMoreTolerence->format('H:i') : "");
+                        $worksheet->getStyle('J' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('K' . $rr, $schedule['morningTo'] ? $schedule['morningTo']->format('H:i') : "");
+                        $worksheet->getStyle('K' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
-                            $rr++;
+                        // Afternoon
+                        $worksheet->setCellValue('L' . $rr, $schedule['afternoonFrom'] ? $schedule['afternoonFrom']->format('H:i') : "");
+                        $worksheet->getStyle('L' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('M' . $rr, $afternoonFromMoreTolerence ? $afternoonFromMoreTolerence->format('H:i') : "");
+                        $worksheet->getStyle('M' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('N' . $rr, $schedule['afternoonTo'] ? $schedule['afternoonTo']->format('H:i') : "");
+                        $worksheet->getStyle('N' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+
+                        // ------------- Assists -------------
+                        // Morning
+                        $worksheet->setCellValue('O' . $rr, $schedule['morningMarkedIn'] ? $schedule['morningMarkedIn']->format('H:i:s') : "");
+                        $worksheet->getStyle('O' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        if ($morningArriveLate) $worksheet->getStyle('O' . $rr)->getFont()->getColor()->setARGB('f14c4c');
+                        $worksheet->setCellValue('P' . $rr, $schedule['morningMarkedOut'] ? $schedule['morningMarkedOut']->format('H:i:s') : "");
+                        $worksheet->getStyle('P' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+
+                        // Afternoon
+                        $worksheet->setCellValue('Q' . $rr, $schedule['afternoonMarkedIn'] ? $schedule['afternoonMarkedIn']->format('H:i:s') : "");
+                        $worksheet->getStyle('Q' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        if ($afternoonArriveLate) $worksheet->getStyle('Q' . $rr)->getFont()->getColor()->setARGB('f14c4c');
+                        $worksheet->setCellValue('R' . $rr, $schedule['afternoonMarkedOut'] ? $schedule['afternoonMarkedOut']->format('H:i:s') : "");
+                        $worksheet->getStyle('R' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+
+                        // Delays in format hh:mm:ss
+                        if ($delayMorning) {
+                            $worksheet->setCellValue('S' . $rr, $delayMorning);
+                            $worksheet->getStyle('S' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
                         }
+
+                        if ($schedule['afternoonMarkedIn']) {
+                            $worksheet->setCellValue('T' . $rr, $delayAfternoon);
+                            $worksheet->getStyle('T' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        }
+
+                        // Total delay
+                        $totalDelay = Carbon::parse($delayMorning)->diff(Carbon::parse($delayAfternoon))->format('%H:%I:%S');
+                        $worksheet->setCellValue('U' . $rr, $totalDelay);
+                        $worksheet->getStyle('U' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $rr++;
                     }
                 }
             }
 
-            $rr = $rr + 5;
+            $rr = $rr + 10;
             $rrr = 0;
             foreach ($restAssists as $assist) {
-                $worksheet->setCellValue('B' . $rr, $rrr + 1);
-                $worksheet->setCellValue('C' . $rr, $assist->terminal?->name ?? "");
-                $worksheet->setCellValue('D' . $rr, $assist->documentId);
-                $worksheet->setCellValue('E' . $rr, $assist->user?->lastNames . ', ' . $assist->user?->firstNames);
-                $worksheet->setCellValue('F' . $rr, $assist->user?->role?->name ?? "");
-                $worksheet->setCellValue('G' . $rr, $assist->user?->role?->department?->area?->name ?? "");
-                $worksheet->setCellValue('H' . $rr, Carbon::parse($assist->datetime)->format('d/m/Y'));
-                $worksheet->setCellValue('I' . $rr, Carbon::parse($assist->datetime)->isoFormat('dddd'));
-                $worksheet->getStyle('I' . $rr)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+                $worksheet->setCellValue('A' . $rr, $rrr + 1);
+                $worksheet->setCellValue('B' . $rr, $assist?->terminal?->name);
+                $worksheet->setCellValue('C' . $rr, Carbon::parse($assist->datetime)->isoFormat('MMMM'));
+                $worksheet->setCellValue('D' . $rr, Carbon::parse($assist->datetime)->format('d/m/Y'));
+                $worksheet->getStyle('D' . $rr)->getNumberFormat()->setFormatCode('D/M/YYYY');
+                $worksheet->setCellValue('E' . $rr, $assist->user?->documentId ?? "");
+                $worksheet->setCellValue('F' . $rr, $assist->user?->lastNames . ', ' . $assist->user?->firstNames);
 
-                $worksheet->setCellValue('N' . $rr, Carbon::parse($assist->datetime)->format('H:i'));
-                $worksheet->getStyle('N' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                $worksheet->setCellValue('G' . $rr, $assist->user?->role?->job?->name ?? "");
+                $worksheet->setCellValue('H' . $rr, $assist->user?->role?->department?->area?->name ?? "");
+
+                $worksheet->setCellValue('O' . $rr, Carbon::parse($assist->datetime)->format('H:i:s'));
+                $worksheet->getStyle('O' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
                 $rr++;
                 $rrr++;
             }
 
-            foreach (range('B', 'N') as $columnID) {
+            foreach (range('B', 'H') as $columnID) {
                 $worksheet->getColumnDimension($columnID)->setAutoSize(true);
             }
 
-            $fileName = 'assists_' . now()->timestamp . '.xlsx';
+            $fileName = $this->startDate . ' - ' . $this->endDate . '_' . now()->timestamp . '.xlsx';
             $filePath = 'files/reports/' . $fileName;
             $downloadLink = asset($filePath);
 
@@ -316,7 +410,7 @@ class Assists implements ShouldQueue
 
             $email = $user->email;
 
-            SendEmail::dispatch('Reporte de asistencias finalizado.', 'Hola, el reporte de asistencias con horarios ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
+            // SendEmail::dispatch('Reporte de asistencias finalizado.', 'Hola, el reporte de asistencias con horarios ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
 
             event(new UserNotice($user->id, "Reporte finalizado.", 'EL reporte de asistencias con horarios ya esta listo.', [
                 'Descargar' => $downloadLink,
@@ -324,7 +418,7 @@ class Assists implements ShouldQueue
             ]));
 
             Report::create([
-                'title' => 'Registros de asistencias con horarios.',
+                'title' => $this->startDate . ' - ' . $this->endDate . ' Asistencias con horarios',
                 'fileUrl' => $filePath,
                 'downloadLink' => $downloadLink,
                 'ext' => 'xlsx',
