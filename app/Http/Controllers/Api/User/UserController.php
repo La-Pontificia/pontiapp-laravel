@@ -400,6 +400,34 @@ class UserController extends Controller
         ]);
     }
 
+    public function getAccount($slug)
+    {
+        $user =  $this->getUser($slug);
+        return response()->json([
+            'customPrivileges' => $user->customPrivileges,
+            'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'username']) : null,
+            'userRole' => $user->userRole ? $user->userRole->only(['id', 'title']) : null,
+        ]);
+    }
+
+    public function getOrganization($slug)
+    {
+        $user =  $this->getUser($slug);
+        return response()->json([
+            'contractType' => $user->contractType ? $user->contractType->only(['id', 'name']) : null,
+            'entryDate' => $user->entryDate,
+        ]);
+    }
+
+    public function getPropertiesEdit($slug)
+    {
+        $user =  $this->getUser($slug);
+        return response()->json([
+            'documentId' => $user->documentId,
+            'birthdate' => $user->birthdate,
+        ]);
+    }
+
     public function updateOrganization(Request $req, $slug)
     {
         $user =  $this->getUser($slug);
