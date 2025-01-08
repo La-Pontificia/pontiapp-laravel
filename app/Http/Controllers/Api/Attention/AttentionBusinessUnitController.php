@@ -38,6 +38,7 @@ class AttentionBusinessUnitController extends Controller
         $req->validate([
             'ids' =>  'required|array',
         ]);
+
         AttentionBusinessUnit::truncate();
 
         $ids = $req->get('ids');
@@ -48,8 +49,6 @@ class AttentionBusinessUnitController extends Controller
             ]);
         }
 
-        return response()->json([
-            'message' => 'Business units assigned to attention successfully',
-        ]);
+        return response()->json('Business units assigned to attention successfully');
     }
 }

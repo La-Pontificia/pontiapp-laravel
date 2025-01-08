@@ -36,7 +36,7 @@ Route::prefix('attentions')->group(function () {
     });
 
     Route::prefix('businessUnits')->group(function () {
+        Route::post('update', [AttentionBusinessUnitController::class, 'store']);
         Route::get('', [AttentionBusinessUnitController::class, 'index']);
-        Route::post('', [AttentionBusinessUnitController::class, 'store']);
     });
 });
