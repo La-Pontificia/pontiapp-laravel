@@ -40,7 +40,7 @@ class AttentionBusinessUnitController extends Controller
         ]);
         AttentionBusinessUnit::truncate();
 
-        $ids = $req->input('ids');
+        $ids = $req->get('ids');
 
         foreach ($ids as $id) {
             AttentionBusinessUnit::create([
