@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Event;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use App\Models\EventRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -89,29 +88,5 @@ class EventController extends Controller
         $event->delete();
 
         return response()->json('Event deleted');
-    }
-
-    public function allRecords(Request $req)
-    {
-        $match = EventRecord::orderBy('created_at', 'desc');
-
-        $q = $req->query('q');
-        $eventId = $req->query('eventId');
-        $businessUnitId = $req->query('businessUnitId');
-        $relationship = explode(',', $req->query('relationship', ''));
-
-        if (in_array('event', $relationship)) $match->with('event');
-        if (in_array('business', $relationship)) $match->with('business');
-
-        if ($eventId) $match->where('eventId', $eventId);
-        if ($businessUnitId) $match->where('businessUnitId', $businessUnitId);
-
-        if ($q) $match->where('firstNames', 'like', "%$q%")
-            ->orWhere('lastNames', 'like', "%$q%")
-            ->orWhere('documentId', 'like', "%$q%");
-
-        $records = $match->paginate();
-
-        return response()->json($records);
     }
 }

@@ -19,6 +19,7 @@ class EventRecord extends Model
         'documentId',
         'firstNames',
         'lastNames',
+        'fullName',
         'career',
         'eventId',
         'institution',
