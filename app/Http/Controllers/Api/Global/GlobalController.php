@@ -13,12 +13,14 @@ class GlobalController extends Controller
     {
         $q = $req->get('q');
         $resultsUsers = User::where('displayName', 'like', "%$q%")
+            ->orderBy('created_at', 'desc')
             ->orWhere('firstNames', 'like', "%$q%")
             ->orWhere('lastNames', 'like', "%$q%")
             ->orWhere('username', 'like', "%$q%")
             ->with('role');
 
         $resultsReports = Report::where('title', 'like', "%$q%")
+            ->orderBy('created_at', 'desc')
             ->whereHas('user', function ($query) use ($q) {
                 $query->where('displayName', 'like', "%$q%")
                     ->orWhere('firstNames', 'like', "%$q%")
