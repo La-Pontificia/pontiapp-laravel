@@ -36,6 +36,6 @@ class AssistTerminal extends Model
 
     public function schedulesCount()
     {
-        return $this->hasMany(Schedule::class, 'assistTerminalId', 'id')->count();
+        return $this->hasMany(UserSchedule::class, 'assistTerminalId', 'id')->count();
     }
 }
