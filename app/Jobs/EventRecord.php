@@ -99,6 +99,7 @@ class EventRecord implements ShouldQueue
             'ext' => 'xlsx',
             'generatedBy' => $user->id,
             'module' => 'events-records',
+            'created_at' => now(),
         ]);
     }
 }
