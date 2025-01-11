@@ -13,7 +13,7 @@ class EventRecordController extends Controller
 
     public function index(Request $req)
     {
-        $match = EventRecord::orderBy('created_at', 'asc');
+        $match = EventRecord::orderBy('created_at', 'desc');
 
         $q = $req->query('q');
         $eventId = $req->query('eventId');
