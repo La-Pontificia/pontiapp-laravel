@@ -446,6 +446,7 @@ class UserController extends Controller
 
         $req->validate([
             'documentId' => 'required|string',
+            'photoURL' => 'nullable|string',
             'firstNames' => 'required|string',
             'lastNames' => 'required|string',
             'birthdate' => 'required|date',
@@ -463,6 +464,7 @@ class UserController extends Controller
         $user->firstNames = $req->firstNames;
         $user->lastNames = $req->lastNames;
         $user->fullName = $fullName;
+        $user->photoURL = $req->photoURL;
         $user->birthdate = $req->birthdate;
         $user->contacts = $req->contacts ? $req->contacts : null;
         $user->save();
