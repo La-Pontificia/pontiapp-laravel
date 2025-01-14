@@ -111,7 +111,28 @@ class UserController extends Controller
         // pagination or limit
         $users = $limit ? $match->limit($limit)->get() : $match->paginate();
 
-        return response()->json($users);
+        $graphed = $users->map(function ($user) {
+            return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username', 'email']) +
+                ['role' => $user->role?->only(['name']) +
+                    ['job' => $user->role?->job->only(['name'])] +
+                    ['department' => $user->role?->department->only(['name']) +
+                        ['area' => $user->role?->department->area->only(['name'])]]] +
+                ['manager' => $user->manager ? $user->manager->only(['firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) : null];
+        });
+
+        return response()->json(
+            $limit ? $graphed : [
+                'data' => $graphed,
+                'links' => $users->links(),
+                'current_page' => $users->currentPage(),
+                'total' => $users->total(),
+                'per_page' => $users->perPage(),
+                'last_page' => $users->lastPage(),
+                'from' => $users->firstItem(),
+                'to' => $users->lastItem(),
+                'next_page_url' => $users->nextPageUrl(),
+            ]
+        );
     }
 
     public function create(Request $req)
