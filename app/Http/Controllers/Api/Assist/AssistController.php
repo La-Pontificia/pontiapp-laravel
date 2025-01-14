@@ -155,6 +155,8 @@ class AssistController extends Controller
             });
         })->values();
 
+        $generatedSchedules = $generatedSchedules->sortBy('date');
+
         $groupedSchedules = $generatedSchedules
             ->groupBy('userId')
             ->flatMap(function ($userSchedules) {
@@ -317,7 +319,7 @@ class AssistController extends Controller
 
         return response()->json([
             'matchedAssists' => $updatedSchedules,
-            'restAssists' => $restAssists,
+            'restAssists' => $restAssists->sortBy('datetime'),
             'originalResultsCount' => $originalResultsCount
         ]);
     }
