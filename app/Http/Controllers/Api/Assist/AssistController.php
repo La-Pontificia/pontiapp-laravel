@@ -129,11 +129,11 @@ class AssistController extends Controller
         $originalResultsCount = $results->count();
 
         $schedules = UserSchedule::whereIn('userId', $userOnlyIds)
-            ->where('startDate', '<=', $startDate)
-            ->where(function ($query) use ($endDate) {
-                $query->where('endDate', '>=', $endDate)
-                    ->orWhereNull('endDate');
-            })
+            // ->where('startDate', '<=', $startDate)
+            // ->where(function ($query) use ($endDate) {
+            //     $query->where('endDate', '>=', $endDate)
+            //         ->orWhereNull('endDate');
+            // })
             ->get();
 
         $generatedSchedules = collect($schedules)->flatMap(function ($schedule) use ($startDate, $endDate) {
@@ -245,7 +245,7 @@ class AssistController extends Controller
                 $schedule['morningTo'],
                 $dailyResults,
                 $results,
-                CarbonInterval::minutes(120),
+                CarbonInterval::minutes(180),
 
             );
 
@@ -254,32 +254,32 @@ class AssistController extends Controller
                 $schedule['afternoonTo'],
                 $dailyResults,
                 $results,
-                CarbonInterval::minutes(120),
+                CarbonInterval::minutes(180),
             );
 
             // If there are still assists left, try to match them with the schedule
-            if ((!$morningMarkedIn || !$morningMarkedOut || !$afternoonMarkedIn || !$afternoonMarkedOut) && $dailyResults->isNotEmpty()) {
-                $remainingEntry = $dailyResults->sortBy(
-                    fn($assist) => abs(Carbon::parse($assist->datetime)->diffInSeconds($schedule['morningFrom'] ?? $schedule['afternoonFrom']))
-                )->first();
+            // if ((!$morningMarkedIn || !$morningMarkedOut || !$afternoonMarkedIn || !$afternoonMarkedOut) && $dailyResults->isNotEmpty()) {
+            //     $remainingEntry = $dailyResults->sortBy(
+            //         fn($assist) => abs(Carbon::parse($assist->datetime)->diffInSeconds($schedule['morningFrom'] ?? $schedule['afternoonFrom']))
+            //     )->first();
 
-                if ($remainingEntry) {
-                    $entryTime = Carbon::parse($remainingEntry->datetime);
+            //     if ($remainingEntry) {
+            //         $entryTime = Carbon::parse($remainingEntry->datetime);
 
-                    if (!$morningMarkedIn && $entryTime < ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
-                        $morningMarkedIn = $entryTime;
-                    } elseif (!$morningMarkedOut && $entryTime < ($schedule['afternoonFrom'] ?? $schedule['morningTo'])) {
-                        $morningMarkedOut = $entryTime;
-                    } elseif (!$afternoonMarkedIn && $entryTime >= ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
-                        $afternoonMarkedIn = $entryTime;
-                    } elseif (!$afternoonMarkedOut) {
-                        $afternoonMarkedOut = $entryTime;
-                    }
+            //         if (!$morningMarkedIn && $entryTime < ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
+            //             $morningMarkedIn = $entryTime;
+            //         } elseif (!$morningMarkedOut && $entryTime < ($schedule['afternoonFrom'] ?? $schedule['morningTo'])) {
+            //             $morningMarkedOut = $entryTime;
+            //         } elseif (!$afternoonMarkedIn && $entryTime >= ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
+            //             $afternoonMarkedIn = $entryTime;
+            //         } elseif (!$afternoonMarkedOut) {
+            //             $afternoonMarkedOut = $entryTime;
+            //         }
 
-                    unset($dailyResults[$remainingEntry->id]);
-                    unset($results[$remainingEntry->id]);
-                }
-            }
+            //         unset($dailyResults[$remainingEntry->id]);
+            //         unset($results[$remainingEntry->id]);
+            //     }
+            // }
 
             if ($morningMarkedIn && !$morningMarkedOut && !$afternoonMarkedIn && $afternoonMarkedOut) {
                 $morningMarkedOut = $schedule['morningTo'];
