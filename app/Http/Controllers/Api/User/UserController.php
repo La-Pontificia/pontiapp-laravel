@@ -301,7 +301,7 @@ class UserController extends Controller
     {
         $user =  $this->getUser($slug);
         $archived = $req->query('archived') ? true : false;
-        $match = UserSchedule::where('userId', $user->id)->orderBy('created_at', 'desc')->where('archived', $archived);
+        $match = UserSchedule::where('userId', $user->id)->orderBy('from', 'asc')->where('archived', $archived);
 
         $limit = $req->query('limit', 10);
         $includes = explode(',', $req->query('relationship'));
