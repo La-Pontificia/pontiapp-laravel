@@ -26,6 +26,7 @@ Route::prefix('users')->group(function () {
     Route::post('{slug}/updateOrganization', [UserController::class, 'updateOrganization']);
     Route::post('{slug}/updateProperties', [UserController::class, 'updateProperties']);
     Route::post('{slug}/create-entry-history', [UserController::class, 'createEntryHistory']);
+    Route::post('{slug}/update-profile-photo', [UserController::class, 'updateProfilePhoto']);
 
     Route::prefix('notifications')->group(function () {
         Route::get('all', [UserNotificationController::class, 'all']);

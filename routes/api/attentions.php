@@ -23,7 +23,7 @@ Route::prefix('attentions')->group(function () {
 
     Route::prefix('services')->group(function () {
         Route::get('all', [AttentionServiceController::class, 'all']);
-        Route::post('', [AttentionServiceController::class, 'store']);
+        Route::post('store', [AttentionServiceController::class, 'store']);
         Route::post('{id}', [AttentionServiceController::class, 'update']);
         Route::post('{id}/delete', [AttentionServiceController::class, 'delete']);
         Route::get('', [AttentionServiceController::class, 'byBusinesses']);
