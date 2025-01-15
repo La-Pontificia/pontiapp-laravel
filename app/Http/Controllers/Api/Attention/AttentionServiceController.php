@@ -14,11 +14,15 @@ class AttentionServiceController extends Controller
         $match = AttentionService::orderBy('created_at', 'desc');
         $paginate = $req->query('paginate', 'false');
 
+
         $q = $req->query('q');
+        $positionId = $req->query('positionId');
         $relationship = explode(',', $req->query('relationship', ''));
 
         if ($q) $match->where('name', 'like', "%$q%")
             ->orWhere('shortName', 'like', "%$q%");
+
+        if ($positionId) $match->where('attentionPositionId', $positionId);
 
         if (in_array('creator', $relationship)) $match->with('creator');
         if (in_array('updater', $relationship)) $match->with('updater');
