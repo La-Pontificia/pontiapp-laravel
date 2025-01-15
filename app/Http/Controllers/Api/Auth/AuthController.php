@@ -76,15 +76,11 @@ class AuthController extends Controller
     public function changeProfile(Request $req)
     {
         $user = User::find(Auth::id());
-        $req->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'path' => 'required|string'
-        ]);
         $cloudinaryImage = $req->file('file')->storeOnCloudinary('pontiapp/' . $user->username . '/profiles');
         $url = $cloudinaryImage->getSecurePath();
 
         $user->photoURL = $url;
         $user->save();
-        return response()->json($url, 200);
+        return response()->json($url);
     }
 }
