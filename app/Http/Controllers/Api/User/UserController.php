@@ -500,4 +500,24 @@ class UserController extends Controller
         $user->save();
         return response()->json('Version updated');
     }
+
+    public function updateProfilePhoto(Request $req, $slug)
+    {
+        $user =  $this->getUser($slug);
+
+        if (!$user) {
+            return response()->json('Usuario no encontrado', 404);
+        }
+
+        if (!$req->hasFile('file')) {
+            return response()->json('No se ha seleccionado una imagen', 400);
+        }
+
+        $cloudinaryImage = $req->file('file')->storeOnCloudinary('pontiapp/' . $user->username . '/profiles');
+        $url = $cloudinaryImage->getSecurePath();
+
+        $user->photoURL = $url;
+        $user->save();
+        return response()->json($url);
+    }
 }
