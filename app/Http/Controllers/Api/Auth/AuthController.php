@@ -46,7 +46,48 @@ class AuthController extends Controller
             if (in_array('role.job.department', $includes))  $user->role->job->department;
             if (in_array('role.department.area', $includes))  $user->role->department->area;
             if (in_array('userRole', $includes)) $user->userRole;
-            return response()->json($user);
+
+            $now = date('m-d');
+            $birthdayBoys = User::whereRaw("DATE_FORMAT(birthdate, '%m-%d') = '$now'")->get();
+
+            return response()->json([
+                'authUser' => [
+                    'displayName' => $user->displayName,
+                    'firstNames' => $user->firstNames,
+                    'lastNames' => $user->lastNames,
+                    'photoURL' => $user->photoURL,
+                    'username' => $user->username,
+                    'customPrivileges' => $user->customPrivileges,
+                    'email' => $user->email,
+                    'role' => [
+                        'id' => $user->role->id,
+                        'name' => $user->role->name,
+                    ],
+                    'userRole' => [
+                        'id' => $user->userRole->id,
+                        'title' => $user->userRole->title,
+                        'privileges' => $user->userRole->privileges
+                    ]
+                ],
+                'birthdayBoys' => $birthdayBoys?->map(function ($user) {
+                    return [
+                        'displayName' => $user->displayName,
+                        'firstNames' => $user->firstNames,
+                        'lastNames' => $user->lastNames,
+                        'contacts' => $user->contacts,
+                        'username' => $user->username,
+                        'photoURL' => $user->photoURL,
+                        'role' => [
+                            'name' => $user->role->name,
+                            'department' => [
+                                'area' => [
+                                    'name' => $user->role->department->area->name
+                                ]
+                            ]
+                        ],
+                    ];
+                })
+            ]);
         }
         return response()->json('No active session', 401);
     }
