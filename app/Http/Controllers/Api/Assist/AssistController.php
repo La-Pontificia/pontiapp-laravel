@@ -47,12 +47,13 @@ class AssistController extends Controller
         $jobId = $req->get('jobId');
         $withUser = $req->get('withUser');
         $areaId = $req->get('areaId');
-        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
-        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
 
         if (!$startDate || !$endDate) {
             return response()->json('Invalid parameters', 400);
         }
+
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('Y-m-d', $endDate)->format('Y-m-d');
 
         $queryUsers = self::relationShipUsers($req->get('relationship'), $req->get('limit'));
 
@@ -304,22 +305,13 @@ class AssistController extends Controller
         $restAssists = $results->map(function ($record) use ($terminals, $users) {
             $user = $users->where('documentId', $record->documentId)->first();
             $record->terminal = $terminals->where('id', $record->terminalId)->first();
-            $record->user = $user ? $user->only([
-                'id',
-                'documentId',
-                'firstNames',
-                'lastNames',
-                'displayName',
-                'email',
-                'username',
-                'photoURL'
-            ]) : null;
+            $record->user = $user ? $user->only(['id', 'documentId', 'firstNames', 'lastNames', 'displayName', 'email', 'username', 'photoURL']) : null;
             return $record;
         })->values();
 
         return response()->json([
             'matchedAssists' => $updatedSchedules,
-            'restAssists' => $restAssists->sortBy('datetime'),
+            'restAssists' => $restAssists->sortBy('datetime')->values(),
             'originalResultsCount' => $originalResultsCount
         ]);
     }
