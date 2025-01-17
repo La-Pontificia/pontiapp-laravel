@@ -3,9 +3,9 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-foreach (glob(base_path('routes/api/*.php')) as $routeFile) {
+collect(glob(base_path('routes/api/*.php')))->each(function ($routeFile) {
     require $routeFile;
-}
+});
 
 Route::get('/test', function () {
     $users = User::limit(5)->get()->map(function ($user) {
