@@ -165,23 +165,23 @@ class UserController extends Controller
         $fullName = $req->firstNames . ' ' . $req->lastNames;
 
         $user = User::create([
-            'photoURL' =>  $req->photoURL,
-            'documentId'  => $req->documentId,
+            'photoURL' =>  $req->get('photoURL'),
+            'documentId'  => $req->get('documentId'),
             'fullName' => $fullName,
-            'firstNames' => $req->firstNames,
-            'lastNames' => $req->lastNames,
+            'firstNames' => $req->get('firstNames'),
+            'lastNames' => $req->get('lastNames'),
             'email' => $req->email,
-            'password' => bcrypt($req->password),
-            'roleId' => $req->roleId,
-            'userRoleId' => $req->userRoleId,
-            'entryDate' => $req->entryDate,
-            'contractTypeId' => $req->contractTypeId,
-            'status' => $req->status,
-            'username' => $req->username,
-            'managerId' => $req->managerId,
-            'birthdate' => $req->birthdate,
-            'displayName' => $req->displayName,
-            'contacts' => $req->contacts ? $req->contacts : null,
+            'password' => bcrypt($req->get('password')),
+            'roleId' => $req->get('roleId'),
+            'userRoleId' => $req->get('userRoleId'),
+            'entryDate' => $req->get('entryDate'),
+            'contractTypeId' => $req->get('contractTypeId'),
+            'status' => $req->get('status'),
+            'username' => $req->get('username'),
+            'managerId' => $req->get('managerId'),
+            'birthdate' => $req->get('birthdate'),
+            'displayName' => $req->get('displayName'),
+            'contacts' => $req->get('contacts') ? $req->get('contacts') : null,
             'createdBy' => Auth::id(),
         ]);
 
@@ -380,31 +380,36 @@ class UserController extends Controller
         $currentUser = $user;
         while ($currentUser->manager) {
             $manager = $currentUser->manager;
-
             $currentUser->fill(
                 collect($manager->getAttributes())
                     ->filter(fn($value, $key) => !array_key_exists($key, $currentUser->getAttributes()))
                     ->toArray()
             );
-
-            $currentUser->role = $manager->role ?: $currentUser->role;
+            $currentUser->role = $currentUser->role;
             $currentUser = $manager;
         }
 
         $response = $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
             'coworkers' => $user->coworkers->map(fn($coworker) => $this->formatUserWithRole($coworker)),
             'subordinates' => $user->subordinates->map(fn($subordinate) => $this->formatUserWithRole($subordinate)),
-            'manager' => $user->manager ? $this->formatUserWithRole($user->manager) : null,
+            'manager' => $user->manager ? $this->formatUserWithRoleRecursion($user->manager) : null,
             'role' => $user->role?->only(['id', 'name'])
         ];
 
         return response()->json($response);
     }
 
+    private function formatUserWithRoleRecursion($user)
+    {
+        return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
+            'role' => $user->role?->only(['id', 'name']),
+            'manager' => $user->manager ? $this->formatUserWithRoleRecursion($user->manager) : null
+        ];
+    }
     private function formatUserWithRole($user)
     {
         return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
-            'role' => $user->role?->only(['id', 'name'])
+            'role' => $user->role?->only(['id', 'name']),
         ];
     }
 
@@ -435,7 +440,7 @@ class UserController extends Controller
     {
         $user =  $this->getUser($slug);
         return response()->json([
-            'contractType' => $user->contractType ? $user->contractType->only(['id', 'name']) : null,
+            'contractType' => $user->contractType?->only(['id', 'name']),
             'entryDate' => $user->entryDate,
         ]);
     }
