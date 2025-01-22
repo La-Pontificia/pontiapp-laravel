@@ -86,11 +86,6 @@ class User extends Authenticatable
         return $this->hasOne(Role::class, 'id', 'roleId');
     }
 
-    // public function job()
-    // {
-    //     return $this->role->job;
-    // }
-
     public function department()
     {
         return $this->role->department;
@@ -121,31 +116,19 @@ class User extends Authenticatable
         return $this->hasOne(UserRole::class, 'id', 'userRoleId');
     }
 
-    public function privileges()
-    {
-        return $this->role->privileges;
-    }
-
-    public function hasGroup($key)
-    {
-        return in_array($key, array_map(function ($privilege) {
-            return explode(':', $privilege)[0];
-        }, $this->role->privileges));
-    }
-
-    public function has($key)
-    {
-        return in_array($key, $this->role->privileges);
-    }
-
-    public function isDev()
-    {
-        return $this->has('development');
-    }
-
     public function manager()
     {
         return $this->hasOne(User::class, 'id', 'managerId');
+    }
+
+    public function hasPrivilege($privilege)
+    {
+        $rolePrivileges = $this->role->privileges ?? [];
+        $customPrivileges = $this->customPrivileges ?? [];
+        $allPrivileges = array_merge($rolePrivileges, $customPrivileges);
+
+        if (in_array('development', $allPrivileges)) return true;
+        return in_array($privilege, $allPrivileges);
     }
 
     public function edas()
