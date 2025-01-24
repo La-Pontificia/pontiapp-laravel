@@ -16,7 +16,7 @@ Route::middleware('check.auth')->group(function () {
 
         Route::prefix('positions')->group(function () {
             Route::get('all', [AttentionPositionController::class, 'all']);
-            Route::post('', [AttentionPositionController::class, 'store']);
+            Route::post('store', [AttentionPositionController::class, 'store']);
             Route::post('{id}', [AttentionPositionController::class, 'update']);
             Route::post('{id}/delete', [AttentionPositionController::class, 'delete']);
             Route::post('{id}/ui', [AttentionPositionController::class, 'updateUi']);
