@@ -15,10 +15,19 @@ class AttentionPositionController extends Controller
         $paginate = $req->query('paginate', 'false');
 
         $q = $req->query('q');
+        $businessIds = $req->query('businessIds') ? explode(',', $req->query('businessIds')) : [];
+        $state = $req->query('state', '');
         $relationship = explode(',', $req->query('relationship', ''));
 
         if ($q) $match->where('name', 'like', "%$q%")
             ->orWhere('shortName', 'like', "%$q%");
+
+        if (count($businessIds) > 0) {
+            $match->whereIn('businessUnitId', $businessIds);
+        }
+
+        if ($state === 'available') $match->where('available', true);
+        if ($state === 'notavailable') $match->where('available', false);
 
         if (in_array('creator', $relationship)) $match->with('creator');
         if (in_array('updater', $relationship)) $match->with('updater');
