@@ -97,8 +97,6 @@ class AttentionController extends Controller
             'personEmail' => 'nullable|email',
             'startAttend' => 'required|date',
             'finishAttend' => 'required|date',
-            'ticket' => 'required|array',
-            'attentionDescripcion' => 'nullable|string',
         ]);
 
         Attention::create([
@@ -113,8 +111,6 @@ class AttentionController extends Controller
             'personEmail' => $req->get('personEmail'),
             'startAttend' => Carbon::parse($req->get('startAttend')),
             'finishAttend' => Carbon::parse($req->get('finishAttend')),
-            'ticket' => $req->get('ticket'),
-            'attentionDescripcion' => $req->get('attentionDescripcion'),
         ]);
 
         return response()->json([
