@@ -123,12 +123,15 @@ class User extends Authenticatable
 
     public function hasPrivilege($privilege)
     {
-        $rolePrivileges = $this->role->privileges ?? [];
+        $rolePrivileges = $this->userRole->privileges ?? [];
         $customPrivileges = $this->customPrivileges ?? [];
         $allPrivileges = array_merge($rolePrivileges, $customPrivileges);
-
-        if (in_array('development', $allPrivileges)) return true;
         return in_array($privilege, $allPrivileges);
+    }
+
+    public function isDeveloper()
+    {
+        return $this->hasPrivilege('development');
     }
 
     public function edas()
