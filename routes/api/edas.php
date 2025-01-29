@@ -21,6 +21,7 @@ Route::middleware('check.auth')->group(function () {
             Route::get('', [EdaController::class, 'slug']);
             Route::post('approve', [EdaController::class, 'approve']);
             Route::post('close', [EdaController::class, 'close']);
+            Route::post('delete', [EdaController::class, 'delete']);
 
             Route::prefix('objetives')->group(function () {
                 Route::get('', [ObjetiveController::class, 'byEda']);
