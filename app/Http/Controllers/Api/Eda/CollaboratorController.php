@@ -58,11 +58,11 @@ class CollaboratorController  extends Controller
         if ($edas === 'withEdas') $match->whereHas('edas');
         if ($edas === 'withoutEdas') $match->doesntHave('edas');
 
-        if ($authUser->hasPrivilege('edas:collaborators:inHisSupervision')) {
+        if ($authUser->hasPrivilege('edas:collaborators:inHisSupervision') && !$authUser->hasPrivilege('edas:collaborators:all')) {
             $match->where('managerId', $authUser->id);
         }
 
-        if (!$authUser->hasPrivilege('edas:collaborators:all' || !$authUser->hasPrivilege('edas:collaborators:inHisSupervision'))) {
+        if (!$authUser->hasPrivilege('edas:collaborators:all') && !$authUser->hasPrivilege('edas:collaborators:inHisSupervision')) {
             return response()->json('permission_denied', 403);
         }
 
