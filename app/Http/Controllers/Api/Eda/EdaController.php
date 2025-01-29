@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Eda;
 use App\Http\Controllers\Controller;
 use App\Models\Eda;
 use App\Models\EdaEvaluation;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class EdaController  extends Controller
@@ -84,6 +85,16 @@ class EdaController  extends Controller
         $eda->closerId = Auth::id();
         $eda->save();
 
+        return response()->json('Ok');
+    }
+    public function delete($slug)
+    {
+        $authUser = User::find(Auth::id());
+        if (!$authUser->hasPrivilege('edas:delete')) {
+            return response()->json('permission_denied', 403);
+        }
+        $eda = Eda::find($slug);
+        $eda->delete();
         return response()->json('Ok');
     }
 }
