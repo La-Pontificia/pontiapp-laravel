@@ -25,7 +25,7 @@ class AuthController extends Controller
         if (!$user->status) return response()->json('account_disabled', 404);
 
         if (!Auth::attempt(['email' => $user->email, 'password' => $password])) {
-            return response()->json('incorrect_password', 401);
+            return response()->json('incorrect_password', 404);
         }
 
         $req->session()->regenerate();
