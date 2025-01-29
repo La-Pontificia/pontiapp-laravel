@@ -259,6 +259,11 @@ class UserController extends Controller
     public function manager(Request $req, $slug)
     {
         $user =  $this->getUser($slug);
+
+        $req->validate([
+            'managerId' => 'nullable|exists:users,id',
+        ]);
+
         if ($req->managerId) {
             $manager = User::find($req->managerId);
             $user->managerId = $req->managerId;
