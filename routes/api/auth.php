@@ -15,6 +15,7 @@ Route::prefix('auth')->group(function () {
     Route::middleware('check.auth')->group(function () {
         Route::get('current', [AuthController::class, 'current']);
         Route::post('changePassword', [AuthController::class, 'changePassword']);
+        Route::post('create-password', [AuthController::class, 'createPassword']);
         Route::post('signout', [AuthController::class, 'signOut']);
         Route::post('update-profile-photo', [AuthController::class, 'changeProfile']);
         Route::get('sanctum/csrf-cookie', [SanctumController::class, 'csrfCookie']);
