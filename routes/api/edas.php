@@ -12,6 +12,7 @@ Route::middleware('check.auth')->group(function () {
         Route::prefix('collaborators')->group(function () {
             Route::get('', [CollaboratorController::class, 'index']);
             Route::get('{slug}', [CollaboratorController::class, 'slug']);
+            Route::post('{slug}/invite', [CollaboratorController::class, 'invite']);
         });
         Route::prefix('years')->group(function () {
             Route::get('', [YearController::class, 'index']);
