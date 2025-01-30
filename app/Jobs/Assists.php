@@ -410,7 +410,7 @@ class Assists implements ShouldQueue
 
             $email = $user->email;
 
-            // SendEmail::dispatch('Reporte de asistencias finalizado.', 'Hola, el reporte de asistencias con horarios ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
+            SendEmail::dispatch('Reporte de asistencias finalizado.', 'Hola, el reporte de asistencias con horarios ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
 
             event(new UserNotice($user->id, "Reporte finalizado.", 'EL reporte de asistencias con horarios ya esta listo.', [
                 'Descargar' => $downloadLink,
