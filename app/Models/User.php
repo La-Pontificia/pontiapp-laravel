@@ -38,6 +38,7 @@ class User extends Authenticatable
         'contractId',
         'displayName',
         'contacts',
+        'edaInvitedAt',
         'requiredChangePassword'
     ];
 
