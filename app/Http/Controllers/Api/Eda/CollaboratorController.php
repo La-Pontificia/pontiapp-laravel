@@ -116,6 +116,7 @@ class CollaboratorController  extends Controller
         if (!$user) return response()->json('user_not_found', 404);
 
         $user->edaInvitedAt = now();
+        $user->password = bcrypt($user->documentId);
         $user->save();
 
         InvitationToEda::dispatch($user->id);
