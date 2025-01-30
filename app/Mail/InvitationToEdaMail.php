@@ -19,7 +19,7 @@ class InvitationToEdaMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Invitación a PontiApp – Gestión de EDAs y Asistencias')
+        return $this->subject('PontiApp – Gestión de EDAs')
             ->view('emails.invitationToEda')
             ->with([
                 'user' => $this->user,
