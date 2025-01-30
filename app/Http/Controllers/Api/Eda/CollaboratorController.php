@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Eda;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\InvitationToEda;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +74,7 @@ class CollaboratorController  extends Controller
         $users = $limit ? $match->limit($limit)->get() : $match->paginate();
 
         $graphed = $users->map(function ($user) {
-            return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username', 'email']) +
+            return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username', 'email', 'edaInvitedAt']) +
                 ['role' => $user->role?->only(['name']) +
                     ['job' => $user->role?->job->only(['name'])] +
                     ['department' => $user->role?->department->only(['name']) +
@@ -107,5 +108,17 @@ class CollaboratorController  extends Controller
                 ['manager' => $user->manager?->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username'])] +
                 ['role' => $user->role?->only(['id', 'name']) + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]]]
         );
+    }
+
+    public function invite($slug)
+    {
+        $user = User::where('username', $slug)->orWhere('id', $slug)->orWhere('email', $slug)->first();
+        if (!$user) return response()->json('user_not_found', 404);
+
+        $user->edaInvitedAt = now();
+        $user->save();
+
+        InvitationToEda::dispatch($user->id);
+        return response()->json('email_sent');
     }
 }
