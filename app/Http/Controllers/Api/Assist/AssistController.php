@@ -127,6 +127,7 @@ class AssistController extends Controller
 
         $finalSql = implode(" UNION ALL ", $unionQueries) . " ORDER BY datetime DESC";
         $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql))->keyBy('id');
+
         $originalResultsCount = $results->count();
 
         $schedules = UserSchedule::whereIn('userId', $userOnlyIds)
