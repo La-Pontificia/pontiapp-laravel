@@ -274,21 +274,20 @@ class UserController extends Controller
         return response()->json('Ok');
     }
 
-    public function resetPassword($slug)
+    public function resetPassword(Request $req, $slug)
     {
+
+        $req->validate([
+            'password' => 'required|string|min:8',
+            'requiredFirstLogin' => 'boolean',
+        ]);
+
         $user =  $this->getUser($slug);
-
-        $chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789';
-        $newPassword = '';
-        for ($x = 0; $x < 8; $x++) {
-            $i = rand(0, strlen($chars) - 1);
-            $newPassword .= substr($chars, $i, 1);
-        }
-
-        $user->password = bcrypt($newPassword);
+        $user->password = bcrypt($req->password);
+        $user->requiredChangePassword = $req->requiredFirstLogin;
         $user->save();
 
-        return response()->json($newPassword, 200);
+        return response()->json($req->password, 200);
     }
 
     public function toggleStatus($slug)

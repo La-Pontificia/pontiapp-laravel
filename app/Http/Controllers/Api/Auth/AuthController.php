@@ -30,7 +30,9 @@ class AuthController extends Controller
 
         $req->session()->regenerate();
 
-        return response()->json('success');
+        return response()->json(
+            $user->only(['id', 'requiredChangePassword']),
+        );
     }
 
     public function current(Request $req)
@@ -58,6 +60,7 @@ class AuthController extends Controller
                     'lastNames' => $user->lastNames,
                     'photoURL' => $user->photoURL,
                     'username' => $user->username,
+                    'requiredChangePassword' => $user->requiredChangePassword,
                     'customPrivileges' => $user->customPrivileges,
                     'email' => $user->email,
                     'role' => [
@@ -112,6 +115,19 @@ class AuthController extends Controller
         $user->password = bcrypt($newPassword);
         $user->save();
 
+        return response()->json('success');
+    }
+
+    public function createPassword(Request $req)
+    {
+        $user = User::find(Auth::id());
+        $req->validate([
+            'password' => 'required|min:8',
+        ]);
+        $newPassword = $req->get('password');
+        $user->password = bcrypt($newPassword);
+        $user->requiredChangePassword = false;
+        $user->save();
         return response()->json('success');
     }
 
