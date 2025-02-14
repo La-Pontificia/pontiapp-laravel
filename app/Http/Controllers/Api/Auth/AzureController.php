@@ -25,10 +25,12 @@ class AzureController extends Controller
         try {
             $azureUser = Socialite::driver('azure')->user();
         } catch (\Exception $e) {
+            error_log($e);
             return redirect($redirectErrorURL . '?error=auth_failed');
         }
 
         $user = User::where('email', $azureUser->getEmail())->first();
+
 
         if (!$user)  return redirect($redirectErrorURL . '?error=unauthorized');
         if (!$user->status) return redirect($redirectErrorURL . '?error=inactive');

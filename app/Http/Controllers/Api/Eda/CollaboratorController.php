@@ -44,6 +44,7 @@ class CollaboratorController  extends Controller
         $authUser = User::find(Auth::id());
 
         $match->where('status', true);
+        $match->whereHas('role');
 
         if ($role) $match->where('roleId', $role);
 
@@ -58,6 +59,8 @@ class CollaboratorController  extends Controller
 
         if ($edas === 'withEdas') $match->whereHas('edas');
         if ($edas === 'withoutEdas') $match->doesntHave('edas');
+
+
 
         if ($authUser->hasPrivilege('edas:collaborators:inHisSupervision') && !$authUser->hasPrivilege('edas:collaborators:all')) {
             $match->where('managerId', $authUser->id);
@@ -75,25 +78,18 @@ class CollaboratorController  extends Controller
 
         $graphed = $users->map(function ($user) {
             return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username', 'email', 'edaInvitedAt']) +
-                ['role' => $user->role?->only(['name']) +
+                ['role' => $user->role ? $user->role->only(['name']) +
                     ['job' => $user->role?->job->only(['name'])] +
                     ['department' => $user->role?->department->only(['name']) +
-                        ['area' => $user->role?->department->area->only(['name'])]]] +
+                        ['area' => $user->role?->department->area->only(['name'])]] : null] +
                 ['manager' => $user->manager ? $user->manager->only(['firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) : null] +
                 ['edasCount' => $user->edas->count()];
         });
 
         return response()->json(
             $limit ? $graphed : [
+                ...$users->toArray(),
                 'data' => $graphed,
-                'links' => $users->links(),
-                'current_page' => $users->currentPage(),
-                'total' => $users->total(),
-                'per_page' => $users->perPage(),
-                'last_page' => $users->lastPage(),
-                'from' => $users->firstItem(),
-                'to' => $users->lastItem(),
-                'next_page_url' => $users->nextPageUrl(),
             ]
         );
     }

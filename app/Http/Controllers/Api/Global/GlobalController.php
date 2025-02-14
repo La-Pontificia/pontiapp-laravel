@@ -17,6 +17,7 @@ class GlobalController extends Controller
             ->orWhere('firstNames', 'like', "%$q%")
             ->orWhere('lastNames', 'like', "%$q%")
             ->orWhere('username', 'like', "%$q%")
+            ->orWhere('documentId', 'like', "%$q%")
             ->with('role');
 
         $resultsReports = Report::where('title', 'like', "%$q%")
@@ -39,7 +40,7 @@ class GlobalController extends Controller
                     'lastNames' => $user->lastNames,
                     'username' => $user->username,
                     'photoURL' => $user->photoURL,
-                    'role' => $user->role->only(['name']),
+                    'role' => $user->role ? $user->role->only(['name']) : null,
                 ];
             }),
             'files' => $reports->map(function ($file) {

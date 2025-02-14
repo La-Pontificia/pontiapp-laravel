@@ -42,7 +42,7 @@ class UserController extends Controller
 
     public static function relationShipUser($relationShiptQuery, $queryMatch)
     {
-        $match = User::where('username', $queryMatch)->orWhere('id', $queryMatch)->orWhere('email', $queryMatch);
+        $match = User::where('username', $queryMatch)->orWhere('id', $queryMatch)->orWhere('email', $queryMatch)->orWhere('documentId', $queryMatch);
         $includes = explode(',', $relationShiptQuery);
         if (in_array('role', $includes)) $match->with('role');
         if (in_array('role.job', $includes)) $match->with('role.job');
@@ -113,24 +113,17 @@ class UserController extends Controller
 
         $graphed = $users->map(function ($user) {
             return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username', 'email']) +
-                ['role' => $user->role?->only(['name']) +
+                ['role' => $user->role ? $user->role?->only(['name']) +
                     ['job' => $user->role?->job->only(['name'])] +
                     ['department' => $user->role?->department->only(['name']) +
-                        ['area' => $user->role?->department->area->only(['name'])]]] +
+                        ['area' => $user->role?->department->area->only(['name'])]] : null] +
                 ['manager' => $user->manager ? $user->manager->only(['firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) : null];
         });
 
         return response()->json(
             $limit ? $graphed : [
+                ...$users->toArray(),
                 'data' => $graphed,
-                'links' => $users->links(),
-                'current_page' => $users->currentPage(),
-                'total' => $users->total(),
-                'per_page' => $users->perPage(),
-                'last_page' => $users->lastPage(),
-                'from' => $users->firstItem(),
-                'to' => $users->lastItem(),
-                'next_page_url' => $users->nextPageUrl(),
             ]
         );
     }
@@ -140,7 +133,7 @@ class UserController extends Controller
         request()->validate(User::$rules);
 
         $existsDocumentId = User::where('documentId', $req->documentId)->exists();
-        if ($existsDocumentId) {
+        if ($existsDocumentId && $req->documentId) {
             return response()->json('El usuario con el documento ingresado ya existe', 400);
         }
 
@@ -182,7 +175,7 @@ class UserController extends Controller
             'birthdate' => $req->get('birthdate'),
             'displayName' => $req->get('displayName'),
             'contacts' => $req->get('contacts') ? $req->get('contacts') : null,
-            'createdBy' => Auth::id(),
+            'creatorId' => Auth::id(),
         ]);
 
         $schedules = collect($req->schedules)->toArray();
@@ -201,6 +194,61 @@ class UserController extends Controller
         }
 
         $this->auditService->registerAudit('Usuario creado', 'Se ha creado un usuario', 'users', 'create', $req);
+        return response()->json($user);
+    }
+
+    public function update(Request $req)
+    {
+        $user = User::where('username', $req->slug)->orWhere('id', $req->slug)->orWhere('email', $req->slug)->first();
+
+        request()->validate(User::$rules);
+
+        $existsDocumentId = User::where('documentId', $req->documentId)->exists();
+
+        if ($req->documentId && $existsDocumentId && $user->documentId != $req->documentId) {
+            return response()->json('El usuario con el documento ingresado ya existe', 400);
+        }
+
+        $existsUsername = User::where('username', $req->username)->exists();
+        if ($existsUsername && $user->username != $req->username) {
+            return response()->json('El nombre de usuario ingresado ya esta en uso', 400);
+        }
+
+        $existsEmail = User::where('email', $req->email)->exists();
+        if ($existsEmail && $user->email != $req->email) {
+            return response()->json('El correo ingresado ya esta en uso por otra cuenta', 400);
+        }
+
+        // validate manage
+        if ($req->managerId) {
+            $role = Role::find($req->roleId);
+            $manage = User::find($req->managerId);
+            if ($manage->role->job->level >= $role->job->level) //<-- El jefe inmediato no puede ser de un nivel inferior al usuario. el nivel 0 es el mas alto
+                return response()->json('El jefe inmediato no puede ser de un nivel inferior al usuario', 400);
+        }
+
+        $fullName = $req->firstNames . ' ' . $req->lastNames;
+
+        $user->update([
+            'photoURL' =>  $req->get('photoURL'),
+            'documentId'  => $req->get('documentId'),
+            'fullName' => $fullName,
+            'firstNames' => $req->get('firstNames'),
+            'lastNames' => $req->get('lastNames'),
+            'email' => $req->email,
+            'password' => bcrypt($req->get('password')),
+            'roleId' => $req->get('roleId'),
+            'userRoleId' => $req->get('userRoleId'),
+            'entryDate' => $req->get('entryDate'),
+            'contractTypeId' => $req->get('contractTypeId'),
+            'status' => $req->get('status'),
+            'username' => $req->get('username'),
+            'managerId' => $req->get('managerId'),
+            'birthdate' => $req->get('birthdate'),
+            'displayName' => $req->get('displayName'),
+            'contacts' => $req->get('contacts') ? $req->get('contacts') : null,
+            'updaterId' => Auth::id(),
+        ]);
         return response()->json($user);
     }
 
@@ -250,9 +298,33 @@ class UserController extends Controller
     {
         $user = $this->relationShipUser($req->query('relationship'), $math)->first();
         // return response()->json($user);
+
+        if (!$user) return response()->json(null, 404);
         return response()->json(
             $user->only(['id', 'firstNames', 'lastNames', 'contacts', 'displayName', 'photoURL', 'username', 'email', 'status', 'created_at', 'updated_at']) +
-                ['role' => $user->role?->only(['id', 'name']) + ['job' => $user->role?->job->only(['id', 'name'])] + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]]]
+                ['role' => $user->role ? $user->role?->only(['id', 'name']) + ['job' => $user->role?->job->only(['id', 'name'])] + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]] : null]
+        );
+    }
+
+    public function oneEdit($math)
+    {
+        $user = User::where('username', $math)->orWhere('id', $math)->orWhere('email', $math)->first();
+
+        if (!$user) return response()->json(null, 404);
+
+        return response()->json(
+            [
+                ...$user->toArray(),
+                'userRole' => $user->userRole ? $user->userRole->only(['id', 'title']) : null,
+                'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'username', 'photoURL']) : null,
+                'contractType' => $user->contractType ? $user->contractType?->only(['id', 'name']) : null,
+                'role' => $user->role ? $user->role->only(['id', 'name']) + [
+                    'job' => $user->role->job->only(['id', 'name']),
+                    'department' => $user->role->department->only(['id', 'name']) + [
+                        'area' => $user->role->department->area->only(['id', 'name'])
+                    ]
+                ] : null,
+            ]
         );
     }
 
@@ -301,23 +373,6 @@ class UserController extends Controller
         );
     }
 
-    public function schedules(Request $req, $slug)
-    {
-        $user =  $this->getUser($slug);
-        $archived = $req->query('archived') ? true : false;
-        $match = UserSchedule::where('userId', $user->id)->orderBy('from', 'asc')->where('archived', $archived);
-
-        $limit = $req->query('limit', 10);
-        $includes = explode(',', $req->query('relationship'));
-        if (in_array('terminal', $includes)) $match->with('terminal');
-        $schedules = $match->limit($limit)->get();
-        return response()->json(
-            $schedules->map(function ($schedule) {
-                return $schedule->only(['id', 'from', 'to', 'days', 'title', 'startDate']) + ['terminal' => $schedule->terminal?->only(['id', 'name'])];
-            })
-        );
-    }
-
     public function getManager(Request $req, $slug)
     {
         $user =  $this->getUser($slug);
@@ -337,7 +392,7 @@ class UserController extends Controller
     {
         $user =  $this->getUser($slug);
 
-        $level = $user->role->job->level;
+        $level =  $user->role ? $user->role->job->level : -1;
 
         $matchCoworkers = $this->relationShipUsers($req->query('relationshipCoworkers'), $req->query('limitCoworkers'));
         $matchSubordinates = $this->relationShipUsers($req->query('relationshipSubordinates'), $req->query('limitSubordinates'));
@@ -368,7 +423,7 @@ class UserController extends Controller
             'subordinates' => $subordinates?->map(function ($subordinate) {
                 return $subordinate->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $subordinate->role?->only(['name', 'id'])];
             }),
-            'manager' => $matchManager?->first() ? $matchManager->first()->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $matchManager->first()->role?->only(['name', 'id'])]
+            'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + ['role' => $matchManager->first()->role ? $matchManager->first()->role?->only(['name', 'id']) : null]
                 : null
         ]);
     }
@@ -397,7 +452,7 @@ class UserController extends Controller
             'coworkers' => $user->coworkers->map(fn($coworker) => $this->formatUserWithRole($coworker)),
             'subordinates' => $user->subordinates->map(fn($subordinate) => $this->formatUserWithRole($subordinate)),
             'manager' => $user->manager ? $this->formatUserWithRoleRecursion($user->manager) : null,
-            'role' => $user->role?->only(['id', 'name'])
+            'role' => $user->role ? $user->role?->only(['id', 'name']) : null,
         ];
 
         return response()->json($response);
@@ -406,14 +461,14 @@ class UserController extends Controller
     private function formatUserWithRoleRecursion($user)
     {
         return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
-            'role' => $user->role?->only(['id', 'name']),
+            'role' => $user->role ? $user->role?->only(['id', 'name']) : null,
             'manager' => $user->manager ? $this->formatUserWithRoleRecursion($user->manager) : null
         ];
     }
     private function formatUserWithRole($user)
     {
         return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
-            'role' => $user->role?->only(['id', 'name']),
+            'role' => $user->role ? $user->role?->only(['id', 'name']) : null,
         ];
     }
 
@@ -528,5 +583,32 @@ class UserController extends Controller
         $user->photoURL = $url;
         $user->save();
         return response()->json($url);
+    }
+
+    public function search(Request $req)
+    {
+        $q = $req->get('q');
+        $users = User::where('displayName', 'like', "%$q%")
+            ->orderBy('created_at', 'desc')
+            ->orWhere('firstNames', 'like', "%$q%")
+            ->orWhere('lastNames', 'like', "%$q%")
+            ->orWhere('username', 'like', "%$q%")
+            ->orWhere('documentId', 'like', "%$q%")
+            ->with('role')
+            ->get();
+
+        return response()->json(
+            $users->map(function ($user) {
+                return [
+                    'fullName' => $user->fullName,
+                    'displayName' => $user->displayName,
+                    'firstNames' => $user->firstNames,
+                    'lastNames' => $user->lastNames,
+                    'username' => $user->username,
+                    'photoURL' => $user->photoURL,
+                    'role' => $user->role ? $user->role->only(['name']) : null,
+                ];
+            })
+        );
     }
 }

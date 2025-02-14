@@ -18,6 +18,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $username)
             ->orWhere('username', $username)
+            ->orWhere('documentId', $username)
             ->first();
 
         if (!$user) return response()->json('user_not_found', 404);
