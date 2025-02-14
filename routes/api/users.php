@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\User\ScheduleController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\User\UserNotificationController;
 use Illuminate\Support\Facades\Route;
@@ -7,27 +8,40 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('check.auth')->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('all', [UserController::class, 'all']);
-        Route::get('{slug}/schedules', [UserController::class, 'schedules']);
-        Route::get('{slug}/getManager', [UserController::class, 'getManager']);
-        Route::get('{slug}/downOrganization', [UserController::class, 'downOrganization']);
-        Route::get('{slug}/organization', [UserController::class, 'organization']);
-
-        Route::get('{slug}/getProperties', [UserController::class, 'getProperties']);
-        Route::get('{slug}/getPropertiesEdit', [UserController::class, 'getPropertiesEdit']);
-        Route::get('{slug}/getAccount', [UserController::class, 'getAccount']);
-        Route::get('{slug}/getOrganization', [UserController::class, 'getOrganization']);
+        Route::get('search', [UserController::class, 'search']);
 
         Route::post('create', [UserController::class, 'create']);
         Route::get('indexUsers', [UserController::class, 'indexUsers']);
-        Route::get('{slug}', [UserController::class, 'one']);
-        Route::post('{slug}/manager', [UserController::class, 'manager']);
-        Route::post('{slug}/reset-password', [UserController::class, 'resetPassword']);
-        Route::post('{slug}/toggle-status', [UserController::class, 'toggleStatus']);
-        Route::post('{slug}/updateAccount', [UserController::class, 'updateAccount']);
-        Route::post('{slug}/updateOrganization', [UserController::class, 'updateOrganization']);
-        Route::post('{slug}/updateProperties', [UserController::class, 'updateProperties']);
-        Route::post('{slug}/create-entry-history', [UserController::class, 'createEntryHistory']);
-        Route::post('{slug}/update-profile-photo', [UserController::class, 'updateProfilePhoto']);
+
+        Route::prefix('{slug}')->group(function () {
+            Route::get('', [UserController::class, 'one']);
+            Route::get('edit', [UserController::class, 'oneEdit']);
+            Route::get('getManager', [UserController::class, 'getManager']);
+            Route::get('downOrganization', [UserController::class, 'downOrganization']);
+            Route::get('organization', [UserController::class, 'organization']);
+            Route::get('getProperties', [UserController::class, 'getProperties']);
+            Route::get('getPropertiesEdit', [UserController::class, 'getPropertiesEdit']);
+            Route::get('getAccount', [UserController::class, 'getAccount']);
+            Route::get('getOrganization', [UserController::class, 'getOrganization']);
+
+            Route::post('', [UserController::class, 'update']);
+            Route::post('manager', [UserController::class, 'manager']);
+            Route::post('reset-password', [UserController::class, 'resetPassword']);
+            Route::post('toggle-status', [UserController::class, 'toggleStatus']);
+            Route::post('updateAccount', [UserController::class, 'updateAccount']);
+            Route::post('updateOrganization', [UserController::class, 'updateOrganization']);
+            Route::post('updateProperties', [UserController::class, 'updateProperties']);
+            Route::post('create-entry-history', [UserController::class, 'createEntryHistory']);
+            Route::post('update-profile-photo', [UserController::class, 'updateProfilePhoto']);
+        });
+
+        Route::prefix('schedules')->group(function () {
+            Route::post('', [ScheduleController::class, 'store']);
+            Route::post('{id}', [ScheduleController::class, 'update']);
+            Route::post('{id}/delete', [ScheduleController::class, 'delete']);
+            Route::post('{id}/archive', [ScheduleController::class, 'archive']);
+            Route::get('{slug}', [ScheduleController::class, 'index']);
+        });
 
         Route::prefix('notifications')->group(function () {
             Route::get('all', [UserNotificationController::class, 'all']);

@@ -16,7 +16,7 @@ Route::middleware('check.auth')->group(function () {
     Route::prefix('partials')->group(function () {
 
         Route::prefix('assist-terminals')->group(function () {
-            Route::get('/all', [AssistTerminalController::class, 'all']);
+            Route::get('all', [AssistTerminalController::class, 'all']);
             Route::post('', [AssistTerminalController::class, 'store']);
             Route::post('{id}', [AssistTerminalController::class, 'update']);
             Route::post('{id}/delete', [AssistTerminalController::class, 'delete']);
