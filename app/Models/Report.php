@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 class Report extends Model
 {
@@ -15,7 +14,7 @@ class Report extends Model
 
     protected $perPage = 25;
 
-    protected $fillable = ['id', 'title', 'fileUrl', 'ext', 'downloadLink', 'generatedBy', 'module'];
+    protected $fillable = ['id', 'title', 'fileUrl', 'ext', 'downloadLink', 'creatorId', 'module'];
 
     protected $keyType = 'string';
 
@@ -23,6 +22,6 @@ class Report extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id',  'generatedBy');
+        return $this->hasOne(User::class, 'id',  'creatorId');
     }
 }

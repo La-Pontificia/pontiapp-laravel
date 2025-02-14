@@ -2,36 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RmTTracking extends Model
 {
+    use HasFactory, HasUuids;
+
     protected $table = 'rm_t_trackings';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
 
+
     protected $fillable = [
         'id',
         'created_at',
         'updated_at',
-        'teacherUserId',
         'teacherDocumentId',
         'teacherFullName',
-        'semester',
-        'semesterId',
+        'period',
         'cycle',
-        'cycleId',
         'section',
-        'sectionId',
         'classRoom',
-        'classRomId',
-        'headquarter',
-        'headquarterId',
+        'branchId',
         'businessUnitId',
         'area',
-        'areaId',
-        'program',
+        'academicProgram',
         'course',
         'date',
         'evaluatorId',
@@ -51,31 +49,33 @@ class RmTTracking extends Model
         'er2b1',
         'er2b2',
         'er2bObtained',
-        'erTotal',
-        'erFinalGrade',
-        'erQualification',
+        'er2Total',
+        'er2FinalGrade',
+        'er2Qualification',
         'aditional1',
         'aditional2',
         'aditional3',
     ];
 
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
         'date' => 'date',
+        'trackingTime' => 'date',
         'er1Json' => 'array',
         'er2Json' => 'array',
-        'evaluationNumber' => 'integer',
-        'er1a' => 'integer',
-        'er1b' => 'integer',
-        'er1Obtained' => 'integer',
-        'er2a1' => 'integer',
-        'er2a2' => 'integer',
-        'er2aObtained' => 'integer',
-        'er2b1' => 'integer',
-        'er2b2' => 'integer',
-        'er2bObtained' => 'integer',
-        'erTotal' => 'integer',
-        'erFinalGrade' => 'integer',
     ];
+
+    public function evaluator()
+    {
+        return $this->hasOne(User::class, 'id', 'evaluatorId');
+    }
+
+    public function businessUnit()
+    {
+        return $this->hasOne(BusinessUnit::class, 'id', 'businessUnitId');
+    }
+
+    public function branch()
+    {
+        return $this->hasOne(Branch::class, 'id', 'branchId');
+    }
 }

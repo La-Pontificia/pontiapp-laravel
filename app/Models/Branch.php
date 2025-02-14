@@ -9,9 +9,12 @@ class Branch extends Model
 {
 
   use HasUuids;
+
+  protected $table = 'rm_branches';
+
   static $rules = [
     'name' => 'required',
-    'address' => 'required'
+    'address' => 'required',
   ];
 
   protected $perPage = 20;
@@ -20,15 +23,10 @@ class Branch extends Model
 
   public $incrementing = false;
 
-  protected $fillable = ['name', 'address'];
+  protected $fillable = ['name', 'address', 'creatorId'];
 
-  public function createdBy()
+  public function creator()
   {
-    return $this->hasOne(User::class, 'id', 'created_by');
-  }
-
-  public function updatedBy()
-  {
-    return $this->hasOne(User::class, 'id', 'updated_by');
+    return $this->hasOne(User::class, 'id', 'creatorId');
   }
 }
