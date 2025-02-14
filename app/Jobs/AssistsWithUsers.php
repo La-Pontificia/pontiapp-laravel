@@ -177,7 +177,7 @@ class AssistsWithUsers implements ShouldQueue
             'fileUrl' => $filePath,
             'downloadLink' => $downloadLink,
             'ext' => 'xlsx',
-            'generatedBy' => $user->id,
+            'creatorId' => $user->id,
             'module' => 'assists',
         ]);
     }
