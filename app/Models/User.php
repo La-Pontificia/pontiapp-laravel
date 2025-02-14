@@ -30,8 +30,8 @@ class User extends Authenticatable
         'branchId',
         'managerId',
         'username',
-        'createdBy',
-        'updatedBy',
+        'creatorId',
+        'updaterId',
         'entryDate',
         'fullName',
         'birthdate',
@@ -52,18 +52,19 @@ class User extends Authenticatable
     ];
 
     static $rules = [
-        'documentId' => 'string|required',
-        'firstNames' => 'string|required',
-        'lastNames' => 'string|required',
+        'documentId' => 'string|nullable',
+        'firstNames' => 'string|nullable',
+        'lastNames' => 'string|nullable',
         'managerId' => 'uuid|nullable',
         'email' => 'required|email',
+        'displayName' => 'string|required',
         'username' => 'required',
-        'roleId' => 'uuid|required',
+        'roleId' => 'uuid|nullable',
         'birthdate' => 'date|nullable',
-        'userRoleId' => 'uuid|required',
+        'userRoleId' => 'uuid|nullable',
         'entryDate' => 'date|nullable',
-        'contractTypeId' => 'uuid|required',
-        'password' => 'required|min:8',
+        'contractTypeId' => 'uuid|nullable',
+        'password' => 'min:8|nullable',
         'status' => 'boolean|required',
         'photoURL' => 'string|nullable',
         'customPrivileges' => 'array|nullable',
@@ -150,6 +151,11 @@ class User extends Authenticatable
 
     public function coworkers($limitCoworkers = 10)
     {
+
+        if (!$this->role) {
+            return collect();
+        }
+
         $level = $this->role->job->level;
         $coworkers = User::whereHas('role', function ($query) use ($level) {
             $query->whereHas('job', function ($query) use ($level) {
