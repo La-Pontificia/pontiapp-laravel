@@ -13,6 +13,18 @@ Route::middleware('check.auth')->group(function () {
         Route::post('create', [UserController::class, 'create']);
         Route::get('indexUsers', [UserController::class, 'indexUsers']);
 
+        Route::prefix('schedules')->group(function () {
+            Route::post('', [ScheduleController::class, 'store']);
+            Route::post('{id}', [ScheduleController::class, 'update']);
+            Route::post('{id}/delete', [ScheduleController::class, 'delete']);
+            Route::post('{id}/archive', [ScheduleController::class, 'archive']);
+            Route::get('{slug}', [ScheduleController::class, 'index']);
+        });
+
+        Route::prefix('notifications')->group(function () {
+            Route::get('all', [UserNotificationController::class, 'all']);
+        });
+
         Route::prefix('{slug}')->group(function () {
             Route::get('', [UserController::class, 'one']);
             Route::get('edit', [UserController::class, 'oneEdit']);
@@ -33,18 +45,6 @@ Route::middleware('check.auth')->group(function () {
             Route::post('updateProperties', [UserController::class, 'updateProperties']);
             Route::post('create-entry-history', [UserController::class, 'createEntryHistory']);
             Route::post('update-profile-photo', [UserController::class, 'updateProfilePhoto']);
-        });
-
-        Route::prefix('schedules')->group(function () {
-            Route::post('store', [ScheduleController::class, 'store']);
-            Route::post('{id}', [ScheduleController::class, 'update']);
-            Route::post('{id}/delete', [ScheduleController::class, 'delete']);
-            Route::post('{id}/archive', [ScheduleController::class, 'archive']);
-            Route::get('{slug}', [ScheduleController::class, 'index']);
-        });
-
-        Route::prefix('notifications')->group(function () {
-            Route::get('all', [UserNotificationController::class, 'all']);
         });
     });
 });
