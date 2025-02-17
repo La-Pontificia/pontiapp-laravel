@@ -23,11 +23,9 @@ class UserSchedule extends Model
         'userId',
         'from',
         'to',
-        'title',
-        'createdBy',
-        'updatedBy',
+        'creatorId',
+        'updaterId',
         'assistTerminalId',
-        'title',
         'days',
         'startDate',
         'endDate',
@@ -42,12 +40,12 @@ class UserSchedule extends Model
 
     public function createdUser()
     {
-        return $this->hasOne(User::class, 'id', 'createdBy');
+        return $this->hasOne(User::class, 'id', 'creatorId');
     }
 
     public function updatedUser()
     {
-        return $this->hasOne(User::class, 'id', 'updatedBy');
+        return $this->hasOne(User::class, 'id', 'updaterId');
     }
 
     public function user()
