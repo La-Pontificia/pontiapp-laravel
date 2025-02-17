@@ -74,8 +74,7 @@ class ScheduleController extends Controller
         $schedule->tolerance = $req->tolerance;
         $schedule->days = $req->days;
         $schedule->startDate = $req->startDate;
-        $schedule->title = $req->title ?? '-';
-        $schedule->createdBy = Auth::id();
+        $schedule->creatorId = Auth::id();
         $schedule->save();
         return response()->json('Schedule created successfully');
     }
@@ -97,8 +96,7 @@ class ScheduleController extends Controller
         $schedule->days = $req->days;
         $schedule->tolerance = $req->tolerance;
         $schedule->startDate = $req->startDate;
-        $schedule->title = $req->title ?? '-';
-        $schedule->updatedBy = Auth::id();
+        $schedule->updaterId = Auth::id();
         $schedule->save();
         return response()->json('Schedule updated successfully');
     }
