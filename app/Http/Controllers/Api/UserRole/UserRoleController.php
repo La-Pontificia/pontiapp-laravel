@@ -21,9 +21,11 @@ class UserRoleController extends Controller
 
         if ($q) $match->where('title', 'like', "%$q%");
 
-        $match->where('level', '>=', $authUser->userRole->level)->orderBy('level', 'asc');
+        if ($authUser->userRole) {
+            $match->where('level', '>=', $authUser->userRole->level);
+        }
 
-        $userRoles = $paginate === 'true' ? $match->paginate() : $match->get();
+        $userRoles = $paginate === 'true' ? $match->orderBy('level', 'asc')->paginate() : $match->orderBy('level', 'asc')->get();
 
         if (in_array('usersCount', $relationship)) {
             $userRoles->map(function ($item) {
