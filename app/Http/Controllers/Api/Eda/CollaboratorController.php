@@ -101,8 +101,11 @@ class CollaboratorController  extends Controller
 
         return response()->json(
             $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username', 'email', 'status']) +
-                ['manager' => $user->manager?->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username'])] +
-                ['role' => $user->role?->only(['id', 'name']) + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]]]
+                ['manager' => $user->manager ? $user->manager?->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) + [
+                    ['role' => $user->role ? $user->role?->only(['id', 'name']) + [
+                        ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]]
+                    ] : null]
+                ] : null]
         );
     }
 

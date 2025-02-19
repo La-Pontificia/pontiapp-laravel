@@ -89,6 +89,7 @@ class AssistController extends Controller
         $users = $queryUsers
             ->whereHas('schedules')
             ->where('status', true)
+            ->whereNotNull('documentId')
             ->get();
 
 
@@ -380,7 +381,10 @@ class AssistController extends Controller
             });
         }
 
-        $users = $queryUsers->where('status', true)->get();
+        $users = $queryUsers
+            ->where('status', true)
+            ->whereNotNull('documentId')
+            ->get();
 
         if (empty($terminalsIds) || !$startDate || !$endDate) {
             return response()->json('Invalid parameters', 400);

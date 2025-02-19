@@ -13,7 +13,6 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class AssistsWithUsers implements ShouldQueue
@@ -83,7 +82,10 @@ class AssistsWithUsers implements ShouldQueue
             });
         }
 
-        $users = $queryUsers->where('status', true)->get();
+        $users = $queryUsers
+            ->where('status', true)
+            ->whereNotNull('documentId')
+            ->get();
 
         $userOnlyDocumentIds = $users->pluck('documentId')->toArray();
 

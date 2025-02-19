@@ -25,7 +25,6 @@ class UserSchedule extends Model
         'to',
         'creatorId',
         'updaterId',
-        'assistTerminalId',
         'days',
         'startDate',
         'endDate',
@@ -51,10 +50,5 @@ class UserSchedule extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'userId');
-    }
-
-    public function terminal()
-    {
-        return $this->hasOne(AssistTerminal::class, 'id', 'assistTerminalId');
     }
 }

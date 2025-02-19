@@ -29,7 +29,6 @@ class AssistTerminalController extends Controller
 
         if (in_array('schedulesCount', $includes)) {
             $terminals->map(function ($terminal) {
-                $terminal->schedulesCount = $terminal->schedulesCount();
                 return $terminal;
             });
         }

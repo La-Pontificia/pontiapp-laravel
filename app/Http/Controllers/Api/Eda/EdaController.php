@@ -33,11 +33,11 @@ class EdaController  extends Controller
                 'closedAt',
                 'sentAt',
             ]) + [
-                'creator' => $eda->creator?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']),
-                'managed' => $eda->managed?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']),
-                'approver' => $eda->approver?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']),
-                'closer' => $eda->closer?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']),
-                'sender' => $eda->sender?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']),
+                'creator' => $eda->creator ? $eda->creator?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']) : null,
+                'managed' => $eda->managed ? $eda->managed?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']) : null,
+                'approver' => $eda->approver ? $eda->approver?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']) : null,
+                'closer' => $eda->closer ? $eda->closer?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']) : null,
+                'sender' => $eda->sender ? $eda->sender?->only(['id', 'displayName', 'firstNames', 'lastNames', 'username']) : null,
                 'evaluations' => [
                     1 => $eda->evaluations->where('number', 1)->first()?->only(['id', 'qualification', 'selftQualification', 'closedAt']),
                     2 => $eda->evaluations->where('number', 2)->first()?->only(['id', 'qualification', 'selftQualification', 'closedAt']),

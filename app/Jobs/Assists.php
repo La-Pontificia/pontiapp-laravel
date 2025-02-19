@@ -80,6 +80,7 @@ class Assists implements ShouldQueue
         $users = $queryUsers
             ->where('status', true)
             ->whereHas('schedules')
+            ->whereNotNull('documentId')
             ->get();
 
         if ($users->isEmpty()) {
