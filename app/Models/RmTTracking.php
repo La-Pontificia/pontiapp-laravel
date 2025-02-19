@@ -71,7 +71,7 @@ class RmTTracking extends Model
 
     public function businessUnit()
     {
-        return $this->hasOne(BusinessUnit::class, 'id', 'businessUnitId');
+        return $this->hasOne(RmBusinessUnit::class, 'id', 'businessUnitId');
     }
 
     public function branch()

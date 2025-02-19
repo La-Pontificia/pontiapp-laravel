@@ -27,6 +27,6 @@ class UserBusinessUnit extends Model
 
     public function business()
     {
-        return $this->hasOne(BusinessUnit::class, 'id', 'business_unit_id');
+        return $this->hasOne(RmBusinessUnit::class, 'id', 'business_unit_id');
     }
 }

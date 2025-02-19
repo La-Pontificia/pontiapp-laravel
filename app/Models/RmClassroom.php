@@ -6,32 +6,22 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BusinessUnit extends Model
+class RmRoom extends Model
 {
     use HasFactory, HasUuids;
-
-    protected $table = 'business_units';
-
-    protected $perPage = 20;
-
-    protected $fillable = [
-        'name',
-        'acronym',
-        'domain',
-        'creatorId',
-        'updaterId',
-    ];
-
-    protected $keyType = 'string';
+    protected $table = 'rm_classrooms';
+    protected $primaryKey = 'id';
     public $incrementing = false;
-
+    protected $keyType = 'string';
+    protected $fillable = [
+        'id',
+        'created_at',
+        'updated_at',
+        'name',
+        'creatorId',
+    ];
     public function creator()
     {
         return $this->hasOne(User::class, 'id', 'creatorId');
-    }
-
-    public function updater()
-    {
-        return $this->hasOne(User::class, 'id', 'updaterId');
     }
 }

@@ -17,11 +17,17 @@ class RmSection extends Model
         'id',
         'created_at',
         'updated_at',
+        'periodId',
         'name',
         'creatorId',
     ];
     public function creator()
     {
         return $this->hasOne(User::class, 'id', 'creatorId');
+    }
+
+    public function period()
+    {
+        return $this->hasOne(RmPeriod::class, 'id', 'periodId');
     }
 }

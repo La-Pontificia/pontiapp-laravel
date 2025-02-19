@@ -36,6 +36,6 @@ class EventRecord extends Model
 
     public function business()
     {
-        return $this->hasOne(BusinessUnit::class, 'id', 'businessUnitId');
+        return $this->hasOne(RmBusinessUnit::class, 'id', 'businessUnitId');
     }
 }

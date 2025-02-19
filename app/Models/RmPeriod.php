@@ -18,10 +18,16 @@ class RmPeriod extends Model
         'created_at',
         'updated_at',
         'name',
+        'academicProgramId',
         'creatorId',
     ];
     public function creator()
     {
         return $this->hasOne(User::class, 'id', 'creatorId');
+    }
+
+    public function academicProgram()
+    {
+        return $this->hasOne(RmAcademicProgram::class, 'id', 'academicProgramId');
     }
 }

@@ -18,10 +18,16 @@ class RmAcademicProgram extends Model
         'created_at',
         'updated_at',
         'name',
+        'businessUnitId',
         'creatorId',
     ];
     public function creator()
     {
         return $this->hasOne(User::class, 'id', 'creatorId');
+    }
+
+    public function businessUnit()
+    {
+        return $this->hasOne(RmBusinessUnit::class, 'id', 'businessUnitId');
     }
 }
