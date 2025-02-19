@@ -64,15 +64,8 @@ class AuthController extends Controller
                     'requiredChangePassword' => $user->requiredChangePassword,
                     'customPrivileges' => $user->customPrivileges,
                     'email' => $user->email,
-                    'role' => [
-                        'id' => $user->role->id,
-                        'name' => $user->role->name,
-                    ],
-                    'userRole' => [
-                        'id' => $user->userRole->id,
-                        'title' => $user->userRole->title,
-                        'privileges' => $user->userRole->privileges
-                    ]
+                    'role' => $user->role ? $user->role->only(['id', 'name']) : null,
+                    'userRole' => $user->userRole ? $user->userRole->only(['id', 'title', 'privileges']) : null
                 ],
                 'birthdayBoys' => $birthdayBoys?->map(function ($user) {
                     return [
@@ -82,14 +75,11 @@ class AuthController extends Controller
                         'contacts' => $user->contacts,
                         'username' => $user->username,
                         'photoURL' => $user->photoURL,
-                        'role' => [
-                            'name' => $user->role->name,
-                            'department' => [
-                                'area' => [
-                                    'name' => $user->role->department->area->name
-                                ]
-                            ]
-                        ],
+                        'role' => $user->role ? $user->role->only(['name']) + [
+                            'department' => $user->role->department ? $user->role->department->only(['name']) + [
+                                'area' => $user->role->department->area ? $user->role->department->area->only(['name']) : null
+                            ] : null
+                        ] : null
                     ];
                 })
             ]);
