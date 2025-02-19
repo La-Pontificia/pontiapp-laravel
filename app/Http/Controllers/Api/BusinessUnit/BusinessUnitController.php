@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api\BusinessUnit;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessUnit;
+use App\Models\RmBusinessUnit;
 use Illuminate\Http\Request;
 
 class BusinessUnitController extends Controller
 {
     public function all(Request $req)
     {
-        $match = BusinessUnit::orderBy('created_at', 'desc');
+        $match = RmBusinessUnit::orderBy('created_at', 'desc');
         $paginate = $req->query('paginate', 'false');
 
         $q = $req->query('q');

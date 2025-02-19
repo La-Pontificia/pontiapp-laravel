@@ -7,7 +7,7 @@ use App\Models\RmRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class RmRoomController extends Controller
+class RmClassroomController extends Controller
 {
     public function index(Request $req)
     {
@@ -20,7 +20,7 @@ class RmRoomController extends Controller
 
     public function store(Request $req)
     {
-        $req->validate(['name' => 'required|string|unique:rm_rooms',]);
+        $req->validate(['name' => 'required|string|unique:rm_classroom',]);
         $data = RmRoom::create([
             'name' => $req->name,
             'creatorId' => Auth::id(),
