@@ -70,6 +70,7 @@ class User extends Authenticatable
         'photoURL' => 'string|nullable',
         'customPrivileges' => 'array|nullable',
         'contacts' => 'array|nullable',
+        'branchId' => 'nullable|uuid'
     ];
 
     protected $casts = [
@@ -102,7 +103,7 @@ class User extends Authenticatable
 
     public function branch()
     {
-        return $this->hasOne(Branch::class, 'id', 'branchId');
+        return $this->hasOne(RmBranch::class, 'id', 'branchId');
     }
 
     public function createdUser()
