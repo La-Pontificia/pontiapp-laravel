@@ -15,59 +15,59 @@ Route::middleware('check.auth')->group(function () {
         Route::prefix('periods')->group(function () {
             Route::get('', [RmPeriodController::class, 'index']);
             Route::post('', [RmPeriodController::class, 'store']);
-            Route::post('{id}', [RmPeriodController::class, 'update']);
-            Route::post('{id}/delete', [RmPeriodController::class, 'delete']);
+            Route::post('{slug}', [RmPeriodController::class, 'update']);
+            Route::post('{slug}/delete', [RmPeriodController::class, 'delete']);
         });
 
         Route::prefix('sections')->group(function () {
             Route::get('', [RmSectionController::class, 'index']);
             Route::post('', [RmSectionController::class, 'store']);
-            Route::post('{id}', [RmSectionController::class, 'update']);
-            Route::post('{id}/delete', [RmSectionController::class, 'delete']);
+            Route::post('{slug}', [RmSectionController::class, 'update']);
+            Route::post('{slug}/delete', [RmSectionController::class, 'delete']);
         });
 
         Route::prefix('classrooms')->group(function () {
             Route::get('', [RmClassroomController::class, 'index']);
             Route::post('', [RmClassroomController::class, 'store']);
-            Route::post('{id}', [RmClassroomController::class, 'update']);
-            Route::post('{id}/delete', [RmClassroomController::class, 'delete']);
+            Route::post('{slug}', [RmClassroomController::class, 'update']);
+            Route::post('{slug}/delete', [RmClassroomController::class, 'delete']);
         });
 
         Route::prefix('cycles')->group(function () {
             Route::get('', [RmCycleController::class, 'index']);
             Route::post('', [RmCycleController::class, 'store']);
-            Route::post('{id}', [RmCycleController::class, 'update']);
-            Route::post('{id}/delete', [RmCycleController::class, 'delete']);
+            Route::post('{slug}', [RmCycleController::class, 'update']);
+            Route::post('{slug}/delete', [RmCycleController::class, 'delete']);
         });
 
         Route::prefix('academic-areas')->group(function () {
             Route::get('', [RmAcademicAreaController::class, 'index']);
             Route::post('', [RmAcademicAreaController::class, 'store']);
-            Route::post('{id}', [RmAcademicAreaController::class, 'update']);
-            Route::post('{id}/delete', [RmAcademicAreaController::class, 'delete']);
+            Route::post('{slug}', [RmAcademicAreaController::class, 'update']);
+            Route::post('{slug}/delete', [RmAcademicAreaController::class, 'delete']);
         });
 
         Route::prefix('academic-programs')->group(function () {
             Route::get('', [RmAcademicProgramController::class, 'index']);
             Route::post('', [RmAcademicProgramController::class, 'store']);
-            Route::post('{id}', [RmAcademicProgramController::class, 'update']);
-            Route::post('{id}/delete', [RmAcademicProgramController::class, 'delete']);
+            Route::post('{slug}', [RmAcademicProgramController::class, 'update']);
+            Route::post('{slug}/delete', [RmAcademicProgramController::class, 'delete']);
         });
 
         Route::prefix('branches')->group(function () {
             Route::get('', [RmBranchController::class, 'index']);
             Route::post('', [RmBranchController::class, 'store']);
-            Route::post('{id}', [RmBranchController::class, 'update']);
-            Route::post('{id}/delete', [RmBranchController::class, 'delete']);
+            Route::post('{slug}', [RmBranchController::class, 'update']);
+            Route::post('{slug}/delete', [RmBranchController::class, 'delete']);
         });
 
         Route::prefix('tt')->group(function () {
             Route::get('', [RmTTrackingController::class, 'index']);
             Route::post('store', [RmTTrackingController::class, 'store']);
             Route::post('report', [RmTTrackingController::class, 'report']);
-            Route::post('{id}', [RmTTrackingController::class, 'update']);
-            Route::post('{id}/delete', [RmTTrackingController::class, 'delete']);
-            Route::get('{id}', [RmTTrackingController::class, 'one']);
+            Route::post('{slug}', [RmTTrackingController::class, 'update']);
+            Route::post('{slug}/delete', [RmTTrackingController::class, 'delete']);
+            Route::get('{slug}', [RmTTrackingController::class, 'one']);
         });
     });
 });
