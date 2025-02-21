@@ -57,6 +57,7 @@ class UserController extends Controller
         if (in_array('schedules.terminal', $includes)) $match->with('schedules.terminal');
         if (in_array('userRole', $includes)) $match->with('userRole');
         if (in_array('contractType', $includes)) $match->with('contractType');
+        if (in_array('branch', $includes)) $match->with('branch');
         return $match;
     }
 
@@ -167,6 +168,7 @@ class UserController extends Controller
             'password' => bcrypt($req->get('password')),
             'roleId' => $req->get('roleId'),
             'userRoleId' => $req->get('userRoleId'),
+            'branchId' => $req->get('branchId'),
             'entryDate' => $req->get('entryDate'),
             'customPrivileges' => $req->get('customPrivileges'),
             'contractTypeId' => $req->get('contractTypeId'),
@@ -242,6 +244,7 @@ class UserController extends Controller
             'contractTypeId' => $req->get('contractTypeId'),
             'customPrivileges' => $req->get('customPrivileges'),
             'status' => $req->get('status'),
+            'branchId' => $req->get('branchId'),
             'username' => $req->get('username'),
             'managerId' => $req->get('managerId'),
             'birthdate' => $req->get('birthdate'),
@@ -302,6 +305,7 @@ class UserController extends Controller
         if (!$user) return response()->json(null, 404);
         return response()->json(
             $user->only(['id', 'firstNames', 'lastNames', 'contacts', 'displayName', 'photoURL', 'username', 'email', 'status', 'created_at', 'updated_at']) +
+                ['branch' => $user->branch ? $user->branch->only(["name", "address"]) : null] +
                 ['role' => $user->role ? $user->role?->only(['id', 'name']) + ['job' => $user->role?->job->only(['id', 'name'])] + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]] : null]
         );
     }
@@ -318,6 +322,7 @@ class UserController extends Controller
                 'userRole' => $user->userRole ? $user->userRole->only(['id', 'title']) : null,
                 'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'username', 'photoURL']) : null,
                 'contractType' => $user->contractType ? $user->contractType?->only(['id', 'name']) : null,
+                'branch' => $user->branch ?  $user->branch->only('id', 'name') : null,
                 'role' => $user->role ? $user->role->only(['id', 'name']) + [
                     'job' => $user->role->job->only(['id', 'name']),
                     'department' => $user->role->department->only(['id', 'name']) + [
