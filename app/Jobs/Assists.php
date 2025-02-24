@@ -305,101 +305,100 @@ class Assists implements ShouldQueue
             foreach ($groupedAssists as $userId => $dates) {
                 foreach ($dates as $date => $schedules) {
                     foreach ($schedules as $schedule) {
-                        $morningArriveLate = Carbon::parse($schedule['morningFrom'])->diffInMinutes(Carbon::parse($schedule['morningMarkedIn']), false) > 0;
-                        $afternoonArriveLate = Carbon::parse($schedule['afternoonFrom'])->diffInMinutes(Carbon::parse($schedule['afternoonMarkedIn']), false) > 0;
+                        // $morningArriveLate = Carbon::parse($schedule['morningFrom'])->diffInMinutes(Carbon::parse($schedule['morningMarkedIn']), false) > 0;
+                        // $afternoonArriveLate = Carbon::parse($schedule['afternoonFrom'])->diffInMinutes(Carbon::parse($schedule['afternoonMarkedIn']), false) > 0;
                         $formatParsed = Carbon::parse($schedule['date']);
                         $morningFromMoreTolerence = $schedule['morningFrom'] ? Carbon::parse($schedule['morningFrom'])->addMinutes($schedule['tolerence']) : null;
                         $afternoonFromMoreTolerence = $schedule['afternoonFrom'] ? Carbon::parse($schedule['afternoonFrom'])->addMinutes($schedule['tolerence']) : null;
 
-                        $delayMorning = ($morningArriveLate && $schedule['morningMarkedIn']) ? Carbon::parse($schedule['morningMarkedIn'])->diff($morningFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
-                        $delayAfternoon = ($afternoonArriveLate && $schedule['afternoonMarkedIn']) ? Carbon::parse($schedule['afternoonMarkedIn'])->diff($afternoonFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
+                        // $delayMorning = ($morningArriveLate && $schedule['morningMarkedIn']) ? Carbon::parse($schedule['morningMarkedIn'])->diff($morningFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
+                        // $delayAfternoon = ($afternoonArriveLate && $schedule['afternoonMarkedIn']) ? Carbon::parse($schedule['afternoonMarkedIn'])->diff($afternoonFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
 
                         $worksheet->setCellValue('A' . $rr, $rr - 3);
-                        $worksheet->setCellValue('B' . $rr, $schedule['user']?->branch?->name ?? "");
+                        $worksheet->setCellValue('B' . $rr, $formatParsed->format('d/m/Y'));
+                        $worksheet->getStyle('B' . $rr)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
+                        $worksheet->setCellValue('C' . $rr, ($schedule['user']?->firstNames && $schedule['user']?->lastNames) ? $schedule['user']?->lastNames . ', ' .  $schedule['user']?->firstNames : $schedule['user']?->displayName);
 
                         // nombre del mes
-                        $worksheet->setCellValue('C' . $rr, $formatParsed->isoFormat('MMMM'));
-                        $worksheet->setCellValue('D' . $rr, $formatParsed->format('d/m/Y'));
-                        $worksheet->getStyle('D' . $rr)->getNumberFormat()->setFormatCode('D/M/YYYY');
-                        $worksheet->setCellValue('E' . $rr, $schedule['user']?->documentId);
-                        $worksheet->setCellValue('F' . $rr, $schedule['user']?->lastNames . ', ' . $schedule['user']?->firstNames);
-                        $worksheet->setCellValue('G' . $rr, $schedule['user']?->role?->job?->name ?? "");
-                        $worksheet->setCellValue('H' . $rr, $schedule['user']?->role?->department?->area?->name ?? "");
+                        // $worksheet->setCellValue('E' . $rr, $schedule['user']?->documentId);
+                        // $worksheet->setCellValue('F' . $rr, $schedule['user']?->lastNames . ', ' . $schedule['user']?->firstNames);
+                        $worksheet->setCellValue('D' . $rr, $schedule['user']?->role?->department?->area?->name ?? "");
+                        // $worksheet->setCellValue('G' . $rr, $schedule['user']?->role?->job?->name ?? "");
 
                         // Morning
-                        $worksheet->setCellValue('I' . $rr, $schedule['morningFrom'] ? $schedule['morningFrom']->format('H:i') : "");
-                        $worksheet->getStyle('I' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        $worksheet->setCellValue('J' . $rr, $morningFromMoreTolerence ? $morningFromMoreTolerence->format('H:i') : "");
-                        $worksheet->getStyle('J' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        $worksheet->setCellValue('K' . $rr, $schedule['morningTo'] ? $schedule['morningTo']->format('H:i') : "");
-                        $worksheet->getStyle('K' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('E' . $rr, $schedule['morningFrom'] ? $schedule['morningFrom']->format('H:i') : "");
+                        $worksheet->getStyle('E' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('F' . $rr, $morningFromMoreTolerence ? $morningFromMoreTolerence->format('H:i') : "");
+                        $worksheet->getStyle('F' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('G' . $rr, $schedule['morningTo'] ? $schedule['morningTo']->format('H:i') : "");
+                        $worksheet->getStyle('G' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
                         // Afternoon
-                        $worksheet->setCellValue('L' . $rr, $schedule['afternoonFrom'] ? $schedule['afternoonFrom']->format('H:i') : "");
-                        $worksheet->getStyle('L' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        $worksheet->setCellValue('M' . $rr, $afternoonFromMoreTolerence ? $afternoonFromMoreTolerence->format('H:i') : "");
-                        $worksheet->getStyle('M' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        $worksheet->setCellValue('N' . $rr, $schedule['afternoonTo'] ? $schedule['afternoonTo']->format('H:i') : "");
-                        $worksheet->getStyle('N' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('H' . $rr, $schedule['afternoonFrom'] ? $schedule['afternoonFrom']->format('H:i') : "");
+                        $worksheet->getStyle('H' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('I' . $rr, $afternoonFromMoreTolerence ? $afternoonFromMoreTolerence->format('H:i') : "");
+                        $worksheet->getStyle('I' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        $worksheet->setCellValue('J' . $rr, $schedule['afternoonTo'] ? $schedule['afternoonTo']->format('H:i') : "");
+                        $worksheet->getStyle('J' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
                         // ------------- Assists -------------
                         // Morning
                         $worksheet->setCellValue('O' . $rr, $schedule['morningMarkedIn'] ? $schedule['morningMarkedIn']->format('H:i:s') : "");
                         $worksheet->getStyle('O' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        if ($morningArriveLate) $worksheet->getStyle('O' . $rr)->getFont()->getColor()->setARGB('f14c4c');
+                        // if ($morningArriveLate) $worksheet->getStyle('O' . $rr)->getFont()->getColor()->setARGB('f14c4c');
                         $worksheet->setCellValue('P' . $rr, $schedule['morningMarkedOut'] ? $schedule['morningMarkedOut']->format('H:i:s') : "");
                         $worksheet->getStyle('P' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
                         // Afternoon
                         $worksheet->setCellValue('Q' . $rr, $schedule['afternoonMarkedIn'] ? $schedule['afternoonMarkedIn']->format('H:i:s') : "");
                         $worksheet->getStyle('Q' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        if ($afternoonArriveLate) $worksheet->getStyle('Q' . $rr)->getFont()->getColor()->setARGB('f14c4c');
+                        // if ($afternoonArriveLate) $worksheet->getStyle('Q' . $rr)->getFont()->getColor()->setARGB('f14c4c');
                         $worksheet->setCellValue('R' . $rr, $schedule['afternoonMarkedOut'] ? $schedule['afternoonMarkedOut']->format('H:i:s') : "");
                         $worksheet->getStyle('R' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
                         // Delays in format hh:mm:ss
-                        if ($delayMorning) {
-                            $worksheet->setCellValue('S' . $rr, $delayMorning);
-                            $worksheet->getStyle('S' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        }
+                        // if ($delayMorning) {
+                        //     $worksheet->setCellValue('S' . $rr, $delayMorning);
+                        //     $worksheet->getStyle('S' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        // }
 
-                        if ($schedule['afternoonMarkedIn']) {
-                            $worksheet->setCellValue('T' . $rr, $delayAfternoon);
-                            $worksheet->getStyle('T' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        }
+                        // if ($schedule['afternoonMarkedIn']) {
+                        //     $worksheet->setCellValue('T' . $rr, $delayAfternoon);
+                        //     $worksheet->getStyle('T' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        // }
 
                         // Total delay
-                        $totalDelay = Carbon::parse($delayMorning)->diff(Carbon::parse($delayAfternoon))->format('%H:%I:%S');
-                        $worksheet->setCellValue('U' . $rr, $totalDelay);
-                        $worksheet->getStyle('U' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+                        // $totalDelay = Carbon::parse($delayMorning)->diff(Carbon::parse($delayAfternoon))->format('%H:%I:%S');
+                        // $worksheet->setCellValue('U' . $rr, $totalDelay);
+                        // $worksheet->getStyle('U' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
                         $rr++;
                     }
                 }
             }
 
-            $rr = $rr + 10;
-            $rrr = 0;
-            foreach ($restAssists as $assist) {
-                $worksheet->setCellValue('A' . $rr, $rrr + 1);
-                $worksheet->setCellValue('B' . $rr, $assist?->terminal?->name);
-                $worksheet->setCellValue('C' . $rr, Carbon::parse($assist->datetime)->isoFormat('MMMM'));
-                $worksheet->setCellValue('D' . $rr, Carbon::parse($assist->datetime)->format('d/m/Y'));
-                $worksheet->getStyle('D' . $rr)->getNumberFormat()->setFormatCode('D/M/YYYY');
-                $worksheet->setCellValue('E' . $rr, $assist->user?->documentId ?? "");
-                $worksheet->setCellValue('F' . $rr, $assist->user?->lastNames . ', ' . $assist->user?->firstNames);
+            // $rr = $rr + 10;
+            // $rrr = 0;
+            // foreach ($restAssists as $assist) {
+            //     $worksheet->setCellValue('A' . $rr, $rrr + 1);
+            //     $worksheet->setCellValue('B' . $rr, $assist?->terminal?->name);
+            //     $worksheet->setCellValue('C' . $rr, Carbon::parse($assist->datetime)->isoFormat('MMMM'));
+            //     $worksheet->setCellValue('D' . $rr, Carbon::parse($assist->datetime)->format('d/m/Y'));
+            //     $worksheet->getStyle('D' . $rr)->getNumberFormat()->setFormatCode('D/M/YYYY');
+            //     $worksheet->setCellValue('E' . $rr, $assist->user?->documentId ?? "");
+            //     $worksheet->setCellValue('F' . $rr, $assist->user?->lastNames . ', ' . $assist->user?->firstNames);
 
-                $worksheet->setCellValue('G' . $rr, $assist->user?->role?->job?->name ?? "");
-                $worksheet->setCellValue('H' . $rr, $assist->user?->role?->department?->area?->name ?? "");
+            //     $worksheet->setCellValue('G' . $rr, $assist->user?->role?->job?->name ?? "");
+            //     $worksheet->setCellValue('H' . $rr, $assist->user?->role?->department?->area?->name ?? "");
 
-                $worksheet->setCellValue('O' . $rr, Carbon::parse($assist->datetime)->format('H:i:s'));
-                $worksheet->getStyle('O' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                $rr++;
-                $rrr++;
-            }
+            //     $worksheet->setCellValue('O' . $rr, Carbon::parse($assist->datetime)->format('H:i:s'));
+            //     $worksheet->getStyle('O' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
+            //     $rr++;
+            //     $rrr++;
+            // }
 
-            foreach (range('B', 'H') as $columnID) {
-                $worksheet->getColumnDimension($columnID)->setAutoSize(true);
-            }
+            // foreach (range('B', 'H') as $columnID) {
+            //     $worksheet->getColumnDimension($columnID)->setAutoSize(true);
+            // }
 
             $fileName = $this->startDate . ' - ' . $this->endDate . '_' . now()->timestamp . '.xlsx';
             $filePath = 'files/reports/' . $fileName;
