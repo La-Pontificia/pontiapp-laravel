@@ -58,7 +58,7 @@ class EventRecord implements ShouldQueue
             $worksheet->setCellValue('D' . $r, $record->gender);
             $worksheet->setCellValue('E' . $r, $record->career);
             $worksheet->setCellValue('F' . $r, $record->period);
-            $worksheet->setCellValue('G' . $r, $record->business->name);
+            $worksheet->setCellValue('G' . $r, $record->businessUnit->name);
             $worksheet->setCellValue('H' . $r, $record->email);
             $worksheet->setCellValue('I' . $r, $record->event->name);
             $worksheet->setCellValue('J' . $r, $record->created_at->format('d/m/Y'));
