@@ -14,14 +14,10 @@ class EventRecordController extends Controller
     public function index(Request $req)
     {
         $match = EventRecord::orderBy('created_at', 'desc');
-
         $q = $req->query('q');
         $eventId = $req->query('eventId');
         $businessUnitId = $req->query('businessUnitId');
-        $relationship = explode(',', $req->query('relationship', ''));
-
-        if (in_array('event', $relationship)) $match->with('event');
-        if (in_array('business', $relationship)) $match->with('business');
+        $paginate = $req->query('paginate') === 'true';
 
         if ($eventId) $match->where('eventId', $eventId);
         if ($businessUnitId) $match->where('businessUnitId', $businessUnitId);
@@ -31,9 +27,20 @@ class EventRecordController extends Controller
             ->orWhere('fullName', 'like', "%$q%")
             ->orWhere('documentId', 'like', "%$q%");
 
-        $records = $match->paginate();
+        $data = $paginate ? $match->paginate(25) :  $match->get();
 
-        return response()->json($records);
+        $graphed = $data->map(function ($item) {
+            return $item->only(['id', 'documentId', 'career', 'firstNames', 'lastNames', 'fullName', 'created_at']) +
+                ['event' => $item->event ? $item->event->only(['id', 'name']) : null] +
+                ['businessUnit' => $item->businessUnit ? $item->businessUnit->only(['id', 'name', 'logoURL']) : null];
+        });
+
+        return response()->json(
+            $paginate ? [
+                ...$data->toArray(),
+                'data' => $graphed,
+            ] : $graphed
+        );
     }
 
     public function store(Request $req)

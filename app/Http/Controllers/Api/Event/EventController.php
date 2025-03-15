@@ -9,30 +9,28 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
-    public function all(Request $req)
+    public function index(Request $req)
     {
         $match = Event::orderBy('created_at', 'desc');
-        $paginate = $req->query('paginate', 'false');
-
         $q = $req->query('q');
-        $relationship = explode(',', $req->query('relationship', ''));
+        $paginate = $req->query('paginate') === 'true';
 
-        if ($q) $match->where('name', 'like', "%$q%")
-            ->orWhere('description', 'like', "%$q%");
+        if ($q) $match->where('name', 'like', "%$q%")->orWhere('description', 'like', "%$q%");
 
-        if (in_array('creator', $relationship)) $match->with('creator');
+        $data = $paginate ? $match->paginate(25) :  $match->get();
 
+        $graphed = $data->map(function ($item) {
+            return $item->only(['id', 'name', 'description', 'date', 'created_at']) +
+                ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
+                ['updater' => $item->updater ? $item->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null];
+        });
 
-        $events = $paginate === 'true' ? $match->paginate() : $match->get();
-
-        if (in_array('recordsCount', $relationship)) {
-            $events->map(function ($event) {
-                $event->recordsCount = $event->recordsCount();
-                return $event;
-            });
-        }
-
-        return response()->json($events);
+        return response()->json(
+            $paginate ? [
+                ...$data->toArray(),
+                'data' => $graphed,
+            ] : $graphed
+        );
     }
 
     public function store(Request $req)
@@ -88,5 +86,16 @@ class EventController extends Controller
         $event->delete();
 
         return response()->json('Event deleted');
+    }
+
+    public function one($id)
+    {
+        $data = Event::find($id);
+        if (!$data) return response()->json('not_found', 404);
+        return response()->json(
+            $data->only(['id', 'name', 'description', 'date', 'created_at']) +
+                ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
+                ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
+        );
     }
 }
