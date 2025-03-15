@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\rm\Branch;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -103,7 +104,7 @@ class User extends Authenticatable
 
     public function branch()
     {
-        return $this->hasOne(RmBranch::class, 'id', 'branchId');
+        return $this->hasOne(Branch::class, 'id', 'branchId');
     }
 
     public function createdUser()
