@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\rm\Branch;
+use App\Models\user\Session;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -180,5 +181,10 @@ class User extends Authenticatable
     public function contractType()
     {
         return $this->hasOne(UserContractType::class, 'id', 'contractTypeId');
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class, 'userId', 'id');
     }
 }
