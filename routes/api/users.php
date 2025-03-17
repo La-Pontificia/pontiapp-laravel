@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\User\ScheduleController;
+use App\Http\Controllers\Api\User\SessionController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\User\UserNotificationController;
 use Illuminate\Support\Facades\Route;
@@ -25,9 +26,15 @@ Route::middleware('check.auth')->group(function () {
             Route::get('all', [UserNotificationController::class, 'all']);
         });
 
+        Route::prefix('sessions')->group(function () {
+            Route::get('', [SessionController::class, 'index']);
+            Route::post('{id}/delete', [SessionController::class, 'delete']);
+        });
+
         Route::prefix('{slug}')->group(function () {
             Route::get('', [UserController::class, 'one']);
             Route::get('edit', [UserController::class, 'oneEdit']);
+            Route::get('sessions', [UserController::class, 'sessions']);
             Route::get('getManager', [UserController::class, 'getManager']);
             Route::get('downOrganization', [UserController::class, 'downOrganization']);
             Route::get('organization', [UserController::class, 'organization']);
