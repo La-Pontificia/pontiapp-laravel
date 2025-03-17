@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\rm\BusinessUnit;
 use App\Models\User;
+use App\Models\user\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Jenssegers\Agent\Agent;
+use Stevebauman\Location\Facades\Location;
 
 class AuthController extends Controller
 {
@@ -31,6 +35,28 @@ class AuthController extends Controller
 
         $req->session()->regenerate();
 
+        $agent = new Agent();
+        $ip = $req->ip();
+        $location = Location::get($ip);
+        $userAgent = $req->header('User-Agent');
+        $isMobile = $agent->isMobile();
+        $isTablet = $agent->isTablet();
+        $isDesktop = $agent->isDesktop();
+        $browser = $agent->browser();
+        $platform = $agent->platform();
+
+        Session::create([
+            'userId' => $user->id,
+            'ip' => $ip,
+            'userAgent' => $userAgent,
+            'location' => $location ? $location->countryName . ', ' . $location->cityName : 'Unknown',
+            'isMobile' => $isMobile,
+            'isTablet' => $isTablet,
+            'isDesktop' => $isDesktop,
+            'browser' => $browser,
+            'platform' => $platform,
+        ]);
+
         return response()->json(
             $user->only(['id', 'requiredChangePassword']),
         );
@@ -42,7 +68,8 @@ class AuthController extends Controller
         $includes = explode(',', $req->query('relationship'));
 
         if (Auth::check()) {
-            $user = Auth::user();
+
+            $user = User::find(Auth::id());
 
             if (in_array('role', $includes)) $user->role;
             if (in_array('branch', $includes))  $user->branch;
@@ -52,35 +79,41 @@ class AuthController extends Controller
 
             $now = date('m-d');
             $birthdayBoys = User::whereRaw("DATE_FORMAT(birthdate, '%m-%d') = '$now'")->get();
+            $businessUnits = BusinessUnit::all();
 
             return response()->json([
-                'authUser' => [
-                    'id' => $user->id,
-                    'displayName' => $user->displayName,
-                    'firstNames' => $user->firstNames,
-                    'lastNames' => $user->lastNames,
-                    'photoURL' => $user->photoURL,
-                    'username' => $user->username,
-                    'requiredChangePassword' => $user->requiredChangePassword,
-                    'customPrivileges' => $user->customPrivileges,
-                    'email' => $user->email,
-                    'role' => $user->role ? $user->role->only(['id', 'name']) : null,
-                    'userRole' => $user->userRole ? $user->userRole->only(['id', 'title', 'privileges']) : null
-                ],
+                'businessUnits' => $businessUnits->map(function ($bu) {
+                    return $bu->only(['id', 'name', 'acronym', 'logoURL']);
+                }),
+
+                'authUser' => array_merge(
+                    $user->only([
+                        'id',
+                        'displayName',
+                        'firstNames',
+                        'lastNames',
+                        'photoURL',
+                        'username',
+                        'requiredChangePassword',
+                        'customPrivileges',
+                        'email',
+                    ]),
+                    [
+                        'role' => $user->role ? $user->role->only(['id', 'name']) : null,
+                        'userRole' => $user->userRole ? $user->userRole->only(['id', 'title', 'privileges']) : null
+                    ]
+                ),
+
                 'birthdayBoys' => $birthdayBoys?->map(function ($user) {
-                    return [
-                        'displayName' => $user->displayName,
-                        'firstNames' => $user->firstNames,
-                        'lastNames' => $user->lastNames,
-                        'contacts' => $user->contacts,
-                        'username' => $user->username,
-                        'photoURL' => $user->photoURL,
-                        'role' => $user->role ? $user->role->only(['name']) + [
-                            'department' => $user->role->department ? $user->role->department->only(['name']) + [
-                                'area' => $user->role->department->area ? $user->role->department->area->only(['name']) : null
+                    return
+                        $user->only(['id', 'displayName', 'firstNames', 'lastNames', 'contacts', 'username', 'photoURL']) +
+                        [
+                            'role' => $user->role ? $user->role->only(['name']) + [
+                                'department' => $user->role->department ? $user->role->department->only(['name']) + [
+                                    'area' => $user->role->department->area ? $user->role->department->area->only(['name']) : null
+                                ] : null
                             ] : null
-                        ] : null
-                    ];
+                        ];
                 })
             ]);
         }
