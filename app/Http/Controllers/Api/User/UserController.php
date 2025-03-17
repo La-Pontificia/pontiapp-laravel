@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\UserSchedule;
 use App\Models\User;
+use App\Models\user\Session;
 use App\services\AuditService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -306,6 +307,9 @@ class UserController extends Controller
         return response()->json(
             $user->only(['id', 'firstNames', 'lastNames', 'contacts', 'displayName', 'photoURL', 'username', 'email', 'status', 'created_at', 'updated_at']) +
                 ['branch' => $user->branch ? $user->branch->only(["name", "address"]) : null] +
+                ['sessions' => $user->sessions ? $user->sessions()->orderBy('created_at', 'desc')->take(5)->get()->map(function ($session) {
+                    return $session->only(['id', 'ip', 'userAgent', 'location', 'isMobile', 'isTablet', 'isDesktop', 'browser', 'platform', 'created_at']);
+                }) : null] +
                 ['role' => $user->role ? $user->role?->only(['id', 'name']) + ['job' => $user->role?->job->only(['id', 'name'])] + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]] : null]
         );
     }
@@ -497,6 +501,9 @@ class UserController extends Controller
             'customPrivileges' => $user->customPrivileges,
             'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'username']) : null,
             'userRole' => $user->userRole ? $user->userRole->only(['id', 'title']) : null,
+            'sessions' => $user->sessions->map(function ($session) {
+                return $session->only(['id', 'ip', 'userAgent', 'location', 'isMobile', 'isTablet', 'isDesktop', 'browser', 'platform', 'created_at']);
+            }),
         ]);
     }
 
@@ -613,6 +620,17 @@ class UserController extends Controller
                     'photoURL' => $user->photoURL,
                     'role' => $user->role ? $user->role->only(['name']) : null,
                 ];
+            })
+        );
+    }
+
+    public function sessions($slug)
+    {
+        $user =  $this->getUser($slug);
+        $sessions = Session::where('userId', $user->id)->orderBy('created_at', 'desc')->get();
+        return response()->json(
+            $sessions->map(function ($session) {
+                return $session->only(['id', 'ip', 'userAgent', 'location', 'isMobile', 'isTablet', 'isDesktop', 'browser', 'platform', 'created_at']);
             })
         );
     }
