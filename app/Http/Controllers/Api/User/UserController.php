@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssistTerminal;
 use App\Models\Role;
 use App\Models\UserSchedule;
 use App\Models\User;
@@ -11,6 +12,7 @@ use App\services\AuditService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -195,7 +197,26 @@ class UserController extends Controller
             ]);
         }
 
-        $this->auditService->registerAudit('Usuario creado', 'Se ha creado un usuario', 'users', 'create', $req);
+        // update user in assist database if existse by emp_code
+        $terminals = AssistTerminal::all();
+        $queries = [];
+        $params = [];
+        foreach ($terminals as $terminal) {
+            $queries[] = "
+                UPDATE [$terminal->database].dbo.personnel_employee
+                SET first_name = ?, last_name = ?, nickname = ?
+                WHERE emp_code = ?
+            ";
+            $params = array_merge($params, [
+                $user->firstNames,
+                $user->lastNames,
+                $user->displayName,
+                $user->documentId
+            ]);
+        }
+        $combinedQuery = implode(" ", $queries);
+        DB::connection('sqlsrv_dynamic')->update($combinedQuery, $params);
+
         return response()->json($user);
     }
 
@@ -231,7 +252,7 @@ class UserController extends Controller
 
         $fullName = $req->firstNames . ' ' . $req->lastNames;
 
-        $user->update([
+        $updatedUser = $user->update([
             'photoURL' =>  $req->get('photoURL'),
             'documentId'  => $req->get('documentId'),
             'fullName' => $fullName,
@@ -253,6 +274,27 @@ class UserController extends Controller
             'contacts' => $req->get('contacts') ? $req->get('contacts') : null,
             'updaterId' => Auth::id(),
         ]);
+
+        // update user in assist database if existse by emp_code
+        $terminals = AssistTerminal::all();
+        $queries = [];
+        $params = [];
+        foreach ($terminals as $terminal) {
+            $queries[] = "
+                 UPDATE [$terminal->database].dbo.personnel_employee
+                 SET first_name = ?, last_name = ?, nickname = ?
+                 WHERE emp_code = ?
+             ";
+            $params = array_merge($params, [
+                $updatedUser->firstNames,
+                $updatedUser->lastNames,
+                $updatedUser->displayName,
+                $updatedUser->documentId
+            ]);
+        }
+        $combinedQuery = implode(" ", $queries);
+        DB::connection('sqlsrv_dynamic')->update($combinedQuery, $params);
+
         return response()->json($user);
     }
 
