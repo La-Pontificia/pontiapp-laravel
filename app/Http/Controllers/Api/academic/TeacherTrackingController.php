@@ -85,7 +85,13 @@ class TeacherTrackingController extends Controller
         $data = TeacherTracking::find($id);
         return response()->json([
             ...$data->toArray(),
-            'businessUnit' => $data->businessUnit?->only(['id', 'name']),
+            'sectionCourse' => $data->sectionCourse?->only(['id']) + [
+                'section' => $data->sectionCourse->section?->only(['id', 'code']) + [
+                    'period' => $data->sectionCourse->section->period?->only(['id', 'name']),
+                    'program' => $data->sectionCourse->section->program?->only(['id', 'name']),
+                ],
+                'planCourse' => $data->sectionCourse->planCourse?->only(['id', 'name']),
+            ],
             'branch' => $data->branch?->only(['id', 'name']),
             'evaluator' => $data->evaluator?->only(['id', 'firstNames', 'lastNames', 'username', 'photoURL', 'displayName']),
         ]);
