@@ -41,7 +41,7 @@ class CourseController extends Controller
         $req->validate([
             'code' => 'required|string',
             'name' => 'required|string',
-            'businesUnitId' => 'required|string',
+            'businessUnitId' => 'required|string',
             'teoricHours' => 'nullable|numeric',
             'practiceHours' => 'nullable|numeric',
             'credits' => 'nullable|numeric',
@@ -54,7 +54,7 @@ class CourseController extends Controller
         $data = Course::create([
             'code' => $req->code,
             'name' => $req->name,
-            'businesUnitId' => $req->businesUnitId,
+            'businessUnitId' => $req->businessUnitId,
             'teoricHours' => $req->teoricHours,
             'practiceHours' => $req->practiceHours,
             'credits' => $req->credits,
@@ -68,7 +68,7 @@ class CourseController extends Controller
         $req->validate([
             'code' => 'required|string',
             'name' => 'required|string',
-            'businesUnitId' => 'required|string',
+            'businessUnitId' => 'required|string',
             'teoricHours' => 'nullable|numeric',
             'practiceHours' => 'nullable|numeric',
             'credits' => 'nullable|numeric',
@@ -84,7 +84,7 @@ class CourseController extends Controller
         $item->update([
             'code' => $req->code,
             'name' => $req->name,
-            'businesUnitId' => $req->businesUnitId,
+            'businessUnitId' => $req->businessUnitId,
             'teoricHours' => $req->teoricHours,
             'practiceHours' => $req->practiceHours,
             'credits' => $req->credits,
