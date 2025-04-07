@@ -132,11 +132,8 @@ class AssistController extends Controller
         $originalResultsCount = $results->count();
 
         $schedules = UserSchedule::whereIn('userId', $userOnlyIds)
-            // ->where('startDate', '<=', $startDate)
-            // ->where(function ($query) use ($endDate) {
-            //     $query->where('endDate', '>=', $endDate)
-            //         ->orWhereNull('endDate');
-            // })
+            ->where('archived', false)
+            ->where('type', 'available')
             ->get();
 
         $generatedSchedules = collect($schedules)->flatMap(function ($schedule) use ($startDate, $endDate) {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\rm\BusinessUnit;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,6 @@ class AttentionBusinessUnit extends Model
 
     public function businessUnit()
     {
-        return $this->hasOne(RmBusinessUnit::class, 'id', 'businessUnitId');
+        return $this->hasOne(BusinessUnit::class, 'id', 'businessUnitId');
     }
 }

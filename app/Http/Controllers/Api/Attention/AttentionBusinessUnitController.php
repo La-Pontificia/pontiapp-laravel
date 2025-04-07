@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Attention;
 
 use App\Http\Controllers\Controller;
 use App\Models\AttentionBusinessUnit;
-use App\Models\RmBusinessUnit;
+use App\Models\rm\BusinessUnit;
 use Illuminate\Http\Request;
 
 class AttentionBusinessUnitController extends Controller
@@ -15,7 +15,7 @@ class AttentionBusinessUnitController extends Controller
         $onlyAttentions = $req->get('onlyAttentions');
 
         $attentionsBusinessUnits = AttentionBusinessUnit::all();
-        $businessUnits = RmBusinessUnit::all();
+        $businessUnits = BusinessUnit::all();
 
         if ($onlyAttentions) {
             return response()->json($attentionsBusinessUnits->map(function ($attentionBusinessUnit) {

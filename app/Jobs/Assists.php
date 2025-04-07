@@ -117,6 +117,8 @@ class Assists implements ShouldQueue
             $results = collect(DB::connection('sqlsrv_dynamic')->select($finalSql))->keyBy('id');
 
             $schedules = UserSchedule::whereIn('userId', $userOnlyIds)
+                ->where('archived', false)
+                ->where('type', 'available')
                 // ->where('startDate', '<=', $startDate)
                 // ->where(function ($query) use ($endDate) {
                 //     $query->where('endDate', '>=', $endDate)

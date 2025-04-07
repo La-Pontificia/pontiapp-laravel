@@ -13,9 +13,20 @@ class ScheduleController extends Controller
     public function index(Request $req, $slug)
     {
         $user =  User::where('id', $slug)->orWhere('username', $slug)->orWhere('email', $slug)->orWhere('documentId', $slug)->first();
+
+        if (!$user) {
+            return response()->json('not_found', 404);
+        }
+
         $archived = $req->query('archived');
+        $type = $req->query('type');
+
 
         $match = UserSchedule::where('userId', $user->id)->orderBy('from', 'asc');
+
+        if ($type) {
+            $match->where('type', $type);
+        }
 
         if ($archived == 'true') {
             $match->where('archived', true);
@@ -26,12 +37,13 @@ class ScheduleController extends Controller
         }
 
         $limit = $req->query('limit', 10);
-        $includes = explode(',', $req->query('relationship'));
-        if (in_array('terminal', $includes)) $match->with('terminal');
         $schedules = $match->limit($limit)->get();
         return response()->json(
             $schedules->map(function ($schedule) {
-                return $schedule->only(['id', 'from', 'to', 'days', 'tolerance', 'archived', 'title', 'startDate', 'endDate']) + ['terminal' => $schedule->terminal?->only(['id', 'name'])];
+                return array_merge(
+                    $schedule->only(['id', 'from', 'to', 'days', 'tolerance', 'archived', 'title', 'startDate', 'type', 'endDate']),
+                    ['dates' => $schedule->dates]
+                );
             })
         );
     }
@@ -61,19 +73,24 @@ class ScheduleController extends Controller
     {
         $req->validate([
             'userId' => 'required|exists:users,id',
+            'type' => 'string',
             'from' => 'required|date',
             'to' => 'required|date',
             'tolerance' => 'required|numeric',
             'days' => 'required|array',
             'startDate' => 'required|date',
+            'endDate' => 'nullable|date',
         ]);
         $schedule = new UserSchedule();
         $schedule->userId = $req->userId;
         $schedule->from = $req->from;
         $schedule->to = $req->to;
         $schedule->tolerance = $req->tolerance;
+        $schedule->type = $req->type;
         $schedule->days = $req->days;
         $schedule->startDate = $req->startDate;
+        $schedule->endDate = $req->endDate;
+        $schedule->archived = false;
         $schedule->creatorId = Auth::id();
         $schedule->save();
         return response()->json('Schedule created successfully');
@@ -83,19 +100,23 @@ class ScheduleController extends Controller
     {
         $req->validate([
             'userId' => 'required|exists:users,id',
+            'type' => 'string',
             'from' => 'required|date',
             'to' => 'required|date',
             'days' => 'required|array',
             'tolerance' => 'required|numeric',
             'startDate' => 'required|date',
+            'endDate' => 'nullable|date',
         ]);
         $schedule = UserSchedule::find($id);
         $schedule->userId = $req->userId;
         $schedule->from = $req->from;
         $schedule->to = $req->to;
+        $schedule->type = $req->type;
         $schedule->days = $req->days;
         $schedule->tolerance = $req->tolerance;
         $schedule->startDate = $req->startDate;
+        $schedule->endDate = $req->endDate;
         $schedule->updaterId = Auth::id();
         $schedule->save();
         return response()->json('Schedule updated successfully');
