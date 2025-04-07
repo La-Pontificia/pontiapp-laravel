@@ -18,7 +18,7 @@ class Course extends Model
         'id',
         'code',
         'name',
-        'businesUnitId',
+        'businessUnitId',
         'teoricHours',
         'practiceHours',
         'credits',
