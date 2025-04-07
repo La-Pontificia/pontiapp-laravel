@@ -47,7 +47,6 @@ class CourseController extends Controller
             'credits' => 'nullable|numeric',
         ]);
 
-        // validate if the course code already exists
         $course = Course::where('code', $req->code)->first();
         if ($course) return response()->json('already_exists', 400);
 
