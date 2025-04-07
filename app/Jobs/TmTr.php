@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use App\Events\UserNotice;
+use App\Models\Academic\TeacherTracking;
 use App\Models\Report;
-use App\Models\RmTTracking;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -41,7 +41,7 @@ class TmTr implements ShouldQueue
 
     public function handle(): void
     {
-        $match = RmTTracking::orderBy('created_at', 'desc');
+        $match = TeacherTracking::orderBy('created_at', 'desc');
         if ($this->section) $match->where('section', $this->section);
         if ($this->period) $match->where('period', $this->period);
         if ($this->academicProgram) $match->where('academicProgram', $this->academicProgram);
