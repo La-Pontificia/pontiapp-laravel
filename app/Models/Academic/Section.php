@@ -53,6 +53,6 @@ class Section extends Model
 
     public function plan()
     {
-        return $this->hasOne(plan::class, 'id', 'planId');
+        return $this->hasOne(Plan::class, 'id', 'planId');
     }
 }
