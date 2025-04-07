@@ -45,7 +45,7 @@ class PeriodController extends Controller
             'startDate' => 'required|date',
             'endDate' => 'required|date',
             'businessUnitId' => 'required|string',
-            'cloneByPeriodId' => 'required|string',
+            'cloneByPeriodId' => 'nullable|string',
         ]);
 
 
@@ -63,24 +63,25 @@ class PeriodController extends Controller
             'creatorId' => Auth::id(),
         ]);
 
-        Pavilion::where('periodId', $req->cloneByPeriodId)->get()->each(function ($pavilion) use ($data) {
-            $newPavilion = Pavilion::create([
-                'name' => $pavilion->name,
-                'periodId' => $data->id,
-                'creatorId' => Auth::id(),
-            ]);
-
-            Classroom::where('pavilionId', $pavilion->id)->get()->each(function ($classroom) use ($newPavilion) {
-                Classroom::create([
-                    'code' => $classroom->code,
-                    'floor' => $classroom->floor,
-                    'details' => $classroom->details,
-                    'capacity' => $classroom->capacity,
-                    'pavilionId' => $newPavilion->id,
+        if ($req->cloneByPeriodId) {
+            Pavilion::where('periodId', $req->cloneByPeriodId)->get()->each(function ($pavilion) use ($data) {
+                $newPavilion = Pavilion::create([
+                    'name' => $pavilion->name,
+                    'periodId' => $data->id,
                     'creatorId' => Auth::id(),
                 ]);
+                Classroom::where('pavilionId', $pavilion->id)->get()->each(function ($classroom) use ($newPavilion) {
+                    Classroom::create([
+                        'code' => $classroom->code,
+                        'floor' => $classroom->floor,
+                        'details' => $classroom->details,
+                        'capacity' => $classroom->capacity,
+                        'pavilionId' => $newPavilion->id,
+                        'creatorId' => Auth::id(),
+                    ]);
+                });
             });
-        });
+        }
 
         return response()->json($data);
     }
