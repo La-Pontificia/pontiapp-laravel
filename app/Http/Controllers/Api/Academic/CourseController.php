@@ -18,7 +18,7 @@ class CourseController extends Controller
         $paginate = $req->query('paginate') === 'true';
 
         if ($q) $match->where('name', 'like', "%$q%")->orWhere('code', 'like', "%$q%");
-        if ($businessUnitId) $match->where('businesUnitId', $businessUnitId);
+        if ($businessUnitId) $match->where('businessUnitId', $businessUnitId);
 
         $data = $paginate ? $match->paginate(25) :  $match->get();
 
