@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ToolController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,4 @@ Route::get('/test', function () {
         'users' => $users
     ]);
 });
+Route::post('fazt-tool', [ToolController::class, 'updateEventsRecords']);
