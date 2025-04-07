@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\user\Session;
+use App\Models\User\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Jenssegers\Agent\Agent;
 use Stevebauman\Location\Facades\Location;

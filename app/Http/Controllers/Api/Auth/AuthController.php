@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\rm\BusinessUnit;
 use App\Models\User;
-use App\Models\user\Session;
+use App\Models\User\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Jenssegers\Agent\Agent;
