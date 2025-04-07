@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\rm\Branch;
+use App\Models\Rm\Branch;
 use App\Models\user\Session;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Rm;
 
 use App\Http\Controllers\Controller;
-use App\Models\rm\Branch;
+use App\Models\Rm\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

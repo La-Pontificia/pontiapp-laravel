@@ -2,7 +2,7 @@
 
 namespace App\Models\Academic;
 
-use App\Models\rm\Branch;
+use App\Models\Rm\Branch;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
