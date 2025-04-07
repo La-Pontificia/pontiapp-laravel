@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Attention;
 
 use App\Http\Controllers\Controller;
 use App\Models\AttentionBusinessUnit;
-use App\Models\rm\BusinessUnit;
+use App\Models\Rm\BusinessUnit;
 use Illuminate\Http\Request;
 
 class AttentionBusinessUnitController extends Controller
