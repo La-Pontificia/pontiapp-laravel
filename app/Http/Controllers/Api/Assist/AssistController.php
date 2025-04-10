@@ -132,7 +132,7 @@ class AssistController extends Controller
         $originalResultsCount = $results->count();
 
         $schedules = UserSchedule::whereIn('userId', $userOnlyIds)
-            ->where('archived', false)
+            // ->where('archived', true)
             ->where('type', 'available')
             ->get();
 
