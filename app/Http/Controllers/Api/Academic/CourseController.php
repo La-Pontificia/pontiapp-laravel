@@ -17,10 +17,12 @@ class CourseController extends Controller
 
         $paginate = $req->query('paginate') === 'true';
 
-        if ($q) $match->where('name', 'like', "%$q%")->orWhere('code', 'like', "%$q%");
-        if ($businessUnitId) $match->where('businessUnitId', $businessUnitId);
+        if ($q)
+            $match->where('name', 'like', "%$q%")->orWhere('code', 'like', "%$q%");
+        if ($businessUnitId)
+            $match->where('businessUnitId', $businessUnitId);
 
-        $data = $paginate ? $match->paginate(25) :  $match->get();
+        $data = $paginate ? $match->paginate(25) : $match->get();
 
         $graphed = $data->map(function ($item) {
             return $item->only(['id', 'name', 'code', 'teoricHours', 'practiceHours', 'credits', 'created_at']) +
@@ -47,8 +49,11 @@ class CourseController extends Controller
             'credits' => 'nullable|numeric',
         ]);
 
-        $course = Course::where('code', $req->code)->first();
-        if ($course) return response()->json('already_exists', 400);
+        $course = Course::where('code', $req->code)
+            ->where('businessUnitId', $req->businessUnitId)
+            ->first();
+        if ($course)
+            return response()->json('already_exists', 400);
 
         $data = Course::create([
             'code' => $req->code,
@@ -74,9 +79,13 @@ class CourseController extends Controller
         ]);
 
 
-        $course = Course::where('code', $req->code)->where('id', '!=', $id)->first();
+        $course = Course::where('code', $req->code)
+            ->where('id', '!=', $id)
+            ->where('businessUnitId', $req->businessUnitId)
+            ->first();
 
-        if ($course) return response()->json('already_exists', 400);
+        if ($course)
+            return response()->json('already_exists', 400);
 
         $item = Course::find($id);
 
@@ -95,7 +104,8 @@ class CourseController extends Controller
     public function delete($id)
     {
         $data = Course::find($id);
-        if (!$data) return response()->json('not_found', 404);
+        if (!$data)
+            return response()->json('not_found', 404);
         $data->delete();
         return response()->json('Data deleted');
     }
@@ -103,11 +113,12 @@ class CourseController extends Controller
     public function one($id)
     {
         $data = Course::find($id);
-        if (!$data) return response()->json('not_found', 404);
+        if (!$data)
+            return response()->json('not_found', 404);
         return response()->json(
             $data->only(['id', 'name', 'code', 'teoricHours', 'practiceHours', 'credits', 'created_at']) +
-                ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
-                ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
+            ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
+            ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
         );
     }
 }

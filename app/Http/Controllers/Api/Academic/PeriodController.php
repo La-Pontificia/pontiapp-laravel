@@ -26,6 +26,7 @@ class PeriodController extends Controller
 
         $graphed = $data->map(function ($item) {
             return $item->only(['id', 'name', 'startDate', 'endDate', 'created_at']) +
+                ['businessUnit' => $item->businessUnit ? $item->businessUnit->only(['id', 'name']) : null] +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['updater' => $item->updater ? $item->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null];
         });
