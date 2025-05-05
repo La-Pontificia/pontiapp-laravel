@@ -25,6 +25,7 @@ class ProgramController extends Controller
         $graphed = $data->map(function ($item) {
             return $item->only(['id', 'name', 'created_at']) +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
+                ['area' => $item->area ? $item->area->only(['id', 'name']) : null] +
                 ['businessUnit' => $item->businessUnit ? $item->businessUnit->only(['id', 'name', 'acronym', 'logoURL']) : null];
         });
 
@@ -43,6 +44,7 @@ class ProgramController extends Controller
         return response()->json(
             $data->only(['id', 'name', 'created_at']) +
                 ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
+                ['area' => $data->area ? $data->area->only(['id', 'name']) : null] +
                 ['businessUnit' => $data->businessUnit ? $data->businessUnit->only(['id', 'name', 'acronym', 'logoURL']) : null]
         );
     }
@@ -52,10 +54,12 @@ class ProgramController extends Controller
         $req->validate([
             'name' => 'required|string',
             'businessUnitId' => 'required|exists:rm_business_units,id',
+            'areaId' => 'required|exists:academic_areas,id',
         ]);
-        $data = Program::create([
+        Program::create([
             'name' => $req->name,
             'businessUnitId' => $req->businessUnitId,
+            'areaId' => $req->areaId,
             'creatorId' => Auth::id(),
         ]);
         return response()->json('Created');
@@ -64,12 +68,16 @@ class ProgramController extends Controller
 
     public function update(Request $req, $id)
     {
-        $req->validate(['name' => 'required|string', 'businessUnitId' => 'required|exists:rm_business_units,id',]);
-
+        $req->validate([
+            'name' => 'required|string',
+            'businessUnitId' => 'required|exists:rm_business_units,id',
+            'areaId' => 'required|exists:academic_areas,id',
+        ]);
         $item = Program::find($id);
 
         $item->update([
             'name' => $req->name,
+            'areaId' => $req->areaId,
             'businessUnitId' => $req->businessUnitId,
         ]);
         return response()->json('Updated');

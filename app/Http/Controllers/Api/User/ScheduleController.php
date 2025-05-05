@@ -58,7 +58,7 @@ class ScheduleController extends Controller
     public function archive(Request $req, $id)
     {
         $req->validate([
-            'endDate' => 'date|required',
+            'endDate' => 'date|nullable',
         ]);
         $schedule = UserSchedule::find($id);
         $isArchived = $schedule->archived;

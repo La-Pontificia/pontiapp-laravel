@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\AssistTerminal;
 use App\Models\EventRecord;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +46,6 @@ class ToolController extends Controller
 
         return response()->json('success');
     }
-
     public function updateEventsRecords(Request $req)
     {
         $req->validate([
@@ -68,5 +68,21 @@ class ToolController extends Controller
         });
 
         return response()->json('success');
+    }
+
+    public function downloadReportFile(Request $req, $id)
+    {
+        $report = Report::findOrFail($id);
+        $relativePath = ltrim($report->fileUrl, '/');
+        $filePath = public_path($relativePath);
+
+        if (!file_exists($filePath)) {
+            return response()->json(['error' => 'Archivo no encontrado', 'path' => $filePath], 404);
+        }
+
+        $extension = pathinfo($report->fileUrl, PATHINFO_EXTENSION);
+        $filename = "{$report->title}.{$extension}";
+
+        return response()->download($filePath, $filename);
     }
 }

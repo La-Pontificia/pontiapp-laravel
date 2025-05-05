@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Academic;
 
 use App\Http\Controllers\Controller;
 use App\Models\Academic\SectionCourse;
+
+use App\Models\Academic\SectionCourseSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -120,6 +122,9 @@ class SectionCourseController extends Controller
     public function delete($id)
     {
         $data = SectionCourse::find($id);
+
+        SectionCourseSchedule::where('sectionCourseId', $id)->delete();
+
         if (!$data) return response()->json('not_found', 404);
         $data->delete();
         return response()->json('Data deleted');
@@ -131,7 +136,7 @@ class SectionCourseController extends Controller
         if (!$data) return response()->json('not_found', 404);
         return response()->json(
             array_merge(
-                $data->only(['id', 'created_at']),
+                $data->only(keys: ['id', 'created_at']),
                 ['section' => $data->section ? $data->section->only(['id', 'code', 'details']) : null],
                 ['planCourse' => $data->planCourse ? $data->planCourse->only(['id', 'name', 'credits', 'teoricHours', 'practiceHours']) + [
                     'course' => $data->planCourse->course ? $data->planCourse->course->only(['id', 'code', 'name']) : null,

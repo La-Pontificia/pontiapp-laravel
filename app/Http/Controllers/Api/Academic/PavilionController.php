@@ -44,7 +44,9 @@ class PavilionController extends Controller
             'periodId' => 'required|string',
         ]);
 
-        $already = Pavilion::where('name', $req->name)->first();
+        $already = Pavilion::where('name', $req->name)
+            ->where('periodId', $req->periodId)
+            ->first();
         if ($already) return response()->json('already_exists', 400);
 
         $data = Pavilion::create([
@@ -65,7 +67,10 @@ class PavilionController extends Controller
         $item = Pavilion::find($id);
         if (!$item) return response()->json('not_found', 404);
 
-        $already = Pavilion::where('name', $req->name)->where('id', '!=', $id)->first();
+        $already = Pavilion::where('name', $req->name)
+            ->where('periodId', $req->periodId)
+            ->where('id', '!=', $id)
+            ->first();
         if ($already) return response()->json('already_exists', 400);
 
         $item->update([

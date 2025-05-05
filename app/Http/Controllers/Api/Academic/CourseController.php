@@ -17,10 +17,15 @@ class CourseController extends Controller
 
         $paginate = $req->query('paginate') === 'true';
 
-        if ($q)
-            $match->where('name', 'like', "%$q%")->orWhere('code', 'like', "%$q%");
-        if ($businessUnitId)
+        if ($q) {
+            $match->where('name', 'like', "%$q%")
+                ->orWhere("code", "LIKE", "%$q%");
+        }
+
+
+        if ($businessUnitId) {
             $match->where('businessUnitId', $businessUnitId);
+        }
 
         $data = $paginate ? $match->paginate(25) : $match->get();
 
@@ -117,8 +122,8 @@ class CourseController extends Controller
             return response()->json('not_found', 404);
         return response()->json(
             $data->only(['id', 'name', 'code', 'teoricHours', 'practiceHours', 'credits', 'created_at']) +
-            ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
-            ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
+                ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
+                ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
         );
     }
 }

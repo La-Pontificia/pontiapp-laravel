@@ -116,7 +116,7 @@ class UserController extends Controller
         $users = $limit ? $match->limit($limit)->get() : $match->paginate();
 
         $graphed = $users->map(function ($user) {
-            return $user->only(['id', 'firstNames', 'lastNames', 'displayName', 'photoURL', 'username', 'email']) +
+            return $user->only(['id', 'firstNames', 'lastNames', 'status', 'displayName', 'photoURL', 'username', 'email']) +
                 ['role' => $user->role ? $user->role?->only(['name']) +
                     ['job' => $user->role?->job->only(['name'])] +
                     ['department' => $user->role?->department->only(['name']) +
@@ -275,6 +275,8 @@ class UserController extends Controller
             'updaterId' => Auth::id(),
         ]);
 
+        $updatedUser = $user;
+
         // update user in assist database if existse by emp_code
         $terminals = AssistTerminal::all();
         $queries = [];
@@ -349,7 +351,7 @@ class UserController extends Controller
         return response()->json(
             $user->only(['id', 'firstNames', 'lastNames', 'contacts', 'displayName', 'photoURL', 'username', 'email', 'status', 'created_at', 'updated_at']) +
                 ['branch' => $user->branch ? $user->branch->only(["name", "address"]) : null] +
-                ['sessions' => $user->sessions ? $user->sessions()->orderBy('created_at', 'desc')->take(5)->get()->map(function ($session) {
+                ['sessions' => $user->sessions ? $user->sessions()->orderBy('created_at', 'desc')->take(3)->get()->map(function ($session) {
                     return $session->only(['id', 'ip', 'userAgent', 'location', 'isMobile', 'isTablet', 'isDesktop', 'browser', 'platform', 'created_at']);
                 }) : null] +
                 ['role' => $user->role ? $user->role?->only(['id', 'name']) + ['job' => $user->role?->job->only(['id', 'name'])] + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]] : null]
@@ -495,7 +497,7 @@ class UserController extends Controller
                     ->filter(fn($value, $key) => !array_key_exists($key, $currentUser->getAttributes()))
                     ->toArray()
             );
-            $currentUser->role = $currentUser->role;
+            $currentUser->role;
             $currentUser = $manager;
         }
 
@@ -543,7 +545,7 @@ class UserController extends Controller
             'customPrivileges' => $user->customPrivileges,
             'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'username']) : null,
             'userRole' => $user->userRole ? $user->userRole->only(['id', 'title']) : null,
-            'sessions' => $user->sessions->map(function ($session) {
+            'sessions' => $user->sessions?->take(3)->map(function ($session) {
                 return $session->only(['id', 'ip', 'userAgent', 'location', 'isMobile', 'isTablet', 'isDesktop', 'browser', 'platform', 'created_at']);
             }),
         ]);
@@ -669,7 +671,10 @@ class UserController extends Controller
     public function sessions($slug)
     {
         $user =  $this->getUser($slug);
-        $sessions = Session::where('userId', $user->id)->orderBy('created_at', 'desc')->get();
+        $sessions = Session::where('userId', $user->id)
+            ->limit(3)
+            ->orderBy('created_at', 'desc')
+            ->get();
         return response()->json(
             $sessions->map(function ($session) {
                 return $session->only(['id', 'ip', 'userAgent', 'location', 'isMobile', 'isTablet', 'isDesktop', 'browser', 'platform', 'created_at']);

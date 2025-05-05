@@ -289,8 +289,13 @@ class SectionCourseScheduleController extends Controller
     {
         $periodId = $req->query('periodId');
         $programId = $req->query('programId');
+        $periodIds = $req->query('periodIds');
+        $programIds = $req->query('programIds');
 
-        SectionSchedules::dispatch($programId,  $periodId, Auth::id());
+        $periodIds = $periodIds ? explode(',', $periodIds) : [];
+        $programIds = $programIds ? explode(',', $programIds) : [];
+
+        SectionSchedules::dispatch($programId,  $periodId, $periodIds, $programIds, Auth::id());
 
         return response()->json([
             'message' => 'El reporte se está generando, por favor revise su correo electrónico.',
