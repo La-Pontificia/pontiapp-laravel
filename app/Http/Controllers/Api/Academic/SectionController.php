@@ -125,10 +125,6 @@ class SectionController extends Controller
         // delete all schedules
         foreach ($data->sectionCourses as $course) {
             $course->schedules()->delete();
-        }
-
-        // delete all section courses
-        foreach ($data->sectionCourses as $course) {
             $course->delete();
         }
 

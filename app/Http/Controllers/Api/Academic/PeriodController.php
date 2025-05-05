@@ -122,6 +122,23 @@ class PeriodController extends Controller
     {
         $data = Period::find($id);
         if (!$data) return response()->json('not_found', 404);
+
+
+        // delete all classrooms and pavilions
+        foreach ($data->pavilions as $pavilion) {
+            $pavilion->classrooms()->delete();
+            $pavilion->delete();
+        }
+
+        // delete all sections and sectionsCourses, Schedules
+        foreach ($data->sections as $section) {
+            foreach ($section->sectionCourses as $sectionCourse) {
+                $sectionCourse->schedules()->delete();
+                $sectionCourse->delete();
+            }
+            $section->delete();
+        }
+
         $data->delete();
         return response()->json('Data deleted');
     }
