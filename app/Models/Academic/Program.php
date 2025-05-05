@@ -20,16 +20,23 @@ class Program extends Model
         'created_at',
         'updated_at',
         'name',
+        'acronym',
         'businessUnitId',
         'creatorId',
+        'areaId'
     ];
     public function creator()
     {
-        return $this->hasOne(User::class, 'id', 'creatorId');
+        return $this->belongsTo(User::class, 'creatorId', 'id');
     }
 
     public function businessUnit()
     {
-        return $this->hasOne(BusinessUnit::class, 'id', 'businessUnitId');
+        return $this->belongsTo(BusinessUnit::class, 'businessUnitId', 'id');
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class, 'areaId', 'id');
     }
 }

@@ -37,4 +37,9 @@ class Pavilion extends Model
     {
         return $this->hasOne(Period::class, 'id', 'periodId');
     }
+
+    public function classrooms()
+    {
+        return $this->hasMany(Classroom::class, 'pavilionId', 'id');
+    }
 }

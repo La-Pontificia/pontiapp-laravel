@@ -40,4 +40,14 @@ class Period extends Model
     {
         return $this->belongsTo(User::class, 'updaterId', 'id');
     }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class, 'periodId', 'id');
+    }
+
+    public function pavilions()
+    {
+        return $this->hasMany(Pavilion::class, 'periodId', 'id');
+    }
 }
