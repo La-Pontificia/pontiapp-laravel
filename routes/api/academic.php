@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Academic\AcademicController;
 use App\Http\Controllers\Api\Academic\AreaController;
 use App\Http\Controllers\Api\Academic\ClassroomController;
 use App\Http\Controllers\Api\Academic\CourseController;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('check.auth')->group(function () {
     Route::prefix('academic')->group(function () {
+        Route::get('stadistics', [AcademicController::class, 'index']);
         Route::prefix('tt')->group(function () {
             Route::get('', [TeacherTrackingController::class, 'index']);
             Route::post('store', [TeacherTrackingController::class, 'store']);

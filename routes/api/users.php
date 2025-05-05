@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\User\ScheduleController;
 use App\Http\Controllers\Api\User\SessionController;
+use App\Http\Controllers\Api\User\TeamController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\User\UserNotificationController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,10 @@ Route::middleware('check.auth')->group(function () {
         Route::prefix('sessions')->group(function () {
             Route::get('', [SessionController::class, 'index']);
             Route::post('{id}/delete', [SessionController::class, 'delete']);
+        });
+
+        Route::prefix('teams')->group(function () {
+            Route::get('', [TeamController::class, 'index']);
         });
 
         Route::prefix('{slug}')->group(function () {

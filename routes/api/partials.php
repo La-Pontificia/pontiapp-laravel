@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\BusinessUnit\BusinessUnitController;
 use App\Http\Controllers\Api\Department\DepartmentController;
 use App\Http\Controllers\Api\Report\ReportController;
 use App\Http\Controllers\Api\UserRole\UserRoleController;
-use App\Http\Controllers\Api\UserTeam\UserTeamController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('check.auth')->group(function () {
@@ -20,19 +19,6 @@ Route::middleware('check.auth')->group(function () {
             Route::post('', [AssistTerminalController::class, 'store']);
             Route::post('{id}', [AssistTerminalController::class, 'update']);
             Route::post('{id}/delete', [AssistTerminalController::class, 'delete']);
-        });
-
-        // teams
-        Route::prefix('teams')->group(function () {
-            Route::get('all', [UserTeamController::class, 'all']);
-            Route::get('{slug}/isOwner', [UserTeamController::class, 'isOwner']);
-            Route::get('{slug}/members', [UserTeamController::class, 'members']);
-            Route::get('{slug}', [UserTeamController::class, 'slug']);
-            Route::post('', [UserTeamController::class, 'create']);
-            Route::post('{slug}/addMembers', [UserTeamController::class, 'addMembers']);
-            Route::post('{slug}/delete', [UserTeamController::class, 'delete']);
-            Route::post('members/{slug}/remove', [UserTeamController::class, 'removeMember']);
-            Route::post('{slug}', [UserTeamController::class, 'update']);
         });
 
         // reports
