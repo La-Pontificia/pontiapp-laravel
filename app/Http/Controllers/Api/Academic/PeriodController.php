@@ -76,6 +76,7 @@ class PeriodController extends Controller
                         'code' => $classroom->code,
                         'floor' => $classroom->floor,
                         'details' => $classroom->details,
+                        'type' => $classroom->type,
                         'capacity' => $classroom->capacity,
                         'pavilionId' => $newPavilion->id,
                         'creatorId' => Auth::id(),

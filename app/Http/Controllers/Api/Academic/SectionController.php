@@ -121,6 +121,17 @@ class SectionController extends Controller
     {
         $data = Section::find($id);
         if (!$data) return response()->json('not_found', 404);
+
+        // delete all schedules
+        foreach ($data->sectionCourses as $course) {
+            $course->schedules()->delete();
+        }
+
+        // delete all section courses
+        foreach ($data->sectionCourses as $course) {
+            $course->delete();
+        }
+
         $data->delete();
         return response()->json('Data deleted');
     }

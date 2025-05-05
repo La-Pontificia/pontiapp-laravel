@@ -123,7 +123,7 @@ class SectionCourseScheduleController extends Controller
             ->whereDate('endDate', '>=', $startDate)
             ->exists();
 
-        // verifu if section is available
+        // verify if section is available
         $section = SectionCourseSchedule::whereHas('sectionCourse', function ($query) use ($sectionCourse) {
             $query->where('sectionId', $sectionCourse->sectionId);
         })->whereRaw("($daysConditions)")
