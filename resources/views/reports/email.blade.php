@@ -26,13 +26,19 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <h3>
-                                        Hola {{ $user->firstNames }},
-                                    </h3>
+                                    <img 
+                                    width="150"
+                                    height="40"
+                                    alt="La Pontificia"
+                                    src="http://res.cloudinary.com/dc0t90ahb/image/upload/v1738211374/pontiapp/qjrx3wnvimjuct523xb2.png">
+                                    <hr style="opacity:0.5;">
+                                    <h2>
+                                        Hola {{ $user->firstNames ?? $user->displayName}},
+                                    </h2>
                                     <p style="margin-bottom:18px">
                                         El reporte de {{ $description }} que solicitaste ya está disponible.
                                         Puedes descargarlo directamente desde este correo haciendo clic en "Descargar" o
-                                        acceder a él a través del módulo de {{ $module }} en Pontiapp.
+                                        acceder a él a través del módulo {{ $module }} en Pontiapp.
                                     </p>
                                 </td>
                             </tr>
