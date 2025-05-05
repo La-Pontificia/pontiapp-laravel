@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Events\UserNotice;
 use App\Models\Academic\Period;
 use App\Models\Academic\Program;
 use App\Models\Academic\SectionCourseSchedule;
@@ -22,15 +21,19 @@ class SectionSchedules implements ShouldQueue
     public $programId;
     public $periodId;
     public $userId;
+    public $periodIds;
+    public $programIds;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($programId,  $periodId, $userId)
+    public function __construct($programId,  $periodId, $periodIds, $programIds, $userId)
     {
         $this->userId = $userId;
         $this->programId = $programId;
         $this->periodId = $periodId;
+        $this->periodIds = $periodIds;
+        $this->programIds = $programIds;
     }
 
     /**
@@ -42,12 +45,31 @@ class SectionSchedules implements ShouldQueue
         $match = SectionCourseSchedule::orderBy('created_at', 'desc');
         $user = User::find($this->userId);
 
-        $schedules = $match->whereHas('sectionCourse', function ($query) {
-            $query->whereHas('section', function ($query) {
-                $query->where('periodId', $this->periodId)
-                    ->where('programId', $this->programId);
+        if ($this->periodId) {
+            $match->whereHas('sectionCourse.section', function ($query) {
+                $query->where('periodId', $this->periodId);
             });
-        })->get();
+        }
+
+        if ($this->programId) {
+            $match->whereHas('sectionCourse.section', function ($query) {
+                $query->where('programId', $this->programId);
+            });
+        }
+
+        if ($this->periodIds) {
+            $match->whereHas('sectionCourse.section', function ($query) {
+                $query->whereIn('periodId', $this->periodIds);
+            });
+        }
+
+        if ($this->programIds) {
+            $match->whereHas('sectionCourse.section', function ($query) {
+                $query->whereIn('programId', $this->programIds);
+            });
+        }
+
+        $schedules = $match->get();
 
         $spreadsheet = IOFactory::load(public_path('templates/section_schedules.xlsx'));
         $worksheet = $spreadsheet->getActiveSheet();
@@ -89,32 +111,44 @@ class SectionSchedules implements ShouldQueue
 
         $fileName = 'section_schedules' . now()->timestamp . '.xlsx';
         $filePath = 'files/reports/' . $fileName;
-        $downloadLink = asset($filePath);
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save(public_path($filePath));
 
         $user = User::find($this->userId);
-        $email = $user->email;
 
         $period = Period::find($this->periodId);
         $program = Program::find($this->programId);
 
-        SendEmail::dispatch('Reporte de horarios (' . $program?->name . ' - ' . $period?->name . ')', 'Hola, reporte disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
+        $displayNameFile = 'Horarios ';
 
-        event(new UserNotice($user->id, "Reporte finalizado.", 'EL reporte de horarios ya esta listo.', [
-            'Descargar' => $downloadLink,
-            'Ver' => '/m/academic/report-files',
-        ]));
+        if ($this->periodId && $this->programId) {
+            $displayNameFile .= '(periodo: ' . $period?->name . ', ' . $program?->acronym . ')';
+        }
 
-        Report::create([
-            'title' => 'Horarios (' . $program?->name . ' - ' . $period?->name . ')',
+        if ($this->periodIds) {
+            $periods = Period::whereIn('id', $this->periodIds)->get();
+            $periodNames = $periods->pluck('name')->implode(', ');
+            $displayNameFile .= '(periodos: ' . $periodNames . ') ';
+        }
+
+        if ($this->programIds) {
+            $programs = Program::whereIn('id', $this->programIds)->get();
+            $programAcronyms = $programs->pluck('acronym')->implode(', ');
+            $displayNameFile .= '(' . $period?->name . ', programas: ' .  $programAcronyms . ')';
+        }
+
+        $report = Report::create([
+            'title' => '' . $displayNameFile . '',
             'fileUrl' => $filePath,
-            'downloadLink' => $downloadLink,
             'ext' => 'xlsx',
             'creatorId' => $user->id,
             'module' => 'academic',
             'created_at' => now(),
         ]);
+
+        $downloadLink = config('app.url') . '/api/tools/downloadReportFile/' . $report->id;
+
+        ReportSendEmail::dispatch($report->title, 'académico', 'los horarios', $downloadLink, $this->userId);
     }
 }
