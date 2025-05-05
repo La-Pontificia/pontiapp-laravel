@@ -50,4 +50,9 @@ class SectionCourse extends Model
     {
         return $this->hasOne(User::class, 'id', 'teacherId');
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(SectionCourseSchedule::class, 'sectionCourseId', 'id');
+    }
 }

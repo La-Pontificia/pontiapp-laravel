@@ -55,4 +55,9 @@ class Section extends Model
     {
         return $this->hasOne(Plan::class, 'id', 'planId');
     }
+
+    public function sectionCourses()
+    {
+        return $this->hasMany(SectionCourse::class, 'sectionId', 'id');
+    }
 }
