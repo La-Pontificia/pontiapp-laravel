@@ -72,11 +72,14 @@ class UserController extends Controller
 
     public function all(Request $req)
     {
+        $teacherRoleId = '9e23d945-bac1-40f9-9917-6ce55a02de7c';
+
         $match = $this->relationShipUsers($req->query('relationship'), $req->query('limit'));
         $q = $req->query('q');
         $limit = $req->query('limit');
         $job = $req->query('job');
         $status = $req->query('status');
+        $onlyTeachers = $req->query('onlyTeachers');
         $role = $req->query('role');
         $area = $req->query('area');
         $hasManager = $req->query('hasManager');
@@ -87,6 +90,10 @@ class UserController extends Controller
         if ($status && $status == 'inactives') $match->where('status', false);
 
         if ($role) $match->where('roleId', $role);
+
+        if ($onlyTeachers == 'true') {
+            $match->where('roleId', $teacherRoleId);
+        }
 
         if ($job) $match->whereHas('role', function ($q) use ($job) {
             $q->where('jobId', $job);
@@ -108,9 +115,14 @@ class UserController extends Controller
             if ($hasSchedules === 'not') $match->whereDoesntHave('schedules');
         }
 
-        if ($q) $match->where('fullName', 'like', '%' . $q . '%')
-            ->orWhere('documentId', 'like', '%' . $q . '%')
-            ->orWhere('email', 'like', '%' . $q . '%');
+        if ($q) {
+            $match->where(function ($query) use ($q) {
+                $query->where('fullName', 'like', "%$q%")
+                    ->orWhere('documentId', 'like', "%$q%")
+                    ->orWhere('displayName', 'like', "%$q%")
+                    ->orWhere('email', 'like', "%$q%");
+            });
+        }
 
         // pagination or limit
         $users = $limit ? $match->limit($limit)->get() : $match->paginate();
