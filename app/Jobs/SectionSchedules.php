@@ -86,6 +86,10 @@ class SectionSchedules implements ShouldQueue
                 ? $schedule->sectionCourse?->teacher?->documentId
                 : '';
 
+            $teacherEmail = $schedule->sectionCourse?->teacher
+                ? $schedule->sectionCourse?->teacher?->email
+                : '';
+
             $worksheet->setCellValue('A' . $r, $schedule->sectionCourse?->section?->period?->name);
             $worksheet->setCellValue('B' . $r, $schedule->startDate?->format('d/m/Y'));
             $worksheet->getStyle('B' . $r)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
@@ -106,6 +110,8 @@ class SectionSchedules implements ShouldQueue
             $worksheet->setCellValue('N' . $r, $schedule->classroom?->type);
             $worksheet->setCellValue('O' . $r, $teacherNames);
             $worksheet->setCellValue('P' . $r, $teacherDocumentId);
+            $worksheet->setCellValue('Q' . $r, $teacherEmail);
+
             $r++;
         }
 
