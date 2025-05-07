@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Api\Academic;
 
 use App\Http\Controllers\Controller;
-use App\Models\Academic\Classroom;
+use App\Models\Academic\Pavilion;
 use App\Models\Academic\Period;
 use App\Models\Academic\Program;
-use App\Models\Academic\SectionCourseSchedule;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +16,7 @@ class AcademicController extends Controller
     $businessUnitId = $req->get('businessUnitId');
     $periodId = $req->get('periodId');
     $programs = Program::where('businessUnitId', $businessUnitId)->get();
-    $periods = Period::where('businessUnitId', $businessUnitId)->get();
+    $periods = Period::get();
 
     // ---- Schedules ----
     $querySchedules = DB::table('academic_programs as p')
@@ -26,7 +24,7 @@ class AcademicController extends Controller
       ->leftJoin('academic_section_courses as sc', 'sc.sectionId', '=', 's.id')
       ->leftJoin('academic_section_course_schedules as scs', 'scs.sectionCourseId', '=', 'sc.id')
       ->select('p.id as programId', DB::raw('COUNT(scs.id) as total'))
-      ->where('p.businessUnitId', $businessUnitId)
+      // ->where('p.businessUnitId', $businessUnitId)
       ->groupBy('p.id');
     if ($periodId) $querySchedules->where('s.periodId', $periodId);
     $schedules = $querySchedules->get();
@@ -40,7 +38,7 @@ class AcademicController extends Controller
       ->join('academic_programs as pr', 'pr.id', '=', 's.programId')
       ->join('academic_periods as p', 'p.id', '=', 's.periodId')
       ->select('p.name as period', 's.programId', DB::raw('count(s.id) as total'))
-      ->when($businessUnitId, fn($q) => $q->where('pr.businessUnitId', $businessUnitId))
+      // ->when($businessUnitId, fn($q) => $q->where('pr.businessUnitId', $businessUnitId))
       ->groupBy('p.name', 's.programId')
       ->get();
 
@@ -55,16 +53,23 @@ class AcademicController extends Controller
     }
 
     // ---- Classrooms ----
-    $types = ['Aula', 'Laboratorio', 'Taller', 'Virtual'];
-    $classroomsByPeriod = $periods->mapWithKeys(function (Period $period) use ($types) {
-      $counts = array_fill_keys($types, 0);
-      foreach ($period->pavilions->flatMap->classrooms as $classroom) {
-        if (in_array($classroom->type, $types)) {
-          $counts[$classroom->type]++;
-        }
+    $types = [
+      'Aula computo',
+      'Aula teoria',
+      'Aula virtual',
+      'Lab. computo',
+      'Lab. CIIE',
+      'Taller enfermeria'
+    ];
+
+    $pavilions = Pavilion::get();
+    $classroomsGroupedByType = array_fill_keys($types, 0);
+
+    foreach ($pavilions->flatMap->classrooms as $classroom) {
+      if (in_array($classroom->type, $types)) {
+        $classroomsGroupedByType[$classroom->type]++;
       }
-      return [$period->name => $counts];
-    });
+    }
 
     // ---- Plans of Study ----
     $plansQuery = DB::table('academic_plans')
@@ -84,7 +89,7 @@ class AcademicController extends Controller
         'total' => $schedules->sum('total'),
       ],
       'sections' => $sectionsGrouped,
-      'classrooms' => $classroomsByPeriod,
+      'classrooms' => $classroomsGroupedByType,
       'plans' => $plansGrouped
     ]);
   }

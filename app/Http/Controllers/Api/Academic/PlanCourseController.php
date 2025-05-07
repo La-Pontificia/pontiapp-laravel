@@ -32,7 +32,7 @@ class PlanCourseController extends Controller
 
         $graphed = $data->map(function ($item) {
             return $item->only(['id', 'name', 'credits', 'teoricHours', 'practiceHours', 'status', 'created_at']) +
-                ['course' => $item->course ? $item->course->only(['id', 'code']) : null] +
+                ['course' => $item->course ? $item->course->only(['id', 'code', 'name']) : null] +
                 ['plan' => $item->plan ? $item->plan->only(['id', 'name']) : null] +
                 ['cycle' => $item->cycle ? $item->cycle->only(['id', 'code', 'name']) : null] +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +

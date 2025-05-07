@@ -49,15 +49,17 @@ class SectionCourseScheduleController extends Controller
 
         $graphed = $data->map(function ($item) {
             return array_merge(
-                $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate', 'created_at']),
-                ['sectionCourse' => $item->sectionCourse ? $item->sectionCourse->only(['id']) + [
-                    'teacher' => $item->sectionCourse->teacher ? $item->sectionCourse->teacher->only(['id', 'firstNames', 'fullName', 'documentId', 'lastNames', 'displayName']) : null,
-                    'planCourse' => $item->sectionCourse->planCourse ? $item->sectionCourse->planCourse->only(['id', 'name', 'credits']) + [
-                        'course' => $item->sectionCourse->planCourse->course ? $item->sectionCourse->planCourse->course->only(['id', 'code']) : null,
+                $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate']),
+                ['program' => $item->sectionCourse?->section?->program?->only(['id', 'name'])],
+                ['sectionCourse' => [
+                    'teacher' => $item->sectionCourse->teacher ? $item->sectionCourse->teacher->only(['firstNames', 'fullName', 'documentId', 'lastNames', 'displayName']) : null,
+                    'section' => $item->sectionCourse->section ? $item->sectionCourse->section->only(['id', 'code']) : null,
+                    'planCourse' => $item->sectionCourse->planCourse ? $item->sectionCourse->planCourse->only(['name']) + [
+                        'course' => $item->sectionCourse->planCourse->course ? $item->sectionCourse->planCourse->course->only(['code']) : null,
                     ] : null,
-                ] : null],
+                ]],
                 ['dates' => $item->dates],
-                ['classroom' => $item->classroom ? $item->classroom->only(['id', 'code', 'name']) +
+                ['classroom' => $item->classroom ? $item->classroom->only(['id', 'code']) +
                     ['pavilion' => $item->classroom->pavilion ? $item->classroom->pavilion->only(['id', 'name']) : null]
                     : null],
             );

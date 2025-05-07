@@ -15,18 +15,15 @@ class PeriodController extends Controller
     {
         $match = Period::orderBy('created_at', 'desc');
         $q = $req->query('q');
-        $businessUnitId = $req->query('businessUnitId');
 
         $paginate = $req->query('paginate') === 'true';
 
         if ($q) $match->where('name', 'like', "%$q%");
-        if ($businessUnitId) $match->where('businessUnitId', $businessUnitId);
 
         $data = $paginate ? $match->paginate(25) :  $match->get();
 
         $graphed = $data->map(function ($item) {
             return $item->only(['id', 'name', 'startDate', 'endDate', 'created_at']) +
-                ['businessUnit' => $item->businessUnit ? $item->businessUnit->only(['id', 'name']) : null] +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['updater' => $item->updater ? $item->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null];
         });
@@ -45,45 +42,17 @@ class PeriodController extends Controller
             'name' => 'required|string',
             'startDate' => 'required|date',
             'endDate' => 'required|date',
-            'businessUnitId' => 'required|string',
-            'cloneByPeriodId' => 'nullable|string',
         ]);
 
-
-        $period = Period::where('name', $req->name)
-            ->where('businessUnitId', $req->businessUnitId)
-
-            ->first();
+        $period = Period::where('name', $req->name)->first();
         if ($period) return response()->json('already_exists', 400);
 
         $data = Period::create([
             'name' => $req->name,
             'startDate' => $req->startDate,
             'endDate' => $req->endDate,
-            'businessUnitId' => $req->businessUnitId,
             'creatorId' => Auth::id(),
         ]);
-
-        if ($req->cloneByPeriodId) {
-            Pavilion::where('periodId', $req->cloneByPeriodId)->get()->each(function ($pavilion) use ($data) {
-                $newPavilion = Pavilion::create([
-                    'name' => $pavilion->name,
-                    'periodId' => $data->id,
-                    'creatorId' => Auth::id(),
-                ]);
-                Classroom::where('pavilionId', $pavilion->id)->get()->each(function ($classroom) use ($newPavilion) {
-                    Classroom::create([
-                        'code' => $classroom->code,
-                        'floor' => $classroom->floor,
-                        'details' => $classroom->details,
-                        'type' => $classroom->type,
-                        'capacity' => $classroom->capacity,
-                        'pavilionId' => $newPavilion->id,
-                        'creatorId' => Auth::id(),
-                    ]);
-                });
-            });
-        }
 
         return response()->json($data);
     }
@@ -94,7 +63,6 @@ class PeriodController extends Controller
             'name' => 'required|string',
             'startDate' => 'required|date',
             'endDate' => 'required|date',
-            'businessUnitId' => 'required|string',
         ]);
 
         $item = Period::find($id);
@@ -102,9 +70,7 @@ class PeriodController extends Controller
         // validate if the period exists
         if (!$item) return response()->json('not_found', 404);
 
-        $period = Period::where('name', $req->name)->where('id', '!=', $id)
-            ->where('businessUnitId', $req->businessUnitId)
-            ->first();
+        $period = Period::where('name', $req->name)->where('id', '!=', $id)->first();
 
         if ($period) return response()->json('already_exists', 400);
 
@@ -112,7 +78,6 @@ class PeriodController extends Controller
             'name' => $req->name,
             'startDate' => $req->startDate,
             'endDate' => $req->endDate,
-            'businessUnitId' => $req->businessUnitId,
             'updaterId' => Auth::id(),
         ]);
         return response()->json('Updated');
@@ -122,13 +87,6 @@ class PeriodController extends Controller
     {
         $data = Period::find($id);
         if (!$data) return response()->json('not_found', 404);
-
-
-        // delete all classrooms and pavilions
-        foreach ($data->pavilions as $pavilion) {
-            $pavilion->classrooms()->delete();
-            $pavilion->delete();
-        }
 
         // delete all sections and sectionsCourses, Schedules
         foreach ($data->sections as $section) {

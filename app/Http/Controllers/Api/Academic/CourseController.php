@@ -22,7 +22,6 @@ class CourseController extends Controller
                 ->orWhere("code", "LIKE", "%$q%");
         }
 
-
         if ($businessUnitId) {
             $match->where('businessUnitId', $businessUnitId);
         }
