@@ -187,4 +187,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Session::class, 'userId', 'id');
     }
+
+    public function unavailableSchedules()
+    {
+        return $this->hasMany(UserSchedule::class, 'userId', localKey: 'id')->where('type', 'unavailable');
+    }
 }
