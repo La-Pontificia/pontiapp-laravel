@@ -17,7 +17,6 @@ class Pavilion extends Model
     protected $fillable = [
         'id',
         'name',
-        'periodId',
         'created_at',
         'updated_at',
         'creatorId',
@@ -31,11 +30,6 @@ class Pavilion extends Model
     public function updater()
     {
         return $this->hasOne(User::class, 'id', 'updaterId');
-    }
-
-    public function period()
-    {
-        return $this->hasOne(Period::class, 'id', 'periodId');
     }
 
     public function classrooms()
