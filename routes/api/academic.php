@@ -13,12 +13,20 @@ use App\Http\Controllers\Api\Academic\ProgramController;
 use App\Http\Controllers\Api\Academic\SectionController;
 use App\Http\Controllers\Api\Academic\SectionCourseController;
 use App\Http\Controllers\Api\Academic\SectionCourseScheduleController;
+use App\Http\Controllers\Api\Academic\TeacherController;
 use App\Http\Controllers\Api\Academic\TeacherTrackingController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('check.auth')->group(function () {
     Route::prefix('academic')->group(function () {
         Route::get('stadistics', [AcademicController::class, 'index']);
+        Route::prefix('teachers')->group(function () {
+            Route::get('', [TeacherController::class, 'index']);
+            Route::post('schedules/{id}', [TeacherController::class, 'updateSchedule']);
+            Route::post('schedules/{id}/delete', [TeacherController::class, 'deleteSchedule']);
+            Route::post('schedules', [TeacherController::class, 'storeSchedule']);
+            Route::get('{id}/schedules', [TeacherController::class, 'schedules']);
+        });
         Route::prefix('tt')->group(function () {
             Route::get('', [TeacherTrackingController::class, 'index']);
             Route::post('store', [TeacherTrackingController::class, 'store']);
