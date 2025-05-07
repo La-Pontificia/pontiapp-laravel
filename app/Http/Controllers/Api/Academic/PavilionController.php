@@ -76,6 +76,7 @@ class PavilionController extends Controller
     {
         $data = Pavilion::find($id);
         if (!$data) return response()->json('not_found', 404);
+        $data->classrooms()->delete();
         $data->delete();
         return response()->json('Data deleted');
     }
