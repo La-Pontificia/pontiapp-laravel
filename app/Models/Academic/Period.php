@@ -22,18 +22,12 @@ class Period extends Model
         'name',
         'startDate',
         'endDate',
-        'businessUnitId',
         'creatorId',
         'updaterId',
     ];
     public function creator()
     {
         return $this->belongsTo(User::class, 'creatorId', 'id');
-    }
-
-    public function businessUnit()
-    {
-        return $this->belongsTo(BusinessUnit::class, 'businessUnitId', 'id');
     }
 
     public function updater()
