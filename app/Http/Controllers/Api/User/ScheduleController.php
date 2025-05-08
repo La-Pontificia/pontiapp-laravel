@@ -86,7 +86,7 @@ class ScheduleController extends Controller
         $schedule->from = $req->from;
         $schedule->to = $req->to;
         $schedule->tolerance = $req->tolerance;
-        $schedule->type = $req->type;
+        $schedule->type = 'available';
         $schedule->days = $req->days;
         $schedule->startDate = $req->startDate;
         $schedule->endDate = $req->endDate;
@@ -112,7 +112,6 @@ class ScheduleController extends Controller
         $schedule->userId = $req->userId;
         $schedule->from = $req->from;
         $schedule->to = $req->to;
-        $schedule->type = $req->type;
         $schedule->days = $req->days;
         $schedule->tolerance = $req->tolerance;
         $schedule->startDate = $req->startDate;
