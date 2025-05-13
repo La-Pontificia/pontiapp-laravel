@@ -5,7 +5,8 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "dev": "bun --watch server.js"
+        "dev": "bun --watch server.js",
+        "dev:npm": "node server.js"
     },
     "keywords": [],
     "author": "",
