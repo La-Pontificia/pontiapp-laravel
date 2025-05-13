@@ -15,28 +15,21 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Assists implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $q;
-    public $startDate;
-    public $endDate;
-    public $jobId;
-    public $areaId;
-    public $userId;
-
-    public function __construct($q, $startDate, $endDate, $jobId, $areaId, $userId)
-    {
-        $this->q = $q;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
-        $this->jobId = $jobId;
-        $this->areaId = $areaId;
-        $this->userId = $userId;
-    }
+    public function __construct(
+        public $q,
+        public $startDate,
+        public $endDate,
+        public $jobId,
+        public $areaId,
+        public $userId
+    ) {}
 
     public function handle(): void
     {
@@ -288,11 +281,11 @@ class Assists implements ShouldQueue
                 ]);
             });
 
-            $restAssists = $results->map(function ($record) use ($terminals, $users) {
-                $record->terminal = $terminals->where('id', $record->terminalId)->first();
-                $record->user = $users->where('documentId', $record->documentId)->first();
-                return $record;
-            })->values();
+            // $restAssists = $results->map(function ($record) use ($terminals, $users) {
+            //     $record->terminal = $terminals->where('id', $record->terminalId)->first();
+            //     $record->user = $users->where('documentId', $record->documentId)->first();
+            //     return $record;
+            // })->values();
 
             $groupedAssists = $updatedSchedules->groupBy('userId')->map(function ($userSchedules) {
                 return $userSchedules->groupBy('date');
@@ -307,14 +300,9 @@ class Assists implements ShouldQueue
             foreach ($groupedAssists as $userId => $dates) {
                 foreach ($dates as $date => $schedules) {
                     foreach ($schedules as $schedule) {
-                        // $morningArriveLate = Carbon::parse($schedule['morningFrom'])->diffInMinutes(Carbon::parse($schedule['morningMarkedIn']), false) > 0;
-                        // $afternoonArriveLate = Carbon::parse($schedule['afternoonFrom'])->diffInMinutes(Carbon::parse($schedule['afternoonMarkedIn']), false) > 0;
                         $formatParsed = Carbon::parse($schedule['date']);
                         $morningFromMoreTolerence = $schedule['morningFrom'] ? Carbon::parse($schedule['morningFrom'])->addMinutes($schedule['tolerence']) : null;
                         $afternoonFromMoreTolerence = $schedule['afternoonFrom'] ? Carbon::parse($schedule['afternoonFrom'])->addMinutes($schedule['tolerence']) : null;
-
-                        // $delayMorning = ($morningArriveLate && $schedule['morningMarkedIn']) ? Carbon::parse($schedule['morningMarkedIn'])->diff($morningFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
-                        // $delayAfternoon = ($afternoonArriveLate && $schedule['afternoonMarkedIn']) ? Carbon::parse($schedule['afternoonMarkedIn'])->diff($afternoonFromMoreTolerence)->format('%H:%I:%S') : '00:00:00';
 
                         $worksheet->setCellValue('A' . $rr, $rr - 3);
                         $worksheet->setCellValue('B' . $rr, $formatParsed->format('d/m/Y'));
@@ -323,10 +311,7 @@ class Assists implements ShouldQueue
                         $worksheet->setCellValue('D' . $rr, ($schedule['user']?->firstNames && $schedule['user']?->lastNames) ? $schedule['user']?->lastNames . ', ' .  $schedule['user']?->firstNames : $schedule['user']?->displayName);
 
                         // nombre del mes
-                        // $worksheet->setCellValue('E' . $rr, $schedule['user']?->documentId);
-                        // $worksheet->setCellValue('F' . $rr, $schedule['user']?->lastNames . ', ' . $schedule['user']?->firstNames);
                         $worksheet->setCellValue('E' . $rr, $schedule['user']?->role?->department?->area?->name ?? "");
-                        // $worksheet->setCellValue('G' . $rr, $schedule['user']?->role?->job?->name ?? "");
 
                         // Morning
                         $worksheet->setCellValue('F' . $rr, $schedule['morningFrom'] ? $schedule['morningFrom']->format('H:i') : "");
@@ -348,86 +333,41 @@ class Assists implements ShouldQueue
                         // Morning
                         $worksheet->setCellValue('P' . $rr, $schedule['morningMarkedIn'] ? $schedule['morningMarkedIn']->format('H:i:s') : "");
                         $worksheet->getStyle('P' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        // if ($morningArriveLate) $worksheet->getStyle('O' . $rr)->getFont()->getColor()->setARGB('f14c4c');
                         $worksheet->setCellValue('Q' . $rr, $schedule['morningMarkedOut'] ? $schedule['morningMarkedOut']->format('H:i:s') : "");
                         $worksheet->getStyle('Q' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
                         // Afternoon
                         $worksheet->setCellValue('R' . $rr, $schedule['afternoonMarkedIn'] ? $schedule['afternoonMarkedIn']->format('H:i:s') : "");
                         $worksheet->getStyle('R' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        // if ($afternoonArriveLate) $worksheet->getStyle('Q' . $rr)->getFont()->getColor()->setARGB('f14c4c');
                         $worksheet->setCellValue('S' . $rr, $schedule['afternoonMarkedOut'] ? $schedule['afternoonMarkedOut']->format('H:i:s') : "");
                         $worksheet->getStyle('S' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
-                        // Delays in format hh:mm:ss
-                        // if ($delayMorning) {
-                        //     $worksheet->setCellValue('S' . $rr, $delayMorning);
-                        //     $worksheet->getStyle('S' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        // }
-
-                        // if ($schedule['afternoonMarkedIn']) {
-                        //     $worksheet->setCellValue('T' . $rr, $delayAfternoon);
-                        //     $worksheet->getStyle('T' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        // }
-
-                        // Total delay
-                        // $totalDelay = Carbon::parse($delayMorning)->diff(Carbon::parse($delayAfternoon))->format('%H:%I:%S');
-                        // $worksheet->setCellValue('U' . $rr, $totalDelay);
-                        // $worksheet->getStyle('U' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
                         $rr++;
                     }
                 }
             }
 
-            // $rr = $rr + 10;
-            // $rrr = 0;
-            // foreach ($restAssists as $assist) {
-            //     $worksheet->setCellValue('A' . $rr, $rrr + 1);
-            //     $worksheet->setCellValue('B' . $rr, $assist?->terminal?->name);
-            //     $worksheet->setCellValue('C' . $rr, Carbon::parse($assist->datetime)->isoFormat('MMMM'));
-            //     $worksheet->setCellValue('D' . $rr, Carbon::parse($assist->datetime)->format('d/m/Y'));
-            //     $worksheet->getStyle('D' . $rr)->getNumberFormat()->setFormatCode('D/M/YYYY');
-            //     $worksheet->setCellValue('E' . $rr, $assist->user?->documentId ?? "");
-            //     $worksheet->setCellValue('F' . $rr, $assist->user?->lastNames . ', ' . $assist->user?->firstNames);
+            Storage::makeDirectory('reports');
 
-            //     $worksheet->setCellValue('G' . $rr, $assist->user?->role?->job?->name ?? "");
-            //     $worksheet->setCellValue('H' . $rr, $assist->user?->role?->department?->area?->name ?? "");
-
-            //     $worksheet->setCellValue('O' . $rr, Carbon::parse($assist->datetime)->format('H:i:s'));
-            //     $worksheet->getStyle('O' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-            //     $rr++;
-            //     $rrr++;
-            // }
-
-            // foreach (range('B', 'H') as $columnID) {
-            //     $worksheet->getColumnDimension($columnID)->setAutoSize(true);
-            // }
-
-            $fileName = $this->startDate . ' - ' . $this->endDate . '_' . now()->timestamp . '.xlsx';
-            $filePath = 'files/reports/' . $fileName;
-            $downloadLink = asset($filePath);
-
+            $fileId = now()->timestamp;
+            $filePath = 'reports/' . $fileId . '.xlsx';
 
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-            $writer->save(public_path($filePath));
+            $writer->save(storage_path('app/' . $filePath));
 
-            $email = $user->email;
+            $fileName = $this->startDate . ' - ' . $this->endDate . ' Asistencias con horarios';
 
-            SendEmail::dispatch('Reporte de asistencias finalizado.', 'Hola, el reporte de asistencias con horarios ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
-
-            event(new UserNotice($user->id, "Reporte finalizado.", 'EL reporte de asistencias con horarios ya esta listo.', [
-                'Descargar' => $downloadLink,
-                'Ver' => '/m/assists/report-files',
-            ]));
-
-            Report::create([
-                'title' => $this->startDate . ' - ' . $this->endDate . ' Asistencias con horarios',
-                'fileUrl' => $filePath,
-                'downloadLink' => $downloadLink,
+            $report = Report::create([
+                'fileId' => $fileId,
+                'title' => $fileName,
                 'ext' => 'xlsx',
                 'creatorId' => $user->id,
                 'module' => 'assists',
             ]);
+
+            $downloadLink = config('app.download_url') . '/reports/' . $report->id;
+
+            ReportSendEmail::dispatch($report->title, 'asistencias', 'las asistencias', $downloadLink, $user->id);
         }
     }
 }

@@ -12,34 +12,25 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class EventRecord implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $eventId;
-    public $businessUnitId;
-    public $userId;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct($eventId,  $businessUnitId, $userId)
-    {
-        $this->eventId = $eventId;
-        $this->businessUnitId = $businessUnitId;
-        $this->userId = $userId;
-    }
+    public function __construct(
+        public $eventId,
+        public $businessUnitId,
+        public $userId
+    ) {}
 
-    /**
-     * Execute the job.
-     */
+
     public function handle(): void
     {
 
         $match = EventRecordModel::orderBy('created_at', 'desc');
-        $user = User::find($this->userId);
 
         if ($this->eventId) $match->where('eventId', $this->eventId);
         if ($this->businessUnitId) $match->where('businessUnitId', $this->businessUnitId);
@@ -47,59 +38,45 @@ class EventRecord implements ShouldQueue
         $records = $match->get();
 
         $spreadsheet = IOFactory::load(public_path('templates/record-events.xlsx'));
-        $worksheet = $spreadsheet->getActiveSheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
         $r = 2;
 
         foreach ($records as $record) {
-            $worksheet->setCellValue('A' . $r, $r - 1);
-            $worksheet->setCellValue('B' . $r, $record->documentId);
-            $worksheet->setCellValue('C' . $r, $record->fullName ? $record->fullName : $record->lastNames . ', ' . $record->firstNames);
-            $worksheet->setCellValue('D' . $r, $record->gender);
-            $worksheet->setCellValue('E' . $r, $record->career);
-            $worksheet->setCellValue('F' . $r, $record->period);
-            $worksheet->setCellValue('G' . $r, $record->businessUnit->name);
-            $worksheet->setCellValue('H' . $r, $record->email);
-            $worksheet->setCellValue('I' . $r, $record->event->name);
-            $worksheet->setCellValue('J' . $r, $record->created_at->format('d/m/Y'));
-            $worksheet->getStyle('J' . $r)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-            $worksheet->setCellValue('K' . $r, $record->created_at->isoFormat('HH:mm:ss'));
-            $worksheet->getStyle('K' . $r)->getNumberFormat()->setFormatCode('HH:MM:SS');
+            $sheet->setCellValue('A' . $r, $r - 1);
+            $sheet->setCellValue('B' . $r, $record->documentId);
+            $sheet->setCellValue('C' . $r, $record->fullName ? $record->fullName : $record->lastNames . ', ' . $record->firstNames);
+            $sheet->setCellValue('D' . $r, $record->gender);
+            $sheet->setCellValue('E' . $r, $record->career);
+            $sheet->setCellValue('F' . $r, $record->period);
+            $sheet->setCellValue('G' . $r, $record->businessUnit->name);
+            $sheet->setCellValue('H' . $r, $record->email);
+            $sheet->setCellValue('I' . $r, $record->event->name);
+            $sheet->setCellValue('J' . $r, $record->created_at->format('d/m/Y'));
+            $sheet->getStyle('J' . $r)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+            $sheet->setCellValue('K' . $r, $record->created_at->isoFormat('HH:mm:ss'));
+            $sheet->getStyle('K' . $r)->getNumberFormat()->setFormatCode('HH:MM:SS');
             $r++;
         }
 
-        foreach (range('A', 'K') as $columnID) {
-            $worksheet->getColumnDimension($columnID)->setAutoSize(true);
-        }
-
-
-        $fileName = 'events_records_' . now()->timestamp . '.xlsx';
-        $filePath = 'files/reports/' . $fileName;
-        $downloadLink = asset($filePath);
-
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save(public_path($filePath));
-
-        $user = User::find($this->userId);
-        $email = $user->email;
-
         $event = Event::find($this->eventId);
 
-        SendEmail::dispatch('Reporte de eventos finalizado.', 'Hola, el reporte de eventos ya está disponible. Puedes descargarlo desde el siguiente enlace: ' . $downloadLink, $email);
+        Storage::makeDirectory('reports');
+        $fileId = now()->timestamp;
+        $filePath = "reports/{$fileId}.xlsx";
 
-        event(new UserNotice($user->id, "Reporte finalizado.", 'EL reporte de eventos ya esta listo.', [
-            'Descargar' => $downloadLink,
-            'Ver' => '/m/events/report-files',
-        ]));
+        IOFactory::createWriter($sheet->getParent(), 'Xlsx')->save(storage_path("app/{$filePath}"));
 
-        Report::create([
-            'title' => 'Registros de eventos (' . $event?->name . ')',
-            'fileUrl' => $filePath,
-            'downloadLink' => $downloadLink,
+        $title = 'Asistentes del evento (' . $event?->name . ')';
+        $report = Report::create([
+            'fileId' => $fileId,
+            'title' => $title,
             'ext' => 'xlsx',
-            'creatorId' => $user->id,
-            'module' => 'events-records',
-            'created_at' => now(),
+            'creatorId' => $this->userId,
+            'module' => 'events',
         ]);
+
+        $link = config('app.download_url') . "/reports/{$report->id}";
+        ReportSendEmail::dispatch($report->title, 'eventos', 'las asistencias al evento', $link, $this->userId);
     }
 }
