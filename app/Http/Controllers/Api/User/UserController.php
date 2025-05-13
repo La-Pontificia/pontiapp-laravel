@@ -211,6 +211,7 @@ class UserController extends Controller
                 'from' =>  Carbon::parse($schedule['from']),
                 'to' => Carbon::parse($schedule['to']),
                 'days' => $schedule['days'],
+                'type' => 'available',
                 'startDate' => Carbon::parse($schedule['startDate']),
                 'creatorId' => Auth::id(),
             ]);
