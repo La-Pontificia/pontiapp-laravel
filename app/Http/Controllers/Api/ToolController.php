@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ToolController extends Controller
 {
@@ -72,17 +73,19 @@ class ToolController extends Controller
 
     public function downloadReportFile(Request $req, $id)
     {
-        $report = Report::findOrFail($id);
-        $relativePath = ltrim($report->fileUrl, '/');
-        $filePath = public_path($relativePath);
+        $filePath = 'file.jpg'; // Ruta relativa dentro de 'storage/app/public'
 
-        if (!file_exists($filePath)) {
-            return response()->json(['error' => 'Archivo no encontrado', 'path' => $filePath], 404);
+        // Obtener la ruta completa en el sistema de archivos
+        $path = storage_path('app/public/' . $filePath);
+
+        // Verificar si el archivo existe
+        if (!file_exists($path)) {
+            abort(404); // Si el archivo no existe, mostrar error 404
         }
 
-        $extension = pathinfo($report->fileUrl, PATHINFO_EXTENSION);
-        $filename = "{$report->title}.{$extension}";
-
-        return response()->download($filePath, $filename);
+        // Servir el archivo con el tipo adecuado (por ejemplo, imagen JPG)
+        return response()->file($path, [
+            'Content-Type' => 'image/jpeg',  // Tipo de contenido para imagen JPG
+        ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Academic\SectionCourseSchedule;
 use App\Models\AssistTerminal;
 use App\Models\Role;
 use App\Models\User;
@@ -92,7 +93,10 @@ class UserController extends Controller
         if ($role) $match->where('roleId', $role);
 
         if ($onlyTeachers == 'true') {
-            $match->where('roleId', $teacherRoleId);
+            $match->where(function ($query) use ($teacherRoleId) {
+                $query->where('roleId', $teacherRoleId)
+                    ->orWhere('role2Id', $teacherRoleId);
+            });
         }
 
         if ($job) $match->whereHas('role', function ($q) use ($job) {
@@ -133,6 +137,7 @@ class UserController extends Controller
                     ['job' => $user->role?->job->only(['name'])] +
                     ['department' => $user->role?->department->only(['name']) +
                         ['area' => $user->role?->department->area->only(['name'])]] : null] +
+                ['role2' => $user->role ? $user->role2?->only(['name']) : null] +
                 ['manager' => $user->manager ? $user->manager->only(['firstNames', 'lastNames', 'displayName', 'photoURL', 'username']) : null];
         });
 
@@ -182,7 +187,9 @@ class UserController extends Controller
             'email' => $req->email,
             'password' => bcrypt($req->get('password')),
             'roleId' => $req->get('roleId'),
+            'role2Id' => $req->get('roleId'),
             'userRoleId' => $req->get('userRoleId'),
+            'userRole2Id' => $req->get('userRoleId'),
             'branchId' => $req->get('branchId'),
             'entryDate' => $req->get('entryDate'),
             'customPrivileges' => $req->get('customPrivileges'),
@@ -238,6 +245,16 @@ class UserController extends Controller
 
         request()->validate(User::$rules);
 
+        if ($req->status == false) {
+            $schedules = SectionCourseSchedule::whereHas('sectionCourse', function ($query) use ($user) {
+                $query->where('teacherId', $user->id);
+            })->where('endDate', '>=', Carbon::now())->count();
+
+            if ($schedules > 0) {
+                return response()->json('there_are_unfinished', 400);
+            }
+        }
+
         $existsDocumentId = User::where('documentId', $req->documentId)->exists();
 
         if ($req->documentId && $existsDocumentId && $user->documentId != $req->documentId) {
@@ -273,7 +290,9 @@ class UserController extends Controller
             'email' => $req->email,
             'password' => bcrypt($req->get('password')),
             'roleId' => $req->get('roleId'),
+            'role2Id' => $req->get('role2Id'),
             'userRoleId' => $req->get('userRoleId'),
+            'userRole2Id' => $req->get('userRole2Id'),
             'entryDate' => $req->get('entryDate'),
             'contractTypeId' => $req->get('contractTypeId'),
             'customPrivileges' => $req->get('customPrivileges'),
@@ -366,7 +385,11 @@ class UserController extends Controller
                 ['sessions' => $user->sessions ? $user->sessions()->orderBy('created_at', 'desc')->take(3)->get()->map(function ($session) {
                     return $session->only(['id', 'ip', 'userAgent', 'location', 'isMobile', 'isTablet', 'isDesktop', 'browser', 'platform', 'created_at']);
                 }) : null] +
-                ['role' => $user->role ? $user->role?->only(['id', 'name']) + ['job' => $user->role?->job->only(['id', 'name'])] + ['department' => $user->role?->department->only(['id', 'name']) + ['area' => $user->role?->department->area->only(['id', 'name'])]] : null]
+                ['role' => $user->role ? $user->role?->only(['id', 'name']) +
+                    ['job' => $user->role?->job->only(['id', 'name'])] +
+                    ['department' => $user->role?->department->only(['id', 'name']) +
+                        ['area' => $user->role?->department->area->only(['id', 'name'])]] : null] +
+                ['role2' => $user->role2 ? $user->role2?->only(['id', 'name']) : null]
         );
     }
 
@@ -380,6 +403,7 @@ class UserController extends Controller
             [
                 ...$user->toArray(),
                 'userRole' => $user->userRole ? $user->userRole->only(['id', 'title']) : null,
+                'userRole2' => $user->userRole2 ? $user->userRole2->only(['id', 'title']) : null,
                 'manager' => $user->manager ? $user->manager->only(['id', 'firstNames', 'lastNames', 'displayName', 'username', 'photoURL']) : null,
                 'contractType' => $user->contractType ? $user->contractType?->only(['id', 'name']) : null,
                 'branch' => $user->branch ?  $user->branch->only('id', 'name') : null,
@@ -388,6 +412,9 @@ class UserController extends Controller
                     'department' => $user->role->department->only(['id', 'name']) + [
                         'area' => $user->role->department->area->only(['id', 'name'])
                     ]
+                ] : null,
+                'role2' => $user->role2 ? $user->role2->only(['id', 'name']) + [
+                    'job' => $user->role2->job->only(['id', 'name']),
                 ] : null,
             ]
         );
@@ -431,6 +458,17 @@ class UserController extends Controller
     {
         $user =  $this->getUser($slug);
         $user->status = !$user->status;
+
+        if ($user == true) {
+            $schedules = SectionCourseSchedule::whereHas('sectionCourse', function ($query) use ($user) {
+                $query->where('teacherId', $user->id);
+            })->where('endDate', '>=', Carbon::now())->count();
+
+            if ($schedules > 0) {
+                return response()->json('Hay horarios de clase activos asignados a este usuario, no se puede desactivar, por favor elimina o migra a otro usuario.', 400);
+            }
+        }
+
         $user->save();
         return response()->json(
             $user->status ? 'Usuario activado' : 'Usuario desactivado',
@@ -591,46 +629,6 @@ class UserController extends Controller
         $user->save();
 
         return response()->json('User updated');
-    }
-
-    public function updateProperties(Request $req, $slug)
-    {
-        $user =  $this->getUser($slug);
-
-        $req->validate([
-            'documentId' => 'required|string',
-            'photoURL' => 'nullable|string',
-            'firstNames' => 'required|string',
-            'lastNames' => 'required|string',
-            'birthdate' => 'required|date',
-            'contacts' => 'nullable|array',
-        ]);
-
-        $alreadyDocumentId = User::where('documentId', $req->documentId)->where('id', '!=', $user->id)->exists();
-        if ($alreadyDocumentId) {
-            return response()->json('El documento de identidad ya esta en uso', 400);
-        }
-
-        $fullName = $req->firstNames . ' ' . $req->lastNames;
-
-        $user->documentId = $req->documentId;
-        $user->firstNames = $req->firstNames;
-        $user->lastNames = $req->lastNames;
-        $user->fullName = $fullName;
-        $user->photoURL = $req->photoURL;
-        $user->birthdate = $req->birthdate;
-        $user->contacts = $req->contacts ? $req->contacts : null;
-        $user->save();
-
-        return response()->json('User updated');
-    }
-
-    public function createVersion(Request $req, $slug)
-    {
-        $user =  $this->getUser($slug);
-        $user->version = $req->version;
-        $user->save();
-        return response()->json('Version updated');
     }
 
     public function updateProfilePhoto(Request $req, $slug)
