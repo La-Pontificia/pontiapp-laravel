@@ -19,24 +19,27 @@ class TeacherController extends Controller
     $q = $req->query('q');
     $paginate = $req->query('paginate') === 'true';
 
-    $match->where(function ($query) use ($q, $teacherRoleId) {
-      $query->where('roleId', $teacherRoleId);
-      if ($q) {
-        $query->where(function ($subQuery) use ($q) {
-          $subQuery->where('fullName', 'like', '%' . $q . '%')
-            ->orWhere('documentId', 'like', '%' . $q . '%')
-            ->orWhere('displayName', 'like', '%' . $q . '%')
-            ->orWhere('email', 'like', '%' . $q . '%');
-        });
-      }
+    $match->where(function ($query) use ($teacherRoleId) {
+      $query->where('roleId', $teacherRoleId)
+        ->orWhere('role2Id', $teacherRoleId);
     });
+
+
+    if ($q) {
+      $match->where(function ($subQuery) use ($q) {
+        $subQuery->where('fullName', 'like', '%' . $q . '%')
+          ->orWhere('documentId', 'like', '%' . $q . '%')
+          ->orWhere('displayName', 'like', '%' . $q . '%')
+          ->orWhere('email', 'like', '%' . $q . '%');
+      });
+    }
 
     $data = $paginate ? $match->paginate(25) : $match->get();
 
     $graphed = $data->map(function ($item) {
       $schedules = UserSchedule::where('userId', $item->id)->where('type', 'unavailable')->get();
       return array_merge(
-        $item->only(['id', 'firstNames', 'lastNames', 'displayName', 'email', 'photoURL']),
+        $item->only(['id', 'firstNames', 'username', 'lastNames', 'displayName', 'email', 'photoURL']),
         ['schedulesNotAvailable' => $schedules->map(function ($schedule) {
           return $schedule->only(['startDate', 'endDate', 'from', 'to']);
         })]
@@ -69,6 +72,9 @@ class TeacherController extends Controller
     $classSchedules = $data2->map(function ($item) {
       return array_merge(
         $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate', 'created_at']),
+        ['program' => $item->sectionCourse?->section?->program?->only(['id', 'name']) + [
+          'businessUnit' => $item->sectionCourse?->section?->program?->businessUnit?->only(['id', 'logoURL']),
+        ]],
         ['sectionCourse' => $item->sectionCourse ? $item->sectionCourse->only(['id']) + [
           'planCourse' => $item->sectionCourse->planCourse ? $item->sectionCourse->planCourse->only(['id', 'name', 'credits']) + [
             'course' => $item->sectionCourse->planCourse->course ? $item->sectionCourse->planCourse->course->only(['id', 'code']) : null,

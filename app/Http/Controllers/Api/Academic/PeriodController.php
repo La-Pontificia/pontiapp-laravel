@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api\Academic;
 
 use App\Http\Controllers\Controller;
-use App\Models\Academic\Classroom;
-use App\Models\Academic\Pavilion;
 use App\Models\Academic\Period;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
