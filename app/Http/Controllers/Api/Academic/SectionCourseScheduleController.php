@@ -301,7 +301,6 @@ class SectionCourseScheduleController extends Controller
         $periodIds = $periodIds ? explode(',', $periodIds) : [];
         $programIds = $programIds ? explode(',', $programIds) : [];
 
-
         $match = SectionCourseSchedule::orderBy('created_at', 'desc');
 
         if ($periodIds) {
@@ -428,7 +427,6 @@ class SectionCourseScheduleController extends Controller
             'ext' => 'xlsx',
             'creatorId' => Auth::id(),
             'module' => 'academic',
-            'created_at' => now(),
         ]);
 
         $downloadLink = config('app.download_url') . '/reports/' . $report->id;
