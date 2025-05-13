@@ -107,7 +107,7 @@ class AssistsWithoutUsers implements ShouldQueue
 
         IOFactory::createWriter($spreadsheet, 'Xlsx')->save(storage_path("app/{$filePath}"));
 
-        $title = "{$this->startDate} - {$this->endDate} Asistencias sin usuarios del sistema";
+        $title = "{$this->startDate} - {$this->endDate} Asistencias del biometrico";
         $report = Report::create([
             'fileId' => $fileId,
             'title' => $title,
