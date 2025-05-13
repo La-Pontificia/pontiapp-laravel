@@ -25,6 +25,7 @@ class Period extends Model
         'creatorId',
         'updaterId',
     ];
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'creatorId', 'id');

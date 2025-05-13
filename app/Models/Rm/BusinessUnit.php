@@ -19,6 +19,7 @@ class BusinessUnit extends Model
         'name',
         'acronym',
         'logoURL',
+        'logoURLSquare',
         'domain',
         'creatorId',
         'updaterId',

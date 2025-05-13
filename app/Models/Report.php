@@ -14,7 +14,7 @@ class Report extends Model
 
     protected $perPage = 25;
 
-    protected $fillable = ['id', 'title', 'fileUrl', 'ext', 'downloadLink', 'creatorId', 'module'];
+    protected $fillable = ['id', 'title', 'fileId', 'ext', 'downloadLink', 'creatorId', 'module'];
 
     protected $keyType = 'string';
 

@@ -26,10 +26,12 @@ class User extends Authenticatable
         'email',
         'password',
         'userRoleId',
+        'userRole2Id',
         'customPrivileges',
         'contractTypeId',
         'status',
         'roleId',
+        'role2Id',
         'branchId',
         'managerId',
         'username',
@@ -63,8 +65,10 @@ class User extends Authenticatable
         'displayName' => 'string|required',
         'username' => 'required',
         'roleId' => 'uuid|nullable',
+        'role2Id' => 'uuid|nullable',
         'birthdate' => 'date|nullable',
         'userRoleId' => 'uuid|nullable',
+        'userRole2Id' => 'uuid|nullable',
         'entryDate' => 'date|nullable',
         'contractTypeId' => 'uuid|nullable',
         'password' => 'min:8|nullable',
@@ -91,6 +95,11 @@ class User extends Authenticatable
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'roleId');
+    }
+
+    public function role2()
+    {
+        return $this->hasOne(Role::class, 'id', 'role2Id');
     }
 
     public function department()
@@ -121,6 +130,11 @@ class User extends Authenticatable
     public function userRole()
     {
         return $this->hasOne(UserRole::class, 'id', 'userRoleId');
+    }
+
+    public function userRole2()
+    {
+        return $this->hasOne(UserRole::class, 'id', 'userRole2Id');
     }
 
     public function manager()
