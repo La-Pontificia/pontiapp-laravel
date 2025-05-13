@@ -83,7 +83,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'businessUnits' => $businessUnits->map(function ($bu) {
-                    return $bu->only(['id', 'name', 'acronym', 'logoURL']);
+                    return $bu->only(['id', 'name', 'acronym', 'logoURL', 'logoURLSquare']);
                 }),
 
                 'authUser' => array_merge(
@@ -100,7 +100,8 @@ class AuthController extends Controller
                     ]),
                     [
                         'role' => $user->role ? $user->role->only(['id', 'name']) : null,
-                        'userRole' => $user->userRole ? $user->userRole->only(['id', 'title', 'privileges']) : null
+                        'userRole' => $user->userRole ? $user->userRole->only(['id', 'title', 'privileges']) : null,
+                        'userRole2' => $user->userRole2 ? $user->userRole2->only(['id', 'title', 'privileges']) : null
                     ]
                 ),
 
