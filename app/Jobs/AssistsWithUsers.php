@@ -134,7 +134,7 @@ class AssistsWithUsers implements ShouldQueue
 
         IOFactory::createWriter($sheet->getParent(), 'Xlsx')->save(storage_path("app/{$filePath}"));
 
-        $title = "{$this->startDate} - {$this->endDate} Asistencias con usuarios del sistema";
+        $title = "{$this->startDate} - {$this->endDate} Asistencias de los usuarios del sistema";
         $report = Report::create([
             'fileId' => $fileId,
             'title' => $title,
