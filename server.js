@@ -2,11 +2,13 @@ import express from 'express'
 import mysql from 'mysql2'
 import fs from 'fs'
 import dotenv from 'dotenv'
+import morgan from 'morgan'
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 1234
+app.use(morgan('dev'))
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
