@@ -10,19 +10,14 @@ const app = express()
 const port = process.env.PORT || 1234
 app.use(morgan('dev'))
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
-})
-
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection error: ' + err.stack)
-        return
-    }
-    console.log('Connected to MySQL database')
+    database: process.env.DB_DATABASE,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 })
 
 app.get('/reports/:report_id', (req, res) => {
