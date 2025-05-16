@@ -13,9 +13,9 @@ class AcademicController extends Controller
 {
   public function index(Request $req)
   {
-    $businessUnitId = $req->get('businessUnitId');
+    // $businessUnitId = $req->get('businessUnitId');
     $periodId = $req->get('periodId');
-    $programs = Program::where('businessUnitId', $businessUnitId)->get();
+    $programs = Program::get();
     $periods = Period::get();
 
     // ---- Schedules ----
