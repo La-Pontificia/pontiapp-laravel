@@ -26,6 +26,12 @@ class Period extends Model
         'updaterId',
     ];
 
+    protected $casts = [
+        'startDate' => 'date',
+        'endDate' => 'date',
+    ];
+
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'creatorId', 'id');
