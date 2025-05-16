@@ -20,25 +20,11 @@ class SectionCourseScheduleController extends Controller
     public function index(Request $req)
     {
         $match = SectionCourseSchedule::orderBy('created_at', 'asc');
-        $q = $req->query('q');
         $classroomId = $req->query('classroomId');
         $sectionCourseId = $req->query('sectionCourseId');
         $sectionId = $req->query('sectionId');
         $teacherId = $req->query('teacherId');
         $paginate = $req->query('paginate') === 'true';
-
-        if ($q) {
-            // $match->whereHas('sectionCourse', function ($query) use ($q) {
-            //     $query->whereHas('section', function ($query) use ($q) {
-            //         $query->where('code', 'like', "%$q%");
-            //     })->orWhereHas('planCourse', function ($query) use ($q) {
-            //         $query->whereHas('course', function ($query) use ($q) {
-            //             $query->where('code', 'like', "%$q%")
-            //                 ->orWhere('name', 'like', "%$q%");
-            //         });
-            //     });
-            // });
-        }
 
         if ($classroomId) $match->where('classroomId', $classroomId);
         if ($sectionCourseId) $match->where('sectionCourseId', $sectionCourseId);
@@ -295,142 +281,184 @@ class SectionCourseScheduleController extends Controller
 
     public function report(Request $req)
     {
-        $periodIds = $req->query('periodIds');
-        $programIds = $req->query('programIds');
+        $periodIds = $req->query('periodIds') ? explode(',', $req->query('periodIds')) : [];
+        $programIds = $req->query('programIds') ? explode(',', $req->query('programIds')) : [];
+        $programId = $req->query('programId');
+        $periodId = $req->query('periodId');
+        $q = $req->query('q');
 
-        $periodIds = $periodIds ? explode(',', $periodIds) : [];
-        $programIds = $programIds ? explode(',', $programIds) : [];
+        $query = SectionCourse::orderBy('created_at', 'desc');
 
-        $match = SectionCourseSchedule::orderBy('created_at', 'desc');
+        foreach (
+            [
+                ['periodId', $periodIds],
+                ['programId', $programIds]
+            ] as [$key, $ids]
+        ) {
+            if ($ids) {
+                $query->whereHas('section', fn($q) => $q->whereIn($key, $ids));
+            }
+        }
 
-        if ($periodIds) {
-            $match->whereHas('sectionCourse.section', function ($query) use ($periodIds) {
-                $query->whereIn('periodId', $periodIds);
+        foreach (
+            [
+                ['programId', $programId],
+                ['periodId', $periodId]
+            ] as [$key, $id]
+        ) {
+            if ($id) {
+                $query->whereHas('section', fn($q) => $q->where($key, $id));
+            }
+        }
+
+        if ($q) {
+            $query->where(function ($subQuery) use ($q) {
+                $subQuery->whereHas('section', fn($q) => $q->where('code', 'like', "%$q%"))
+                    ->orWhereHas(
+                        'planCourse',
+                        fn($q) =>
+                        $q->whereHas(
+                            'course',
+                            fn($q) =>
+                            $q->where('code', 'like', "%$q%")->orWhere('name', 'like', "%$q%")
+                        )
+                    )->orWhereHas(
+                        'teacher',
+                        fn($q) =>
+                        $q->where('username', 'like', "%$q%")
+                            ->orWhere('firstNames', 'like', "%$q%")
+                            ->orWhere('documentId', 'like', "%$q%")
+                            ->orWhere('lastNames', 'like', "%$q%")
+                            ->orWhere('displayName', 'like', "%$q%")
+                    );
             });
         }
 
-        if ($programIds) {
-            $match->whereHas('sectionCourse.section', function ($query) use ($programIds) {
-                $query->whereIn('programId', $programIds);
-            });
-        }
+        $schedulesRaw = $query->get()->flatMap(function ($course) {
+            if ($course->schedules->isEmpty()) {
+                return [[
+                    'period' => $course->section?->period?->name,
+                    'startDate' => $course->section?->period?->startDate,
+                    'endDate' => $course->section?->period?->endDate,
+                    'businessUnit' => $course->section?->program?->businessUnit?->acronym,
+                    'program' => $course->section?->program?->name,
+                    'cycle' => $course->section?->cycle?->code,
+                    'section' => $course->section?->code,
+                    'course' => $course->planCourse?->name,
+                    'courseCode' => $course->planCourse?->course?->code,
+                    'daysOfWeek' => [],
+                    'startTime' => null,
+                    'endTime' => null,
+                    'classroom' => null,
+                    'classroomType' => null,
+                    'teacher' => $course->teacher,
+                ]];
+            }
 
-        $schedulesRaw = $match->get();
+            return $course->schedules->map(fn($s) => [
+                'period' => $course->section?->period?->name,
+                'startDate' => $course->section?->period?->startDate,
+                'endDate' => $course->section?->period?->endDate,
+                'businessUnit' => $course->section?->program?->businessUnit?->acronym,
+                'program' => $course->section?->program?->name,
+                'cycle' => $course->section?->cycle?->code,
+                'section' => $course->section?->code,
+                'course' => $course->planCourse?->name,
+                'courseCode' => $course->planCourse?->course?->code,
+                'daysOfWeek' => $s->daysOfWeek,
+                'startTime' => $s->startTime,
+                'endTime' => $s->endTime,
+                'classroom' => $s->classroom?->code,
+                'classroomType' => $s->classroom?->type,
+                'teacher' => $course->teacher,
+            ]);
+        });
 
-        $allSchedules = collect();
-
-        $dayNames = [
-            '1' => 'Lunes',
-            '2' => 'Martes',
-            '3' => 'Miércoles',
-            '4' => 'Jueves',
-            '5' => 'Viernes',
-            '6' => 'Sábado',
-            '7' => 'Domingo',
-        ];
+        $dayNames = ['1' => 'Lunes', '2' => 'Martes', '3' => 'Miércoles', '4' => 'Jueves', '5' => 'Viernes', '6' => 'Sábado', '7' => 'Domingo'];
+        $items = collect();
 
         foreach ($schedulesRaw as $schedule) {
-            foreach ($schedule->daysOfWeek as $day) {
-                $clone = clone $schedule;
-                $dayNum = trim($day);
-                $clone->daysOfWeek = "$dayNum. " . ($dayNames[$dayNum] ?? $dayNum);
-                $allSchedules->push($clone);
+            if (empty($schedule['daysOfWeek'])) {
+                $schedule['daysOfWeek'] = '';
+                $items->push($schedule);
+            } else {
+                foreach ($schedule['daysOfWeek'] as $day) {
+                    $clone = $schedule;
+                    $dayNum = trim($day);
+                    $clone['daysOfWeek'] = "$dayNum. " . ($dayNames[$dayNum] ?? $dayNum);
+                    $items->push($clone);
+                }
             }
         }
 
         $spreadsheet = IOFactory::load(public_path('templates/section_schedules.xlsx'));
         $worksheet = $spreadsheet->getActiveSheet();
-
         $r = 2;
 
-        $allSchedules = $allSchedules->sort(function ($a, $b) {
-            return [
-                $a->sectionCourse?->section?->period?->id,
-                $a->sectionCourse?->section?->program?->businessUnit?->id,
-                $a->sectionCourse?->section?->program?->id,
-                $a->sectionCourse?->section?->id,
-                $a->sectionCourse?->teacher?->id
-            ]
-                <=>
-                [
-                    $b->sectionCourse?->section?->period?->id,
-                    $b->sectionCourse?->section?->program?->businessUnit?->id,
-                    $b->sectionCourse?->section?->program?->id,
-                    $b->sectionCourse?->section?->id,
-                    $b->sectionCourse?->teacher?->id
-                ];
-        })->values();
+        $allItems = $items->sort(fn($a, $b) => [
+            $a['period'],
+            $a['businessUnit'],
+            $a['program'],
+            $a['section']
+        ] <=> [
+            $b['period'],
+            $b['businessUnit'],
+            $b['program'],
+            $b['section']
+        ])->values()->sortByDesc(fn($i) => !is_null($i['startTime']))->values();
 
-        foreach ($allSchedules as $schedule) {
-
-            $teacherNames = $schedule->sectionCourse?->teacher
-                ? strtoupper($schedule->sectionCourse?->teacher?->lastNames) . ', ' . strtoupper($schedule->sectionCourse?->teacher?->firstNames)
-                : '';
-            $teacherDocumentId = $schedule->sectionCourse?->teacher
-                ? $schedule->sectionCourse?->teacher?->documentId
-                : '';
-
-            $teacherEmail = $schedule->sectionCourse?->teacher
-                ? $schedule->sectionCourse?->teacher?->email
-                : '';
-
-            $worksheet->setCellValue('A' . $r, $schedule->sectionCourse?->section?->period?->name);
-            $worksheet->setCellValue('B' . $r, $schedule->startDate?->format('d/m/Y'));
-            $worksheet->getStyle('B' . $r)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-            $worksheet->setCellValue('C' . $r, $schedule->endDate?->format('d/m/Y'));
-            $worksheet->getStyle('C' . $r)->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-            $worksheet->setCellValue('D' . $r, $schedule->sectionCourse?->section?->program?->businessUnit?->acronym);
-            $worksheet->setCellValue('E' . $r, $schedule->sectionCourse?->section?->program?->name);
-            $worksheet->setCellValue('F' . $r, $schedule->sectionCourse?->section?->cycle?->code);
-            $worksheet->setCellValue('G' . $r, $schedule->sectionCourse?->section?->code);
-            $worksheet->setCellValue('H' . $r, $schedule->sectionCourse?->planCourse?->name);
-            $worksheet->setCellValue('I' . $r, $schedule->sectionCourse?->planCourse?->course?->code);
-            $worksheet->setCellValue('J' . $r, $schedule->daysOfWeek);
-            $worksheet->setCellValue('K' . $r, $schedule->startTime->format('H:i'));
-            $worksheet->getStyle('K' . $r)->getNumberFormat()->setFormatCode('HH:MM');
-            $worksheet->setCellValue('L' . $r, $schedule->endTime->format('H:i'));
-            $worksheet->getStyle('L' . $r)->getNumberFormat()->setFormatCode('HH:MM');
-            $worksheet->setCellValue('M' . $r, $schedule->classroom?->code);
-            $worksheet->setCellValue('N' . $r, $schedule->classroom?->type);
-            $worksheet->setCellValue('O' . $r, $teacherNames);
-            $worksheet->setCellValue('P' . $r, $teacherDocumentId);
-            $worksheet->setCellValue('Q' . $r, $teacherEmail);
-
+        foreach ($allItems as $item) {
+            $teacher = $item['teacher'];
+            $worksheet->setCellValue("A$r", $item['period']);
+            $worksheet->setCellValue("B$r", $item['startDate']?->format('d/m/Y'));
+            $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+            $worksheet->setCellValue("C$r", $item['endDate']?->format('d/m/Y'));
+            $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+            $worksheet->setCellValue("D$r", $item['businessUnit']);
+            $worksheet->setCellValue("E$r", $item['program']);
+            $worksheet->setCellValue("F$r", $item['cycle']);
+            $worksheet->setCellValue("G$r", $item['section']);
+            $worksheet->setCellValue("H$r", $item['course']);
+            $worksheet->setCellValue("I$r", $item['courseCode']);
+            $worksheet->setCellValue("J$r", $item['daysOfWeek']);
+            $worksheet->setCellValue("K$r", $item['startTime']?->format('H:i'));
+            $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
+            $worksheet->setCellValue("L$r", $item['endTime']?->format('H:i'));
+            $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('HH:MM');
+            $worksheet->setCellValue("M$r", $item['classroom']);
+            $worksheet->setCellValue("N$r", $item['classroomType']);
+            $worksheet->setCellValue("O$r", $teacher ? strtoupper($teacher->fullNames()) : '');
+            $worksheet->setCellValue("P$r", $teacher?->documentId);
+            $worksheet->setCellValue("Q$r", $teacher?->email);
             $r++;
         }
 
         Storage::makeDirectory('reports');
-
         $fileId = now()->timestamp;
-        $filePath = 'reports/' . $fileId . '.xlsx';
+        $filePath = "reports/$fileId.xlsx";
 
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save(storage_path('app/' . $filePath));
+        IOFactory::createWriter($spreadsheet, 'Xlsx')->save(storage_path("app/$filePath"));
 
         $displayNameFile = 'Horarios ';
-
         if ($periodIds) {
-            $periods = Period::whereIn('id', $periodIds)->get();
-            $periodNames = $periods->pluck('name')->implode(', ');
-            $displayNameFile .= '(periodos: ' . $periodNames . ', ';
+            $displayNameFile .= '(periodos: ' . Period::whereIn('id', $periodIds)->pluck('name')->implode(', ') . ', ';
         }
-
         if ($programIds) {
-            $programs = Program::whereIn('id', $programIds)->get();
-            $programAcronyms = $programs->pluck('acronym')->implode(', ');
-            $displayNameFile .= 'programas: ' . $programAcronyms . ')';
+            $displayNameFile .= 'programas: ' . Program::whereIn('id', $programIds)->pluck('acronym')->implode(', ') . ')';
+        }
+        if ($programId && $periodId) {
+            $displayNameFile .= '(programa: ' . Program::find($programId)?->acronym . ', periodo: ' . Period::find($periodId)?->name . ')';
         }
 
         $report = Report::create([
             'fileId' => $fileId,
-            'title' => '' . $displayNameFile . '',
+            'title' => $displayNameFile,
             'ext' => 'xlsx',
             'creatorId' => Auth::id(),
             'module' => 'academic',
         ]);
 
         $downloadLink = config('app.download_url') . '/reports/' . $report->id;
-
         ReportSendEmail::dispatch($report->title, 'académico', 'los horarios', $downloadLink, Auth::id());
 
         return response()->json($downloadLink);

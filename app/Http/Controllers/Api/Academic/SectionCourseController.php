@@ -65,7 +65,8 @@ class SectionCourseController extends Controller
                     'course' => $item->planCourse->course ? $item->planCourse->course->only(['id', 'code', 'name']) : null,
                     'plan' => $item->planCourse->plan ? $item->planCourse->plan->only(['id', 'name']) : null,
                 ] : null],
-                ['teacher' => $item->teacher ? $item->teacher->only(['id', 'firstNames', 'fullName', 'documentId', 'lastNames', 'displayName']) : null],
+                ['schedulesCount' => $item->schedules ? $item->schedules->count() : 0],
+                ['teacher' => $item->teacher ? $item->teacher->only(['id', 'firstNames', 'fullName', 'documentId', 'lastNames', 'displayName', 'photoURL']) : null],
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null],
                 ['updater' => $item->updater ? $item->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
             );
