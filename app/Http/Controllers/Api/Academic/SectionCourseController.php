@@ -13,7 +13,11 @@ class SectionCourseController extends Controller
 {
     public function index(Request $req)
     {
-        $match = SectionCourse::orderBy('created_at', 'asc');
+        $match = SectionCourse::orderBy('created_at', 'asc')
+            ->whereHas('planCourse', function ($query) {
+                $query->where('status', true);
+            });
+
         $q = $req->query('q');
         $sectionId = $req->query('sectionId');
         $programId = $req->query('programId');
@@ -22,20 +26,24 @@ class SectionCourseController extends Controller
         $teacherId = $req->query('teacherId');
         $paginate = $req->query('paginate') === 'true';
 
-        if ($q) $match->whereHas('section', function ($query) use ($q) {
-            $query->where('code', 'like', "%$q%");
-        })->orWhereHas('planCourse', function ($query) use ($q) {
-            $query->whereHas('course', function ($query) use ($q) {
-                $query->where('code', 'like', "%$q%")
-                    ->orWhere('name', 'like', "%$q%");
+        if ($q) {
+            $match->where(function ($subQuery) use ($q) {
+                $subQuery->whereHas('section', function ($subQuery) use ($q) {
+                    $subQuery->where('code', 'like', "%$q%");
+                })->orWhereHas('planCourse', function ($subQuery) use ($q) {
+                    $subQuery->whereHas('course', function ($subQuery) use ($q) {
+                        $subQuery->where('code', 'like', "%$q%")
+                            ->orWhere('name', 'like', "%$q%");
+                    });
+                })->orWhereHas('teacher', function ($subQuery) use ($q) {
+                    $subQuery->where('username', 'like', "%$q%")
+                        ->orWhere('firstNames', 'like', "%$q%")
+                        ->orWhere('documentId', 'like', "%$q%")
+                        ->orWhere('lastNames', 'like', "%$q%")
+                        ->orWhere('displayName', 'like', "%$q%");
+                });
             });
-        })->orWhereHas('teacher', function ($query) use ($q) {
-            $query->where('username', 'like', "%$q%")
-                ->orWhere('firstNames', 'like', "%$q%")
-                ->orWhere('documentId', 'like', "%$q%")
-                ->orWhere('lastNames', 'like', "%$q%")
-                ->orWhere('displayName', 'like', "%$q%");
-        });
+        }
 
         if ($sectionId) $match->where('sectionId', $sectionId);
         if ($periodId) $match->whereHas('section', function ($query) use ($periodId) {
