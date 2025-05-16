@@ -206,4 +206,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSchedule::class, 'userId', localKey: 'id')->where('type', 'unavailable');
     }
+
+    public function fullNames()
+    {
+        return $this->lastNames . ', ' . $this->firstNames;
+    }
 }
