@@ -286,8 +286,12 @@ class SectionCourseScheduleController extends Controller
         $programId = $req->query('programId');
         $periodId = $req->query('periodId');
         $q = $req->query('q');
-
         $query = SectionCourse::orderBy('created_at', 'desc');
+        $query->where(function ($q) {
+            $q->whereHas('planCourse', function ($subQuery) {
+                $subQuery->where('status', true);
+            });
+        });
 
         foreach (
             [
