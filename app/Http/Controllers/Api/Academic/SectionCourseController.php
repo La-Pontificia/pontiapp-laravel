@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Academic\SectionCourse;
 
 use App\Models\Academic\SectionCourseSchedule;
+use App\Models\UserSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -156,5 +157,73 @@ class SectionCourseController extends Controller
                 ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
             )
         );
+    }
+
+    public function schedules(Request $req, $id)
+    {
+        $teacherId = $req->query('teacherId');
+        $sectionId = $req->query('sectionId');
+
+        $tu = UserSchedule::where('userId', $teacherId)->where('type', 'unavailable')->get();
+
+        $ss = SectionCourseSchedule::whereHas('sectionCourse', function ($query) use ($sectionId) {
+            $query->where('sectionId', $sectionId);
+        })
+            ->get();
+
+        $ts = SectionCourseSchedule::whereHas('sectionCourse', function ($query) use ($teacherId) {
+            $query->where('teacherId', $teacherId);
+        })
+            ->whereNotIn('id', $ss->pluck('id'))
+            ->get();
+
+
+
+        return response()->json([
+            'teacherUnavailables' => $tu->map(function ($schedule) {
+                return array_merge(
+                    $schedule->only(['id', 'startDate', 'endDate', 'days', 'from', 'to']),
+                    ['dates' => $schedule->dates]
+                );
+            }),
+            'sectionSchedules' => $ss->map(function ($item) {
+                return array_merge(
+                    $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate']),
+                    ['program' => $item->sectionCourse?->section?->program?->only(['id', 'name']) + [
+                        'businessUnit' => $item->sectionCourse?->section?->program?->businessUnit?->only(['id', 'logoURLSquare']),
+                    ]],
+                    ['sectionCourse' => [
+                        'teacher' => $item->sectionCourse->teacher ? $item->sectionCourse->teacher->only(['id', 'firstNames', 'fullName', 'documentId', 'lastNames', 'displayName']) : null,
+                        'section' => $item->sectionCourse->section ? $item->sectionCourse->section->only(['id', 'code']) : null,
+                        'planCourse' => $item->sectionCourse->planCourse ? $item->sectionCourse->planCourse->only(['name']) + [
+                            'course' => $item->sectionCourse->planCourse->course ? $item->sectionCourse->planCourse->course->only(['code']) : null,
+                        ] : null,
+                    ]],
+                    ['dates' => $item->dates],
+                    ['classroom' => $item->classroom ? $item->classroom->only(['id', 'code']) +
+                        ['pavilion' => $item->classroom->pavilion ? $item->classroom->pavilion->only(['id', 'name']) : null]
+                        : null],
+                );
+            }),
+            'teacherSchedules' => $ts->map(function ($item) {
+                return array_merge(
+                    $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate']),
+                    ['program' => $item->sectionCourse?->section?->program?->only(['id', 'name']) + [
+                        'businessUnit' => $item->sectionCourse?->section?->program?->businessUnit?->only(['id', 'logoURLSquare']),
+                    ]],
+                    ['sectionCourse' => [
+                        'teacher' => $item->sectionCourse->teacher ? $item->sectionCourse->teacher->only(['id', 'firstNames', 'fullName', 'documentId', 'lastNames', 'displayName']) : null,
+                        'section' => $item->sectionCourse->section ? $item->sectionCourse->section->only(['id', 'code']) : null,
+                        'planCourse' => $item->sectionCourse->planCourse ? $item->sectionCourse->planCourse->only(['name']) + [
+                            'course' => $item->sectionCourse->planCourse->course ? $item->sectionCourse->planCourse->course->only(['code']) : null,
+                        ] : null,
+                    ]],
+                    ['dates' => $item->dates],
+                    ['classroom' => $item->classroom ? $item->classroom->only(['id', 'code']) +
+                        ['pavilion' => $item->classroom->pavilion ? $item->classroom->pavilion->only(['id', 'name']) : null]
+                        : null],
+                );
+            }),
+        ]);
     }
 }

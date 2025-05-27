@@ -23,7 +23,7 @@ class PlanController extends Controller
         $data = $paginate ? $match->paginate(25) :  $match->get();
 
         $graphed = $data->map(function ($item) {
-            return $item->only(['id', 'name', 'created_at', 'status']) +
+            return $item->only(['id', 'name', 'pontisisCode', 'created_at', 'status']) +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['program' => $item->program ? $item->program->only(['id', 'name']) + [
                     'businessUnit' => $item->program->businessUnit ? $item->program->businessUnit->only(['id', 'name', 'acronym', 'logoURL']) : null
@@ -43,7 +43,7 @@ class PlanController extends Controller
         $data = Plan::find($slug);
         if (!$data) return response()->json('not_found', 404);
         return response()->json(
-            $data->only(['id', 'name', 'created_at', 'status']) +
+            $data->only(['id', 'name', 'pontisisCode', 'created_at', 'status']) +
                 ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['program' => $data->program ? $data->program->only(['id', 'name']) + [
                     'businessUnit' => $data->program->businessUnit ? $data->program->businessUnit->only(['id', 'name', 'acronym', 'logoURL']) : null
@@ -54,12 +54,14 @@ class PlanController extends Controller
     public function store(Request $req)
     {
         $req->validate([
+            'pontisisCode' => 'required|string',
             'name' => 'required|string|unique:academic_plans',
             'programId' => 'required|exists:academic_programs,id',
             'status' => 'nullable|boolean',
         ]);
         Plan::create([
             'name' => $req->name,
+            'pontisisCode' => $req->pontisisCode,
             'programId' => $req->programId,
             'status' => $req->status ?? true,
             'creatorId' => Auth::id(),
@@ -73,11 +75,17 @@ class PlanController extends Controller
         if (!$found) return response()->json('not_found', 404);
 
         $req->validate([
-            'name' => 'required|string|unique:academic_plans',
+            'pontisisCode' => 'required|string',
+            'name' => 'required|string',
             'programId' => 'required|exists:academic_programs,id',
             'status' => 'nullable|boolean',
         ]);
+
+        $already = Plan::where('name', $req->name)->where('id', '!=', $id)->first();
+        if ($already) return response()->json('already_exists', 400);
+
         $found->update([
+            'pontisisCode' => $req->pontisisCode,
             'name' => $req->name,
             'programId' => $req->programId,
             'status' => $req->status ?? true,

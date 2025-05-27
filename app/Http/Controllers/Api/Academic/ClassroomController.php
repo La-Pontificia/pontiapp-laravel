@@ -16,14 +16,15 @@ class ClassroomController extends Controller
         $pavilionId = $req->query('pavilionId');
         $paginate = $req->query('paginate') === 'true';
 
-        if ($q) $match->where('code', 'like', "%$q%")->orWhere('type', 'like', "%$q%");
+        if ($q) $match->where('code', 'like', "%$q%")->orWhere('pontisisCode', 'like', "%$q%");
         if ($pavilionId) $match->where('pavilionId', $pavilionId);
 
         $data = $paginate ? $match->paginate(25) :  $match->get();
 
         $graphed = $data->map(function ($item) {
-            return $item->only(['id', 'code', 'type', 'floor', 'capacity', 'created_at']) +
+            return $item->only(['id', 'code',  'pontisisCode', 'floor', 'capacity', 'created_at']) +
                 ['pavilion' => $item->pavilion ? $item->pavilion->only(['id', 'name']) : null] +
+                ['type' => $item->type ? $item->type->only(['id', 'name']) : null] +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['updater' => $item->updater ? $item->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null];
         });
@@ -39,8 +40,9 @@ class ClassroomController extends Controller
     public function store(Request $req)
     {
         $req->validate([
+            'pontisisCode' => 'nullable|string',
             'code' => 'required|string',
-            'type' => 'required|string',
+            'typeId' => 'required|string',
             'floor' => 'nullable|numeric',
             'capacity' => 'nullable|numeric',
             'pavilionId' => 'required|string',
@@ -51,7 +53,8 @@ class ClassroomController extends Controller
 
         $data = Classroom::create([
             'code' => $req->code,
-            'type' => $req->type,
+            'pontisisCode' => $req->pontisisCode,
+            'typeId' => $req->typeId,
             'capacity' => $req->capacity,
             'floor' => $req->floor,
             'pavilionId' => $req->pavilionId,
@@ -63,8 +66,9 @@ class ClassroomController extends Controller
     public function update(Request $req, $id)
     {
         $req->validate([
+            'pontisisCode' => 'nullable|string',
             'code' => 'required|string',
-            'type' => 'required|string',
+            'typeId' => 'required|string',
             'floor' => 'nullable|numeric',
             'capacity' => 'nullable|numeric',
             'pavilionId' => 'required|string',
@@ -77,8 +81,9 @@ class ClassroomController extends Controller
         if ($already) return response()->json('already_exists', 400);
 
         $item->update([
+            'pontisisCode' => $req->pontisisCode,
             'code' => $req->code,
-            'type' => $req->type,
+            'typeId' => $req->typeId,
             'floor' => $req->floor,
             'capacity' => $req->capacity,
             'pavilionId' => $req->pavilionId,
@@ -100,8 +105,9 @@ class ClassroomController extends Controller
         $data = Classroom::find($id);
         if (!$data) return response()->json('not_found', 404);
         return response()->json(
-            $data->only(['id', 'code', 'type', 'floor', 'capacity', 'created_at']) +
+            $data->only(['id', 'code', 'pontisisCode', 'floor', 'capacity', 'created_at']) +
                 ['pavilion' => $data->pavilion ? $data->pavilion->only(['id', 'name']) : null] +
+                ['type' => $data->type ? $data->type->only(['id', 'name']) : null] +
                 ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
         );

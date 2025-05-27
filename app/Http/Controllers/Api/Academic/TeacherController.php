@@ -73,7 +73,7 @@ class TeacherController extends Controller
       return array_merge(
         $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate', 'created_at']),
         ['program' => $item->sectionCourse?->section?->program?->only(['id', 'name']) + [
-          'businessUnit' => $item->sectionCourse?->section?->program?->businessUnit?->only(['id', 'logoURL']),
+          'businessUnit' => $item->sectionCourse?->section?->program?->businessUnit?->only(['id', 'logoURLSquare']),
         ]],
         ['sectionCourse' => $item->sectionCourse ? $item->sectionCourse->only(['id']) + [
           'planCourse' => $item->sectionCourse->planCourse ? $item->sectionCourse->planCourse->only(['id', 'name', 'credits']) + [

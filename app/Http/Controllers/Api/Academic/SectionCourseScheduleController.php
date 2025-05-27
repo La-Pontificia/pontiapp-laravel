@@ -67,7 +67,7 @@ class SectionCourseScheduleController extends Controller
 
     public function store(Request $req)
     {
-        $req->validate([
+        $validated = $req->validate([
             'sectionCourseId' => 'required|string',
             'classroomId' => 'required|string',
             'startDate' => 'required|date',
@@ -77,89 +77,114 @@ class SectionCourseScheduleController extends Controller
             'daysOfWeek' => 'required|array',
         ]);
 
-        $sectionCourse = SectionCourse::find($req->sectionCourseId);
+        $sectionCourse = SectionCourse::find($validated['sectionCourseId']);
         if (!$sectionCourse) return response()->json('not_found', 404);
 
-        $startTime = date('H:i:s', strtotime($req->startTime));
-        $endTime = date('H:i:s', strtotime($req->endTime));
-        $startDate = date('Y-m-d', strtotime($req->startDate));
-        $endDate = date('Y-m-d', strtotime($req->endDate));
+        $startTime = date('H:i:s', strtotime($validated['startTime']));
+        $endTime = date('H:i:s', strtotime($validated['endTime']));
+        $startDate = date('Y-m-d', strtotime($validated['startDate']));
+        $endDate = date('Y-m-d', strtotime($validated['endDate']));
+        $days = $validated['daysOfWeek'];
 
-        $daysConditions = implode(' OR ', array_map(fn($day) => "JSON_SEARCH(daysOfWeek, 'one', '$day') IS NOT NULL", $req->daysOfWeek));
-        $daysConditions2 = implode(' OR ', array_map(fn($day) => "JSON_SEARCH(days, 'one', '$day') IS NOT NULL", $req->daysOfWeek));
+        $buildSearch = fn($column) => implode(' OR ', array_map(fn($day) => "JSON_SEARCH($column, 'one', '$day') IS NOT NULL", $days));
 
-        // verify if the teacher in the schedules exists schedules unavailable
-        $teacher = UserSchedule::where('userId', $sectionCourse->teacherId)
-            ->where('type', 'unavailable')
-            ->whereRaw("($daysConditions2)")
-            ->whereTime('from', '<', $endTime)
-            ->whereTime('to', '>', $startTime)
-            ->whereDate('startDate', '<=', $endDate)
-            ->whereDate('endDate', '>=', $startDate)
-            ->exists();
+        $conflicts = [
+            'teacher_unavailable' => UserSchedule::where('userId', $sectionCourse->teacherId)
+                ->where('type', 'unavailable')
+                ->whereRaw('(' . $buildSearch('days') . ')')
+                ->whereTime('from', '<', $endTime)
+                ->whereTime('to', '>', $startTime)
+                ->whereDate('startDate', '<=', $endDate)
+                ->whereDate('endDate', '>=', $startDate)
+                ->first(),
 
-        // verify if the classroom is available
-        $classroom = SectionCourseSchedule::where('classroomId', $req->classroomId)
-            ->whereRaw("($daysConditions)")
-            ->whereTime('startTime', '<', $endTime)
-            ->whereTime('endTime', '>', $startTime)
-            ->whereDate('startDate', '<=', $endDate)
-            ->whereDate('endDate', '>=', $startDate)
-            ->exists();
+            'classroom_busy' => SectionCourseSchedule::where('classroomId', $validated['classroomId'])
+                ->whereRaw('(' . $buildSearch('daysOfWeek') . ')')
+                ->whereTime('startTime', '<', $endTime)
+                ->whereTime('endTime', '>', $startTime)
+                ->whereDate('startDate', '<=', $endDate)
+                ->whereDate('endDate', '>=', $startDate)
+                ->first(),
 
-        // verify if the teacher is available
-        $teacherSection = SectionCourseSchedule::whereHas('sectionCourse', function ($query) use ($sectionCourse) {
-            $query->where('teacherId', $sectionCourse->teacherId);
-        })->whereRaw("($daysConditions)")
-            ->whereTime('startTime', '<', $endTime)
-            ->whereTime('endTime', '>', $startTime)
-            ->whereDate('startDate', '<=', $endDate)
-            ->whereDate('endDate', '>=', $startDate)
-            ->exists();
+            'teacher_busy' => SectionCourseSchedule::whereHas('sectionCourse', function ($q) use ($sectionCourse) {
+                $q->where('teacherId', $sectionCourse->teacherId);
+            })
+                ->whereRaw('(' . $buildSearch('daysOfWeek') . ')')
+                ->whereTime('startTime', '<', $endTime)
+                ->whereTime('endTime', '>', $startTime)
+                ->whereDate('startDate', '<=', $endDate)
+                ->whereDate('endDate', '>=', $startDate)
+                ->first(),
 
-        // verify if section is available
-        $section = SectionCourseSchedule::whereHas('sectionCourse', function ($query) use ($sectionCourse) {
-            $query->where('sectionId', $sectionCourse->sectionId);
-        })->whereRaw("($daysConditions)")
-            ->whereTime('startTime', '<', $endTime)
-            ->whereTime('endTime', '>', $startTime)
-            ->whereDate('startDate', '<=', $endDate)
-            ->whereDate('endDate', '>=', $startDate)
-            ->exists();
+            'section_busy' => SectionCourseSchedule::whereHas('sectionCourse', function ($q) use ($sectionCourse) {
+                $q->where('sectionId', $sectionCourse->sectionId);
+            })
+                ->whereRaw('(' . $buildSearch('daysOfWeek') . ')')
+                ->whereTime('startTime', '<', $endTime)
+                ->whereTime('endTime', '>', $startTime)
+                ->whereDate('startDate', '<=', $endDate)
+                ->whereDate('endDate', '>=', $startDate)
+                ->first(),
+        ];
 
-        if ($teacher) {
-            return response()->json('El docente no está disponible en ese horario, por favor seleccione otro horario o cambie el docente del curso.', 409);
-        }
+        $messages = [
+            'teacher_unavailable' => 'El docente no está disponible en ese horario.',
+            'classroom_busy' => 'El aula ya está ocupada en ese horario.',
+            'teacher_busy' => 'El docente ya está ocupado en ese horario.',
+            'section_busy' => '🙅 Hay cruces de horario en la sección, por favor selecciona otro rango de horario.'
+        ];
 
-        if ($classroom) {
-            return response()->json('El aula ya está ocupada en ese horario, por favor seleccione otro horario o aula.', 409);
-        }
+        foreach ($conflicts as $type => $conflictItem) {
+            if ($conflictItem) {
+                switch ($type) {
+                    case 'teacher_unavailable':
+                        $item = [
+                            'name' => $conflictItem->user->fullNames() . ' (No disponible)',
+                            'startDate' => $conflictItem->startDate,
+                            'endDate' => $conflictItem->endDate,
+                            'startTime' => $conflictItem->from,
+                            'dates' => $conflictItem->dates,
+                            'endTime' => $conflictItem->to,
+                            'daysOfWeek' => $conflictItem->days,
+                        ];
+                        break;
+                    default:
+                        $item = [
+                            'name' => $conflictItem->sectionCourse->planCourse->course->name,
+                            'startDate' => $conflictItem->startDate,
+                            'endDate' => $conflictItem->endDate,
+                            'startTime' => $conflictItem->startTime,
+                            'endTime' => $conflictItem->endTime,
+                            'dates' => $conflictItem->dates,
+                            'daysOfWeek' => $conflictItem->daysOfWeek,
+                        ];
+                        break;
+                }
 
-        if ($teacherSection) {
-            return response()->json('El docente ya está ocupado en ese horario, por favor seleccione otro horario o docente.', 409);
-        }
-
-        if ($section) {
-            return response()->json('Hay un cruze de horarios con otros horarios de la sección, por favor seleccione otro horario.', 409);
+                return response()->json([
+                    'message' => $messages[$type],
+                    'item' => $item,
+                ], 409);
+            }
         }
 
         $data = SectionCourseSchedule::create([
-            'sectionCourseId' => $req->sectionCourseId,
-            'classroomId' => $req->classroomId,
-            'startDate' => $req->startDate,
-            'endDate' => $req->endDate,
-            'startTime' => $req->startTime,
-            'endTime' => $req->endTime,
-            'daysOfWeek' => $req->daysOfWeek,
+            'sectionCourseId' => $validated['sectionCourseId'],
+            'classroomId' => $validated['classroomId'],
+            'startDate' => $validated['startDate'],
+            'endDate' => $validated['endDate'],
+            'startTime' => $validated['startTime'],
+            'endTime' => $validated['endTime'],
+            'daysOfWeek' => $validated['daysOfWeek'],
             'creatorId' => Auth::id(),
         ]);
+
         return response()->json($data);
     }
 
     public function update(Request $req, $id)
     {
         $req->validate([
-            'sectionCourseId' => 'required|string',
             'classroomId' => 'required|string',
             'startDate' => 'required|date',
             'endDate' => 'required|date',
@@ -281,6 +306,7 @@ class SectionCourseScheduleController extends Controller
 
     public function report(Request $req)
     {
+        $type = $req->query('type');
         $periodIds = $req->query('periodIds') ? explode(',', $req->query('periodIds')) : [];
         $programIds = $req->query('programIds') ? explode(',', $req->query('programIds')) : [];
         $programId = $req->query('programId');
@@ -346,6 +372,8 @@ class SectionCourseScheduleController extends Controller
                     'endDate' => $course->section?->period?->endDate,
                     'businessUnit' => $course->section?->program?->businessUnit?->acronym,
                     'program' => $course->section?->program?->name,
+                    'programPontisisCode' => $course->section?->program?->pontisisCode,
+                    'planPontisisCode' => $course->planCourse?->plan?->pontisisCode,
                     'cycle' => $course->section?->cycle?->code,
                     'section' => $course->section?->code,
                     'course' => $course->planCourse?->name,
@@ -355,6 +383,8 @@ class SectionCourseScheduleController extends Controller
                     'endTime' => null,
                     'classroom' => null,
                     'classroomType' => null,
+                    'classroomPontisisCode' => null,
+                    'classroomTypePontisisCode' => null,
                     'teacher' => $course->teacher,
                 ]];
             }
@@ -365,6 +395,8 @@ class SectionCourseScheduleController extends Controller
                 'endDate' => $course->section?->period?->endDate,
                 'businessUnit' => $course->section?->program?->businessUnit?->acronym,
                 'program' => $course->section?->program?->name,
+                'programPontisisCode' => $course->section?->program?->pontisisCode,
+                'planPontisisCode' => $course->planCourse?->plan?->pontisisCode,
                 'cycle' => $course->section?->cycle?->code,
                 'section' => $course->section?->code,
                 'course' => $course->planCourse?->name,
@@ -374,6 +406,8 @@ class SectionCourseScheduleController extends Controller
                 'endTime' => $s->endTime,
                 'classroom' => $s->classroom?->code,
                 'classroomType' => $s->classroom?->type,
+                'classroomPontisisCode' => $s->classroom?->pontisisCode,
+                'classroomTypePontisisCode' => $s->classroom?->type?->pontisisCode,
                 'teacher' => $course->teacher,
             ]);
         });
@@ -395,8 +429,9 @@ class SectionCourseScheduleController extends Controller
             }
         }
 
-        $spreadsheet = IOFactory::load(public_path('templates/section_schedules.xlsx'));
-        $worksheet = $spreadsheet->getActiveSheet();
+        $template = $type === 'pontisis' ? 'templates/section_schedule_pontisis.xlsx' : 'templates/section_schedules.xlsx';
+        $spreadsheet = IOFactory::load(public_path($template));
+        $worksheet = $type === 'pontisis' ? $spreadsheet->getSheetByName('Data A Importar') : $spreadsheet->getActiveSheet();
         $r = 2;
 
         $allItems = $items->sort(fn($a, $b) => [
@@ -413,27 +448,47 @@ class SectionCourseScheduleController extends Controller
 
         foreach ($allItems as $item) {
             $teacher = $item['teacher'];
-            $worksheet->setCellValue("A$r", $item['period']);
-            $worksheet->setCellValue("B$r", $item['startDate']?->format('d/m/Y'));
-            $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-            $worksheet->setCellValue("C$r", $item['endDate']?->format('d/m/Y'));
-            $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-            $worksheet->setCellValue("D$r", $item['businessUnit']);
-            $worksheet->setCellValue("E$r", $item['program']);
-            $worksheet->setCellValue("F$r", $item['cycle']);
-            $worksheet->setCellValue("G$r", $item['section']);
-            $worksheet->setCellValue("H$r", $item['course']);
-            $worksheet->setCellValue("I$r", $item['courseCode']);
-            $worksheet->setCellValue("J$r", $item['daysOfWeek']);
-            $worksheet->setCellValue("K$r", $item['startTime']?->format('H:i'));
-            $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
-            $worksheet->setCellValue("L$r", $item['endTime']?->format('H:i'));
-            $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('HH:MM');
-            $worksheet->setCellValue("M$r", $item['classroom']);
-            $worksheet->setCellValue("N$r", $item['classroomType']);
-            $worksheet->setCellValue("O$r", $teacher ? strtoupper($teacher->fullNames()) : '');
-            $worksheet->setCellValue("P$r", $teacher?->documentId);
-            $worksheet->setCellValue("Q$r", $teacher?->email);
+            if ($type === 'pontisis') {
+                $worksheet->setCellValue("A$r", 'G');
+                $worksheet->setCellValue("B$r", $item['programPontisisCode']);
+                $worksheet->setCellValue("C$r", $item['planPontisisCode']);
+                $worksheet->setCellValue("D$r", $item['courseCode']);
+                $worksheet->setCellValue("E$r", $item['section']);
+                $worksheet->setCellValue("F$r", $teacher?->documentId);
+                $worksheet->setCellValue("G$r", $item['daysOfWeek']);
+                $worksheet->setCellValue("H$r", $item['classroomPontisisCode']);
+                $worksheet->setCellValue("I$r", $item['classroomTypePontisisCode']);
+                $worksheet->setCellValue("J$r",  $item['startTime']?->format('H:i'));
+                $worksheet->getStyle("J$r")->getNumberFormat()->setFormatCode('HH:MM');
+                $worksheet->setCellValue("K$r",  $item['endTime']?->format('H:i'));
+                $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
+                $worksheet->setCellValue("L$r", $item['startDate']?->format('d/m/Y'));
+                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+                $worksheet->setCellValue("M$r", $item['endDate']?->format('d/m/Y'));
+                $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+            } else {
+                $worksheet->setCellValue("A$r", $item['period']);
+                $worksheet->setCellValue("B$r", $item['startDate']?->format('d/m/Y'));
+                $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+                $worksheet->setCellValue("C$r", $item['endDate']?->format('d/m/Y'));
+                $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+                $worksheet->setCellValue("D$r", $item['businessUnit']);
+                $worksheet->setCellValue("E$r", $item['program']);
+                $worksheet->setCellValue("F$r", $item['cycle']);
+                $worksheet->setCellValue("G$r", $item['section']);
+                $worksheet->setCellValue("H$r", $item['course']);
+                $worksheet->setCellValue("I$r", $item['courseCode']);
+                $worksheet->setCellValue("J$r", $item['daysOfWeek']);
+                $worksheet->setCellValue("K$r", $item['startTime']?->format('H:i'));
+                $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
+                $worksheet->setCellValue("L$r", $item['endTime']?->format('H:i'));
+                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('HH:MM');
+                $worksheet->setCellValue("M$r", $item['classroom']);
+                $worksheet->setCellValue("N$r", $item['classroomType']->name ?? '');
+                $worksheet->setCellValue("O$r", $teacher ? strtoupper($teacher->fullNames()) : '');
+                $worksheet->setCellValue("P$r", $teacher?->documentId);
+                $worksheet->setCellValue("Q$r", $teacher?->email);
+            }
             $r++;
         }
 
@@ -452,6 +507,10 @@ class SectionCourseScheduleController extends Controller
         }
         if ($programId && $periodId) {
             $displayNameFile .= '(programa: ' . Program::find($programId)?->acronym . ', periodo: ' . Period::find($periodId)?->name . ')';
+        }
+
+        if ($type === 'pontisis') {
+            $displayNameFile .= ' - Pontisis';
         }
 
         $report = Report::create([

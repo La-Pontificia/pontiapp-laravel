@@ -23,7 +23,7 @@ class ProgramController extends Controller
         $data = $paginate ? $match->paginate(25) :  $match->get();
 
         $graphed = $data->map(function ($item) {
-            return $item->only(['id', 'name', 'created_at']) +
+            return $item->only(['id', 'name', 'pontisisCode', 'created_at']) +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['area' => $item->area ? $item->area->only(['id', 'name']) : null] +
                 ['businessUnit' => $item->businessUnit ? $item->businessUnit->only(['id', 'name', 'acronym', 'logoURL']) : null];
@@ -42,7 +42,7 @@ class ProgramController extends Controller
         $data = Program::find($slug);
         if (!$data) return response()->json('Data not found', 404);
         return response()->json(
-            $data->only(['id', 'name', 'created_at']) +
+            $data->only(['id', 'name', 'pontisisCode', 'created_at']) +
                 ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['area' => $data->area ? $data->area->only(['id', 'name']) : null] +
                 ['businessUnit' => $data->businessUnit ? $data->businessUnit->only(['id', 'name', 'acronym', 'logoURL']) : null]
@@ -52,6 +52,7 @@ class ProgramController extends Controller
     public function store(Request $req)
     {
         $req->validate([
+            'pontisisCode' => 'nullable|string',
             'name' => 'required|string',
             'businessUnitId' => 'required|exists:rm_business_units,id',
             'areaId' => 'required|exists:academic_areas,id',
@@ -60,6 +61,7 @@ class ProgramController extends Controller
             'name' => $req->name,
             'businessUnitId' => $req->businessUnitId,
             'areaId' => $req->areaId,
+            'pontisisCode' => $req->pontisisCode,
             'creatorId' => Auth::id(),
         ]);
         return response()->json('Created');
@@ -69,6 +71,7 @@ class ProgramController extends Controller
     public function update(Request $req, $id)
     {
         $req->validate([
+            'pontisisCode' => 'nullable|string',
             'name' => 'required|string',
             'businessUnitId' => 'required|exists:rm_business_units,id',
             'areaId' => 'required|exists:academic_areas,id',
@@ -76,6 +79,7 @@ class ProgramController extends Controller
         $item = Program::find($id);
 
         $item->update([
+            'pontisisCode' => $req->pontisisCode,
             'name' => $req->name,
             'areaId' => $req->areaId,
             'businessUnitId' => $req->businessUnitId,
