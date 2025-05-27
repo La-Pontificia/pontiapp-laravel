@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Academic\AcademicController;
 use App\Http\Controllers\Api\Academic\AreaController;
 use App\Http\Controllers\Api\Academic\ClassroomController;
+use App\Http\Controllers\Api\Academic\ClassTypeController;
 use App\Http\Controllers\Api\Academic\CourseController;
 use App\Http\Controllers\Api\Academic\CycleController;
 use App\Http\Controllers\Api\Academic\PavilionController;
@@ -82,7 +83,13 @@ Route::middleware('check.auth')->group(function () {
             Route::post('{slug}/delete', [PavilionController::class, 'delete']);
         });
         Route::prefix('classrooms')->group(function () {
-            Route::get('', [ClassroomController::class, 'index']);
+            Route::prefix('types')->group(function () {
+                Route::get('', [ClassTypeController::class, 'index']);
+                Route::get('{slug}', [ClassTypeController::class, 'one']);
+                Route::post('', [ClassTypeController::class, 'store']);
+                Route::post('{slug}', [ClassTypeController::class, 'update']);
+                Route::post('{slug}/delete', [ClassTypeController::class, 'delete']);
+            });
             Route::get('', [ClassroomController::class, 'index']);
             Route::get('{slug}', [ClassroomController::class, 'one']);
             Route::post('', [ClassroomController::class, 'store']);
@@ -100,6 +107,7 @@ Route::middleware('check.auth')->group(function () {
                     Route::post('{slug}/delete', [SectionCourseScheduleController::class, 'delete']);
                 });
                 Route::get('', [SectionCourseController::class, 'index']);
+                Route::get('calendar/{id}', [SectionCourseController::class, 'schedules']);
                 Route::get('{slug}', [SectionCourseController::class, 'one']);
                 Route::post('', [SectionCourseController::class, 'store']);
                 Route::post('{slug}', [SectionCourseController::class, 'update']);
