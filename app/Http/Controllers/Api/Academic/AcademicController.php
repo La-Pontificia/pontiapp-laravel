@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Academic;
 
 use App\Http\Controllers\Controller;
+use App\Models\Academic\ClassType;
 use App\Models\Academic\Pavilion;
 use App\Models\Academic\Period;
 use App\Models\Academic\Program;
@@ -53,21 +54,24 @@ class AcademicController extends Controller
     }
 
     // ---- Classrooms ----
-    $types = [
-      'Aula computo',
-      'Aula teoria',
-      'Aula virtual',
-      'Lab. computo',
-      'Lab. CIIE',
-      'Taller enfermeria'
-    ];
+    // $types = [
+    //   'Aula computo',
+    //   'Aula teoria',
+    //   'Aula virtual',
+    //   'Lab. computo',
+    //   'Lab. CIIE',
+    //   'Taller enfermeria'
+    // ];
+
+    $types = ClassType::get()->pluck('name')->toArray();
+
 
     $pavilions = Pavilion::get();
     $classroomsGroupedByType = array_fill_keys($types, 0);
 
     foreach ($pavilions->flatMap->classrooms as $classroom) {
-      if (in_array($classroom->type, $types)) {
-        $classroomsGroupedByType[$classroom->type]++;
+      if (in_array($classroom->type?->name, $types)) {
+        $classroomsGroupedByType[$classroom->type?->name]++;
       }
     }
 
