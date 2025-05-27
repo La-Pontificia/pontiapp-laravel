@@ -19,6 +19,7 @@ class Plan extends Model
         'name',
         'status',
         'programId',
+        'pontisisCode',
         'created_at',
         'updated_at',
         'creatorId',

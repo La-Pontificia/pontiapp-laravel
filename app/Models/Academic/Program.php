@@ -21,6 +21,7 @@ class Program extends Model
         'updated_at',
         'name',
         'acronym',
+        'pontisisCode',
         'businessUnitId',
         'creatorId',
         'areaId'

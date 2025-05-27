@@ -7,21 +7,17 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Classroom extends Model
+class ClassType extends Model
 {
     use HasFactory, HasUuids;
-    protected $table = 'academic_classrooms';
+    protected $table = 'academic_class_types';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
         'id',
-        'code',
         'pontisisCode',
-        'typeId',
-        'capacity',
-        'floor',
-        'pavilionId',
+        'name',
         'created_at',
         'updated_at',
         'creatorId',
@@ -37,13 +33,8 @@ class Classroom extends Model
         return $this->hasOne(User::class, 'id', 'updaterId');
     }
 
-    public function pavilion()
+    public function classrooms()
     {
-        return $this->hasOne(Pavilion::class, 'id', 'pavilionId');
-    }
-
-    public function type()
-    {
-        return $this->hasOne(ClassType::class, 'id', 'typeId');
+        return $this->hasMany(Classroom::class, 'typeId', 'id');
     }
 }
