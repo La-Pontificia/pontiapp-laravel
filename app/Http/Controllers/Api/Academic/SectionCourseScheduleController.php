@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class SectionCourseScheduleController extends Controller
 {
@@ -506,16 +507,18 @@ class SectionCourseScheduleController extends Controller
                 $worksheet->getStyle("J$r")->getNumberFormat()->setFormatCode('HH:MM');
                 $worksheet->setCellValue("K$r",  $item['endTime']?->format('H:i'));
                 $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
-                $worksheet->setCellValue("L$r", $item['startDate']?->format('d/m/Y'));
-                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-                $worksheet->setCellValue("M$r", $item['endDate']?->format('d/m/Y'));
-                $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+
+
+                $worksheet->setCellValue("L$r", Date::PHPToExcel($item['startDate']));
+                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
+                $worksheet->setCellValue("M$r", Date::PHPToExcel($item['endDate']));
+                $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
             } else {
                 $worksheet->setCellValue("A$r", $item['period']);
-                $worksheet->setCellValue("B$r", $item['startDate']?->format('d/m/Y'));
-                $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
-                $worksheet->setCellValue("C$r", $item['endDate']?->format('d/m/Y'));
-                $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode('DD/MM/YYYY');
+                $worksheet->setCellValue("B$r", Date::PHPToExcel($item['startDate']));
+                $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
+                $worksheet->setCellValue("C$r", Date::PHPToExcel($item['endDate']));
+                $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
                 $worksheet->setCellValue("D$r", $item['businessUnit']);
                 $worksheet->setCellValue("E$r", $item['program']);
                 $worksheet->setCellValue("F$r", $item['cycle']);
