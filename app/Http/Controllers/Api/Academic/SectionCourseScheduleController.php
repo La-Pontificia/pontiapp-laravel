@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class SectionCourseScheduleController extends Controller
 {
@@ -509,16 +510,18 @@ class SectionCourseScheduleController extends Controller
                 $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
 
 
+
                 $worksheet->setCellValue("L$r", Date::PHPToExcel($item['startDate']));
-                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
+                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
                 $worksheet->setCellValue("M$r", Date::PHPToExcel($item['endDate']));
-                $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
+                $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
             } else {
                 $worksheet->setCellValue("A$r", $item['period']);
                 $worksheet->setCellValue("B$r", Date::PHPToExcel($item['startDate']));
-                $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
+                $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
                 $worksheet->setCellValue("C$r", Date::PHPToExcel($item['endDate']));
-                $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode('YYYY/MM/DD');
+                $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+
                 $worksheet->setCellValue("D$r", $item['businessUnit']);
                 $worksheet->setCellValue("E$r", $item['program']);
                 $worksheet->setCellValue("F$r", $item['cycle']);
