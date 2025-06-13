@@ -2,7 +2,6 @@
 
 namespace App\Models\Academic;
 
-use App\Models\Rm\BusinessUnit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

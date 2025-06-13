@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Academic\PeriodController;
 use App\Http\Controllers\Api\Academic\PlanController;
 use App\Http\Controllers\Api\Academic\PlanCourseController;
 use App\Http\Controllers\Api\Academic\ProgramController;
+use App\Http\Controllers\Api\Academic\ScheduleController;
 use App\Http\Controllers\Api\Academic\SectionController;
 use App\Http\Controllers\Api\Academic\SectionCourseController;
 use App\Http\Controllers\Api\Academic\SectionCourseScheduleController;
@@ -133,6 +134,13 @@ Route::middleware('check.auth')->group(function () {
             Route::post('', [AreaController::class, 'store']);
             Route::post('{slug}', [AreaController::class, 'update']);
             Route::post('{slug}/delete', [AreaController::class, 'delete']);
+        });
+
+        Route::prefix('schedules')->group(function () {
+            Route::prefix('import')->group(function () {
+                Route::post('', [ScheduleController::class, 'import']);
+                Route::post('verify', [ScheduleController::class, 'verifyImportFile']);
+            });
         });
     });
 });
