@@ -460,7 +460,11 @@ class SectionCourseScheduleController extends Controller
                 foreach ($schedule['daysOfWeek'] as $day) {
                     $clone = $schedule;
                     $dayNum = trim($day);
-                    $clone['daysOfWeek'] = "$dayNum. " . ($dayNames[$dayNum] ?? $dayNum);
+                    if ($type === 'pontisis') {
+                        $clone['daysOfWeek'] = $dayNum;
+                    } else {
+                        $clone['daysOfWeek'] = "$dayNum. " . ($dayNames[$dayNum] ?? $dayNum);
+                    }
                     $items->push($clone);
                 }
             }
@@ -492,7 +496,10 @@ class SectionCourseScheduleController extends Controller
                 $worksheet->setCellValue("D$r", $item['courseCode']);
                 $worksheet->setCellValue("E$r", $item['section']);
                 $worksheet->setCellValue("F$r", $teacher?->documentId);
-                $worksheet->setCellValue("G$r", $item['daysOfWeek']);
+
+                // daysOfWeek only first and only number
+                $daysOfWeek = collect($item['daysOfWeek'])->map(fn($day) => trim(explode('.', $day)[0]))->implode(', ');
+                $worksheet->setCellValue("G$r", $daysOfWeek);
                 $worksheet->setCellValue("H$r", $item['classroomPontisisCode']);
                 $worksheet->setCellValue("I$r", $item['classroomTypePontisisCode']);
                 $worksheet->setCellValue("J$r",  $item['startTime']?->format('H:i'));
