@@ -104,6 +104,8 @@ Route::middleware('check.auth')->group(function () {
                     Route::get('{slug}', [SectionCourseScheduleController::class, 'one']);
                     Route::post('', [SectionCourseScheduleController::class, 'store']);
                     Route::post('report', [SectionCourseScheduleController::class, 'report']);
+                    Route::post('report-pontisis', [SectionCourseScheduleController::class, 'reportPontisis']);
+                    Route::post('report-pontisis-teachers', [SectionCourseScheduleController::class, 'reportPontisisTeachers']);
                     Route::post('{slug}', [SectionCourseScheduleController::class, 'update']);
                     Route::post('{slug}/delete', [SectionCourseScheduleController::class, 'delete']);
                 });
@@ -134,13 +136,6 @@ Route::middleware('check.auth')->group(function () {
             Route::post('', [AreaController::class, 'store']);
             Route::post('{slug}', [AreaController::class, 'update']);
             Route::post('{slug}/delete', [AreaController::class, 'delete']);
-        });
-
-        Route::prefix('schedules')->group(function () {
-            Route::prefix('import')->group(function () {
-                Route::post('', [ScheduleController::class, 'import']);
-                Route::post('verify', [ScheduleController::class, 'verifyImportFile']);
-            });
         });
     });
 });
