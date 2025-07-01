@@ -24,6 +24,7 @@ class SectionCourseSchedule extends Model
         'startDate',
         'endDate',
         'startTime',
+        'type',
         'endTime',
         'daysOfWeek',
         'created_at',
@@ -96,5 +97,21 @@ class SectionCourseSchedule extends Model
             ->map(fn($day) => $daysMap[$day] ?? null)
             ->filter()
             ->implode(', ');
+    }
+
+    public function getShiftAttribute(): string
+    {
+        // M = 6 am - 11 am
+        // T = 12 pm - 6 pm
+        // N = 7 pm - 11 pm
+
+        $startHour = $this->startTime->format('H');
+        if ($startHour >= 19) {
+            return 'N';
+        }
+        if ($startHour >= 12) {
+            return 'T';
+        }
+        return 'M';
     }
 }

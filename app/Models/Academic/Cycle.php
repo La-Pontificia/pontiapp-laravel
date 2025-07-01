@@ -39,4 +39,27 @@ class Cycle extends Model
     {
         return $this->hasOne(Program::class, 'id', 'programId');
     }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class, 'cycleId', 'id');
+    }
+
+    public function displayName()
+    {
+        $codes = [
+            'I' => '01.- Primero',
+            'II' => '02.- Segundo',
+            'III' => '03.- Tercero',
+            'IV' => '04.- Cuarto',
+            'V' => '05.- Quinto',
+            'VI' => '06.- Sexto',
+            'VII' => '07.- Séptimo',
+            'VIII' => '08.- Octavo',
+            'IX' => '09.- Noveno',
+            'X' => '10.- Décimo',
+        ];
+
+        return $codes[$this->code] ?? $this->name;
+    }
 }

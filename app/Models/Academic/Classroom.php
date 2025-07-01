@@ -17,7 +17,6 @@ class Classroom extends Model
     protected $fillable = [
         'id',
         'code',
-        'pontisisCode',
         'typeId',
         'capacity',
         'floor',
@@ -45,5 +44,16 @@ class Classroom extends Model
     public function type()
     {
         return $this->hasOne(ClassType::class, 'id', 'typeId');
+    }
+
+    public function businessUnits()
+    {
+        return $this->hasMany(ClassroomBusiness::class, 'academicClassroomId', 'id');
+    }
+
+    public function businessUnitPontisisCode($businessUnitId)
+    {
+        $business = $this->businessUnits()->where('businessUnitId', $businessUnitId)->first();
+        return $business ? $business->pontisisCode : null;
     }
 }

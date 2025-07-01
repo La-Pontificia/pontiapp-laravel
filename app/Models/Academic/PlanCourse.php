@@ -20,6 +20,7 @@ class PlanCourse extends Model
         'planId',
         'courseId',
         'cycleId',
+        'formula',
         'credits',
         'teoricHours',
         'practiceHours',

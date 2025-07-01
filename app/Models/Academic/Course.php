@@ -36,4 +36,9 @@ class Course extends Model
     {
         return $this->hasOne(User::class, 'id', 'updaterId');
     }
+
+    public function getHoursNameAttribute()
+    {
+        return ($this->teoricHours  ?? 0) . 'TE+' . ($this->practiceHours ?? 0) . 'LA';
+    }
 }
