@@ -14,6 +14,7 @@ class ClassroomController extends Controller
         $match = Classroom::orderBy('code', 'asc');
         $q = $req->query('q');
         $pavilionId = $req->query('pavilionId');
+        $businessUnitId = $req->query('businessUnitId');
         $paginate = $req->query('paginate') === 'true';
 
         if ($q) $match->where('code', 'like', "%$q%")->orWhere('pontisisCode', 'like', "%$q%");
@@ -21,10 +22,12 @@ class ClassroomController extends Controller
 
         $data = $paginate ? $match->paginate(25) :  $match->get();
 
-        $graphed = $data->map(function ($item) {
-            return $item->only(['id', 'code',  'pontisisCode', 'floor', 'capacity', 'created_at']) +
+        $graphed = $data->map(function ($item) use ($businessUnitId) {
+            $businessCode = $item->businessUnits->where('businessUnitId', $businessUnitId)->first();
+            return $item->only(['id', 'code', 'floor', 'capacity', 'created_at']) +
                 ['pavilion' => $item->pavilion ? $item->pavilion->only(['id', 'name']) : null] +
                 ['type' => $item->type ? $item->type->only(['id', 'name']) : null] +
+                ['pontisisCode' => $businessCode ? $businessCode->pontisisCode : null] +
                 ['creator' => $item->creator ? $item->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['updater' => $item->updater ? $item->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null];
         });
@@ -46,6 +49,7 @@ class ClassroomController extends Controller
             'floor' => 'nullable|numeric',
             'capacity' => 'nullable|numeric',
             'pavilionId' => 'required|string',
+            'businessUnitId' => 'required|string',
         ]);
 
         $already = Classroom::where('code', $req->code)->where('pavilionId', $req->pavilionId)->first();
@@ -53,13 +57,20 @@ class ClassroomController extends Controller
 
         $data = Classroom::create([
             'code' => $req->code,
-            'pontisisCode' => $req->pontisisCode,
             'typeId' => $req->typeId,
             'capacity' => $req->capacity,
             'floor' => $req->floor,
             'pavilionId' => $req->pavilionId,
             'creatorId' => Auth::id(),
         ]);
+
+        $data->businessUnits()->create([
+            'pontisisCode' => $req->pontisisCode,
+            'businessUnitId' => $req->businessUnitId,
+            'academicClassroomId' => $data->id,
+        ]);
+
+
         return response()->json($data);
     }
 
@@ -72,6 +83,7 @@ class ClassroomController extends Controller
             'floor' => 'nullable|numeric',
             'capacity' => 'nullable|numeric',
             'pavilionId' => 'required|string',
+            'businessUnitId' => 'required|string',
         ]);
 
         $item = Classroom::find($id);
@@ -81,7 +93,6 @@ class ClassroomController extends Controller
         if ($already) return response()->json('already_exists', 400);
 
         $item->update([
-            'pontisisCode' => $req->pontisisCode,
             'code' => $req->code,
             'typeId' => $req->typeId,
             'floor' => $req->floor,
@@ -89,6 +100,21 @@ class ClassroomController extends Controller
             'pavilionId' => $req->pavilionId,
             'updaterId' => Auth::id(),
         ]);
+
+        $businessUnit = $item->businessUnits->where('businessUnitId', $req->businessUnitId)->first();
+
+        if ($businessUnit) {
+            $businessUnit->update([
+                'pontisisCode' => $req->pontisisCode,
+            ]);
+        } else {
+            $item->businessUnits()->create([
+                'pontisisCode' => $req->pontisisCode,
+                'businessUnitId' => $req->businessUnitId,
+                'academicClassroomId' => $item->id,
+            ]);
+        }
+
         return response()->json('Updated');
     }
 
@@ -100,14 +126,17 @@ class ClassroomController extends Controller
         return response()->json('Data deleted');
     }
 
-    public function one($id)
+    public function one(Request $req, $id)
     {
         $data = Classroom::find($id);
+        $businessUnitId = $req->query('businessUnitId');
+
         if (!$data) return response()->json('not_found', 404);
         return response()->json(
-            $data->only(['id', 'code', 'pontisisCode', 'floor', 'capacity', 'created_at']) +
+            $data->only(['id', 'code', 'floor', 'capacity', 'created_at']) +
                 ['pavilion' => $data->pavilion ? $data->pavilion->only(['id', 'name']) : null] +
                 ['type' => $data->type ? $data->type->only(['id', 'name']) : null] +
+                ['pontisisCode' => $data->businessUnits->where('businessUnitId', $businessUnitId)->first()->pontisisCode ?? null] +
                 ['creator' => $data->creator ? $data->creator->only(['id', 'firstNames', 'lastNames', 'displayName']) : null] +
                 ['updater' => $data->updater ? $data->updater->only(['id', 'firstNames', 'lastNames', 'displayName']) : null]
         );

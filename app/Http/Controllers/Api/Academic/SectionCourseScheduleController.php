@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Academic;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ReportSendEmail;
+use App\Models\Academic\ClassroomBusiness;
 use App\Models\Academic\Period;
 use App\Models\Academic\Program;
 use App\Models\Academic\SectionCourse;
@@ -41,7 +42,7 @@ class SectionCourseScheduleController extends Controller
 
         $graphed = $data->map(function ($item) {
             return array_merge(
-                $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate']),
+                $item->only(['id', 'startTime', 'endTime', 'type', 'startDate', 'daysOfWeek', 'endDate']),
                 ['program' => $item->sectionCourse?->section?->program?->only(['id', 'name']) + [
                     'businessUnit' => $item->sectionCourse?->section?->program?->businessUnit?->only(['id', 'logoURL']),
                 ]],
@@ -76,6 +77,7 @@ class SectionCourseScheduleController extends Controller
             'endDate' => 'required|date',
             'startTime' => 'required|string',
             'endTime' => 'required|string',
+            'type' => 'required|string',
             'daysOfWeek' => 'required|array',
         ]);
 
@@ -174,6 +176,7 @@ class SectionCourseScheduleController extends Controller
             'sectionCourseId' => $validated['sectionCourseId'],
             'classroomId' => $validated['classroomId'],
             'startDate' => $validated['startDate'],
+            'type' => $validated['type'],
             'endDate' => $validated['endDate'],
             'startTime' => $validated['startTime'],
             'endTime' => $validated['endTime'],
@@ -186,29 +189,20 @@ class SectionCourseScheduleController extends Controller
 
     public function update(Request $req, $id)
     {
-        $req->validate([
-            'classroomId' => 'required|string',
-            'startDate' => 'required|date',
-            'endDate' => 'required|date',
-            'startTime' => 'required|string',
-            'endTime' => 'required|string',
-            'daysOfWeek' => 'required|array',
-        ]);
-
         $item = SectionCourseSchedule::find($id);
         if (!$item) return response()->json('not_found', 404);
 
         $validated = $req->validate([
-            'sectionCourseId' => 'required|string',
             'classroomId' => 'required|string',
             'startDate' => 'required|date',
             'endDate' => 'required|date',
+            'type' => 'required|string',
             'startTime' => 'required|string',
             'endTime' => 'required|string',
             'daysOfWeek' => 'required|array',
         ]);
 
-        $sectionCourse = SectionCourse::find($validated['sectionCourseId']);
+        $sectionCourse = SectionCourse::find($item->sectionCourseId);
         if (!$sectionCourse) return response()->json('not_found', 404);
 
         $startTime = date('H:i:s', strtotime($validated['startTime']));
@@ -307,6 +301,7 @@ class SectionCourseScheduleController extends Controller
             'startDate' => $req->startDate,
             'endDate' => $req->endDate,
             'startTime' => $req->startTime,
+            'type' => $req->type,
             'endTime' => $req->endTime,
             'daysOfWeek' => $req->daysOfWeek,
             'updaterId' => Auth::id(),
@@ -328,7 +323,7 @@ class SectionCourseScheduleController extends Controller
         if (!$data) return response()->json('not_found', 404);
         return response()->json(
             array_merge(
-                $data->only(['id', 'startTime', 'endTime', 'startDate', 'endDate', 'daysOfWeek', 'created_at']),
+                $data->only(['id', 'startTime', 'endTime', 'startDate', 'type', 'endDate', 'daysOfWeek', 'created_at']),
                 ['sectionCourse' => $data->sectionCourse ? $data->sectionCourse->only(['id']) + [
                     'section' => $data->sectionCourse->section ? $data->sectionCourse->section->only(['id', 'code', 'details']) : null,
                     'planCourse' => $data->sectionCourse->planCourse ? $data->sectionCourse->planCourse->only(['id', 'name', 'credits']) + [
@@ -345,7 +340,213 @@ class SectionCourseScheduleController extends Controller
 
     public function report(Request $req)
     {
-        $type = $req->query('type');
+
+        $periodIds = $req->query('periodIds') ? explode(',', $req->query('periodIds')) : [];
+        $programIds = $req->query('programIds') ? explode(',', $req->query('programIds')) : [];
+        $programId = $req->query('programId');
+        $periodId = $req->query('periodId');
+        $q = $req->query('q');
+        $query = SectionCourse::orderBy('created_at', 'desc');
+        $query->where(function ($q) {
+            $q->whereHas('planCourse', function ($subQuery) {
+                $subQuery->where('status', true);
+            });
+        });
+
+        foreach (
+            [
+                ['periodId', $periodIds],
+                ['programId', $programIds]
+            ] as [$key, $ids]
+        ) {
+            if ($ids) {
+                $query->whereHas('section', fn($q) => $q->whereIn($key, $ids));
+            }
+        }
+
+        foreach (
+            [
+                ['programId', $programId],
+                ['periodId', $periodId]
+            ] as [$key, $id]
+        ) {
+            if ($id) {
+                $query->whereHas('section', fn($q) => $q->where($key, $id));
+            }
+        }
+
+        if ($q) {
+            $query->where(function ($subQuery) use ($q) {
+                $subQuery->whereHas('section', fn($q) => $q->where('code', 'like', "%$q%"))
+                    ->orWhereHas(
+                        'planCourse',
+                        fn($q) =>
+                        $q->whereHas(
+                            'course',
+                            fn($q) =>
+                            $q->where('code', 'like', "%$q%")->orWhere('name', 'like', "%$q%")
+                        )
+                    )->orWhereHas(
+                        'teacher',
+                        fn($q) =>
+                        $q->where('username', 'like', "%$q%")
+                            ->orWhere('firstNames', 'like', "%$q%")
+                            ->orWhere('documentId', 'like', "%$q%")
+                            ->orWhere('lastNames', 'like', "%$q%")
+                            ->orWhere('displayName', 'like', "%$q%")
+                    );
+            });
+        }
+
+        $schedulesRaw = $query->get()->flatMap(function ($course) {
+            $section = $course->section;
+            $period = $section?->period;
+            $program = $section?->program;
+            $y = $course->schedules->isEmpty();
+            $planCourse = $course->planCourse;
+            if ($y) {
+                return [[
+                    'period' => $period?->name,
+                    'startDate' => $period?->startDate,
+                    'endDate' => $period?->endDate,
+                    'businessUnit' => $program?->businessUnit,
+                    'program' => $program,
+                    'cycle' => $section?->cycle,
+                    'section' => $section?->code,
+                    'planCourse' => $planCourse,
+                    'daysOfWeek' => [],
+                    'startTime' => null,
+                    'endTime' => null,
+                    'classroom' => null,
+                    'teacher' => $course->teacher,
+                    'shift' => null,
+                    'type' => '',
+                ]];
+            }
+
+            return $course->schedules->map(fn($s) => [
+                'period' => $section?->period?->name,
+                'startDate' => $section?->period?->startDate,
+                'endDate' => $section?->period?->endDate,
+                'businessUnit' => $program?->businessUnit,
+                'program' => $program,
+                'cycle' => $section?->cycle,
+                'section' => $section?->code,
+                'planCourse' => $planCourse,
+                'daysOfWeek' => $s->daysOfWeek,
+                'startTime' => $s->startTime,
+                'endTime' => $s->endTime,
+                'classroom' => $s->classroom,
+                'teacher' => $course->teacher,
+                'shift' => $s->shift,
+                'type' => $s->type,
+            ]);
+        });
+
+        $dayNames = ['1' => '01.- Lunes', '2' => '02.- Martes', '3' => '03.- Miércoles', '4' => '04.- Jueves', '5' => '05.- Viernes', '6' => '06.- Sábado', '7' => '07.- Domingo'];
+        $items = collect();
+
+        foreach ($schedulesRaw as $schedule) {
+            if (empty($schedule['daysOfWeek'])) {
+                $schedule['daysOfWeek'] = '';
+                $items->push($schedule);
+            } else {
+                foreach ($schedule['daysOfWeek'] as $day) {
+                    $clone = $schedule;
+                    $dayNum = trim($day);
+                    $clone['daysOfWeek'] = $dayNames[$dayNum] ?? $dayNum;
+                    $items->push($clone);
+                }
+            }
+        }
+
+        $spreadsheet = IOFactory::load(public_path('templates/academic_schedules.xlsx'));
+        $worksheet = $spreadsheet->getSheetByName('BASE');
+
+        $r = 2;
+
+        $allItems = $items->sort(fn($a, $b) => [
+            $a['period'],
+            $a['businessUnit']->acronym,
+            $a['program']->acronym,
+            $a['section']
+        ] <=> [
+            $b['period'],
+            $b['businessUnit']->acronym,
+            $b['program']->acronym,
+            $b['section']
+        ])->values()->sortByDesc(fn($i) => !is_null($i['startTime']))->values();
+
+        foreach ($allItems as $item) {
+            $teacher = $item['teacher'];
+
+            $worksheet->setCellValue("A$r", $item['period']);
+            $worksheet->setCellValue("B$r", Date::PHPToExcel($item['startDate']));
+            $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+            $worksheet->setCellValue("C$r", Date::PHPToExcel($item['endDate']));
+            $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+
+            $worksheet->setCellValue("D$r", $item['businessUnit']->acronym);
+            $worksheet->setCellValue("E$r",  $item['program']?->acronym . ' ' . $item['program']->name);
+            $worksheet->setCellValue("F$r", $item['cycle']->displayName());
+
+            $worksheet->setCellValue("G$r", '');
+
+            $worksheet->setCellValue("H$r", $item['section']);
+            $worksheet->setCellValue("I$r", $item['shift']);
+            $worksheet->setCellValue("J$r", $item['planCourse']?->formula);
+            $worksheet->setCellValue("K$r", $item['planCourse']?->course?->name);
+            $worksheet->setCellValue("L$r", $item['planCourse']?->course?->code);
+
+            $worksheet->setCellValue("M$r",  $item['planCourse']?->course?->hoursName);
+            $worksheet->setCellValue("N$r", $item['type']);
+            $worksheet->setCellValue("O$r", $item['daysOfWeek']);
+
+            $worksheet->setCellValue("P$r", $item['startTime']?->format('H:i'));
+            $worksheet->getStyle("P$r")->getNumberFormat()->setFormatCode('HH:MM');
+            $worksheet->setCellValue("Q$r", $item['endTime']?->format('H:i'));
+            $worksheet->getStyle("Q$r")->getNumberFormat()->setFormatCode('HH:MM');
+
+            $worksheet->setCellValue("V$r", $item['classroom'] ? $item['classroom']?->code : '');
+            $worksheet->setCellValue("W$r", $item['classroom'] ? $item['classroom']->type?->name : '');
+            $worksheet->setCellValue("Y$r", $teacher ? strtoupper($teacher->fullNames()) : '');
+            $worksheet->setCellValue("Z$r", $teacher?->documentId);
+            $r++;
+        }
+
+        Storage::makeDirectory('reports');
+        $fileId = now()->timestamp;
+        $filePath = "reports/$fileId.xlsx";
+
+        IOFactory::createWriter($spreadsheet, 'Xlsx')->save(storage_path("app/$filePath"));
+
+        $displayNameFile = 'Horarios centralizados';
+        if ($periodIds) {
+            $displayNameFile .= '(periodos: ' . Period::whereIn('id', $periodIds)->pluck('name')->implode(', ') . ', ';
+        }
+        if ($programIds) {
+            $displayNameFile .= 'programas: ' . Program::whereIn('id', $programIds)->pluck('acronym')->implode(', ') . ')';
+        }
+        if ($programId && $periodId) {
+            $displayNameFile .= '(programa: ' . Program::find($programId)?->acronym . ', periodo: ' . Period::find($periodId)?->name . ')';
+        }
+
+        $report = Report::create([
+            'fileId' => $fileId,
+            'title' => $displayNameFile,
+            'ext' => 'xlsx',
+            'creatorId' => Auth::id(),
+            'module' => 'academic',
+        ]);
+
+        $downloadLink = config('app.download_url') . '/reports/' . $report->id;
+        ReportSendEmail::dispatch($report->title, 'académico', 'los horarios', $downloadLink, Auth::id());
+
+        return response()->json($downloadLink);
+    }
+
+    public function reportPontisis(Request $req)
+    {
         $periodIds = $req->query('periodIds') ? explode(',', $req->query('periodIds')) : [];
         $programIds = $req->query('programIds') ? explode(',', $req->query('programIds')) : [];
         $programId = $req->query('programId');
@@ -409,7 +610,7 @@ class SectionCourseScheduleController extends Controller
                     'period' => $course->section?->period?->name,
                     'startDate' => $course->section?->period?->startDate,
                     'endDate' => $course->section?->period?->endDate,
-                    'businessUnit' => $course->section?->program?->businessUnit?->acronym,
+                    'businessUnit' => $course->section?->program?->businessUnit,
                     'program' => $course->section?->program?->name,
                     'programPontisisCode' => $course->section?->program?->pontisisCode,
                     'planPontisisCode' => $course->planCourse?->plan?->pontisisCode,
@@ -421,9 +622,6 @@ class SectionCourseScheduleController extends Controller
                     'startTime' => null,
                     'endTime' => null,
                     'classroom' => null,
-                    'classroomType' => null,
-                    'classroomPontisisCode' => null,
-                    'classroomTypePontisisCode' => null,
                     'teacher' => $course->teacher,
                 ]];
             }
@@ -432,7 +630,7 @@ class SectionCourseScheduleController extends Controller
                 'period' => $course->section?->period?->name,
                 'startDate' => $course->section?->period?->startDate,
                 'endDate' => $course->section?->period?->endDate,
-                'businessUnit' => $course->section?->program?->businessUnit?->acronym,
+                'businessUnit' => $course->section?->program?->businessUnit,
                 'program' => $course->section?->program?->name,
                 'programPontisisCode' => $course->section?->program?->pontisisCode,
                 'planPontisisCode' => $course->planCourse?->plan?->pontisisCode,
@@ -443,15 +641,11 @@ class SectionCourseScheduleController extends Controller
                 'daysOfWeek' => $s->daysOfWeek,
                 'startTime' => $s->startTime,
                 'endTime' => $s->endTime,
-                'classroom' => $s->classroom?->code,
-                'classroomType' => $s->classroom?->type,
-                'classroomPontisisCode' => $s->classroom?->pontisisCode,
-                'classroomTypePontisisCode' => $s->classroom?->type?->pontisisCode,
+                'classroom' => $s->classroom,
                 'teacher' => $course->teacher,
             ]);
         });
 
-        $dayNames = ['1' => 'Lunes', '2' => 'Martes', '3' => 'Miércoles', '4' => 'Jueves', '5' => 'Viernes', '6' => 'Sábado', '7' => 'Domingo'];
         $items = collect();
 
         foreach ($schedulesRaw as $schedule) {
@@ -462,83 +656,179 @@ class SectionCourseScheduleController extends Controller
                 foreach ($schedule['daysOfWeek'] as $day) {
                     $clone = $schedule;
                     $dayNum = trim($day);
-                    if ($type === 'pontisis') {
-                        $clone['daysOfWeek'] = $dayNum;
-                    } else {
-                        $clone['daysOfWeek'] = "$dayNum. " . ($dayNames[$dayNum] ?? $dayNum);
-                    }
+                    $clone['daysOfWeek'] = $dayNum;
                     $items->push($clone);
                 }
             }
         }
 
-        $template = $type === 'pontisis' ? 'templates/section_schedule_pontisis.xlsx' : 'templates/section_schedules.xlsx';
-        $spreadsheet = IOFactory::load(public_path($template));
-        $worksheet = $type === 'pontisis' ? $spreadsheet->getSheetByName('Data A Importar') : $spreadsheet->getActiveSheet();
+        $spreadsheet = IOFactory::load(public_path('templates/academic_schedules_pontisis.xlsx'));
+        $worksheet = $spreadsheet->getSheetByName('Data A Importar');
         $r = 2;
 
         $allItems = $items->sort(fn($a, $b) => [
             $a['period'],
-            $a['businessUnit'],
+            $a['businessUnit']->acronym,
             $a['program'],
             $a['section']
         ] <=> [
             $b['period'],
-            $b['businessUnit'],
+            $b['businessUnit']->acronym,
             $b['program'],
             $b['section']
         ])->values()->sortByDesc(fn($i) => !is_null($i['startTime']))->values();
 
         foreach ($allItems as $item) {
+
+            $businessClassroom = ClassroomBusiness::where('academicClassroomId', $item['classroom']?->id)
+                ->where('businessUnitId', $item['businessUnit']->id)
+                ->first();
+
             $teacher = $item['teacher'];
-            if ($type === 'pontisis') {
-                $worksheet->setCellValue("A$r", 'G');
-                $worksheet->setCellValue("B$r", $item['programPontisisCode']);
-                $worksheet->setCellValue("C$r", $item['planPontisisCode']);
-                $worksheet->setCellValue("D$r", $item['courseCode']);
-                $worksheet->setCellValue("E$r", $item['section']);
-                $worksheet->setCellValue("F$r", $teacher?->documentId);
+            $worksheet->setCellValue("A$r", 'G');
+            $worksheet->setCellValue("B$r", $item['programPontisisCode']);
+            $worksheet->setCellValue("C$r", $item['planPontisisCode']);
+            $worksheet->setCellValue("D$r", $item['courseCode']);
+            $worksheet->setCellValue("E$r", $item['section']);
+            $worksheet->setCellValue("F$r", $teacher?->documentId);
 
-                // daysOfWeek only first and only number
-                $daysOfWeek = collect($item['daysOfWeek'])->map(fn($day) => trim(explode('.', $day)[0]))->implode(', ');
-                $worksheet->setCellValue("G$r", $daysOfWeek);
-                $worksheet->setCellValue("H$r", $item['classroomPontisisCode']);
-                $worksheet->setCellValue("I$r", $item['classroomTypePontisisCode']);
-                $worksheet->setCellValue("J$r",  $item['startTime']?->format('H:i'));
-                $worksheet->getStyle("J$r")->getNumberFormat()->setFormatCode('HH:MM');
-                $worksheet->setCellValue("K$r",  $item['endTime']?->format('H:i'));
-                $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
+            // daysOfWeek only first and only number
+            $daysOfWeek = collect($item['daysOfWeek'])->map(fn($day) => trim(explode('.', $day)[0]))->implode(', ');
+            $worksheet->setCellValue("G$r", $daysOfWeek);
+            $worksheet->setCellValue("H$r", $businessClassroom?->pontisisCode);
+            $worksheet->setCellValue("I$r", $item['classroom']?->type?->pontisisCode);
+            $worksheet->setCellValue("J$r",  $item['startTime']?->format('H:i'));
+            $worksheet->getStyle("J$r")->getNumberFormat()->setFormatCode('HH:MM');
+            $worksheet->setCellValue("K$r",  $item['endTime']?->format('H:i'));
+            $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
+            $worksheet->setCellValue("L$r", Date::PHPToExcel($item['startDate']));
+            $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+            $worksheet->setCellValue("M$r", Date::PHPToExcel($item['endDate']));
+            $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
 
+            $worksheet->setCellValue("O$r", $item['businessUnit']?->acronym);
+            $worksheet->setCellValue("P$r", $item['classroom']?->pavilion?->name);
+            $worksheet->setCellValue("Q$r", $item['classroom']?->code);
 
+            $r++;
+        }
 
-                $worksheet->setCellValue("L$r", Date::PHPToExcel($item['startDate']));
-                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
-                $worksheet->setCellValue("M$r", Date::PHPToExcel($item['endDate']));
-                $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
-            } else {
-                $worksheet->setCellValue("A$r", $item['period']);
-                $worksheet->setCellValue("B$r", Date::PHPToExcel($item['startDate']));
-                $worksheet->getStyle("B$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
-                $worksheet->setCellValue("C$r", Date::PHPToExcel($item['endDate']));
-                $worksheet->getStyle("C$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+        Storage::makeDirectory('reports');
+        $fileId = now()->timestamp;
+        $filePath = "reports/$fileId.xlsx";
 
-                $worksheet->setCellValue("D$r", $item['businessUnit']);
-                $worksheet->setCellValue("E$r", $item['program']);
-                $worksheet->setCellValue("F$r", $item['cycle']);
-                $worksheet->setCellValue("G$r", $item['section']);
-                $worksheet->setCellValue("H$r", $item['course']);
-                $worksheet->setCellValue("I$r", $item['courseCode']);
-                $worksheet->setCellValue("J$r", $item['daysOfWeek']);
-                $worksheet->setCellValue("K$r", $item['startTime']?->format('H:i'));
-                $worksheet->getStyle("K$r")->getNumberFormat()->setFormatCode('HH:MM');
-                $worksheet->setCellValue("L$r", $item['endTime']?->format('H:i'));
-                $worksheet->getStyle("L$r")->getNumberFormat()->setFormatCode('HH:MM');
-                $worksheet->setCellValue("M$r", $item['classroom']);
-                $worksheet->setCellValue("N$r", $item['classroomType']->name ?? '');
-                $worksheet->setCellValue("O$r", $teacher ? strtoupper($teacher->fullNames()) : '');
-                $worksheet->setCellValue("P$r", $teacher?->documentId);
-                $worksheet->setCellValue("Q$r", $teacher?->email);
+        IOFactory::createWriter($spreadsheet, 'Xlsx')->save(storage_path("app/$filePath"));
+
+        $displayNameFile = 'Horarios ';
+        if ($periodIds) {
+            $displayNameFile .= '(periodos: ' . Period::whereIn('id', $periodIds)->pluck('name')->implode(', ') . ', ';
+        }
+        if ($programIds) {
+            $displayNameFile .= 'programas: ' . Program::whereIn('id', $programIds)->pluck('acronym')->implode(', ') . ')';
+        }
+        if ($programId && $periodId) {
+            $displayNameFile .= '(programa: ' . Program::find($programId)?->acronym . ', periodo: ' . Period::find($periodId)?->name . ')';
+        }
+        $displayNameFile .= ' - Pontisis';
+
+        $report = Report::create([
+            'fileId' => $fileId,
+            'title' => $displayNameFile,
+            'ext' => 'xlsx',
+            'creatorId' => Auth::id(),
+            'module' => 'academic',
+        ]);
+
+        $downloadLink = config('app.download_url') . '/reports/' . $report->id;
+        ReportSendEmail::dispatch($report->title, 'académico', 'los horarios (pontisis) ', $downloadLink, Auth::id());
+
+        return response()->json($downloadLink);
+    }
+
+    public function reportPontisisTeachers(Request $req)
+    {
+        $periodIds = $req->query('periodIds') ? explode(',', $req->query('periodIds')) : [];
+        $programIds = $req->query('programIds') ? explode(',', $req->query('programIds')) : [];
+        $programId = $req->query('programId');
+        $periodId = $req->query('periodId');
+        $q = $req->query('q');
+        $query = SectionCourse::orderBy('created_at', 'desc');
+        $query->where(function ($q) {
+            $q->whereHas('planCourse', function ($subQuery) {
+                $subQuery->where('status', true);
+            });
+        });
+
+        foreach (
+            [
+                ['periodId', $periodIds],
+                ['programId', $programIds]
+            ] as [$key, $ids]
+        ) {
+            if ($ids) {
+                $query->whereHas('section', fn($q) => $q->whereIn($key, $ids));
             }
+        }
+
+        foreach (
+            [
+                ['programId', $programId],
+                ['periodId', $periodId]
+            ] as [$key, $id]
+        ) {
+            if ($id) {
+                $query->whereHas('section', fn($q) => $q->where($key, $id));
+            }
+        }
+
+        if ($q) {
+            $query->where(function ($subQuery) use ($q) {
+                $subQuery->whereHas('section', fn($q) => $q->where('code', 'like', "%$q%"))
+                    ->orWhereHas(
+                        'planCourse',
+                        fn($q) =>
+                        $q->whereHas(
+                            'course',
+                            fn($q) =>
+                            $q->where('code', 'like', "%$q%")->orWhere('name', 'like', "%$q%")
+                        )
+                    )->orWhereHas(
+                        'teacher',
+                        fn($q) =>
+                        $q->where('username', 'like', "%$q%")
+                            ->orWhere('firstNames', 'like', "%$q%")
+                            ->orWhere('documentId', 'like', "%$q%")
+                            ->orWhere('lastNames', 'like', "%$q%")
+                            ->orWhere('displayName', 'like', "%$q%")
+                    );
+            });
+        }
+
+        $spreadsheet = IOFactory::load(public_path('templates/academic_schedules_pontisis_teachers.xlsx'));
+        $worksheet =  $spreadsheet->getSheetByName('Data A Importar');
+        $r = 2;
+
+        $courses = $query->get();
+        $allItems = $courses->sort(fn($a, $b) => [
+            $a->section->program->acronym,
+            $a->teacher?->documentId,
+        ] <=> [
+            $b->section->program->acronym,
+            $b->teacher?->documentId,
+        ])->values();
+
+        foreach ($allItems as $item) {
+
+            if (!$item->teacher) continue;
+
+            $worksheet->setCellValue("A$r", 'G');
+            $worksheet->setCellValue("B$r", $item->section->program?->pontisisCode);
+            $worksheet->setCellValue("C$r", $item->planCourse?->plan?->pontisisCode);
+            $worksheet->setCellValue("D$r", $item->planCourse?->course?->code);
+            $worksheet->setCellValue("E$r", $item->section?->code);
+            $worksheet->setCellValue("F$r", $item->teacher?->documentId);
+            $worksheet->setCellValue("G$r", 'EP');
+            $worksheet->setCellValue("I$r", $item->section?->program?->businessUnit?->acronym);
             $r++;
         }
 
@@ -559,9 +849,7 @@ class SectionCourseScheduleController extends Controller
             $displayNameFile .= '(programa: ' . Program::find($programId)?->acronym . ', periodo: ' . Period::find($periodId)?->name . ')';
         }
 
-        if ($type === 'pontisis') {
-            $displayNameFile .= ' - Pontisis';
-        }
+        $displayNameFile .= ' - Pontisis docentes';
 
         $report = Report::create([
             'fileId' => $fileId,
@@ -572,7 +860,7 @@ class SectionCourseScheduleController extends Controller
         ]);
 
         $downloadLink = config('app.download_url') . '/reports/' . $report->id;
-        ReportSendEmail::dispatch($report->title, 'académico', 'los horarios', $downloadLink, Auth::id());
+        ReportSendEmail::dispatch($report->title, 'académico', 'los horarios de docentes para la pontisis', $downloadLink, Auth::id());
 
         return response()->json($downloadLink);
     }

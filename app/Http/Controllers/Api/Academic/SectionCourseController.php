@@ -188,7 +188,7 @@ class SectionCourseController extends Controller
             }),
             'sectionSchedules' => $ss->map(function ($item) {
                 return array_merge(
-                    $item->only(['id', 'startTime', 'endTime', 'startDate', 'daysOfWeek', 'endDate']),
+                    $item->only(['id', 'startTime', 'endTime', 'type', 'startDate', 'daysOfWeek', 'endDate']),
                     ['program' => $item->sectionCourse?->section?->program?->only(['id', 'name']) + [
                         'businessUnit' => $item->sectionCourse?->section?->program?->businessUnit?->only(['id', 'logoURLSquare']),
                     ]],

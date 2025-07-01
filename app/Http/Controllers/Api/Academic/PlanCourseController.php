@@ -31,7 +31,7 @@ class PlanCourseController extends Controller
         $data = $paginate ? $match->paginate(25) :  $match->get();
 
         $graphed = $data->map(function ($item) {
-            return $item->only(['id', 'name', 'credits', 'teoricHours', 'practiceHours', 'status', 'created_at']) +
+            return $item->only(['id', 'name', 'formula', 'credits', 'teoricHours', 'practiceHours', 'status', 'created_at']) +
                 ['course' => $item->course ? $item->course->only(['id', 'code', 'name']) : null] +
                 ['plan' => $item->plan ? $item->plan->only(['id', 'name']) : null] +
                 ['cycle' => $item->cycle ? $item->cycle->only(['id', 'code', 'name']) : null] +
@@ -57,6 +57,7 @@ class PlanCourseController extends Controller
             'credits' => 'required|numeric',
             'teoricHours' => 'required|numeric',
             'practiceHours' => 'required|numeric',
+            'formula' => 'required|string',
             'status' => 'required|boolean',
         ]);
 
@@ -75,6 +76,7 @@ class PlanCourseController extends Controller
             'teoricHours' => $req->teoricHours,
             'practiceHours' => $req->practiceHours,
             'status' => $req->status,
+            'formula' => $req->formula,
             'creatorId' => Auth::id(),
         ]);
         return response()->json($data);
@@ -90,6 +92,7 @@ class PlanCourseController extends Controller
             'credits' => 'required|numeric',
             'teoricHours' => 'required|numeric',
             'practiceHours' => 'required|numeric',
+            'formula' => 'required|string',
             'status' => 'required|boolean',
         ]);
 
@@ -110,6 +113,7 @@ class PlanCourseController extends Controller
             'name' => $req->name,
             'planId' => $req->planId,
             'courseId' => $req->courseId,
+            'formula' => $req->formula,
             'cycleId' => $req->cycleId,
             'credits' => $req->credits,
             'teoricHours' => $req->teoricHours,
@@ -133,7 +137,7 @@ class PlanCourseController extends Controller
         $data = PlanCourse::find($id);
         if (!$data) return response()->json('not_found', 404);
         return response()->json(
-            $data->only(['id', 'name', 'credits', 'teoricHours', 'practiceHours', 'status', 'created_at']) +
+            $data->only(['id', 'name', 'credits', 'formula', 'teoricHours', 'practiceHours', 'status', 'created_at']) +
                 ['course' => $data->course ? $data->course->only(['id', 'code']) : null] +
                 ['plan' => $data->plan ? $data->plan->only(['id', 'name']) : null] +
                 ['cycle' => $data->cycle ? $data->cycle->only(['id', 'code', 'name']) : null] +
