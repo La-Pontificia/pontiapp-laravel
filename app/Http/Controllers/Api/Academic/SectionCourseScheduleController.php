@@ -140,31 +140,24 @@ class SectionCourseScheduleController extends Controller
 
         foreach ($conflicts as $type => $conflictItem) {
             if ($conflictItem) {
-                switch ($type) {
-                    case 'teacher_unavailable':
-                        $item = [
-                            'name' => $conflictItem->user->fullNames() . ' (No disponible)',
-                            'startDate' => $conflictItem->startDate,
-                            'endDate' => $conflictItem->endDate,
-                            'startTime' => $conflictItem->from,
-                            'dates' => $conflictItem->dates,
-                            'endTime' => $conflictItem->to,
-                            'daysOfWeek' => $conflictItem->days,
-                        ];
-                        break;
-                    default:
-                        $item = [
-                            'name' => $conflictItem->sectionCourse->planCourse->course->name,
-                            'startDate' => $conflictItem->startDate,
-                            'endDate' => $conflictItem->endDate,
-                            'startTime' => $conflictItem->startTime,
-                            'endTime' => $conflictItem->endTime,
-                            'dates' => $conflictItem->dates,
-                            'daysOfWeek' => $conflictItem->daysOfWeek,
-                        ];
-                        break;
-                }
 
+                $item = $type === 'teacher_unavailable' ? [
+                    'name' => $conflictItem->user->fullNames() . ' (No disponible)',
+                    'startDate' => $conflictItem->startDate,
+                    'endDate' => $conflictItem->endDate,
+                    'startTime' => $conflictItem->from,
+                    'dates' => $conflictItem->dates,
+                    'endTime' => $conflictItem->to,
+                    'daysOfWeek' => $conflictItem->days,
+                ] : [
+                    'name' => $conflictItem->sectionCourse->planCourse->course->name,
+                    'startDate' => $conflictItem->startDate,
+                    'endDate' => $conflictItem->endDate,
+                    'startTime' => $conflictItem->startTime,
+                    'endTime' => $conflictItem->endTime,
+                    'dates' => $conflictItem->dates,
+                    'daysOfWeek' => $conflictItem->daysOfWeek,
+                ];
                 return response()->json([
                     'message' => $messages[$type],
                     'item' => $item,

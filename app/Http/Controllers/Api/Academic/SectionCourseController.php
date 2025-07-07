@@ -106,23 +106,78 @@ class SectionCourseController extends Controller
     public function update(Request $req, $id)
     {
         $req->validate([
-            'sectionId' => 'required|string',
-            'planCourseId' => 'required|string',
             'teacherId' => 'nullable|string',
         ]);
 
         $item = SectionCourse::find($id);
         if (!$item) return response()->json('not_found', 404);
 
-        $already = SectionCourse::where('planCourseId', $req->planCourseId)
-            ->where('sectionId', $req->sectionId)
-            ->where('id', '!=', $id)->first();
+        $schedules = SectionCourseSchedule::where('sectionCourseId', $id)->get();
 
-        if ($already) return response()->json('already_exists', 400);
+        // if has schedules & teacherId is not null, validate that the teacher is not already assigned to another section course with schedules
+        if ($schedules->count() > 0 && $req->teacherId) {
+            foreach ($schedules as $schedule) {
+                $days = $schedule->daysOfWeek;
+                $startTime = $schedule->startTime;
+                $endTime = $schedule->endTime;
+                $startDate = $schedule->startDate;
+                $endDate = $schedule->endDate;
+
+                $buildSearch = fn($column) => implode(' OR ', array_map(fn($day) => "JSON_SEARCH($column, 'one', '$day') IS NOT NULL", $days));
+                $conflicts = [
+                    // Si el docente tiene horarios no disponibles registrados
+                    'teacher_unavailable' => UserSchedule::where('userId', $req->teacherId)
+                        ->where('type', 'unavailable')
+                        ->whereRaw('(' . $buildSearch('days') . ')')
+                        ->whereTime('from', '<', $endTime)
+                        ->whereTime('to', '>', $startTime)
+                        ->whereDate('startDate', '<=', $endDate)
+                        ->whereDate('endDate', '>=', $startDate)
+                        ->first(),
+
+                    // si el docente tiene horarios de cursos asignados
+                    'teacher_busy' => SectionCourseSchedule::whereHas('sectionCourse', function ($q) use ($req) {
+                        $q->where('teacherId', $req->teacherId);
+                    })
+                        ->whereRaw('(' . $buildSearch('daysOfWeek') . ')')
+                        ->whereTime('startTime', '<', $endTime)
+                        ->whereTime('endTime', '>', $startTime)
+                        ->whereDate('startDate', '<=', $endDate)
+                        ->whereDate('endDate', '>=', $startDate)
+                        ->first(),
+                ];
+
+                $messages = [
+                    'teacher_unavailable' => 'El docente no está disponible en los horarios de este curso.',
+                    'teacher_busy' => 'Docente ya tiene horarios asignados en los horarios de este curso.',
+                ];
+
+                foreach ($conflicts as $type => $conflictItem) {
+                    if ($conflictItem) {
+                        $item = $type === 'teacher_unavailable' ? [
+                            'name' => $conflictItem->user->fullNames() . ' (No disponible)',
+                            'startDate' => $conflictItem->startDate,
+                            'endDate' => $conflictItem->endDate,
+                            'startTime' => $conflictItem->from,
+                            'dates' => $conflictItem->dates,
+                            'endTime' => $conflictItem->to,
+                            'daysOfWeek' => $conflictItem->days,
+                        ] : [
+                            'name' => $conflictItem->sectionCourse->planCourse->course->name,
+                            'startDate' => $conflictItem->startDate,
+                            'endDate' => $conflictItem->endDate,
+                            'startTime' => $conflictItem->startTime,
+                            'endTime' => $conflictItem->endTime,
+                            'dates' => $conflictItem->dates,
+                            'daysOfWeek' => $conflictItem->daysOfWeek,
+                        ];
+                        return response()->json($messages[$type], 409);
+                    }
+                }
+            }
+        }
 
         $item->update([
-            'sectionId' => $req->sectionId,
-            'planCourseId' => $req->planCourseId,
             'teacherId' => $req->teacherId,
             'updaterId' => Auth::id(),
         ]);
