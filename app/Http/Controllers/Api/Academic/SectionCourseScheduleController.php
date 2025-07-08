@@ -472,23 +472,23 @@ class SectionCourseScheduleController extends Controller
         $r = 3;
         $templateRow = 2;
 
+        $formulas = [];
+
+        foreach (range('A', 'Z') as $col) {
+            $value = $worksheet->getCell("$col$templateRow")->getValue();
+            if (is_string($value) && $value[0] === '=') {
+                $formulas[$col] = preg_replace_callback('/([A-Z]+)(\d+)/', function ($m) {
+                    return $m[1] . '{row}';
+                }, $value);
+            }
+        }
+
         foreach ($allItems as $item) {
             $teacher = $item['teacher'];
             $worksheet->insertNewRowBefore($r);
 
-            foreach (range('A', 'Z') as $col) {
-                $cell = $worksheet->getCell("$col$templateRow");
-                $formula = $cell->getValue();
-                if (is_string($formula) && str_starts_with($formula, '=')) {
-                    $newFormula = preg_replace_callback('/([A-Z]+)(\d+)/', function ($matches) use ($r, $templateRow) {
-                        $col = $matches[1];
-                        $row = (int) $matches[2];
-                        $offset = $r - $templateRow;
-                        return $col . ($row + $offset);
-                    }, $formula);
-
-                    $worksheet->setCellValueExplicit("$col$r", $newFormula, DataType::TYPE_FORMULA);
-                }
+            foreach ($formulas as $col => $templateFormula) {
+                $worksheet->setCellValueExplicit("$col$r", str_replace('{row}', $r, $templateFormula), DataType::TYPE_FORMULA);
             }
 
             $worksheet->setCellValue("A$r", $item['period']);
