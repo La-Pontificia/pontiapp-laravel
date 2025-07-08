@@ -470,26 +470,9 @@ class SectionCourseScheduleController extends Controller
         ])->values()->sortByDesc(fn($i) => !is_null($i['startTime']))->values();
 
         $r = 3;
-        $templateRow = 2;
-
-        $formulas = [];
-
-        foreach (range('A', 'Z') as $col) {
-            $value = $worksheet->getCell("$col$templateRow")->getValue();
-            if (is_string($value) && $value[0] === '=') {
-                $formulas[$col] = preg_replace_callback('/([A-Z]+)(\d+)/', function ($m) {
-                    return $m[1] . '{row}';
-                }, $value);
-            }
-        }
-
         foreach ($allItems as $item) {
             $teacher = $item['teacher'];
             $worksheet->insertNewRowBefore($r);
-
-            foreach ($formulas as $col => $templateFormula) {
-                $worksheet->setCellValueExplicit("$col$r", str_replace('{row}', $r, $templateFormula), DataType::TYPE_FORMULA);
-            }
 
             $worksheet->setCellValue("A$r", $item['period']);
             $worksheet->setCellValue("B$r", Date::PHPToExcel($item['startDate']));
@@ -517,6 +500,18 @@ class SectionCourseScheduleController extends Controller
             $worksheet->getStyle("P$r")->getNumberFormat()->setFormatCode('HH:MM');
             $worksheet->setCellValue("Q$r", $item['endTime']?->format('H:i'));
             $worksheet->getStyle("Q$r")->getNumberFormat()->setFormatCode('HH:MM');
+
+            # HC = endTime - startTime
+            $hc = $item['endTime'] && $item['startTime'] ? $item['endTime']->diff($item['startTime']) : null;
+            $worksheet->setCellValue("R$r", $hc ? $hc->format('%H:%I') : '');
+
+            #HA = =(HOUR(HC)*60+MINUTE(HC))/(45)
+            $ha = $hc ? ($hc->h * 60 + $hc->i) / 45 : null;
+            $worksheet->setCellValue("S$r", $ha ? $ha : '');
+
+            #FHC = =HC*24
+            $fhc = $hc ? ($hc->h * 60 + $hc->i) / 60 : null;
+            $worksheet->setCellValue("T$r", $fhc ? $fhc : '');
 
             $worksheet->setCellValue("V$r", $item['classroom'] ? $item['classroom']?->code : '');
             $worksheet->setCellValue("W$r", $item['classroom'] ? $item['classroom']->type?->name : '');
