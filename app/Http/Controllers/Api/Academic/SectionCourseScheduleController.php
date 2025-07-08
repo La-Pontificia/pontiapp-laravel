@@ -14,6 +14,7 @@ use App\Models\UserSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -456,8 +457,6 @@ class SectionCourseScheduleController extends Controller
         $spreadsheet = IOFactory::load(public_path('templates/academic_schedules.xlsx'));
         $worksheet = $spreadsheet->getSheetByName('BASE');
 
-        $r = 2;
-
         $allItems = $items->sort(fn($a, $b) => [
             $a['period'],
             $a['businessUnit']->acronym,
@@ -470,8 +469,27 @@ class SectionCourseScheduleController extends Controller
             $b['section']
         ])->values()->sortByDesc(fn($i) => !is_null($i['startTime']))->values();
 
+        $r = 3;
+        $templateRow = 2;
+
         foreach ($allItems as $item) {
             $teacher = $item['teacher'];
+            $worksheet->insertNewRowBefore($r);
+
+            foreach (range('A', 'Z') as $col) {
+                $cell = $worksheet->getCell("$col$templateRow");
+                $formula = $cell->getValue();
+                if (is_string($formula) && str_starts_with($formula, '=')) {
+                    $newFormula = preg_replace_callback('/([A-Z]+)(\d+)/', function ($matches) use ($r, $templateRow) {
+                        $col = $matches[1];
+                        $row = (int) $matches[2];
+                        $offset = $r - $templateRow;
+                        return $col . ($row + $offset);
+                    }, $formula);
+
+                    $worksheet->setCellValueExplicit("$col$r", $newFormula, DataType::TYPE_FORMULA);
+                }
+            }
 
             $worksheet->setCellValue("A$r", $item['period']);
             $worksheet->setCellValue("B$r", Date::PHPToExcel($item['startDate']));
@@ -506,6 +524,10 @@ class SectionCourseScheduleController extends Controller
             $worksheet->setCellValue("Z$r", $teacher?->documentId);
             $r++;
         }
+
+        // delete template row
+        $spreadsheet->getActiveSheet()->removeRow(2, 1);
+        $spreadsheet->getActiveSheet()->removeRow($r - 1, 1);
 
         Storage::makeDirectory('reports');
         $fileId = now()->timestamp;
@@ -609,7 +631,7 @@ class SectionCourseScheduleController extends Controller
                     'planPontisisCode' => $course->planCourse?->plan?->pontisisCode,
                     'cycle' => $course->section?->cycle?->code,
                     'section' => $course->section?->code,
-                    'course' => $course->planCourse?->name,
+                    'course' => $course->planCourse?->course,
                     'courseCode' => $course->planCourse?->course?->code,
                     'daysOfWeek' => [],
                     'startTime' => null,
@@ -629,8 +651,8 @@ class SectionCourseScheduleController extends Controller
                 'planPontisisCode' => $course->planCourse?->plan?->pontisisCode,
                 'cycle' => $course->section?->cycle?->code,
                 'section' => $course->section?->code,
-                'course' => $course->planCourse?->name,
-                'courseCode' => $course->planCourse?->course?->code,
+                'course' => $course->planCourse?->course,
+                'courseCode' => $course->planCourse?->course->code,
                 'daysOfWeek' => $s->daysOfWeek,
                 'startTime' => $s->startTime,
                 'endTime' => $s->endTime,
@@ -700,9 +722,10 @@ class SectionCourseScheduleController extends Controller
             $worksheet->getStyle("M$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
 
             $worksheet->setCellValue("O$r", $item['businessUnit']?->acronym);
-            $worksheet->setCellValue("P$r", $item['classroom']?->pavilion?->name);
-            $worksheet->setCellValue("Q$r", $item['classroom']?->code);
-
+            $worksheet->setCellValue("P$r", $item['course']?->name);
+            $worksheet->setCellValue("Q$r", $teacher?->fullNames());
+            $worksheet->setCellValue("R$r", $item['classroom']?->pavilion?->name);
+            $worksheet->setCellValue("S$r", $item['classroom']?->code);
             $r++;
         }
 
@@ -821,7 +844,11 @@ class SectionCourseScheduleController extends Controller
             $worksheet->setCellValue("E$r", $item->section?->code);
             $worksheet->setCellValue("F$r", $item->teacher?->documentId);
             $worksheet->setCellValue("G$r", 'EP');
+
             $worksheet->setCellValue("I$r", $item->section?->program?->businessUnit?->acronym);
+            $worksheet->setCellValue("J$r", $item->planCourse?->course?->name);
+            $worksheet->setCellValue("K$r", $item->teacher->fullNames());
+            $worksheet->setCellValue("L$r", $item->section->program?->name);
             $r++;
         }
 
