@@ -469,10 +469,10 @@ class SectionCourseScheduleController extends Controller
             $b['section']
         ])->values()->sortByDesc(fn($i) => !is_null($i['startTime']))->values();
 
-        $r = 3;
+        $r = 2;
         foreach ($allItems as $item) {
             $teacher = $item['teacher'];
-            $worksheet->insertNewRowBefore($r);
+            // $worksheet->insertNewRowBefore($r);
 
             $worksheet->setCellValue("A$r", $item['period']);
             $worksheet->setCellValue("B$r", Date::PHPToExcel($item['startDate']));
@@ -501,17 +501,17 @@ class SectionCourseScheduleController extends Controller
             $worksheet->setCellValue("Q$r", $item['endTime']?->format('H:i'));
             $worksheet->getStyle("Q$r")->getNumberFormat()->setFormatCode('HH:MM');
 
-            # HC = endTime - startTime
-            $hc = $item['endTime'] && $item['startTime'] ? $item['endTime']->diff($item['startTime']) : null;
-            $worksheet->setCellValue("R$r", $hc ? $hc->format('%H:%I') : '');
+            // # HC = endTime - startTime
+            // $hc = $item['endTime'] && $item['startTime'] ? $item['endTime']->diff($item['startTime']) : null;
+            // $worksheet->setCellValue("R$r", $hc ? $hc->format('%H:%I') : '');
 
-            #HA = =(HOUR(HC)*60+MINUTE(HC))/(45)
-            $ha = $hc ? ($hc->h * 60 + $hc->i) / 45 : null;
-            $worksheet->setCellValue("S$r", $ha ? $ha : '');
+            // #HA = =(HOUR(HC)*60+MINUTE(HC))/(45)
+            // $ha = $hc ? ($hc->h * 60 + $hc->i) / 45 : null;
+            // $worksheet->setCellValue("S$r", $ha ? $ha : '');
 
-            #FHC = =HC*24
-            $fhc = $hc ? ($hc->h * 60 + $hc->i) / 60 : null;
-            $worksheet->setCellValue("T$r", $fhc ? $fhc : '');
+            // #FHC = =HC*24
+            // $fhc = $hc ? ($hc->h * 60 + $hc->i) / 60 : null;
+            // $worksheet->setCellValue("T$r", $fhc ? $fhc : '');
 
             $worksheet->setCellValue("V$r", $item['classroom'] ? $item['classroom']?->code : '');
             $worksheet->setCellValue("W$r", $item['classroom'] ? $item['classroom']->type?->name : '');
@@ -520,9 +520,8 @@ class SectionCourseScheduleController extends Controller
             $r++;
         }
 
-        // delete template row
-        $spreadsheet->getActiveSheet()->removeRow(2, 1);
-        $spreadsheet->getActiveSheet()->removeRow($r - 1, 1);
+        // eliminar las filas apartir de la fila $r hasta 800
+        $worksheet->removeRow($r, 800 - $r + 1);
 
         Storage::makeDirectory('reports');
         $fileId = now()->timestamp;
