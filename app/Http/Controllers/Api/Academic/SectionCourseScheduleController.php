@@ -570,6 +570,7 @@ class SectionCourseScheduleController extends Controller
         $periodId = $req->query('periodId');
         $q = $req->query('q');
         $query = SectionCourse::orderBy('created_at', 'desc');
+
         $query->where(function ($q) {
             $q->whereHas('planCourse', function ($subQuery) {
                 $subQuery->where('status', true);
@@ -600,19 +601,20 @@ class SectionCourseScheduleController extends Controller
 
         if ($q) {
             $query->where(function ($subQuery) use ($q) {
-                $subQuery->whereHas('section', fn($q) => $q->where('code', 'like', "%$q%"))
+                $subQuery->whereHas('section', fn($sub) => $sub->where('code', 'like', "%$q%"))
                     ->orWhereHas(
                         'planCourse',
-                        fn($q) =>
-                        $q->whereHas(
+                        fn($sub) =>
+                        $sub->whereHas(
                             'course',
-                            fn($q) =>
-                            $q->where('code', 'like', "%$q%")->orWhere('name', 'like', "%$q%")
+                            fn($c) =>
+                            $c->where('code', 'like', "%$q%")
+                                ->orWhere('name', 'like', "%$q%")
                         )
                     )->orWhereHas(
                         'teacher',
-                        fn($q) =>
-                        $q->where('username', 'like', "%$q%")
+                        fn($t) =>
+                        $t->where('username', 'like', "%$q%")
                             ->orWhere('firstNames', 'like', "%$q%")
                             ->orWhere('documentId', 'like', "%$q%")
                             ->orWhere('lastNames', 'like', "%$q%")
@@ -801,19 +803,20 @@ class SectionCourseScheduleController extends Controller
 
         if ($q) {
             $query->where(function ($subQuery) use ($q) {
-                $subQuery->whereHas('section', fn($q) => $q->where('code', 'like', "%$q%"))
+                $subQuery->whereHas('section', fn($sub) => $sub->where('code', 'like', "%$q%"))
                     ->orWhereHas(
                         'planCourse',
-                        fn($q) =>
-                        $q->whereHas(
+                        fn($sub) =>
+                        $sub->whereHas(
                             'course',
-                            fn($q) =>
-                            $q->where('code', 'like', "%$q%")->orWhere('name', 'like', "%$q%")
+                            fn($c) =>
+                            $c->where('code', 'like', "%$q%")
+                                ->orWhere('name', 'like', "%$q%")
                         )
                     )->orWhereHas(
                         'teacher',
-                        fn($q) =>
-                        $q->where('username', 'like', "%$q%")
+                        fn($t) =>
+                        $t->where('username', 'like', "%$q%")
                             ->orWhere('firstNames', 'like', "%$q%")
                             ->orWhere('documentId', 'like', "%$q%")
                             ->orWhere('lastNames', 'like', "%$q%")
