@@ -150,6 +150,7 @@ class SectionCourseScheduleController extends Controller
                     'dates' => $conflictItem->dates,
                     'endTime' => $conflictItem->to,
                     'daysOfWeek' => $conflictItem->days,
+                    'extendedProperties' => []
                 ] : [
                     'name' => $conflictItem->sectionCourse->planCourse->course->name,
                     'startDate' => $conflictItem->startDate,
@@ -158,6 +159,13 @@ class SectionCourseScheduleController extends Controller
                     'endTime' => $conflictItem->endTime,
                     'dates' => $conflictItem->dates,
                     'daysOfWeek' => $conflictItem->daysOfWeek,
+                    'extendedProperties' => [
+                        'Sección' => $conflictItem->sectionCourse?->section?->code,
+                        'Periodo' => $conflictItem->sectionCourse?->section?->period?->name,
+                        'Carrera' => $conflictItem->sectionCourse?->section?->program?->name,
+                        'Unidad' => $conflictItem->sectionCourse?->section?->program?->businessUnit?->name,
+                        '$photoURL' => $conflictItem->sectionCourse?->section?->program?->businessUnit?->logoURLSquare,
+                    ],
                 ];
                 return response()->json([
                     'message' => $messages[$type],

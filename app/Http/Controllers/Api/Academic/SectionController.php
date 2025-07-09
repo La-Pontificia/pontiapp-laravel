@@ -20,7 +20,7 @@ class SectionController extends Controller
         $cycleId = $req->query('cycleId');
         $paginate = $req->query('paginate') === 'true';
 
-        if ($q) $match->where('code', 'like', "%$q%")->orWhere('details', 'like', "%$q%");
+        if ($q) $match->where('code', 'like', "%$q%");
         if ($programId) $match->where('programId', $programId);
         if ($periodId) $match->where('periodId', $periodId);
         if ($cycleId) $match->where('cycleId', $cycleId);
