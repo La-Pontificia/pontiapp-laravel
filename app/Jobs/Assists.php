@@ -17,6 +17,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class Assists implements ShouldQueue
 {
@@ -230,7 +231,7 @@ class Assists implements ShouldQueue
                     $schedule['morningTo'],
                     $dailyResults,
                     $results,
-                    CarbonInterval::minutes(120),
+                    CarbonInterval::minutes(180),
 
                 );
 
@@ -239,7 +240,7 @@ class Assists implements ShouldQueue
                     $schedule['afternoonTo'],
                     $dailyResults,
                     $results,
-                    CarbonInterval::minutes(120),
+                    CarbonInterval::minutes(180),
                 );
 
                 // If there are still assists left, try to match them with the schedule
@@ -266,10 +267,10 @@ class Assists implements ShouldQueue
                     }
                 }
 
-                if ($morningMarkedIn && !$morningMarkedOut && !$afternoonMarkedIn && $afternoonMarkedOut) {
-                    $morningMarkedOut = $schedule['morningTo'];
-                    $afternoonMarkedIn = $schedule['afternoonFrom'];
-                }
+                // if ($morningMarkedIn && !$morningMarkedOut && !$afternoonMarkedIn && $afternoonMarkedOut) {
+                //     $morningMarkedOut = $schedule['morningTo'];
+                //     $afternoonMarkedIn = $schedule['afternoonFrom'];
+                // }
 
                 return array_merge($schedule, [
                     'user' => $users->find($schedule['userId'])
@@ -330,14 +331,31 @@ class Assists implements ShouldQueue
                         $worksheet->getStyle('K' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
                         // ------------- Assists -------------
+                        $onlyMarkedInAndOut = $schedule['morningMarkedIn'] && !$schedule['morningMarkedOut'] && $schedule['afternoonMarkedOut'] && !$schedule['afternoonMarkedIn'];
+
                         // Morning
                         $worksheet->setCellValue('P' . $rr, $schedule['morningMarkedIn'] ? $schedule['morningMarkedIn']->format('H:i:s') : "");
                         $worksheet->getStyle('P' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
-                        $worksheet->setCellValue('Q' . $rr, $schedule['morningMarkedOut'] ? $schedule['morningMarkedOut']->format('H:i:s') : "");
+
+                        if ($onlyMarkedInAndOut) {
+                            $worksheet->setCellValue('Q' . $rr, $schedule['morningTo'] ? $schedule['morningTo']->format('H:i:s') : "");
+                            $worksheet->getStyle('Q' . $rr)->getFill()->setFillType(Fill::FILL_SOLID);
+                            $worksheet->getStyle('Q' . $rr)->getFill()->getStartColor()->setARGB('FF00FF');
+                        } else {
+                            $worksheet->setCellValue('Q' . $rr, $schedule['morningMarkedOut'] ? $schedule['morningMarkedOut']->format('H:i:s') : "");
+                        }
+
                         $worksheet->getStyle('Q' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
 
                         // Afternoon
-                        $worksheet->setCellValue('R' . $rr, $schedule['afternoonMarkedIn'] ? $schedule['afternoonMarkedIn']->format('H:i:s') : "");
+                        if ($onlyMarkedInAndOut) {
+                            $worksheet->setCellValue('R' . $rr, $afternoonFromMoreTolerence ? $afternoonFromMoreTolerence->format('H:i:s') : "");
+                            $worksheet->getStyle('R' . $rr)->getFill()->setFillType(Fill::FILL_SOLID);
+                            $worksheet->getStyle('R' . $rr)->getFill()->getStartColor()->setARGB('FF00FF');
+                        } else {
+                            $worksheet->setCellValue('R' . $rr, $schedule['afternoonMarkedIn'] ? $schedule['afternoonMarkedIn']->format('H:i:s') : "");
+                        }
+
                         $worksheet->getStyle('R' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');
                         $worksheet->setCellValue('S' . $rr, $schedule['afternoonMarkedOut'] ? $schedule['afternoonMarkedOut']->format('H:i:s') : "");
                         $worksheet->getStyle('S' . $rr)->getNumberFormat()->setFormatCode('HH:MM:SS');

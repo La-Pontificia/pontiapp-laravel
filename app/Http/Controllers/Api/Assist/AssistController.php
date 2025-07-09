@@ -259,30 +259,6 @@ class AssistController extends Controller
                 CarbonInterval::minutes(180),
             );
 
-            // If there are still assists left, try to match them with the schedule
-            // if ((!$morningMarkedIn || !$morningMarkedOut || !$afternoonMarkedIn || !$afternoonMarkedOut) && $dailyResults->isNotEmpty()) {
-            //     $remainingEntry = $dailyResults->sortBy(
-            //         fn($assist) => abs(Carbon::parse($assist->datetime)->diffInSeconds($schedule['morningFrom'] ?? $schedule['afternoonFrom']))
-            //     )->first();
-
-            //     if ($remainingEntry) {
-            //         $entryTime = Carbon::parse($remainingEntry->datetime);
-
-            //         if (!$morningMarkedIn && $entryTime < ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
-            //             $morningMarkedIn = $entryTime;
-            //         } elseif (!$morningMarkedOut && $entryTime < ($schedule['afternoonFrom'] ?? $schedule['morningTo'])) {
-            //             $morningMarkedOut = $entryTime;
-            //         } elseif (!$afternoonMarkedIn && $entryTime >= ($schedule['morningTo'] ?? $schedule['afternoonFrom'])) {
-            //             $afternoonMarkedIn = $entryTime;
-            //         } elseif (!$afternoonMarkedOut) {
-            //             $afternoonMarkedOut = $entryTime;
-            //         }
-
-            //         unset($dailyResults[$remainingEntry->id]);
-            //         unset($results[$remainingEntry->id]);
-            //     }
-            // }
-
             if ($morningMarkedIn && !$morningMarkedOut && !$afternoonMarkedIn && $afternoonMarkedOut) {
                 $morningMarkedOut = $schedule['morningTo'];
                 $afternoonMarkedIn = $schedule['afternoonFrom'];
@@ -425,6 +401,7 @@ class AssistController extends Controller
 
         return response()->json($results);
     }
+
     public function withUsersReport(Request $req)
     {
         $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
@@ -502,6 +479,7 @@ class AssistController extends Controller
         $results = DB::connection('sqlsrv_dynamic')->select($finalSql);
         return response()->json($results);
     }
+
     public function withoutUsersReport(Request $req)
     {
         $terminalsIds = $req->get('assistTerminals') ? explode(',', $req->get('assistTerminals')) : [];
