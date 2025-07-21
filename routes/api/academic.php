@@ -11,12 +11,16 @@ use App\Http\Controllers\Api\Academic\PeriodController;
 use App\Http\Controllers\Api\Academic\PlanController;
 use App\Http\Controllers\Api\Academic\PlanCourseController;
 use App\Http\Controllers\Api\Academic\ProgramController;
-use App\Http\Controllers\Api\Academic\ScheduleController;
 use App\Http\Controllers\Api\Academic\SectionController;
 use App\Http\Controllers\Api\Academic\SectionCourseController;
 use App\Http\Controllers\Api\Academic\SectionCourseScheduleController;
 use App\Http\Controllers\Api\Academic\TeacherController;
-use App\Http\Controllers\Api\Academic\TeacherTrackingController;
+use App\Http\Controllers\Api\Academic\TeBlockController;
+use App\Http\Controllers\Api\Academic\TeCategoryController;
+use App\Http\Controllers\Api\Academic\TeGroupController;
+use App\Http\Controllers\Api\Academic\TeOptionController;
+use App\Http\Controllers\Api\Academic\TeQuestionController;
+use App\Http\Controllers\Api\Academic\TevaluationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('check.auth')->group(function () {
@@ -29,13 +33,54 @@ Route::middleware('check.auth')->group(function () {
             Route::post('schedules', [TeacherController::class, 'storeSchedule']);
             Route::get('{id}/schedules', [TeacherController::class, 'schedules']);
         });
-        Route::prefix('tt')->group(function () {
-            Route::get('', [TeacherTrackingController::class, 'index']);
-            Route::post('store', [TeacherTrackingController::class, 'store']);
-            Route::post('report', [TeacherTrackingController::class, 'report']);
-            Route::post('{slug}', [TeacherTrackingController::class, 'update']);
-            Route::post('{slug}/delete', [TeacherTrackingController::class, 'delete']);
-            Route::get('{slug}', [TeacherTrackingController::class, 'one']);
+        Route::prefix('te')->group(function () {
+            Route::prefix('gro')->group(function () {
+                Route::get('', [TeGroupController::class, 'index']);
+                Route::get('{id}', [TeGroupController::class, 'one']);
+                Route::get('{id}/full', [TeGroupController::class, 'full']);
+                Route::post('', [TeGroupController::class, 'store']);
+                Route::post('{id}', [TeGroupController::class, 'update']);
+                Route::post('{id}/delete', [TeGroupController::class, 'delete']);
+            });
+
+            Route::prefix('cate')->group(function () {
+                Route::get('', [TeCategoryController::class, 'index']);
+                Route::post('', [TeCategoryController::class, 'store']);
+                Route::post('{id}', [TeCategoryController::class, 'update']);
+                Route::post('{id}/delete', [TeCategoryController::class, 'delete']);
+                Route::get('{id}', [TeCategoryController::class, 'one']);
+            });
+
+            Route::prefix('block')->group(function () {
+                Route::get('', [TeBlockController::class, 'index']);
+                Route::post('', [TeBlockController::class, 'store']);
+                Route::post('{id}', [TeBlockController::class, 'update']);
+                Route::post('{id}/delete', [TeBlockController::class, 'delete']);
+                Route::get('{id}', [TeBlockController::class, 'one']);
+            });
+
+            Route::prefix('question')->group(function () {
+                Route::get('', [TeQuestionController::class, 'index']);
+                Route::post('', [TeQuestionController::class, 'store']);
+                Route::post('{id}', [TeQuestionController::class, 'update']);
+                Route::post('{id}/delete', [TeQuestionController::class, 'delete']);
+                Route::get('{id}', [TeQuestionController::class, 'one']);
+            });
+
+            Route::prefix('option')->group(function () {
+                Route::get('', [TeOptionController::class, 'index']);
+                Route::post('', [TeOptionController::class, 'store']);
+                Route::post('{id}', [TeOptionController::class, 'update']);
+                Route::post('{id}/delete', [TeOptionController::class, 'delete']);
+                Route::get('{id}', [TeOptionController::class, 'one']);
+            });
+
+            Route::get('', [TevaluationController::class, 'index']);
+            Route::post('', [TevaluationController::class, 'store']);
+            Route::post('{id}', [TevaluationController::class, 'update']);
+            Route::post('{id}/delete', [TevaluationController::class, 'delete']);
+            Route::get('{id}', [TevaluationController::class, 'one']);
+            Route::get('{id}/full', [TevaluationController::class, 'full']);
         });
         Route::prefix('programs')->group(function () {
             Route::get('', [ProgramController::class, 'index']);
