@@ -41,6 +41,7 @@ Route::middleware('check.auth')->group(function () {
                 Route::post('', [TeGroupController::class, 'store']);
                 Route::post('{id}', [TeGroupController::class, 'update']);
                 Route::post('{id}/delete', [TeGroupController::class, 'delete']);
+                Route::post('{id}/replicate', [TeGroupController::class, 'replicate']);
             });
 
             Route::prefix('cate')->group(function () {
