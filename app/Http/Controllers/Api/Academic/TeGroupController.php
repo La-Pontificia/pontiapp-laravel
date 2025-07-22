@@ -78,6 +78,50 @@ class TeGroupController extends Controller
         );
     }
 
+    public function replicate(Request $req, $id)
+    {
+        $req->validate([
+            'name' => 'required|string',
+        ]);
+        $group = TeGroup::find($id);
+        if (!$group) return response()->json('not_found', 404);
+
+        $new = TeGroup::create([
+            'name' => $req->name,
+            'creatorId' => Auth::id(),
+        ]);
+
+        $group->categories->each(function ($category) use ($new) {
+            $newCategory = $category->replicate();
+            $newCategory->groupId = $new->id;
+            $newCategory->creatorId = Auth::id();
+            $newCategory->save();
+
+            $category->blocks->each(function ($block) use ($newCategory) {
+                $newBlock = $block->replicate();
+                $newBlock->categoryId = $newCategory->id;
+                $newBlock->creatorId = Auth::id();
+                $newBlock->save();
+
+                $block->questions->each(function ($question) use ($newBlock) {
+                    $newQuestion = $question->replicate();
+                    $newQuestion->blockId = $newBlock->id;
+                    $newQuestion->creatorId = Auth::id();
+                    $newQuestion->save();
+
+                    $question->options->each(function ($option) use ($newQuestion) {
+                        $newOption = $option->replicate();
+                        $newOption->questionId = $newQuestion->id;
+                        $newOption->creatorId = Auth::id();
+                        $newOption->save();
+                    });
+                });
+            });
+        });
+
+        return response()->json($new);
+    }
+
     public function full($id)
     {
         $data = TeGroup::find($id);
