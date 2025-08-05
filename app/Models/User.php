@@ -209,6 +209,14 @@ class User extends Authenticatable
 
     public function fullNames()
     {
+        if (empty($this->firstNames) && empty($this->lastNames)) {
+            return $this->displayName;
+        }
         return $this->lastNames . ', ' . $this->firstNames;
+    }
+
+    public function getNamesAttribute()
+    {
+        return $this->fullNames();
     }
 }

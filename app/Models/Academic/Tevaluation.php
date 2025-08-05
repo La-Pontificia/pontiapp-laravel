@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Tevaluation extends Model
 {
@@ -30,6 +31,10 @@ class Tevaluation extends Model
         'evaluatorId',
         'creatorId',
         'updaterId',
+    ];
+
+    protected $casts = [
+        'trackingTime' => 'datetime',
     ];
 
     public function group()
@@ -75,5 +80,15 @@ class Tevaluation extends Model
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacherId', 'id');
+    }
+
+
+    public function score(): float
+    {
+        // Carga solo respuestas relacionadas a preguntas tipo 'select' y suma sus valores
+        // Mejor usar relación y constrain para evitar consultas sin relaciones definidas
+        return $this->answers()
+            ->whereHas('question', fn($q) => $q->where('type', 'select'))
+            ->sum(DB::raw('CAST(answer AS DECIMAL(10,2))'));
     }
 }
