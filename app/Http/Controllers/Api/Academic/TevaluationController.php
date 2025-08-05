@@ -3,10 +3,17 @@
 namespace App\Http\Controllers\Api\Academic;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ReportSendEmail;
 use App\Models\Academic\TeAnswer;
+use App\Models\Academic\TeGroup;
 use App\Models\Academic\Tevaluation;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class TevaluationController extends Controller
 {
@@ -156,5 +163,115 @@ class TevaluationController extends Controller
                     })
                 ]
         );
+    }
+
+    // reports
+    public function report(Request $req)
+    {
+
+        $groupIds = $req->query('groupIds') ? explode(',', $req->query('groupIds')) : [];
+        $query = Tevaluation::orderBy('created_at', 'desc');
+        $query->whereIn('groupId', $groupIds);
+
+        $groups = TeGroup::whereIn('id', $groupIds)->get();
+
+        $data = $query->get();
+
+        $spreadsheet = IOFactory::load(public_path('templates/academic_teacher_evaluation.xlsx'));
+        $worksheet = $spreadsheet->getSheetByName('Sheet');
+
+        $allData = $data->sort(fn($a, $b) => [
+            $a->sectionCourse->section->program->businessUnit->acronym,
+            $a->sectionCourse->section->program->name,
+            $a->sectionCourse->section->period->name,
+            $a->sectionCourse->section->code
+        ] <=> [
+            $b->sectionCourse->section->program->businessUnit->acronym,
+            $b->sectionCourse->section->program->name,
+            $b->sectionCourse->section->period->name,
+            $b->sectionCourse->section->code
+        ])->values();
+
+        $sheetTitle = '';
+
+        foreach ($groups as $i => $group) {
+            $sheetTitle .= $group->name;
+            if ($i < count($groups) - 1) {
+                $sheetTitle .= ', ';
+            }
+        }
+
+        $worksheet->setCellValue("A2", $sheetTitle);
+
+        $r = 5;
+
+        $linkStyle = [
+            'font' => [
+                'color' => ['rgb' => '208fcb'],
+                'underline' => 'single'
+            ]
+        ];
+
+        $groupScores = [];
+
+        foreach ($groups as $group) {
+            $groupScores[$group->id] = $group->highScore();
+        }
+
+        foreach ($allData as $item) {
+
+            $groupScore = $groupScores[$item->group->id] ?? 0;
+            $evaScore = $item->score();
+            $score = $groupScore > 0 ? round(($evaScore / $groupScore) * 20, 2) : 0;
+
+            $worksheet->setCellValue("A$r", $item->sectionCourse->section->program->businessUnit->acronym . ' - ' . $item->sectionCourse->section->program->businessUnit->name);
+            $worksheet->setCellValue("B$r", $item->sectionCourse->section->program->acronym . ' - ' . $item->sectionCourse->section->program->name);
+            $worksheet->setCellValue("C$r", $item->sectionCourse->section->period->name);
+            $worksheet->setCellValue("D$r", $item->sectionCourse->section->code);
+            $worksheet->setCellValue("E$r", $item->sectionCourse->planCourse->course->code . ' - ' . $item->sectionCourse->planCourse->name);
+
+            $worksheet->setCellValue("F$r", Date::PHPToExcel($item->trackingTime));
+            $worksheet->getStyle("F$r")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_DATE_YYYYMMDDSLASH);
+
+            $worksheet->setCellValue("G$r", $item->trackingTime->format('H:i'));
+            $worksheet->getStyle("G$r")->getNumberFormat()->setFormatCode('HH:MM');
+
+            $worksheet->setCellValue("H$r", $item->teacher->documentId);
+            $worksheet->setCellValue("I$r", $item->teacher->names);
+            $worksheet->getCell("I$r")->getHyperlink()->setUrl('https://app.lapontificia.edu.pe/' . $item->teacher->username);
+            $worksheet->getStyle("I$r")->applyFromArray($linkStyle);
+
+            $worksheet->setCellValue("J$r", $score);
+
+            $worksheet->setCellValue("K$r", $item->evaluator->names);
+            $worksheet->getCell("K$r")->getHyperlink()->setUrl('https://app.lapontificia.edu.pe/' . $item->evaluator->username);
+            $worksheet->getStyle("K$r")->applyFromArray($linkStyle);
+
+            $worksheet->setCellValue("M$r", $groupScore);
+            $worksheet->setCellValue("N$r", $evaScore);
+
+            $r++;
+        }
+
+        Storage::makeDirectory('reports');
+        $fileId = now()->timestamp;
+        $filePath = "reports/$fileId.xlsx";
+
+        IOFactory::createWriter($spreadsheet, 'Xlsx')->save(storage_path("app/$filePath"));
+
+        $displayNameFile = 'Evaluaciones de docentes - ' . $sheetTitle;
+
+        $report = Report::create([
+            'fileId' => $fileId,
+            'title' => $displayNameFile,
+            'ext' => 'xlsx',
+            'creatorId' => Auth::id(),
+            'module' => 'academic',
+        ]);
+
+        $downloadLink = config('app.download_url') . '/reports/' . $report->id;
+        ReportSendEmail::dispatch($report->title, 'académico', 'las evaluaciones de docentes', $downloadLink, Auth::id());
+
+        return response()->json($downloadLink);
     }
 }

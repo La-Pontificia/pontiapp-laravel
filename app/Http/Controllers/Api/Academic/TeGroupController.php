@@ -63,6 +63,7 @@ class TeGroupController extends Controller
     {
         $data = TeGroup::find($id);
         if (!$data) return response()->json('not_found', 404);
+
         $data->delete();
         return response()->json('Data deleted');
     }

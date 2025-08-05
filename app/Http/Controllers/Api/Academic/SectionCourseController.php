@@ -122,7 +122,6 @@ class SectionCourseController extends Controller
                 $endTime = $schedule->endTime;
                 $startDate = $schedule->startDate;
                 $endDate = $schedule->endDate;
-
                 $buildSearch = fn($column) => implode(' OR ', array_map(fn($day) => "JSON_SEARCH($column, 'one', '$day') IS NOT NULL", $days));
                 $conflicts = [
                     // Si el docente tiene horarios no disponibles registrados
@@ -135,7 +134,7 @@ class SectionCourseController extends Controller
                         ->whereDate('endDate', '>=', $startDate)
                         ->first(),
 
-                    // si el docente tiene horarios de cursos asignados
+                    // Si el docente tiene horarios de cursos asignados
                     'teacher_busy' => SectionCourseSchedule::whereHas('sectionCourse', function ($q) use ($req) {
                         $q->where('teacherId', $req->teacherId);
                     })
@@ -144,33 +143,16 @@ class SectionCourseController extends Controller
                         ->whereTime('endTime', '>', $startTime)
                         ->whereDate('startDate', '<=', $endDate)
                         ->whereDate('endDate', '>=', $startDate)
-                        ->first(),
+                        ->first()
                 ];
 
                 $messages = [
-                    'teacher_unavailable' => 'El docente no está disponible en los horarios de este curso.',
-                    'teacher_busy' => 'Docente ya tiene horarios asignados en los horarios de este curso.',
+                    'teacher_unavailable' => 'El docente tiene horarios no disponibles registrados que entran en conflicto con los horarios del curso. Por favor, revise los horarios asignados al docente.',
+                    'teacher_busy' => 'El docente tiene horarios asignados a otros cursos que entran en conflicto con los horarios de este. Por favor, revise los horarios asignados al docente.',
                 ];
 
                 foreach ($conflicts as $type => $conflictItem) {
                     if ($conflictItem) {
-                        $item = $type === 'teacher_unavailable' ? [
-                            'name' => $conflictItem->user->fullNames() . ' (No disponible)',
-                            'startDate' => $conflictItem->startDate,
-                            'endDate' => $conflictItem->endDate,
-                            'startTime' => $conflictItem->from,
-                            'dates' => $conflictItem->dates,
-                            'endTime' => $conflictItem->to,
-                            'daysOfWeek' => $conflictItem->days,
-                        ] : [
-                            'name' => $conflictItem->sectionCourse->planCourse->course->name,
-                            'startDate' => $conflictItem->startDate,
-                            'endDate' => $conflictItem->endDate,
-                            'startTime' => $conflictItem->startTime,
-                            'endTime' => $conflictItem->endTime,
-                            'dates' => $conflictItem->dates,
-                            'daysOfWeek' => $conflictItem->daysOfWeek,
-                        ];
                         return response()->json($messages[$type], 409);
                     }
                 }
