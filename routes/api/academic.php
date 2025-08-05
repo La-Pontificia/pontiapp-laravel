@@ -33,6 +33,7 @@ Route::middleware('check.auth')->group(function () {
             Route::post('schedules', [TeacherController::class, 'storeSchedule']);
             Route::get('{id}/schedules', [TeacherController::class, 'schedules']);
         });
+
         Route::prefix('te')->group(function () {
             Route::prefix('gro')->group(function () {
                 Route::get('', [TeGroupController::class, 'index']);
@@ -78,11 +79,13 @@ Route::middleware('check.auth')->group(function () {
 
             Route::get('', [TevaluationController::class, 'index']);
             Route::post('', [TevaluationController::class, 'store']);
+            Route::post('report', [TevaluationController::class, 'report']);
             Route::post('{id}', [TevaluationController::class, 'update']);
             Route::post('{id}/delete', [TevaluationController::class, 'delete']);
             Route::get('{id}', [TevaluationController::class, 'one']);
             Route::get('{id}/full', [TevaluationController::class, 'full']);
         });
+
         Route::prefix('programs')->group(function () {
             Route::get('', [ProgramController::class, 'index']);
             Route::get('{slug}', [ProgramController::class, 'one']);
@@ -115,6 +118,7 @@ Route::middleware('check.auth')->group(function () {
             Route::post('{slug}', [PlanController::class, 'update']);
             Route::post('{slug}/delete', [PlanController::class, 'delete']);
         });
+
         Route::prefix('periods')->group(function () {
             Route::get('', [PeriodController::class, 'index']);
             Route::get('{slug}', [PeriodController::class, 'one']);
@@ -122,6 +126,7 @@ Route::middleware('check.auth')->group(function () {
             Route::post('{slug}', [PeriodController::class, 'update']);
             Route::post('{slug}/delete', [PeriodController::class, 'delete']);
         });
+
         Route::prefix('pavilions')->group(function () {
             Route::get('', [PavilionController::class, 'index']);
             Route::get('{slug}', [PavilionController::class, 'one']);
@@ -129,6 +134,7 @@ Route::middleware('check.auth')->group(function () {
             Route::post('{slug}', [PavilionController::class, 'update']);
             Route::post('{slug}/delete', [PavilionController::class, 'delete']);
         });
+
         Route::prefix('classrooms')->group(function () {
             Route::prefix('types')->group(function () {
                 Route::get('', [ClassTypeController::class, 'index']);
@@ -143,6 +149,7 @@ Route::middleware('check.auth')->group(function () {
             Route::post('{slug}', [ClassroomController::class, 'update']);
             Route::post('{slug}/delete', [ClassroomController::class, 'delete']);
         });
+
         Route::prefix('sections')->group(function () {
             Route::prefix('courses')->group(function () {
                 Route::prefix('schedules')->group(function () {
